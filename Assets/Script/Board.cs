@@ -55,7 +55,9 @@ public class Board : MonoBehaviour
                 {
                     placementLayer[x, y] = true;
                     Cell dotCell = new Cell();
-                    dotCell.occupying = new Dot();
+                    Dot d = new Dot();
+                    d.dotType = DotType.Blue;
+                    dotCell.occupying = d;
                     levelLayer[x, y] = dotCell;
                 }
                 else
@@ -81,34 +83,63 @@ public class Board : MonoBehaviour
 
                     //Spawn level
                     if (cell.occupying != null)
-                        Instantiate(testDot, cellSpawn.transform);
+                    {
+                        GameObject spawn = Instantiate(testDot, cellSpawn.transform);
+                        Dot makedDot = spawn.GetComponent<Dot>();
+                        Dot d = levelLayer[x, y].occupying as Dot;
+                        makedDot.dotType = d.dotType;
+                        PlaceDot(new Vector2Int(x, y), makedDot);
+                    }
                 }
             }
         }
+
+        Debug.Log(GetDot(new Vector2Int(2, 2)).dotType);
     }
 
     #region Board interaction
-    public bool PlaceDot(Vector2Int coordinat, Dot dot)
+    public bool PlaceDot(Vector2Int coordinat, Dot targetDot)
     {
-        return false;
+        if (grid[coordinat.x, coordinat.y].occupying == null)
+        {
+            grid[coordinat.x, coordinat.y].occupying = targetDot;
+            return true;
+        }
+        else
+            return false;
     }
 
     public bool PlaceDots(Vector2Int coordinats, Piece piece)
     {
+
+
         return false;
     }
 
     public Dot GetDot(Vector2Int coordinat)
     {
-        return null;
+        Dot result = null;
+
+        if(grid[coordinat.x, coordinat.y].occupying is Dot)
+            result = (Dot)grid[coordinat.x, coordinat.y].occupying;
+
+        return result;
     }
 
     public List<Dot> GetDots(Vector2Int[] coordinats) 
     {
-        return null;
+        List<Dot> result = new List<Dot> ();
+
+        foreach (Vector2Int coor in coordinats)
+        {
+            if(grid[coor.x, coor.y].occupying != null)
+                result.Add((Dot)grid[coor.x, coor.y].occupying);
+        }
+
+        return result;
     }
 
-    public Piece GetPiece(Vector2Int coordinat)
+    public Piece PickupPiece(Vector2Int coordinat)
     {
         return null;
     }
