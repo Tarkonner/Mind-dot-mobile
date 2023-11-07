@@ -17,6 +17,8 @@ public class Board : MonoBehaviour
 
     public Action onChange;
 
+    [SerializeField] GameObject testDot;
+
     private void Awake()
     {
         Instance = this;
@@ -29,7 +31,12 @@ public class Board : MonoBehaviour
 
     public void LoadLevel(int level)
     {
-        placementLayer = new bool[4, 3];
+        //Test level
+        Vector2Int levelSize = new Vector2Int(4, 3);
+        placementLayer = new bool[levelSize.x, levelSize.y];        
+        levelLayer = new Cell[levelSize.x, levelSize.y];
+
+        grid = new Cell[levelSize.x, levelSize.y];
 
         Vector2 targetOffset = new Vector2(
             (placementLayer.GetLength(0) / 2 * gridSize) + (placementLayer.GetLength(0) - 1) * spaceingBetweenCells + gridSize / 2,
@@ -40,24 +47,41 @@ public class Board : MonoBehaviour
             for (int y = 0; y < placementLayer.GetLength(1); y++)
             {
                 //Placeholder level
-                if(x == 0 && y == 0)
+                if (x == 0 && y == 0)
                     placementLayer[x, y] = false;
-                else if(y == 2 && x == 3)
+                else if (y == 2 && x == 3)
                     placementLayer[x, y] = false;
-                else
+                else if (x == 2 && y == 2)
+                {
                     placementLayer[x, y] = true;
+                    Cell dotCell = new Cell();
+                    dotCell.occupying = new Dot();
+                    levelLayer[x, y] = dotCell;
+                }
+                else
+                {
+                    placementLayer[x, y] = true;
+                    levelLayer[x, y] = new Cell();
+                }
 
                 //make grid
                 if(placementLayer[x, y])
                 {
-                    GameObject spawn = Instantiate(cellPrefab, transform);
-                    spawn.name = $"Cell: {x}, {y}";
+                    GameObject cellSpawn = Instantiate(cellPrefab, transform);
+                    cellSpawn.name = $"Cell: {x}, {y}";
 
-                    spawn.transform.localPosition = new Vector2(
+                    cellSpawn.transform.localPosition = new Vector2(
                         x * gridSize + (x - 1) * spaceingBetweenCells - targetOffset.x / 2,
                         y * gridSize + (y - 1) * spaceingBetweenCells - targetOffset.y / 2);
 
-                    spawn.GetComponent<Cell>().gridPos = new Vector2Int(x, y);
+                    Cell cell = cellSpawn.GetComponent<Cell>();
+                    cell.occupying = levelLayer[x, y].occupying;
+                    grid[x, y] = cell;
+                    cell.gridPos = new Vector2Int(x, y);
+
+                    //Spawn level
+                    if (cell.occupying != null)
+                        Instantiate(testDot, cellSpawn.transform);
                 }
             }
         }
