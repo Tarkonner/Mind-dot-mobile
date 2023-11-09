@@ -93,8 +93,6 @@ public class Board : MonoBehaviour
                 }
             }
         }
-
-        Debug.Log(GetDot(new Vector2Int(2, 2)).dotType);
     }
 
     #region Board interaction
