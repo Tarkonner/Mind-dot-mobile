@@ -17,6 +17,11 @@ public class InputSystem : MonoBehaviour
 
     private void Awake()
     {
+        playerInput = GetComponent<PlayerInput>();
+
+        positionAction = playerInput.actions["TouchPosition"];
+        tapAction = playerInput.actions["Tap"];
+
         TestCirkle = Instantiate(TestCirkle);
     }
 
