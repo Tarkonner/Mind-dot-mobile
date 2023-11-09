@@ -44,6 +44,15 @@ public partial class @TouchControls: IInputActionCollection2, IDisposable
                     ""processors"": """",
                     ""interactions"": """",
                     ""initialStateCheck"": true
+                },
+                {
+                    ""name"": ""PrimaryContract"",
+                    ""type"": ""Button"",
+                    ""id"": ""91c1f17d-45c3-426d-8a57-8f46dedc3c64"",
+                    ""expectedControlType"": ""Button"",
+                    ""processors"": """",
+                    ""interactions"": """",
+                    ""initialStateCheck"": false
                 }
             ],
             ""bindings"": [
@@ -68,6 +77,17 @@ public partial class @TouchControls: IInputActionCollection2, IDisposable
                     ""action"": ""Tap"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""3ed43351-d604-46e1-bf19-1fffd764efda"",
+                    ""path"": ""<Touchscreen>/primaryTouch/press"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""PrimaryContract"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
                 }
             ]
         }
@@ -78,6 +98,7 @@ public partial class @TouchControls: IInputActionCollection2, IDisposable
         m_Touch = asset.FindActionMap("Touch", throwIfNotFound: true);
         m_Touch_TouchPosition = m_Touch.FindAction("TouchPosition", throwIfNotFound: true);
         m_Touch_Tap = m_Touch.FindAction("Tap", throwIfNotFound: true);
+        m_Touch_PrimaryContract = m_Touch.FindAction("PrimaryContract", throwIfNotFound: true);
     }
 
     public void Dispose()
@@ -141,12 +162,14 @@ public partial class @TouchControls: IInputActionCollection2, IDisposable
     private List<ITouchActions> m_TouchActionsCallbackInterfaces = new List<ITouchActions>();
     private readonly InputAction m_Touch_TouchPosition;
     private readonly InputAction m_Touch_Tap;
+    private readonly InputAction m_Touch_PrimaryContract;
     public struct TouchActions
     {
         private @TouchControls m_Wrapper;
         public TouchActions(@TouchControls wrapper) { m_Wrapper = wrapper; }
         public InputAction @TouchPosition => m_Wrapper.m_Touch_TouchPosition;
         public InputAction @Tap => m_Wrapper.m_Touch_Tap;
+        public InputAction @PrimaryContract => m_Wrapper.m_Touch_PrimaryContract;
         public InputActionMap Get() { return m_Wrapper.m_Touch; }
         public void Enable() { Get().Enable(); }
         public void Disable() { Get().Disable(); }
@@ -162,6 +185,9 @@ public partial class @TouchControls: IInputActionCollection2, IDisposable
             @Tap.started += instance.OnTap;
             @Tap.performed += instance.OnTap;
             @Tap.canceled += instance.OnTap;
+            @PrimaryContract.started += instance.OnPrimaryContract;
+            @PrimaryContract.performed += instance.OnPrimaryContract;
+            @PrimaryContract.canceled += instance.OnPrimaryContract;
         }
 
         private void UnregisterCallbacks(ITouchActions instance)
@@ -172,6 +198,9 @@ public partial class @TouchControls: IInputActionCollection2, IDisposable
             @Tap.started -= instance.OnTap;
             @Tap.performed -= instance.OnTap;
             @Tap.canceled -= instance.OnTap;
+            @PrimaryContract.started -= instance.OnPrimaryContract;
+            @PrimaryContract.performed -= instance.OnPrimaryContract;
+            @PrimaryContract.canceled -= instance.OnPrimaryContract;
         }
 
         public void RemoveCallbacks(ITouchActions instance)
@@ -193,5 +222,6 @@ public partial class @TouchControls: IInputActionCollection2, IDisposable
     {
         void OnTouchPosition(InputAction.CallbackContext context);
         void OnTap(InputAction.CallbackContext context);
+        void OnPrimaryContract(InputAction.CallbackContext context);
     }
 }

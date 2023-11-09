@@ -10,42 +10,69 @@ public class InputSystem : MonoBehaviour
 
     private InputAction tapAction;
     private InputAction positionAction;
+    private InputAction pressScreen;
 
     private Vector2 touchPosition;
+    private bool holding = false;
 
+
+    private Camera mainCam;
     [SerializeField] private GameObject TestCirkle;
 
     private void Awake()
     {
+        //Input
         playerInput = GetComponent<PlayerInput>();
-
         positionAction = playerInput.actions["TouchPosition"];
         tapAction = playerInput.actions["Tap"];
+        pressScreen = playerInput.actions["PrimaryContract"];
 
+        mainCam = Camera.main;
+
+        //Testing
         TestCirkle = Instantiate(TestCirkle);
     }
 
     private void OnEnable()
     {
         tapAction.started += Click;
+        pressScreen.canceled += Release;
     }
 
     private void OnDisable()
     {
         tapAction.started -= Click;
-    }
-
-    private void Start()
-    {
-
+        pressScreen.canceled -= Release;
     }
 
     private void Update()
     {
+        //Drag
         if (positionAction.WasPerformedThisFrame())
         {
-            touchPosition = Touchscreen.current.primaryTouch.position.ReadValue(); ;
+            holding = true;
+
+            touchPosition = Touchscreen.current.primaryTouch.position.ReadValue();
             Drag();
+        }
+    }
+
+    private void Release(InputAction.CallbackContext context)
+    {
+
+        Debug.Log("Release");
+
+        touchPosition = Touchscreen.current.primaryTouch.position.ReadValue();
+
+        RaycastHit2D hit = Physics2D.Raycast(touchPosition, transform.forward);
+        if (hit.collider != null)
+        {
+            GameObject target = hit.collider.gameObject;
+            Debug.Log(target);
+            if (TryGetComponent(out Cell cell))
+            {
+                Debug.Log(cell.gridPos);
+            }
         }
     }
 
@@ -57,7 +84,7 @@ public class InputSystem : MonoBehaviour
 
     private void Drag()
     {
-        var result = Camera.main.ScreenToWorldPoint(touchPosition);
+        var result = mainCam.ScreenToWorldPoint(touchPosition);
         result.z = 0;
 
         TestCirkle.transform.position = result;
