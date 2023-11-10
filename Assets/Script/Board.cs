@@ -51,7 +51,7 @@ public class Board : MonoBehaviour
                     placementLayer[x, y] = false;
                 else if (y == 2 && x == 3)
                     placementLayer[x, y] = false;
-                else if (x == 2 && y == 2)
+                else if (x == 1 && y == 1)
                 {
                     placementLayer[x, y] = true;
                     Cell dotCell = new Cell();
@@ -101,25 +101,61 @@ public class Board : MonoBehaviour
         if (grid[coordinat.x, coordinat.y].occupying == null)
         {
             grid[coordinat.x, coordinat.y].occupying = targetDot;
+            GameObject targetCell = grid[coordinat.x, coordinat.y].gameObject;
+            targetDot.transform.position = targetCell.transform.position;
+            targetDot.transform.parent = targetCell.transform;
             return true;
         }
         else
             return false;
     }
 
-    public bool PlaceDots(Vector2Int coordinats, Piece piece)
+    public bool PlacePiece(Vector2Int coordinats, Piece piece)
     {
+        bool canPlace = true;
 
+        //Does place exits
+        for (int i = 0; i < piece.dotsArray.Length; i++)
+        {
+            Vector2Int coor = new Vector2Int(coordinats.x + (int)piece.posArray[i].x, coordinats.y + (int)piece.posArray[i].y);
+            if (coor.x >= grid.GetLength(0) || coor.y >= grid.GetLength(1)
+                || coor.x < 0 || coor.y < 0
+                || grid[coor.x, coor.y] == null)
+            {
+                return false;
+            }
+        }
 
-        return false;
+        //Check if all places are free
+        for (int i = 0; i < piece.dotsArray.Length; i++)
+        {
+            Debug.Log(GetDot(coordinats + new Vector2Int((int)piece.posArray[i].x, (int)piece.posArray[i].y)));
+
+            if (GetDot(coordinats + new Vector2Int((int)piece.posArray[i].x, (int)piece.posArray[i].y)) != null)
+            {
+                canPlace = false; 
+                break;
+            }
+        }
+
+        //Place dots
+        if(canPlace)
+        {
+            for (int i = 0; i < piece.dotsArray.Length; i++)
+            {
+                Debug.Log($"{i}: {coordinats + new Vector2Int((int)piece.posArray[i].x, (int)piece.posArray[i].y)}");
+                PlaceDot(coordinats + new Vector2Int((int)piece.posArray[i].x, (int)piece.posArray[i].y), piece.dotsArray[i]);
+            }
+        }
+
+        return canPlace;
     }
 
-    public Dot GetDot(Vector2Int coordinat)
+    public IOccupying GetDot(Vector2Int coordinat)
     {
-        Dot result = null;
-
-        if(grid[coordinat.x, coordinat.y].occupying is Dot)
-            result = (Dot)grid[coordinat.x, coordinat.y].occupying;
+        IOccupying result = null;
+        if (grid[coordinat.x, coordinat.y].occupying != null && grid[coordinat.x, coordinat.y].occupying is Dot)
+            result = grid[coordinat.x, coordinat.y].occupying;
 
         return result;
     }
