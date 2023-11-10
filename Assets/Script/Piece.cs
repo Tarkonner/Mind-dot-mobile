@@ -20,14 +20,8 @@ public class Piece : MonoBehaviour
     int testTimer = 0;
     public void Start()
     {
-        Debug.Log("Entered Start for piece");
+        LoadPiece();
         testPivotPoint.transform.localPosition = pivotPoint;
-        for (int i = 0; i<dotsArray.Length; i++)
-        {
-            Debug.Log("In Loop");
-            dotsArray[i].gameObject.transform.position.Set(posArray[i].x, posArray[i].y, 
-                dotsArray[i].gameObject.transform.position.z);
-        }
     }
     public void Update()
     {
@@ -41,6 +35,10 @@ public class Piece : MonoBehaviour
     }
     public void LoadPiece()
     {
+        for (int i = 0; i < dotsArray.Length; i++)
+        {
+            dotsArray[i].gameObject.transform.localPosition = posArray[i];
+        }
 
     }
 
