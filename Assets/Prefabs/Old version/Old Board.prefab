@@ -1,6 +1,6 @@
 %YAML 1.1
 %TAG !u! tag:unity3d.com,2011:
---- !u!1 &7481191788362027120
+--- !u!1 &4162665727022335534
 GameObject:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -8,22 +8,23 @@ GameObject:
   m_PrefabAsset: {fileID: 0}
   serializedVersion: 6
   m_Component:
-  - component: {fileID: 6419171983027597632}
-  - component: {fileID: 8907170997581844231}
-  m_Layer: 5
-  m_Name: Board
+  - component: {fileID: 6964304963551189462}
+  - component: {fileID: 6646508646475347129}
+  m_Layer: 0
+  m_Name: Old Board
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
   m_IsActive: 1
---- !u!224 &6419171983027597632
-RectTransform:
+--- !u!4 &6964304963551189462
+Transform:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 7481191788362027120}
+  m_GameObject: {fileID: 4162665727022335534}
+  serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
@@ -31,24 +32,19 @@ RectTransform:
   m_Children: []
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
-  m_AnchorMin: {x: 0.5, y: 0.5}
-  m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: 0, y: 0}
-  m_SizeDelta: {x: 400, y: 400}
-  m_Pivot: {x: 0.5, y: 0.5}
---- !u!114 &8907170997581844231
+--- !u!114 &6646508646475347129
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 7481191788362027120}
+  m_GameObject: {fileID: 4162665727022335534}
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 11bea1be46a24cf4fb90d02107e743ec, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  cellPrefab: {fileID: 7296703449727020553, guid: b51ac518b1a34124486016406b545702, type: 3}
-  gridSize: 100
-  spaceingBetweenCells: 10
+  cellPrefab: {fileID: 2819074154008341016, guid: c1618ec37c3b3c24ba0c98f1ba96ab57, type: 3}
+  gridSize: 0.5
+  spaceingBetweenCells: 0.1
   testDot: {fileID: 6019067608180137540, guid: e7aa8ad5e26e1f147ba600f1a6867480, type: 3}
