@@ -117,7 +117,7 @@ public class Board : MonoBehaviour
         //Does place exits
         for (int i = 0; i < piece.dotsArray.Length; i++)
         {
-            Vector2Int coor = new Vector2Int(coordinats.x + (int)piece.posArray[i].x, coordinats.y + (int)piece.posArray[i].y);
+            Vector2Int coor = new Vector2Int(coordinats.x + (int)piece.gridPosArray[i].x, coordinats.y + (int)piece.gridPosArray[i].y);
             if (coor.x >= grid.GetLength(0) || coor.y >= grid.GetLength(1)
                 || coor.x < 0 || coor.y < 0
                 || grid[coor.x, coor.y] == null)
@@ -129,9 +129,9 @@ public class Board : MonoBehaviour
         //Check if all places are free
         for (int i = 0; i < piece.dotsArray.Length; i++)
         {
-            Debug.Log(GetDot(coordinats + new Vector2Int((int)piece.posArray[i].x, (int)piece.posArray[i].y)));
+            Debug.Log(GetDot(coordinats + new Vector2Int((int)piece.gridPosArray[i].x, (int)piece.gridPosArray[i].y)));
 
-            if (GetDot(coordinats + new Vector2Int((int)piece.posArray[i].x, (int)piece.posArray[i].y)) != null)
+            if (GetDot(coordinats + new Vector2Int((int)piece.gridPosArray[i].x, (int)piece.gridPosArray[i].y)) != null)
             {
                 canPlace = false; 
                 break;
@@ -143,8 +143,8 @@ public class Board : MonoBehaviour
         {
             for (int i = 0; i < piece.dotsArray.Length; i++)
             {
-                Debug.Log($"{i}: {coordinats + new Vector2Int((int)piece.posArray[i].x, (int)piece.posArray[i].y)}");
-                PlaceDot(coordinats + new Vector2Int((int)piece.posArray[i].x, (int)piece.posArray[i].y), piece.dotsArray[i]);
+                Debug.Log($"{i}: {coordinats + new Vector2Int((int)piece.gridPosArray[i].x, (int)piece.gridPosArray[i].y)}");
+                PlaceDot(coordinats + new Vector2Int((int)piece.gridPosArray[i].x, (int)piece.gridPosArray[i].y), piece.dotsArray[i]);
             }
         }
 
