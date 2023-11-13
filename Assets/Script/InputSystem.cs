@@ -13,11 +13,14 @@ public class InputSystem : MonoBehaviour
     private InputAction pressScreen;
 
     private Vector2 touchPosition;
-    private bool holding = false;
 
 
     private Camera mainCam;
-    [SerializeField] private GameObject TestCirkle;
+    [SerializeField] private Piece TestPiece;
+    private Piece holdingPiece;
+
+    [Header("Pieces")]
+    [SerializeField] private float pieceSizeWhileHolding = .2f;
 
     private void Awake()
     {
@@ -30,7 +33,8 @@ public class InputSystem : MonoBehaviour
         mainCam = Camera.main;
 
         //Testing
-        TestCirkle = Instantiate(TestCirkle);
+        holdingPiece = Instantiate(TestPiece, transform);
+        holdingPiece.transform.localScale = new Vector3(pieceSizeWhileHolding, pieceSizeWhileHolding, 1);
     }
 
     private void OnEnable()
@@ -50,8 +54,6 @@ public class InputSystem : MonoBehaviour
         //Drag
         if (positionAction.WasPerformedThisFrame())
         {
-            holding = true;
-
             touchPosition = Touchscreen.current.primaryTouch.position.ReadValue();
             Drag();
         }
@@ -59,21 +61,28 @@ public class InputSystem : MonoBehaviour
 
     private void Release(InputAction.CallbackContext context)
     {
-
         Debug.Log("Release");
 
         touchPosition = Touchscreen.current.primaryTouch.position.ReadValue();
+        Vector2 pos = mainCam.ScreenToWorldPoint(touchPosition);
 
-        RaycastHit2D hit = Physics2D.Raycast(touchPosition, transform.forward);
+
+        RaycastHit2D hit = Physics2D.Raycast(pos, Vector2.zero);
         if (hit.collider != null)
         {
-            GameObject target = hit.collider.gameObject;
-            Debug.Log(target);
-            if (TryGetComponent(out Cell cell))
+            //See if we hit a cell
+            if (hit.transform.TryGetComponent(out Cell cell))
             {
-                Debug.Log(cell.gridPos);
+                bool result = Board.Instance.PlacePiece(cell.gridPos, holdingPiece);
+
+                if (result)
+                    holdingPiece = null;
+                else
+                {
+                    //Return to UI
+                }
             }
-        }
+        }        
     }
 
     private void Click(InputAction.CallbackContext context)
@@ -84,9 +93,12 @@ public class InputSystem : MonoBehaviour
 
     private void Drag()
     {
+        if (holdingPiece == null)
+            return;
+
         var result = mainCam.ScreenToWorldPoint(touchPosition);
         result.z = 0;
 
-        TestCirkle.transform.position = result;
+        holdingPiece.transform.position = result;
     }
 }
