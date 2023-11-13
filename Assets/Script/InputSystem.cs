@@ -16,7 +16,6 @@ public class InputSystem : MonoBehaviour
 
 
     private Camera mainCam;
-    [SerializeField] private Piece TestPiece;
     private Piece holdingPiece;
 
     [Header("Pieces")]
@@ -31,10 +30,6 @@ public class InputSystem : MonoBehaviour
         pressScreen = playerInput.actions["PrimaryContract"];
 
         mainCam = Camera.main;
-
-        //Testing
-        holdingPiece = Instantiate(TestPiece, transform);
-        holdingPiece.transform.localScale = new Vector3(pieceSizeWhileHolding, pieceSizeWhileHolding, 1);
     }
 
     private void OnEnable()
