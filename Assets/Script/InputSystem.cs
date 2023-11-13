@@ -27,7 +27,7 @@ public class InputSystem : MonoBehaviour
         playerInput = GetComponent<PlayerInput>();
         positionAction = playerInput.actions["TouchPosition"];
         tapAction = playerInput.actions["Tap"];
-        pressScreen = playerInput.actions["PrimaryContract"];
+        pressScreen = playerInput.actions["PrimaryContact"];
 
         mainCam = Camera.main;
     }
