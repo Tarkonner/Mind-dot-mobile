@@ -426,10 +426,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 8b4831507d5481445a4e23d2990faa9e, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  posArray:
-  - {x: 1, y: 2}
-  - {x: -1, y: -2}
+  gridPosArray:
+  - {x: 1, y: 1}
   - {x: 0, y: 0}
+  - {x: -1, y: -1}
   dotsArray:
   - {fileID: 2217506693765319778}
   - {fileID: 1598486706333785338}

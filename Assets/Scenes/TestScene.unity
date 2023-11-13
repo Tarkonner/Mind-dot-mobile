@@ -281,6 +281,10 @@ PrefabInstance:
     m_TransformParent: {fileID: 0}
     m_Modifications:
     - target: {fileID: 3932863844296530614, guid: 4b2aafc290ac3614487ec849b44f05c5, type: 3}
+      propertyPath: gridPosArray.Array.size
+      value: 3
+      objectReference: {fileID: 0}
+    - target: {fileID: 3932863844296530614, guid: 4b2aafc290ac3614487ec849b44f05c5, type: 3}
       propertyPath: posArray.Array.data[0].y
       value: 1
       objectReference: {fileID: 0}
