@@ -1,11 +1,14 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.EventSystems;
 using UnityEngine.InputSystem;
 using UnityEngine.InputSystem.Controls;
+using UnityEngine.UI;
 
 public class InputSystem : MonoBehaviour
 {
+    //Input
     private PlayerInput playerInput;
 
     private InputAction tapAction;
@@ -16,13 +19,22 @@ public class InputSystem : MonoBehaviour
 
 
     private Camera mainCam;
-    private Piece holdingPiece;
 
     [Header("Pieces")]
     [SerializeField] private float pieceSizeWhileHolding = .2f;
+    private Piece holdingPiece;
+
+    //UI Raycast
+    GraphicRaycaster raycaster;
+    PointerEventData pointerEventData;
+    EventSystem eventSystem;
 
     private void Awake()
     {
+        //Raycast
+        raycaster = GetComponent<GraphicRaycaster>();
+        eventSystem = GetComponent<EventSystem>();
+
         //Input
         playerInput = GetComponent<PlayerInput>();
         positionAction = playerInput.actions["TouchPosition"];
@@ -58,26 +70,36 @@ public class InputSystem : MonoBehaviour
     {
         Debug.Log("Release");
 
+        //Touch position
         touchPosition = Touchscreen.current.primaryTouch.position.ReadValue();
-        Vector2 pos = mainCam.ScreenToWorldPoint(touchPosition);
 
+        // Create a pointer event data with the current input position
+        pointerEventData = new PointerEventData(eventSystem);
+        pointerEventData.position = touchPosition;
 
-        RaycastHit2D hit = Physics2D.Raycast(pos, Vector2.zero);
-        if (hit.collider != null)
+        // Create a list to store the raycast results
+        List<RaycastResult> results = new List<RaycastResult>();
+
+        // Raycast using the GraphicRaycaster
+        raycaster.Raycast(pointerEventData, results);
+
+        foreach (RaycastResult result in results)
         {
-            //See if we hit a cell
-            if (hit.transform.TryGetComponent(out Cell cell))
-            {
-                bool result = Board.Instance.PlacePiece(cell.gridPos, holdingPiece);
+            Debug.Log(result.gameObject.name);
 
-                if (result)
+            //See if we hit a cell
+            if (result.gameObject.TryGetComponent(out Cell cell))
+            {
+                bool placeResult = Board.Instance.PlacePiece(cell.gridPos, holdingPiece);
+
+                if (placeResult)
                     holdingPiece = null;
                 else
                 {
                     //Return to UI
                 }
             }
-        }        
+        }    
     }
 
     private void Click(InputAction.CallbackContext context)
@@ -91,9 +113,9 @@ public class InputSystem : MonoBehaviour
         if (holdingPiece == null)
             return;
 
-        var result = mainCam.ScreenToWorldPoint(touchPosition);
-        result.z = 0;
+        //var result = mainCam.ScreenToWorldPoint(touchPosition);
+        //result.z = 0;
 
-        holdingPiece.transform.position = result;
+        holdingPiece.transform.position = touchPosition;
     }
 }
