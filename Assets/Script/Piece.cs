@@ -1,9 +1,11 @@
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.EventSystems;
 
-public class Piece : MonoBehaviour
+public class Piece : MonoBehaviour, IDragHandler
 {
     [SerializeField] private GameObject dotPrefab;
+    RectTransform rectTransform;
 
     public Vector2[] gridPosArray;
     public Dot[] dotsArray;
@@ -20,6 +22,12 @@ public class Piece : MonoBehaviour
     public bool testRotate;
 
     int testTimer = 0;
+
+    private void Awake()
+    {
+        rectTransform = GetComponent<RectTransform>();
+    }
+
     public void Start()
     {
         LoadPiece();
@@ -147,7 +155,7 @@ public class Piece : MonoBehaviour
             gridPosArray[i] = new Vector2((pivotPoint.x - (gridPosArray[i].y - pivotPoint.y)),
                 (pivotPoint.y + (gridPosArray[i].x - pivotPoint.y)));
 
-            dotsArray[i].gameObject.transform.localPosition = gridPosArray[i];
+            dotsArray[i].gameObject.transform.localPosition = gridPosArray[i] * 100;
         }
     }
 
@@ -159,5 +167,11 @@ public class Piece : MonoBehaviour
     public void Lift()
     {
 
+    }
+
+    public void OnDrag(PointerEventData eventData)
+    {
+        //Debug.Log($"Draging: {gameObject.name}");
+        rectTransform.position = InputSystem.instance.touchPosition;
     }
 }

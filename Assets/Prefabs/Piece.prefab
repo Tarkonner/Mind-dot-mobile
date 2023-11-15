@@ -59,7 +59,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   m_Material: {fileID: 0}
   m_Color: {r: 1, g: 0.1830188, b: 0.1830188, a: 1}
-  m_RaycastTarget: 1
+  m_RaycastTarget: 0
   m_RaycastPadding: {x: 0, y: 0, z: 0, w: 0}
   m_Maskable: 1
   m_OnCullStateChanged:
@@ -86,7 +86,7 @@ GameObject:
   - component: {fileID: 1249703313203146825}
   - component: {fileID: 1801569222638801190}
   - component: {fileID: 1003704837308716687}
-  - component: {fileID: 5504719801281058797}
+  - component: {fileID: 7252276453392386464}
   m_Layer: 5
   m_Name: Piece
   m_TagString: Untagged
@@ -104,7 +104,7 @@ RectTransform:
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
-  m_ConstrainProportionsScale: 0
+  m_ConstrainProportionsScale: 1
   m_Children:
   - {fileID: 624538191327425614}
   m_Father: {fileID: 0}
@@ -112,7 +112,7 @@ RectTransform:
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
   m_AnchoredPosition: {x: 0, y: 0}
-  m_SizeDelta: {x: 100, y: 100}
+  m_SizeDelta: {x: 300, y: 300}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!222 &1801569222638801190
 CanvasRenderer:
@@ -141,7 +141,7 @@ MonoBehaviour:
   testPivotPoint: {fileID: 7457672802589896295}
   dotSpacing: 100
   testRotate: 0
---- !u!114 &5504719801281058797
+--- !u!114 &7252276453392386464
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}

@@ -8,6 +8,8 @@ using UnityEngine.UI;
 
 public class InputSystem : MonoBehaviour
 {
+    public static InputSystem instance;
+
     //Input
     private PlayerInput playerInput;
 
@@ -15,24 +17,31 @@ public class InputSystem : MonoBehaviour
     private InputAction positionAction;
     private InputAction pressScreen;
 
-    private Vector2 touchPosition;
-
-
-    private Camera mainCam;
+    public Vector2 touchPosition { get; private set; }
 
     [Header("Pieces")]
+    [SerializeField] private GameObject moveingPiecesHolder;
+    [SerializeField] Transform piecesHolder;
     [SerializeField] private float pieceSizeWhileHolding = .2f;
     private Piece holdingPiece;
+    private Piece pieceWhereWasPointetAd;
 
-    //UI Raycast
-    GraphicRaycaster raycaster;
+    [Header("Raycating")]
+    [SerializeField] GraphicRaycaster boardRaycast;
+    [SerializeField] GraphicRaycaster piecesRaycast;
     PointerEventData pointerEventData;
     EventSystem eventSystem;
 
+    [Header("Input")]
+    [SerializeField] float timeBeforeDragging = .15f;
+    private float beforeDragTimer;
+    private bool activeDraggingTimer;
+
     private void Awake()
     {
+        instance = this;
+
         //Raycast
-        raycaster = GetComponent<GraphicRaycaster>();
         eventSystem = GetComponent<EventSystem>();
 
         //Input
@@ -40,42 +49,62 @@ public class InputSystem : MonoBehaviour
         positionAction = playerInput.actions["TouchPosition"];
         tapAction = playerInput.actions["Tap"];
         pressScreen = playerInput.actions["PrimaryContact"];
-
-        mainCam = Camera.main;
     }
 
     private void OnEnable()
     {
+        //Input
         tapAction.started += Click;
+        
+        pressScreen.started += BeginDrag;
         pressScreen.canceled += Release;
+
+        //Timer
+        pressScreen.started += TurnOnTimer;
+        pressScreen.canceled += TurnOffTimer;
     }
 
     private void OnDisable()
     {
+        //Input
         tapAction.started -= Click;
+
+        pressScreen.started -= BeginDrag;
         pressScreen.canceled -= Release;
+
+        //Timer
+        pressScreen.started -= TurnOnTimer;
+        pressScreen.canceled -= TurnOffTimer;
     }
 
     private void Update()
     {
-        //Drag
-        if (positionAction.WasPerformedThisFrame())
+        if(activeDraggingTimer && pieceWhereWasPointetAd != null)
         {
-            touchPosition = Touchscreen.current.primaryTouch.position.ReadValue();
-            Drag();
+            timeBeforeDragging += Time.deltaTime;
+
+            if(timeBeforeDragging > beforeDragTimer)
+            {
+                timeBeforeDragging = 0;
+
+                holdingPiece = pieceWhereWasPointetAd;
+                
+                holdingPiece.transform.SetParent(moveingPiecesHolder.transform);
+            }
         }
+
+        //Drag
+        if(positionAction.WasPerformedThisFrame())
+            touchPosition = Touchscreen.current.primaryTouch.position.ReadValue();
+        if (holdingPiece != null)
+            holdingPiece.OnDrag(pointerEventData);
     }
 
-    private void Release(InputAction.CallbackContext context)
+    List<RaycastResult> HitDetection(Vector2 inputPosition, GraphicRaycaster raycaster)
     {
-        Debug.Log("Release");
-
-        //Touch position
-        touchPosition = Touchscreen.current.primaryTouch.position.ReadValue();
-
         // Create a pointer event data with the current input position
         pointerEventData = new PointerEventData(eventSystem);
-        pointerEventData.position = touchPosition;
+        pointerEventData.position = inputPosition;
 
         // Create a list to store the raycast results
         List<RaycastResult> results = new List<RaycastResult>();
@@ -83,7 +112,39 @@ public class InputSystem : MonoBehaviour
         // Raycast using the GraphicRaycaster
         raycaster.Raycast(pointerEventData, results);
 
-        foreach (RaycastResult result in results)
+        return results;
+    }
+
+    private void BeginDrag(InputAction.CallbackContext context)
+    {
+        if (holdingPiece != null)
+            return;
+
+        touchPosition = Touchscreen.current.primaryTouch.position.ReadValue();
+        List<RaycastResult> deteced = HitDetection(touchPosition, piecesRaycast);
+
+        foreach (RaycastResult result in deteced)
+        {
+            if(result.gameObject.TryGetComponent(out Piece targetPiece))
+            {
+                pieceWhereWasPointetAd = targetPiece;
+            }
+        }
+    }
+
+    private void Release(InputAction.CallbackContext context)
+    {
+        if (holdingPiece == null)
+            return;
+
+        Debug.Log("Release");
+
+        bool canPlacePiece = false;
+
+        touchPosition = Touchscreen.current.primaryTouch.position.ReadValue();
+        List<RaycastResult> deteced = HitDetection(touchPosition, boardRaycast);
+
+        foreach (RaycastResult result in deteced)
         {
             Debug.Log(result.gameObject.name);
 
@@ -93,29 +154,32 @@ public class InputSystem : MonoBehaviour
                 bool placeResult = Board.Instance.PlacePiece(cell.gridPos, holdingPiece);
 
                 if (placeResult)
-                    holdingPiece = null;
-                else
                 {
-                    //Return to UI
+                    //Place piece on board
+                    holdingPiece = null;
+                    canPlacePiece = true;
                 }
             }
         }    
+
+        if(!canPlacePiece)
+        {
+            //Return to Holder
+            holdingPiece.transform.SetParent(piecesHolder);
+            holdingPiece.GetComponent<RectTransform>().anchoredPosition = Vector2.zero;
+            holdingPiece = null;
+        }
     }
+
+    private void TurnOnTimer(InputAction.CallbackContext context) => activeDraggingTimer = true;
+    private void TurnOffTimer(InputAction.CallbackContext context) => activeDraggingTimer = false;
 
     private void Click(InputAction.CallbackContext context)
     {
-        Debug.Log("Cliked");
-
-    }
-
-    private void Drag()
-    {
-        if (holdingPiece == null)
-            return;
-
-        //var result = mainCam.ScreenToWorldPoint(touchPosition);
-        //result.z = 0;
-
-        holdingPiece.transform.position = touchPosition;
+        if(pieceWhereWasPointetAd != null)
+        {
+            Debug.Log("C");
+            pieceWhereWasPointetAd.Rotate();
+        }
     }
 }

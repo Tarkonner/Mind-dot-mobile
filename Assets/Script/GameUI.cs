@@ -8,8 +8,10 @@ public class GameUI : MonoBehaviour
     [Header("Holders")]
     [SerializeField] GameObject goalHolder;
     [SerializeField] GameObject pieceHolder;
+    [SerializeField] GameObject pieceBackground;
+    [SerializeField] float paddingBetweenPieces = 300;
 
-    [SerializeField] GameObject[] pices;
+    [SerializeField] GameObject[] pieces;
     [SerializeField] GameObject[] goals;
 
     void Start()
@@ -22,10 +24,19 @@ public class GameUI : MonoBehaviour
         }
 
         //Pieces
-        for (int i = 0;i < pices.Length; i++)
+        float offset = 0;
+        if(pieces.Length > 1)
         {
-            GameObject spawn = Instantiate(pices[i], transform);
-            spawn.transform.SetParent(pieceHolder.transform);
+            offset = paddingBetweenPieces * (pieces.Length - 1) / 2;
+        }
+        for (int i = 0;i < pieces.Length; i++)
+        {
+            Vector2 targetPos = new Vector2(i * paddingBetweenPieces - offset, 0);
+
+            GameObject background = Instantiate(pieceBackground, pieceHolder.transform);
+            background.GetComponent<RectTransform>().anchoredPosition = targetPos;
+            GameObject spawn = Instantiate(pieces[i], background.transform);
+            spawn.GetComponent<RectTransform>().anchoredPosition = Vector2.zero;
         }
     }
 }
