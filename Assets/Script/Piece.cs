@@ -116,6 +116,7 @@ public class Piece : MonoBehaviour
 
     public void Lift()
     {
-
+        //Consider making a mathematical circle around the center of the piece. Lifting within the circle simply uses the lift location.
+        //Lifting outside the circle snaps into the circle's edge.
     }
 }
