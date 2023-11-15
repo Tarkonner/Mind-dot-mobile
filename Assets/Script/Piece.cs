@@ -3,13 +3,15 @@ using UnityEngine;
 
 public class Piece : MonoBehaviour
 {
+    [SerializeField] private GameObject dotPrefab;
+
     public Vector2[] gridPosArray;
     public Dot[] dotsArray;
     public Vector2 pivotPoint;
 
     public GameObject testPivotPoint;
 
-    public float dotSpacing;
+    [SerializeField] private float dotSpacing;
 
     private List<LineRenderer> connections;
 
@@ -35,6 +37,46 @@ public class Piece : MonoBehaviour
     }
     public void LoadPiece()
     {
+        //Test piece
+        Vector2[] dotCoordinats = new Vector2[]
+            {new Vector2(0, 0), new Vector2(0, 1), new Vector2(1, 0)};
+
+        gridPosArray = dotCoordinats;
+
+        Dot[] testDots = new Dot[3];
+        dotsArray = new Dot[testDots.Length];
+
+        for (int i = 0; i < testDots.Length; i++)
+        {
+            GameObject spawn = Instantiate(dotPrefab, transform);
+
+            Dot targetDot = spawn.GetComponent<Dot>();
+
+            testDots[i] = targetDot;
+            dotsArray[i] = targetDot;
+
+            RectTransform rect = spawn.GetComponent<RectTransform>();
+
+            rect.anchoredPosition = new Vector2(dotCoordinats[i].x * dotSpacing, dotCoordinats[i].y * dotSpacing);
+
+            switch(i)
+            {
+                case 0:
+                    testDots[i].dotType = DotType.Red;
+                    break;
+                case 1:
+                    testDots[i].dotType = DotType.Blue;
+                    break;
+                case 2:
+                    testDots[i].dotType = DotType.Yellow;
+                    break;
+            }
+
+            targetDot.Setup(testDots[i].dotType);
+        }
+
+
+
         //Goes through each dot and measures grid distance to each other dot.
         // Distance is used to differentiate adjacent and diagonal dot connections. 
         for (int i = 0; i < dotsArray.Length; i++)

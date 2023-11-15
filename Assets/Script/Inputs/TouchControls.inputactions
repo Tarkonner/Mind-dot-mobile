@@ -24,7 +24,7 @@
                     "initialStateCheck": true
                 },
                 {
-                    "name": "PrimaryContract",
+                    "name": "PrimaryContact",
                     "type": "Button",
                     "id": "91c1f17d-45c3-426d-8a57-8f46dedc3c64",
                     "expectedControlType": "Button",
@@ -63,7 +63,7 @@
                     "interactions": "",
                     "processors": "",
                     "groups": "",
-                    "action": "PrimaryContract",
+                    "action": "PrimaryContact",
                     "isComposite": false,
                     "isPartOfComposite": false
                 }

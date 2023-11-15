@@ -88,6 +88,7 @@ public class Board : MonoBehaviour
                         Dot makedDot = spawn.GetComponent<Dot>();
                         Dot d = levelLayer[x, y].occupying as Dot;
                         makedDot.dotType = d.dotType;
+                        makedDot.Setup(makedDot.dotType);
                         PlaceDot(new Vector2Int(x, y), makedDot);
                     }
                 }
