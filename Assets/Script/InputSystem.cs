@@ -24,7 +24,7 @@ public class InputSystem : MonoBehaviour
     [SerializeField] Transform piecesHolder;
     [SerializeField] private float pieceSizeWhileHolding = .2f;
     private Piece holdingPiece;
-    private Piece pieceWhereWasPointetAd;
+    private Transform takenFrom;
 
     [Header("Raycating")]
     [SerializeField] GraphicRaycaster boardRaycast;
@@ -53,27 +53,18 @@ public class InputSystem : MonoBehaviour
 
     private void OnEnable()
     {
-        //Input
-        //tapAction.started += Tap;
-        
         pressScreen.started += BeginDrag;
         pressScreen.canceled += Release;
     }
 
     private void OnDisable()
     {
-        //Input
-        //tapAction.started -= Tap;
-
         pressScreen.started -= BeginDrag;
         pressScreen.canceled -= Release;
     }
 
     private void Update()
     {
-        //holdingPiece = pieceWhereWasPointetAd;
-        //holdingPiece.transform.SetParent(moveingPiecesHolder.transform);
-
         //Drag
         if (positionAction.WasPerformedThisFrame())
         {
@@ -115,8 +106,10 @@ public class InputSystem : MonoBehaviour
             if(result.gameObject.TryGetComponent(out Piece targetPiece))
             {
                 //Set piece to moveing
+                takenFrom = targetPiece.transform;
                 holdingPiece = targetPiece;
                 holdingPiece.transform.SetParent(moveingPiecesHolder.transform);
+                break;
             }
         }
     }
@@ -133,6 +126,8 @@ public class InputSystem : MonoBehaviour
         {
             Debug.Log("Tap");
             Tap();
+            holdingPiece.ReturnToHolder();
+            holdingPiece = null;
         }
         else
         {
@@ -155,20 +150,18 @@ public class InputSystem : MonoBehaviour
                         //Place piece on board
                         holdingPiece = null;
                         canPlacePiece = true;
+                        break;
                     }
                 }
             }
 
             if (!canPlacePiece)
             {
-                //Return to Holder
-                holdingPiece.transform.SetParent(piecesHolder);
-                holdingPiece.GetComponent<RectTransform>().anchoredPosition = Vector2.zero;
+                holdingPiece.ReturnToHolder();
                 holdingPiece = null;
             }
         }
     }
-
 
     private void Tap()
     {
