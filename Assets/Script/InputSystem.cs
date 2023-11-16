@@ -8,6 +8,8 @@ using UnityEngine.UI;
 
 public class InputSystem : MonoBehaviour
 {
+    public static InputSystem instance;
+
     //Input
     private PlayerInput playerInput;
 
@@ -15,67 +17,76 @@ public class InputSystem : MonoBehaviour
     private InputAction positionAction;
     private InputAction pressScreen;
 
-    private Vector2 touchPosition;
-
-
-    private Camera mainCam;
+    public Vector2 touchPosition { get; private set; }
 
     [Header("Pieces")]
+    [SerializeField] private GameObject moveingPiecesHolder;
+    [SerializeField] Transform piecesHolder;
     [SerializeField] private float pieceSizeWhileHolding = .2f;
     private Piece holdingPiece;
+    private Piece pieceWhereWasPointetAd;
 
-    //UI Raycast
-    GraphicRaycaster raycaster;
+    [Header("Raycating")]
+    [SerializeField] GraphicRaycaster boardRaycast;
+    [SerializeField] GraphicRaycaster piecesRaycast;
     PointerEventData pointerEventData;
     EventSystem eventSystem;
 
+    [Header("Input")]
+    [SerializeField] float distanceBeforeSwipe = 50;
+    private Vector2 contactPosition;
+
     private void Awake()
     {
+        instance = this;
+
         //Raycast
-        raycaster = GetComponent<GraphicRaycaster>();
         eventSystem = GetComponent<EventSystem>();
+        pointerEventData = new PointerEventData(eventSystem);
 
         //Input
         playerInput = GetComponent<PlayerInput>();
         positionAction = playerInput.actions["TouchPosition"];
         tapAction = playerInput.actions["Tap"];
         pressScreen = playerInput.actions["PrimaryContact"];
-
-        mainCam = Camera.main;
     }
 
     private void OnEnable()
     {
-        tapAction.started += Click;
+        //Input
+        //tapAction.started += Tap;
+        
+        pressScreen.started += BeginDrag;
         pressScreen.canceled += Release;
     }
 
     private void OnDisable()
     {
-        tapAction.started -= Click;
+        //Input
+        //tapAction.started -= Tap;
+
+        pressScreen.started -= BeginDrag;
         pressScreen.canceled -= Release;
     }
 
     private void Update()
     {
+        //holdingPiece = pieceWhereWasPointetAd;
+        //holdingPiece.transform.SetParent(moveingPiecesHolder.transform);
+
         //Drag
         if (positionAction.WasPerformedThisFrame())
         {
             touchPosition = Touchscreen.current.primaryTouch.position.ReadValue();
-            Drag();
         }
+        if (holdingPiece != null)
+            holdingPiece.OnDrag(pointerEventData);
     }
 
-    private void Release(InputAction.CallbackContext context)
+    List<RaycastResult> HitDetection(Vector2 inputPosition, GraphicRaycaster raycaster)
     {
-        Debug.Log("Release");
-
-        //Touch position
-        touchPosition = Touchscreen.current.primaryTouch.position.ReadValue();
-
-        // Create a pointer event data with the current input position
-        pointerEventData = new PointerEventData(eventSystem);
-        pointerEventData.position = touchPosition;
+        // Create a pointer event data with the current input position        
+        pointerEventData.position = inputPosition;
 
         // Create a list to store the raycast results
         List<RaycastResult> results = new List<RaycastResult>();
@@ -83,39 +94,87 @@ public class InputSystem : MonoBehaviour
         // Raycast using the GraphicRaycaster
         raycaster.Raycast(pointerEventData, results);
 
-        foreach (RaycastResult result in results)
-        {
-            Debug.Log(result.gameObject.name);
-
-            //See if we hit a cell
-            if (result.gameObject.TryGetComponent(out Cell cell))
-            {
-                bool placeResult = Board.Instance.PlacePiece(cell.gridPos, holdingPiece);
-
-                if (placeResult)
-                    holdingPiece = null;
-                else
-                {
-                    //Return to UI
-                }
-            }
-        }    
+        return results;
     }
 
-    private void Click(InputAction.CallbackContext context)
+    private void BeginDrag(InputAction.CallbackContext context)
     {
-        Debug.Log("Cliked");
+        if (holdingPiece != null)
+            return;
 
+        touchPosition = Touchscreen.current.primaryTouch.position.ReadValue();
+
+        //Save where first touching
+        contactPosition = touchPosition;
+
+        //Raycast
+        List<RaycastResult> deteced = HitDetection(touchPosition, piecesRaycast);
+
+        foreach (RaycastResult result in deteced)
+        {
+            if(result.gameObject.TryGetComponent(out Piece targetPiece))
+            {
+                //Set piece to moveing
+                holdingPiece = targetPiece;
+                holdingPiece.transform.SetParent(moveingPiecesHolder.transform);
+            }
+        }
     }
 
-    private void Drag()
+    private void Release(InputAction.CallbackContext context)
     {
         if (holdingPiece == null)
             return;
 
-        //var result = mainCam.ScreenToWorldPoint(touchPosition);
-        //result.z = 0;
+        touchPosition = Touchscreen.current.primaryTouch.position.ReadValue();
 
-        holdingPiece.transform.position = touchPosition;
+        //Tap or swipe
+        if (Vector2.Distance(contactPosition, touchPosition) < distanceBeforeSwipe)
+        {
+            Debug.Log("Tap");
+            Tap();
+        }
+        else
+        {
+            Debug.Log("Place");
+            bool canPlacePiece = false;
+
+            //Raycast
+            List<RaycastResult> deteced = HitDetection(touchPosition, boardRaycast);
+            foreach (RaycastResult result in deteced)
+            {
+                Debug.Log(result.gameObject.name);
+
+                //See if we hit a cell
+                if (result.gameObject.TryGetComponent(out Cell cell))
+                {
+                    bool placeResult = Board.Instance.PlacePiece(cell.gridPos, holdingPiece);
+
+                    if (placeResult)
+                    {
+                        //Place piece on board
+                        holdingPiece = null;
+                        canPlacePiece = true;
+                    }
+                }
+            }
+
+            if (!canPlacePiece)
+            {
+                //Return to Holder
+                holdingPiece.transform.SetParent(piecesHolder);
+                holdingPiece.GetComponent<RectTransform>().anchoredPosition = Vector2.zero;
+                holdingPiece = null;
+            }
+        }
+    }
+
+
+    private void Tap()
+    {
+        if(holdingPiece != null)
+        {
+            holdingPiece.Rotate();
+        }
     }
 }
