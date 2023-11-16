@@ -111,6 +111,18 @@ public class InputSystem : MonoBehaviour
                 holdingPiece.transform.SetParent(moveingPiecesHolder.transform);
                 break;
             }
+            else if(result.gameObject.TryGetComponent(out Cell targetCell))
+            {
+                Dot targetDot = null;
+                if (targetCell.occupying is Dot)
+                {
+                    targetDot = (Dot)targetCell.occupying;
+                    if(targetDot.parentPiece != null)
+                    {
+
+                    }
+                }
+            }
         }
     }
 
@@ -148,6 +160,7 @@ public class InputSystem : MonoBehaviour
                     if (placeResult)
                     {
                         //Place piece on board
+                        holdingPiece.transform.SetParent(Board.Instance.transform);
                         holdingPiece = null;
                         canPlacePiece = true;
                         break;

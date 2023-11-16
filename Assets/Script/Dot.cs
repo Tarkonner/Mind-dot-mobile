@@ -9,12 +9,18 @@ public class Dot : MonoBehaviour, IOccupying
 
     private bool isConnected;
 
+    public Piece parentPiece;
+
     //Consider moving Grid Position storage into here.
 
     public bool IsConnected { get => isConnected; set => isConnected = value; }
 
-    public void Setup(DotType targetType)
+    public void Setup(DotType targetType, Piece parentPiece = null)
     {
+        //Is part of a piece
+        this.parentPiece = parentPiece;
+
+        //Set color
         Image renderer = GetComponent<Image>();
         
         switch (targetType)

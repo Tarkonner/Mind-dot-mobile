@@ -84,7 +84,7 @@ public class Piece : MonoBehaviour, IDragHandler
                     break;
             }
 
-            targetDot.Setup(testDots[i].dotType);
+            targetDot.Setup(testDots[i].dotType, this);
         }
 
 

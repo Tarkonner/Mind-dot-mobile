@@ -173,9 +173,16 @@ public class Board : MonoBehaviour
 
         return result;
     }
+    
+    public void RemoveDot(Vector2Int coodinat)
+    {
+        grid[coodinat.x, coodinat.y].occupying = null;
+    }
 
     public Piece PickupPiece(Vector2Int coordinat)
     {
+
+
         return null;
     }
     #endregion
