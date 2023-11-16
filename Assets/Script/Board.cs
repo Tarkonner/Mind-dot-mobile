@@ -179,11 +179,14 @@ public class Board : MonoBehaviour
         grid[coodinat.x, coodinat.y].occupying = null;
     }
 
-    public Piece PickupPiece(Vector2Int coordinat)
+    public void PickupPiece(Piece targetPiece)
     {
-
-
-        return null;
+        foreach(Dot d in targetPiece.dotsArray)
+        {
+            Vector2Int coordinats = d.GetComponentInParent<Cell>().gridPos;
+            RemoveDot(coordinats);
+            d.transform.SetParent(targetPiece.transform);
+        }
     }
     #endregion
 }

@@ -98,10 +98,9 @@ public class InputSystem : MonoBehaviour
         //Save where first touching
         contactPosition = touchPosition;
 
-        //Raycast
-        List<RaycastResult> deteced = HitDetection(touchPosition, piecesRaycast);
-
-        foreach (RaycastResult result in deteced)
+        //Raycast Piecehodler
+        List<RaycastResult> piecesDeteced = HitDetection(touchPosition, piecesRaycast);
+        foreach (RaycastResult result in piecesDeteced)
         {
             if(result.gameObject.TryGetComponent(out Piece targetPiece))
             {
@@ -111,15 +110,24 @@ public class InputSystem : MonoBehaviour
                 holdingPiece.transform.SetParent(moveingPiecesHolder.transform);
                 break;
             }
-            else if(result.gameObject.TryGetComponent(out Cell targetCell))
+        }
+
+        //Board detection
+        List<RaycastResult> boardDection = HitDetection(touchPosition, boardRaycast);
+        foreach (RaycastResult result in boardDection)
+        {
+            if (result.gameObject.TryGetComponent(out Cell targetCell))
             {
                 Dot targetDot = null;
                 if (targetCell.occupying is Dot)
                 {
                     targetDot = (Dot)targetCell.occupying;
-                    if(targetDot.parentPiece != null)
+                    if (targetDot.parentPiece != null)
                     {
-
+                        holdingPiece = targetDot.parentPiece;
+                        holdingPiece.transform.SetParent(moveingPiecesHolder.transform);
+                        Board.Instance.PickupPiece(holdingPiece);
+                        holdingPiece.GetComponent<Image>().raycastTarget = true;
                     }
                 }
             }
@@ -161,6 +169,7 @@ public class InputSystem : MonoBehaviour
                     {
                         //Place piece on board
                         holdingPiece.transform.SetParent(Board.Instance.transform);
+                        holdingPiece.GetComponent<Image>().raycastTarget = false;
                         holdingPiece = null;
                         canPlacePiece = true;
                         break;
