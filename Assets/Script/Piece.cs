@@ -19,6 +19,8 @@ public class Piece : MonoBehaviour, IDragHandler
 
     private bool rotatable = true;
 
+    private Transform pieceHolder;
+
     public bool testRotate;
 
     int testTimer = 0;
@@ -30,8 +32,10 @@ public class Piece : MonoBehaviour, IDragHandler
 
     public void Start()
     {
+        pieceHolder = transform.parent;
         LoadPiece();
         testPivotPoint.transform.localPosition = pivotPoint;
+
     }
     public void Update()
     {
@@ -173,5 +177,11 @@ public class Piece : MonoBehaviour, IDragHandler
     {
         //Debug.Log($"Draging: {gameObject.name}");
         rectTransform.position = InputSystem.instance.touchPosition;
+    }
+
+    public void ReturnToHolder()
+    {
+        gameObject.transform.SetParent(pieceHolder);
+        rectTransform.anchoredPosition = Vector2.zero;
     }
 }
