@@ -34,6 +34,7 @@ public class InputSystem : MonoBehaviour
 
     [Header("Input")]
     [SerializeField] float distanceBeforeSwipe = 50;
+    [SerializeField] RectTransform rotateLine;
     private Vector2 contactPosition;
 
     private void Awake()
@@ -187,8 +188,9 @@ public class InputSystem : MonoBehaviour
 
     private void Tap()
     {
-        if(holdingPiece != null)
+        if(holdingPiece != null && touchPosition.y < rotateLine.position.y)
         {
+            Debug.Log($"Tocuh positon y: {touchPosition.y}");
             holdingPiece.Rotate();
         }
     }
