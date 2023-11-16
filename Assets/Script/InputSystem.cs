@@ -33,9 +33,8 @@ public class InputSystem : MonoBehaviour
     EventSystem eventSystem;
 
     [Header("Input")]
-    [SerializeField] float timeBeforeDragging = .15f;
-    private float beforeDragTimer;
-    private bool activeDraggingTimer;
+    [SerializeField] float distanceBeforeSwipe = 50;
+    private Vector2 contactPosition;
 
     private void Awake()
     {
@@ -43,6 +42,7 @@ public class InputSystem : MonoBehaviour
 
         //Raycast
         eventSystem = GetComponent<EventSystem>();
+        pointerEventData = new PointerEventData(eventSystem);
 
         //Input
         playerInput = GetComponent<PlayerInput>();
@@ -54,56 +54,38 @@ public class InputSystem : MonoBehaviour
     private void OnEnable()
     {
         //Input
-        tapAction.started += Click;
+        //tapAction.started += Tap;
         
         pressScreen.started += BeginDrag;
         pressScreen.canceled += Release;
-
-        //Timer
-        pressScreen.started += TurnOnTimer;
-        pressScreen.canceled += TurnOffTimer;
     }
 
     private void OnDisable()
     {
         //Input
-        tapAction.started -= Click;
+        //tapAction.started -= Tap;
 
         pressScreen.started -= BeginDrag;
         pressScreen.canceled -= Release;
-
-        //Timer
-        pressScreen.started -= TurnOnTimer;
-        pressScreen.canceled -= TurnOffTimer;
     }
 
     private void Update()
     {
-        if(activeDraggingTimer && pieceWhereWasPointetAd != null)
-        {
-            timeBeforeDragging += Time.deltaTime;
-
-            if(timeBeforeDragging > beforeDragTimer)
-            {
-                timeBeforeDragging = 0;
-
-                holdingPiece = pieceWhereWasPointetAd;
-                
-                holdingPiece.transform.SetParent(moveingPiecesHolder.transform);
-            }
-        }
+        //holdingPiece = pieceWhereWasPointetAd;
+        //holdingPiece.transform.SetParent(moveingPiecesHolder.transform);
 
         //Drag
-        if(positionAction.WasPerformedThisFrame())
+        if (positionAction.WasPerformedThisFrame())
+        {
             touchPosition = Touchscreen.current.primaryTouch.position.ReadValue();
+        }
         if (holdingPiece != null)
             holdingPiece.OnDrag(pointerEventData);
     }
 
     List<RaycastResult> HitDetection(Vector2 inputPosition, GraphicRaycaster raycaster)
     {
-        // Create a pointer event data with the current input position
-        pointerEventData = new PointerEventData(eventSystem);
+        // Create a pointer event data with the current input position        
         pointerEventData.position = inputPosition;
 
         // Create a list to store the raycast results
@@ -121,13 +103,20 @@ public class InputSystem : MonoBehaviour
             return;
 
         touchPosition = Touchscreen.current.primaryTouch.position.ReadValue();
+
+        //Save where first touching
+        contactPosition = touchPosition;
+
+        //Raycast
         List<RaycastResult> deteced = HitDetection(touchPosition, piecesRaycast);
 
         foreach (RaycastResult result in deteced)
         {
             if(result.gameObject.TryGetComponent(out Piece targetPiece))
             {
-                pieceWhereWasPointetAd = targetPiece;
+                //Set piece to moveing
+                holdingPiece = targetPiece;
+                holdingPiece.transform.SetParent(moveingPiecesHolder.transform);
             }
         }
     }
@@ -137,49 +126,55 @@ public class InputSystem : MonoBehaviour
         if (holdingPiece == null)
             return;
 
-        Debug.Log("Release");
-
-        bool canPlacePiece = false;
-
         touchPosition = Touchscreen.current.primaryTouch.position.ReadValue();
-        List<RaycastResult> deteced = HitDetection(touchPosition, boardRaycast);
 
-        foreach (RaycastResult result in deteced)
+        //Tap or swipe
+        if (Vector2.Distance(contactPosition, touchPosition) < distanceBeforeSwipe)
         {
-            Debug.Log(result.gameObject.name);
+            Debug.Log("Tap");
+            Tap();
+        }
+        else
+        {
+            Debug.Log("Place");
+            bool canPlacePiece = false;
 
-            //See if we hit a cell
-            if (result.gameObject.TryGetComponent(out Cell cell))
+            //Raycast
+            List<RaycastResult> deteced = HitDetection(touchPosition, boardRaycast);
+            foreach (RaycastResult result in deteced)
             {
-                bool placeResult = Board.Instance.PlacePiece(cell.gridPos, holdingPiece);
+                Debug.Log(result.gameObject.name);
 
-                if (placeResult)
+                //See if we hit a cell
+                if (result.gameObject.TryGetComponent(out Cell cell))
                 {
-                    //Place piece on board
-                    holdingPiece = null;
-                    canPlacePiece = true;
+                    bool placeResult = Board.Instance.PlacePiece(cell.gridPos, holdingPiece);
+
+                    if (placeResult)
+                    {
+                        //Place piece on board
+                        holdingPiece = null;
+                        canPlacePiece = true;
+                    }
                 }
             }
-        }    
 
-        if(!canPlacePiece)
-        {
-            //Return to Holder
-            holdingPiece.transform.SetParent(piecesHolder);
-            holdingPiece.GetComponent<RectTransform>().anchoredPosition = Vector2.zero;
-            holdingPiece = null;
+            if (!canPlacePiece)
+            {
+                //Return to Holder
+                holdingPiece.transform.SetParent(piecesHolder);
+                holdingPiece.GetComponent<RectTransform>().anchoredPosition = Vector2.zero;
+                holdingPiece = null;
+            }
         }
     }
 
-    private void TurnOnTimer(InputAction.CallbackContext context) => activeDraggingTimer = true;
-    private void TurnOffTimer(InputAction.CallbackContext context) => activeDraggingTimer = false;
 
-    private void Click(InputAction.CallbackContext context)
+    private void Tap()
     {
-        if(pieceWhereWasPointetAd != null)
+        if(holdingPiece != null)
         {
-            Debug.Log("C");
-            pieceWhereWasPointetAd.Rotate();
+            holdingPiece.Rotate();
         }
     }
 }
