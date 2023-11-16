@@ -224,11 +224,11 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 6419171983027597632, guid: 9cd0cb406c8a10e4cab49d5ba0333347, type: 3}
       propertyPath: m_SizeDelta.x
-      value: 900
+      value: 1000
       objectReference: {fileID: 0}
     - target: {fileID: 6419171983027597632, guid: 9cd0cb406c8a10e4cab49d5ba0333347, type: 3}
       propertyPath: m_SizeDelta.y
-      value: 900
+      value: 1000
       objectReference: {fileID: 0}
     - target: {fileID: 6419171983027597632, guid: 9cd0cb406c8a10e4cab49d5ba0333347, type: 3}
       propertyPath: m_LocalPosition.x
@@ -281,6 +281,14 @@ PrefabInstance:
     - target: {fileID: 7481191788362027120, guid: 9cd0cb406c8a10e4cab49d5ba0333347, type: 3}
       propertyPath: m_Name
       value: Board
+      objectReference: {fileID: 0}
+    - target: {fileID: 8907170997581844231, guid: 9cd0cb406c8a10e4cab49d5ba0333347, type: 3}
+      propertyPath: gridSize
+      value: 135
+      objectReference: {fileID: 0}
+    - target: {fileID: 8907170997581844231, guid: 9cd0cb406c8a10e4cab49d5ba0333347, type: 3}
+      propertyPath: spaceingBetweenCells
+      value: 8
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
@@ -1172,7 +1180,7 @@ MonoBehaviour:
   pieceSizeWhileHolding: 0.35
   boardRaycast: {fileID: 321381868}
   piecesRaycast: {fileID: 1403032273}
-  distanceBeforeSwipe: 50
+  distanceBeforeSwipe: 25
   rotateLine: {fileID: 431044420}
 --- !u!114 &1886755115
 MonoBehaviour:

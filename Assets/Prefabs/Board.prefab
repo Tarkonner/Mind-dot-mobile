@@ -49,6 +49,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   cellPrefab: {fileID: 7296703449727020553, guid: b51ac518b1a34124486016406b545702, type: 3}
-  gridSize: 100
+  gridSize: 150
   spaceingBetweenCells: 10
   testDot: {fileID: 1995507298133785622, guid: 0f48472b57c3942478e34342026ce7ae, type: 3}
