@@ -32,19 +32,11 @@ public class Board : MonoBehaviour
     public void LoadLevel(int level)
     {
         //Test level
-        Vector2Int levelSize = new Vector2Int(6, 6);
+        Vector2Int levelSize = new Vector2Int(5, 3);
         placementLayer = new bool[levelSize.x, levelSize.y];        
         levelLayer = new Cell[levelSize.x, levelSize.y];
 
         grid = new Cell[levelSize.x, levelSize.y];
-
-        //Vector2 targetOffset = new Vector2(
-        //    ((float)placementLayer.GetLength(0) / 2 * gridSize) + (placementLayer.GetLength(0) - 1) * spaceingBetweenCells / 2 + gridSize / 2,
-        //    ((float)placementLayer.GetLength(1) / 2 * gridSize) + (placementLayer.GetLength(1) - 1) * spaceingBetweenCells / 2 + gridSize / 2);
-
-        //Vector2 gridStartPosition = new Vector2(
-        //    -(((levelSize.x - 1) * gridSize) + (levelSize.x) * spaceingBetweenCells) / 2,
-        //    -(((levelSize.y - 1) * gridSize) + (levelSize.y) * spaceingBetweenCells) / 2);
 
         Vector2 gridStartPosition = new Vector2(
             ((levelSize.x - 1) * (gridSize + spaceingBetweenCells) - spaceingBetweenCells) / 2,
