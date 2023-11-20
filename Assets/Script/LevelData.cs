@@ -2,7 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-[System.Serializable]
+[ES3Serializable]
 public class LevelData
 {
     public string test;
@@ -10,8 +10,7 @@ public class LevelData
     public int levelIndex;
 
     //Board
-    public bool[,] placementLayer;
-    public Cell[,] levelLayer;
+    public SerializableCell[,] levelCells;
 
     
     public Piece[] levelsPieces;

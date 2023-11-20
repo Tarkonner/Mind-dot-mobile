@@ -1,3 +1,4 @@
+using ES3Types;
 using System;
 using System.Collections;
 using System.Collections.Generic;
@@ -8,8 +9,6 @@ public class Board : MonoBehaviour
     public static Board Instance;
 
     [Header("Grid system")]
-    private bool[,] placementLayer;
-    private Cell[,] levelLayer;
     public Cell[,] grid;
     [SerializeField] private GameObject cellPrefab;
     [SerializeField] private float gridSize;
@@ -19,23 +18,26 @@ public class Board : MonoBehaviour
 
     [SerializeField] GameObject testDot;
 
+    private bool testLoadedLevel = false;
+
     private void Awake()
     {
         Instance = this;
     }
 
-    private void Start()
+    private void Update()
     {
-        LoadLevel(0);
+        if (!testLoadedLevel && Input.GetKeyDown(KeyCode.K))
+        {
+            testLoadedLevel = true;
+            LevelManager.instance.LoadLevel(0);
+            Debug.Log("T");
+        }
     }
 
-    public void LoadLevel(int level)
+    public void LoadLevel(LevelData level)
     {
-        //Test level
-        Vector2Int levelSize = new Vector2Int(5, 3);
-        placementLayer = new bool[levelSize.x, levelSize.y];        
-        levelLayer = new Cell[levelSize.x, levelSize.y];
-
+        Vector2Int levelSize = new Vector2Int(level.levelCells.GetLength(0), level.levelCells.GetLength(1));
         grid = new Cell[levelSize.x, levelSize.y];
 
         Vector2 gridStartPosition = new Vector2(
@@ -43,32 +45,12 @@ public class Board : MonoBehaviour
             ((levelSize.y - 1) * (gridSize + spaceingBetweenCells) - spaceingBetweenCells) / 2);
         
 
-        for (int x = 0; x < placementLayer.GetLength(0); x++)
+        for (int x = 0; x < grid.GetLength(0); x++)
         {
-            for (int y = 0; y < placementLayer.GetLength(1); y++)
+            for (int y = 0; y < grid.GetLength(1); y++)
             {
-                //Placeholder level
-                if (x == 0 && y == 0)
-                    placementLayer[x, y] = false;
-                else if (y == 2 && x == 3)
-                    placementLayer[x, y] = false;
-                else if (x == 1 && y == 1)
-                {
-                    placementLayer[x, y] = true;
-                    Cell dotCell = new Cell();
-                    Dot d = new Dot();
-                    d.dotType = DotType.Blue;
-                    dotCell.occupying = d;
-                    levelLayer[x, y] = dotCell;
-                }
-                else
-                {
-                    placementLayer[x, y] = true;
-                    levelLayer[x, y] = new Cell();
-                }
-
                 //make grid
-                if(placementLayer[x, y])
+                if(!level.levelCells[x, y].isNullCell)
                 {
                     GameObject cellSpawn = Instantiate(cellPrefab, transform);
                     cellSpawn.name = $"Cell: {x}, {y}";
@@ -81,7 +63,8 @@ public class Board : MonoBehaviour
                     cellSpawn.GetComponent<RectTransform>().anchoredPosition = spawnPoint;
 
                     Cell cell = cellSpawn.GetComponent<Cell>();
-                    cell.occupying = levelLayer[x, y].occupying;
+                    cell.ConvertToCell(level.levelCells[x, y]);
+                    ////cell.occupying = grid[x, y].occupying;
                     grid[x, y] = cell;
                     cell.gridPos = new Vector2Int(x, y);
 
@@ -90,7 +73,7 @@ public class Board : MonoBehaviour
                     {
                         GameObject spawn = Instantiate(testDot, cellSpawn.transform);
                         Dot makedDot = spawn.GetComponent<Dot>();
-                        Dot d = levelLayer[x, y].occupying as Dot;
+                        Dot d = grid[x, y].occupying as Dot;
                         makedDot.dotType = d.dotType;
                         makedDot.Setup(makedDot.dotType);
                         PlaceDot(new Vector2Int(x, y), makedDot);

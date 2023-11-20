@@ -1,3 +1,5 @@
+using ES3Types;
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using Unity.VisualScripting;
@@ -25,16 +27,14 @@ public class LevelManager : MonoBehaviour
         SaveLevel();
     }
 
-    private void Update()
-    {
-        if (Input.GetKeyDown(KeyCode.Space))
-            LoadLevel(0);
-    }
-
     public void LoadLevel(int level)
     {
-        LevelData l = ES3.Load<LevelData>("1");
-        Debug.Log(l.test);
+        LevelData save = ES3.Load<LevelData>(level.ToString());
+
+        if (save != null)
+            Board.Instance.LoadLevel(save);
+        else
+            Debug.LogError($"Tried to load: [{level}], but was not found");
     }
 
     public void SaveLevel()
@@ -42,12 +42,43 @@ public class LevelManager : MonoBehaviour
         //Test level
         LevelData level = new LevelData();
         level.test = "testing";
-        level.levelIndex = 1;
+        level.levelIndex = 0;
 
         string key = level.levelIndex.ToString();
 
+        Vector2Int levelSize = new Vector2Int(5, 3);
+        SerializableCell[,] grid = new SerializableCell[levelSize.x, levelSize.y];
+        for (int x = 0; x < levelSize.x; x++)
+        {
+            for (int y = 0; y < levelSize.y; y++)
+            {
+                //Placeholder level
+                if (x == 0 && y == 0)
+                {
+                    grid[x, y] = new SerializableCell();
+                }
+                else if (y == 2 && x == 3)
+                    grid[x, y] = new SerializableCell();
+                else if (x == 1 && y == 1)
+                {
+                    Cell dotCell = new Cell();
+                    Dot d = new Dot();
+                    d.dotType = DotType.Blue;
+                    dotCell.occupying = d;
+                    grid[x, y] = new SerializableCell(dotCell);
+                }
+                else
+                {
+                    grid[x, y] = new SerializableCell(new Cell());
+                }
+            }
+        }
+
+        //Save grid
+        level.levelCells = grid;
+
         //Gate
-        if(ES3.KeyExists(key))
+        if (ES3.KeyExists(key))
         {
             Debug.Log("Need new key for level");
             return;
