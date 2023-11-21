@@ -75,7 +75,8 @@ public class Board : MonoBehaviour
 
                         //Load saved dot
                         SerializableDot seriDot = level.levelCells[x, y].occupying;
-                        makedDot = makedDot.ConvertToDot(seriDot);
+                        Dot savedDot = SaveConverter.ConvertToDot(seriDot);
+                        makedDot.Setup(savedDot.dotType);
 
                         //Place on Board
                         PlaceDot(new Vector2Int(x, y), makedDot);

@@ -173,18 +173,4 @@ public class Piece : MonoBehaviour, IDragHandler
         gameObject.transform.SetParent(pieceHolder);
         rectTransform.anchoredPosition = Vector2.zero;
     }
-
-    public SerializablePiece ConvertToSerializablePiece(Piece targetPiece)
-    {
-        SerializablePiece piece = new SerializablePiece();
-        //Position
-        piece.gridPosArray = targetPiece.gridPosArray;
-        //Dots
-        SerializableDot[] saveDots = new SerializableDot[targetPiece.dotsArray.Length];
-        for (int i = 0; i < targetPiece.dotsArray.Length; i++)
-            saveDots[i] = targetPiece.dotsArray[i].ConvertToSerializableDot(targetPiece.dotsArray[i]);
-        piece.dotsArray = saveDots;
-
-        return piece;
-    }
 }

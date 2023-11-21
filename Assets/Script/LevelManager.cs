@@ -92,7 +92,7 @@ public class LevelManager : MonoBehaviour
         Piece piece = new Piece();
         piece.gridPosArray = dotCoordinats;
         piece.dotsArray = pieceDots;
-        SerializablePiece sPiece = piece.ConvertToSerializablePiece(piece);
+        SerializablePiece sPiece = SaveConverter.ConvertToSerializablePiece(piece);
         savePieces[0] = sPiece;
 
         //P2
@@ -108,7 +108,7 @@ public class LevelManager : MonoBehaviour
         piece = new Piece();
         piece.gridPosArray = dotCoordinats;
         piece.dotsArray = pieceDots;
-        sPiece = piece.ConvertToSerializablePiece(piece);
+        sPiece = SaveConverter.ConvertToSerializablePiece(piece);
         savePieces[1] = sPiece;
 
         level.levelsPieces = savePieces;
