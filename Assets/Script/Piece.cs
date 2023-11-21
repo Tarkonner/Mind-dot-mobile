@@ -12,18 +12,19 @@ public class Piece : MonoBehaviour, IDragHandler
     public Dot[] dotsArray;
     public Vector2 pivotPoint;
 
-    public GameObject testPivotPoint;
     [SerializeField] private float dotSpacing;
 
     private List<UILine> connections = new List<UILine>();
 
     private bool rotatable = true;
 
+    private int rotationInt = 0;
+
+    public GameObject testPivotPoint;
     private Transform pieceHolder;
     private GameObject lineHolder;
 
     public bool testRotate;
-
     int testTimer = 0;
 
     private void Awake()
@@ -154,6 +155,7 @@ public class Piece : MonoBehaviour, IDragHandler
         {
             line.UpdateLine();
         }
+        rotationInt = (rotationInt + 1) % 4;
     }
 
     public void CreateLine(Dot dot1, Dot dot2)
