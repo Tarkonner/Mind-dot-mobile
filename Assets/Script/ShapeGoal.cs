@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
 
 public class ShapeGoal : MonoBehaviour
 {
@@ -28,6 +29,8 @@ public class ShapeGoal : MonoBehaviour
                 goalsizeY = (int)goalSpecifications[i].gridPos.y;
             }
         }
+        Image background = GetComponent<Image>();
+        background.color = new Color(0.85f, 0.85f, 0.85f, 1);
     }
 
     bool CheckFulfilment(Board board)
