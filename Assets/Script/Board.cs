@@ -52,30 +52,35 @@ public class Board : MonoBehaviour
                 //make grid
                 if(!level.levelCells[x, y].isNullCell)
                 {
+                    //Make Cell
                     GameObject cellSpawn = Instantiate(cellPrefab, transform);
                     cellSpawn.name = $"Cell: {x}, {y}";
 
+                    //Placement
                     Vector2 spawnPoint = new Vector2(
                         x * (gridSize + spaceingBetweenCells) - gridStartPosition.x - spaceingBetweenCells / 2,
                         y * (gridSize + spaceingBetweenCells) - gridStartPosition.y - spaceingBetweenCells / 2
                         );
-
                     cellSpawn.GetComponent<RectTransform>().anchoredPosition = spawnPoint;
 
+                    //Setup cell
                     Cell cell = cellSpawn.GetComponent<Cell>();
                     cell.ConvertToCell(level.levelCells[x, y]);
-                    ////cell.occupying = grid[x, y].occupying;
                     grid[x, y] = cell;
                     cell.gridPos = new Vector2Int(x, y);
 
                     //Spawn level
                     if (cell.occupying != null)
                     {
+                        //Make dot & get component
                         GameObject spawn = Instantiate(testDot, cellSpawn.transform);
                         Dot makedDot = spawn.GetComponent<Dot>();
-                        Dot d = grid[x, y].occupying as Dot;
-                        makedDot.dotType = d.dotType;
-                        makedDot.Setup(makedDot.dotType);
+
+                        //Load saved dot
+                        SerializableDot seriDot = level.levelCells[x, y].occupying;
+                        makedDot = makedDot.ConvertToDot(seriDot);
+
+                        //Place on Board
                         PlaceDot(new Vector2Int(x, y), makedDot);
                     }
                 }
