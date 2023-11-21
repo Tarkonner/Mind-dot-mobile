@@ -36,4 +36,29 @@ public class Dot : MonoBehaviour, IOccupying
                 break;
         }
     }
+
+    public Dot ConvertToDot(SerializableDot seriDot)
+    {
+        this.dotType = seriDot.dotType;
+        Setup(this.dotType);
+
+        return this;
+    }
+
+    public Dot ConvertToDot(SerializableDot seriDot, Piece targetPiece)
+    {
+        this.dotType = seriDot.dotType;
+        Setup(this.dotType);
+
+        this.parentPiece = targetPiece; 
+        
+        return this;
+    }
+
+    public SerializableDot ConvertToSerializableDot(Dot dot)
+    {
+        SerializableDot serializableDot = new SerializableDot();
+        serializableDot.dotType = dot.dotType;
+        return serializableDot;
+    }
 }
