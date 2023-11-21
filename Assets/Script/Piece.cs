@@ -88,7 +88,6 @@ public class Piece : MonoBehaviour, IDragHandler
                     if (i == j) continue;
 
                     float val = Vector2.Distance(gridPosArray[i], gridPosArray[j]);
-                    Debug.Log(val);
                     if (val > 1.5f) continue;
 
                     else if (val > 1.2f && !foundAdjacent)
