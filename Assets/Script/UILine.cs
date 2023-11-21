@@ -46,6 +46,8 @@ public class UILine : Graphic
     }
     public void UpdateLine()
     {
+        SetVerticesDirty();
+        /*
         vh.Clear();
 
         Vector2[] points = new Vector2[] { startPoint.anchoredPosition, endPoint.anchoredPosition };
@@ -55,6 +57,7 @@ public class UILine : Graphic
         }
 
         AddQuad(vh, points[0], points[1]);
+        */
     }
 
     private UIVertex[] SetVbo(Vector2[] vertices, Color color)
