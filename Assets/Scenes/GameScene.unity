@@ -724,7 +724,7 @@ GameObject:
   - component: {fileID: 1042911373}
   - component: {fileID: 1042911376}
   m_Layer: 5
-  m_Name: Moveing Canvas
+  m_Name: Moving Canvas
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
