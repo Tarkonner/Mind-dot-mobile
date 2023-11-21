@@ -12,18 +12,20 @@ public class Piece : MonoBehaviour, IDragHandler
     public Dot[] dotsArray;
     public Vector2 pivotPoint;
 
-    public GameObject testPivotPoint;
     [SerializeField] private float dotSpacing;
 
     private List<UILine> connections = new List<UILine>();
 
     private bool rotatable = true;
 
+    private int rotationInt = 0;
+
+    public GameObject testPivotPoint;
     private Transform pieceHolder;
     private GameObject lineHolder;
+    public float lineWidth = 10;
 
     public bool testRotate;
-
     int testTimer = 0;
 
     private void Awake()
@@ -50,6 +52,7 @@ public class Piece : MonoBehaviour, IDragHandler
     }
     public void LoadPiece()
     {
+        /*
         //Test piece
         Vector2[] dotCoordinats = new Vector2[]
             {new Vector2(0, 0), new Vector2(0, 1), new Vector2(1, 0)};
@@ -58,11 +61,12 @@ public class Piece : MonoBehaviour, IDragHandler
 
         Dot[] testDots = new Dot[3];
         dotsArray = new Dot[testDots.Length];
+        */
 
         lineHolder = new GameObject();
         lineHolder.transform.SetParent(transform, false);
 
-        for (int i = 0; i < testDots.Length; i++)
+        for (int i = 0; i < dotsArray.Length; i++)
         {
             GameObject spawn = Instantiate(dotPrefab, transform);
 
@@ -70,26 +74,26 @@ public class Piece : MonoBehaviour, IDragHandler
 
             RectTransform rect = spawn.GetComponent<RectTransform>();
 
-            rect.anchoredPosition = new Vector2(dotCoordinats[i].x * dotSpacing, dotCoordinats[i].y * dotSpacing);
+            rect.anchoredPosition = new Vector2(gridPosArray[i].x * dotSpacing, gridPosArray[i].y * dotSpacing);
 
-            testDots[i] = targetDot;
+            //testDots[i] = targetDot;
             dotsArray[i] = targetDot;
 
 
             switch(i)
             {
                 case 0:
-                    testDots[i].dotType = DotType.Red;
+                    dotsArray[i].dotType = DotType.Red;
                     break;
                 case 1:
-                    testDots[i].dotType = DotType.Blue;
+                    dotsArray[i].dotType = DotType.Blue;
                     break;
                 case 2:
-                    testDots[i].dotType = DotType.Yellow;
+                    dotsArray[i].dotType = DotType.Yellow;
                     break;
             }
 
-            targetDot.Setup(testDots[i].dotType, this);
+            targetDot.Setup(dotsArray[i].dotType, this);
         }
 
 
@@ -109,9 +113,10 @@ public class Piece : MonoBehaviour, IDragHandler
                     if (i == j) continue;
 
                     float val = Vector2.Distance(gridPosArray[i], gridPosArray[j]);
-                    if (val > 1.3f) continue;
+                    Debug.Log(val);
+                    if (val > 1.5f) continue;
 
-                    else if (val > 1.1f && !foundAdjacent)
+                    else if (val > 1.2f && !foundAdjacent)
                     {
                         diagonalList.Add(j);
                     }
@@ -154,6 +159,7 @@ public class Piece : MonoBehaviour, IDragHandler
         {
             line.UpdateLine();
         }
+        rotationInt = (rotationInt + 1) % 4;
     }
 
     public void CreateLine(Dot dot1, Dot dot2)
@@ -168,7 +174,7 @@ public class Piece : MonoBehaviour, IDragHandler
         RectTransform dot1Rect = dot1.GetComponent<RectTransform>();
         RectTransform dot2Rect = dot2.GetComponent<RectTransform>();
         connections.Add(uiLine);
-        uiLine.Initialzie(dot1Rect, dot2Rect, 5);
+        uiLine.Initialzie(dot1Rect, dot2Rect, lineWidth);
         dot1.IsConnected = true;
         dot2.IsConnected = true;
     }

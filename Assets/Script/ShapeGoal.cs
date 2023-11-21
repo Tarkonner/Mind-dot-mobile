@@ -42,6 +42,7 @@ public class ShapeGoal : MonoBehaviour
                     {
                         if (CheckForPatternAtPosition(board,new Vector2(x, y)))
                         {
+                            completed = true;
                             return true;
                         }
                     }

@@ -8,7 +8,7 @@ public class UILine : Graphic
     public RectTransform startPoint;
     public RectTransform endPoint;
 
-    public float lineWidth = 10;
+    public float lineWidth;
 
     private VertexHelper vh;
     public void Initialzie(RectTransform startPoint, RectTransform endPoint, float lineWidth)

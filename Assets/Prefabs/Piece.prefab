@@ -135,11 +135,17 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   dotPrefab: {fileID: 1995507298133785622, guid: 0f48472b57c3942478e34342026ce7ae, type: 3}
-  gridPosArray: []
-  dotsArray: []
+  gridPosArray:
+  - {x: 1, y: 1}
+  - {x: 0, y: 0}
+  - {x: -1, y: 1}
+  dotsArray:
+  - {fileID: 8363953510307615422, guid: 0f48472b57c3942478e34342026ce7ae, type: 3}
+  - {fileID: 8363953510307615422, guid: 0f48472b57c3942478e34342026ce7ae, type: 3}
+  - {fileID: 8363953510307615422, guid: 0f48472b57c3942478e34342026ce7ae, type: 3}
   pivotPoint: {x: 0, y: 0}
-  testPivotPoint: {fileID: 7457672802589896295}
   dotSpacing: 125
+  testPivotPoint: {fileID: 7457672802589896295}
   testRotate: 0
 --- !u!114 &7252276453392386464
 MonoBehaviour:
