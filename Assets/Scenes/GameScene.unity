@@ -224,11 +224,11 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 6419171983027597632, guid: 9cd0cb406c8a10e4cab49d5ba0333347, type: 3}
       propertyPath: m_SizeDelta.x
-      value: 900
+      value: 1000
       objectReference: {fileID: 0}
     - target: {fileID: 6419171983027597632, guid: 9cd0cb406c8a10e4cab49d5ba0333347, type: 3}
       propertyPath: m_SizeDelta.y
-      value: 900
+      value: 1000
       objectReference: {fileID: 0}
     - target: {fileID: 6419171983027597632, guid: 9cd0cb406c8a10e4cab49d5ba0333347, type: 3}
       propertyPath: m_LocalPosition.x
@@ -281,6 +281,14 @@ PrefabInstance:
     - target: {fileID: 7481191788362027120, guid: 9cd0cb406c8a10e4cab49d5ba0333347, type: 3}
       propertyPath: m_Name
       value: Board
+      objectReference: {fileID: 0}
+    - target: {fileID: 8907170997581844231, guid: 9cd0cb406c8a10e4cab49d5ba0333347, type: 3}
+      propertyPath: gridSize
+      value: 135
+      objectReference: {fileID: 0}
+    - target: {fileID: 8907170997581844231, guid: 9cd0cb406c8a10e4cab49d5ba0333347, type: 3}
+      propertyPath: spaceingBetweenCells
+      value: 8
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
@@ -365,6 +373,41 @@ MonoBehaviour:
   m_BlockingMask:
     serializedVersion: 2
     m_Bits: 4294967295
+--- !u!1 &431044419
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 431044420}
+  m_Layer: 5
+  m_Name: Rotate line
+  m_TagString: Untagged
+  m_Icon: {fileID: 2974397684917235467, guid: 0000000000000000d000000000000000, type: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!224 &431044420
+RectTransform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 431044419}
+  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 1886755110}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+  m_AnchorMin: {x: 0.5, y: 0.5}
+  m_AnchorMax: {x: 0.5, y: 0.5}
+  m_AnchoredPosition: {x: 0, y: -504}
+  m_SizeDelta: {x: 100, y: 100}
+  m_Pivot: {x: 0.5, y: 0.5}
 --- !u!1 &478583515
 GameObject:
   m_ObjectHideFlags: 0
@@ -550,6 +593,51 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 641304345}
   m_CullTransparentMesh: 1
+--- !u!1 &716659778
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 716659780}
+  - component: {fileID: 716659779}
+  m_Layer: 0
+  m_Name: Level Manager
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!114 &716659779
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 716659778}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 888074b2f150156419cb77a043046eed, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  levelFolderPath: Assets/Levels
+--- !u!4 &716659780
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 716659778}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &735525228
 GameObject:
   m_ObjectHideFlags: 0
@@ -1056,6 +1144,7 @@ RectTransform:
   m_LocalScale: {x: 0, y: 0, z: 0}
   m_ConstrainProportionsScale: 0
   m_Children:
+  - {fileID: 431044420}
   - {fileID: 1057033087}
   - {fileID: 321381864}
   - {fileID: 1403032269}
@@ -1136,7 +1225,8 @@ MonoBehaviour:
   pieceSizeWhileHolding: 0.35
   boardRaycast: {fileID: 321381868}
   piecesRaycast: {fileID: 1403032273}
-  distanceBeforeSwipe: 50
+  distanceBeforeSwipe: 25
+  rotateLine: {fileID: 431044420}
 --- !u!114 &1886755115
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1303,3 +1393,4 @@ SceneRoots:
   - {fileID: 519420032}
   - {fileID: 1886755110}
   - {fileID: 1536273097}
+  - {fileID: 716659780}

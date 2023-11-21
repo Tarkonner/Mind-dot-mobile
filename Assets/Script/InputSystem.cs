@@ -34,6 +34,7 @@ public class InputSystem : MonoBehaviour
 
     [Header("Input")]
     [SerializeField] float distanceBeforeSwipe = 50;
+    [SerializeField] RectTransform rotateLine;
     private Vector2 contactPosition;
 
     private void Awake()
@@ -98,10 +99,9 @@ public class InputSystem : MonoBehaviour
         //Save where first touching
         contactPosition = touchPosition;
 
-        //Raycast
-        List<RaycastResult> deteced = HitDetection(touchPosition, piecesRaycast);
-
-        foreach (RaycastResult result in deteced)
+        //Raycast Piecehodler
+        List<RaycastResult> piecesDeteced = HitDetection(touchPosition, piecesRaycast);
+        foreach (RaycastResult result in piecesDeteced)
         {
             if(result.gameObject.TryGetComponent(out Piece targetPiece))
             {
@@ -110,6 +110,27 @@ public class InputSystem : MonoBehaviour
                 holdingPiece = targetPiece;
                 holdingPiece.transform.SetParent(moveingPiecesHolder.transform);
                 break;
+            }
+        }
+
+        //Board detection
+        List<RaycastResult> boardDection = HitDetection(touchPosition, boardRaycast);
+        foreach (RaycastResult result in boardDection)
+        {
+            if (result.gameObject.TryGetComponent(out Cell targetCell))
+            {
+                Dot targetDot = null;
+                if (targetCell.occupying is Dot)
+                {
+                    targetDot = (Dot)targetCell.occupying;
+                    if (targetDot.parentPiece != null)
+                    {
+                        holdingPiece = targetDot.parentPiece;
+                        holdingPiece.transform.SetParent(moveingPiecesHolder.transform);
+                        Board.Instance.PickupPiece(holdingPiece);
+                        holdingPiece.GetComponent<Image>().raycastTarget = true;
+                    }
+                }
             }
         }
     }
@@ -148,6 +169,8 @@ public class InputSystem : MonoBehaviour
                     if (placeResult)
                     {
                         //Place piece on board
+                        holdingPiece.transform.SetParent(Board.Instance.transform);
+                        holdingPiece.GetComponent<Image>().raycastTarget = false;
                         holdingPiece = null;
                         canPlacePiece = true;
                         break;
@@ -165,8 +188,9 @@ public class InputSystem : MonoBehaviour
 
     private void Tap()
     {
-        if(holdingPiece != null)
+        if(holdingPiece != null && touchPosition.y < rotateLine.position.y)
         {
+            Debug.Log($"Tocuh positon y: {touchPosition.y}");
             holdingPiece.Rotate();
         }
     }
