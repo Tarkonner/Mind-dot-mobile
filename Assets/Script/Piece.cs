@@ -23,6 +23,7 @@ public class Piece : MonoBehaviour, IDragHandler
     public GameObject testPivotPoint;
     private Transform pieceHolder;
     private GameObject lineHolder;
+    public float lineWidth = 10;
 
     public bool testRotate;
     int testTimer = 0;
@@ -173,7 +174,7 @@ public class Piece : MonoBehaviour, IDragHandler
         RectTransform dot1Rect = dot1.GetComponent<RectTransform>();
         RectTransform dot2Rect = dot2.GetComponent<RectTransform>();
         connections.Add(uiLine);
-        uiLine.Initialzie(dot1Rect, dot2Rect, 5);
+        uiLine.Initialzie(dot1Rect, dot2Rect, lineWidth);
         dot1.IsConnected = true;
         dot2.IsConnected = true;
     }
