@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.EventSystems;
@@ -12,14 +13,14 @@ public class Piece : MonoBehaviour, IDragHandler
     public Vector2 pivotPoint;
 
     public GameObject testPivotPoint;
-
     [SerializeField] private float dotSpacing;
 
-    private List<LineRenderer> connections;
+    private List<UILine> connections = new List<UILine>();
 
     private bool rotatable = true;
 
     private Transform pieceHolder;
+    private GameObject lineHolder;
 
     public bool testRotate;
 
@@ -58,18 +59,22 @@ public class Piece : MonoBehaviour, IDragHandler
         Dot[] testDots = new Dot[3];
         dotsArray = new Dot[testDots.Length];
 
+        lineHolder = new GameObject();
+        lineHolder.transform.SetParent(transform, false);
+
         for (int i = 0; i < testDots.Length; i++)
         {
             GameObject spawn = Instantiate(dotPrefab, transform);
 
             Dot targetDot = spawn.GetComponent<Dot>();
 
-            testDots[i] = targetDot;
-            dotsArray[i] = targetDot;
-
             RectTransform rect = spawn.GetComponent<RectTransform>();
 
             rect.anchoredPosition = new Vector2(dotCoordinats[i].x * dotSpacing, dotCoordinats[i].y * dotSpacing);
+
+            testDots[i] = targetDot;
+            dotsArray[i] = targetDot;
+
 
             switch(i)
             {
@@ -88,13 +93,12 @@ public class Piece : MonoBehaviour, IDragHandler
         }
 
 
-
         //Goes through each dot and measures grid distance to each other dot.
         // Distance is used to differentiate adjacent and diagonal dot connections. 
         for (int i = 0; i < dotsArray.Length; i++)
         {
-            //
-            dotsArray[i].gameObject.transform.localPosition = gridPosArray[i];
+            
+            //dotsArray[i].gameObject.transform.localPosition = gridPosArray[i];
 
             if (!dotsArray[i].IsConnected)
             {
@@ -107,26 +111,21 @@ public class Piece : MonoBehaviour, IDragHandler
                     float val = Vector2.Distance(gridPosArray[i], gridPosArray[j]);
                     if (val > 1.3f) continue;
 
-                    else if (val < 1.1f && !foundAdjacent)
+                    else if (val > 1.1f && !foundAdjacent)
                     {
                         diagonalList.Add(j);
-
                     }
                     else if (val == 1)
                     {
                         foundAdjacent = true;
-                        CreateConnection(dotsArray[i].gameObject, gridPosArray[i], gridPosArray[j]);
-                        dotsArray[i].IsConnected = true;
-                        dotsArray[j].IsConnected = true;
+                        CreateLine(dotsArray[i], dotsArray[j]);
                     }
                 }
                 if (!foundAdjacent)
                 {
                     foreach (int j in diagonalList)
                     {
-                        CreateConnection(dotsArray[i].gameObject, gridPosArray[i], gridPosArray[j]);
-                        dotsArray[i].IsConnected = true;
-                        dotsArray[j].IsConnected = true;
+                        CreateLine(dotsArray[i], dotsArray[j]);
                     }
                 }
             }
@@ -134,17 +133,7 @@ public class Piece : MonoBehaviour, IDragHandler
         }
 
     }
-    public void CreateConnection(GameObject gameObject, Vector2 start, Vector2 end)
-    {
-        LineRenderer lineRenderer = gameObject.AddComponent<LineRenderer>();
-        lineRenderer.SetPosition(0, start);
-        lineRenderer.SetPosition(1, end);
-        connections.Add(lineRenderer);
-    }
-    public void UpdateConnections()
-    {
 
-    }
 
     public void Rotate()
     {
@@ -159,8 +148,29 @@ public class Piece : MonoBehaviour, IDragHandler
             gridPosArray[i] = new Vector2((pivotPoint.x - (gridPosArray[i].y - pivotPoint.y)),
                 (pivotPoint.y + (gridPosArray[i].x - pivotPoint.y)));
 
-            dotsArray[i].gameObject.transform.localPosition = gridPosArray[i] * 100;
+            dotsArray[i].gameObject.transform.localPosition = gridPosArray[i] * dotSpacing;
         }
+        foreach (var line in connections)
+        {
+            line.UpdateLine();
+        }
+    }
+
+    public void CreateLine(Dot dot1, Dot dot2)
+    {
+        GameObject newObject = new GameObject();
+        CanvasRenderer cR = newObject.AddComponent<CanvasRenderer>();
+        
+        RectTransform newRectTrans = newObject.AddComponent<RectTransform>();
+        newRectTrans.SetParent(lineHolder.transform, false);
+        newRectTrans.anchoredPosition = gameObject.transform.localPosition;
+        UILine uiLine = newObject.AddComponent<UILine>();
+        RectTransform dot1Rect = dot1.GetComponent<RectTransform>();
+        RectTransform dot2Rect = dot2.GetComponent<RectTransform>();
+        connections.Add(uiLine);
+        uiLine.Initialzie(dot1Rect, dot2Rect, 5);
+        dot1.IsConnected = true;
+        dot2.IsConnected = true;
     }
 
     public void Place(Vector2 coordinates)

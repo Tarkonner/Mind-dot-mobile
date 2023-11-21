@@ -139,7 +139,7 @@ MonoBehaviour:
   dotsArray: []
   pivotPoint: {x: 0, y: 0}
   testPivotPoint: {fileID: 7457672802589896295}
-  dotSpacing: 100
+  dotSpacing: 125
   testRotate: 0
 --- !u!114 &7252276453392386464
 MonoBehaviour:

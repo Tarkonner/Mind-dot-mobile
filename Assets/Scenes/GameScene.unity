@@ -1136,7 +1136,7 @@ MonoBehaviour:
   pieceSizeWhileHolding: 0.35
   boardRaycast: {fileID: 321381868}
   piecesRaycast: {fileID: 1403032273}
-  timeBeforeDragging: 0.15
+  distanceBeforeSwipe: 50
 --- !u!114 &1886755115
 MonoBehaviour:
   m_ObjectHideFlags: 0
