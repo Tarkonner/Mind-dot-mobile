@@ -6,7 +6,8 @@ using UnityEngine;
 
 public class Board : MonoBehaviour
 {    
-    public static Board Instance;
+    [Header("Refrences")]
+    [SerializeField] private LevelManager levelManager;
 
     [Header("Grid system")]
     public Cell[,] grid;
@@ -20,17 +21,13 @@ public class Board : MonoBehaviour
 
     private bool testLoadedLevel = false;
 
-    private void Awake()
-    {
-        Instance = this;
-    }
 
     private void Update()
     {
         if (!testLoadedLevel && Input.GetKeyDown(KeyCode.K))
         {
             testLoadedLevel = true;
-            LevelManager.instance.LoadLevel(0);
+            levelManager.LoadLevel(0);
             Debug.Log("T");
         }
     }

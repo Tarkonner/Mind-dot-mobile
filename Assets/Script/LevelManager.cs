@@ -8,16 +8,15 @@ using UnityEngine.SceneManagement;
 
 public class LevelManager : MonoBehaviour
 {
-    public static LevelManager instance;
+    [Header("Refences")]
+    [SerializeField] private Board board;
+    [SerializeField] private GameUI gameUI;
 
+    [Header("Folder")]
     [SerializeField] private string levelFolderPath;
 
     private void Awake()
     {
-        instance = this;
-
-        DontDestroyOnLoad(gameObject);
-
         ES3.Init();
     }
 
@@ -32,7 +31,10 @@ public class LevelManager : MonoBehaviour
         LevelData save = ES3.Load<LevelData>(level.ToString());
 
         if (save != null)
-            Board.Instance.LoadLevel(save);
+        {
+            board.LoadLevel(save);
+            gameUI.LoadLevel(save);
+        }
         else
             Debug.LogError($"Tried to load: [{level}], but was not found");
     }
@@ -46,6 +48,7 @@ public class LevelManager : MonoBehaviour
 
         string key = level.levelIndex.ToString();
 
+        #region Test Level
         Vector2Int levelSize = new Vector2Int(5, 3);
         SerializableCell[,] grid = new SerializableCell[levelSize.x, levelSize.y];
         for (int x = 0; x < levelSize.x; x++)
@@ -74,6 +77,43 @@ public class LevelManager : MonoBehaviour
             }
         }
 
+        //Test Pieces
+        SerializablePiece[] savePieces = new SerializablePiece[2];
+        //P1
+        Vector2[] dotCoordinats = new Vector2[]
+            {new Vector2(0, 0), new Vector2(0, 1), new Vector2(1, 0)};
+        Dot[] pieceDots = new Dot[3];
+        for (int i = 0; i < pieceDots.Length; i++)
+            pieceDots[i] = new Dot();
+        pieceDots[0].dotType = DotType.Blue;
+        pieceDots[1].dotType = DotType.Red;
+        pieceDots[2].dotType = DotType.Blue;
+
+        Piece piece = new Piece();
+        piece.gridPosArray = dotCoordinats;
+        piece.dotsArray = pieceDots;
+        SerializablePiece sPiece = piece.ConvertToSerializablePiece(piece);
+        savePieces[0] = sPiece;
+
+        //P2
+        dotCoordinats = new Vector2[]
+        {new Vector2(0, 0), new Vector2(0, -1), new Vector2(-1, 0)};
+        pieceDots = new Dot[3];
+        for (int i = 0; i < pieceDots.Length; i++)
+            pieceDots[i] = new Dot();
+        pieceDots[0].dotType = DotType.Blue;
+        pieceDots[1].dotType = DotType.Yellow;
+        pieceDots[2].dotType = DotType.Red;
+
+        piece = new Piece();
+        piece.gridPosArray = dotCoordinats;
+        piece.dotsArray = pieceDots;
+        sPiece = piece.ConvertToSerializablePiece(piece);
+        savePieces[1] = sPiece;
+
+        level.levelsPieces = savePieces;
+        #endregion
+
         //Save grid
         level.levelCells = grid;
 
@@ -90,11 +130,4 @@ public class LevelManager : MonoBehaviour
         }
 
     }
-
-    public void LoadScene(int level)
-    {
-        SceneManager.LoadScene(level);            
-    }
-
-
 }

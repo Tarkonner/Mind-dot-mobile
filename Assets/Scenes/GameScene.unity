@@ -287,6 +287,10 @@ PrefabInstance:
       value: 135
       objectReference: {fileID: 0}
     - target: {fileID: 8907170997581844231, guid: 9cd0cb406c8a10e4cab49d5ba0333347, type: 3}
+      propertyPath: levelManager
+      value: 
+      objectReference: {fileID: 716659779}
+    - target: {fileID: 8907170997581844231, guid: 9cd0cb406c8a10e4cab49d5ba0333347, type: 3}
       propertyPath: spaceingBetweenCells
       value: 8
       objectReference: {fileID: 0}
@@ -295,6 +299,17 @@ PrefabInstance:
     m_AddedGameObjects: []
     m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 9cd0cb406c8a10e4cab49d5ba0333347, type: 3}
+--- !u!114 &224558969 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 8907170997581844231, guid: 9cd0cb406c8a10e4cab49d5ba0333347, type: 3}
+  m_PrefabInstance: {fileID: 206434873}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 11bea1be46a24cf4fb90d02107e743ec, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &321381863
 GameObject:
   m_ObjectHideFlags: 0
@@ -622,6 +637,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 888074b2f150156419cb77a043046eed, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  board: {fileID: 224558969}
+  gameUI: {fileID: 1886755111}
   levelFolderPath: Assets/Levels
 --- !u!4 &716659780
 Transform:
@@ -1220,6 +1237,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f3d5d00100aec8841b9019aea6569be1, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  board: {fileID: 224558969}
   moveingPiecesHolder: {fileID: 1042911372}
   piecesHolder: {fileID: 1442661176}
   pieceSizeWhileHolding: 0.35

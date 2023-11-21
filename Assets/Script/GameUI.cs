@@ -14,7 +14,7 @@ public class GameUI : MonoBehaviour
     [SerializeField] GameObject[] pieces;
     [SerializeField] GameObject[] goals;
 
-    void Start()
+    public void LoadLevel(LevelData levelData)
     {
         //Goal
         for (int i = 0; i < goals.Length; i++)
@@ -23,20 +23,26 @@ public class GameUI : MonoBehaviour
             spawn.transform.SetParent(goalHolder.transform);
         }
 
-        //Pieces
+        //Position
         float offset = 0;
         if(pieces.Length > 1)
-        {
             offset = paddingBetweenPieces * (pieces.Length - 1) / 2;
-        }
+
+        //Pieces
         for (int i = 0;i < pieces.Length; i++)
         {
             Vector2 targetPos = new Vector2(i * paddingBetweenPieces - offset, 0);
 
+            //Background
             GameObject background = Instantiate(pieceBackground, pieceHolder.transform);
             background.GetComponent<RectTransform>().anchoredPosition = targetPos;
+
+            //Piece
             GameObject spawn = Instantiate(pieces[i], background.transform);
+            Piece piece = spawn.GetComponent<Piece>();
             spawn.GetComponent<RectTransform>().anchoredPosition = Vector2.zero;
+
+            piece.LoadPiece(levelData.levelsPieces[i]);
         }
     }
 }

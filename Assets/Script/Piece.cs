@@ -1,4 +1,3 @@
-using System;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.EventSystems;
@@ -36,7 +35,6 @@ public class Piece : MonoBehaviour, IDragHandler
     public void Start()
     {
         pieceHolder = transform.parent;
-        LoadPiece();
         testPivotPoint.transform.localPosition = pivotPoint;
 
     }
@@ -50,50 +48,27 @@ public class Piece : MonoBehaviour, IDragHandler
             testTimer = 0;
         }
     }
-    public void LoadPiece()
+    public void LoadPiece(SerializablePiece seriPiece)
     {
-        /*
-        //Test piece
-        Vector2[] dotCoordinats = new Vector2[]
-            {new Vector2(0, 0), new Vector2(0, 1), new Vector2(1, 0)};
-
-        gridPosArray = dotCoordinats;
-
-        Dot[] testDots = new Dot[3];
-        dotsArray = new Dot[testDots.Length];
-        */
-
         lineHolder = new GameObject();
         lineHolder.transform.SetParent(transform, false);
 
-        for (int i = 0; i < dotsArray.Length; i++)
+        //Set cordinats
+        gridPosArray = seriPiece.gridPosArray;
+
+        //Setup dots
+        for (int i = 0; i < seriPiece.dotsArray.Length; i++)
         {
+            //Make object
             GameObject spawn = Instantiate(dotPrefab, transform);
-
             Dot targetDot = spawn.GetComponent<Dot>();
-
             RectTransform rect = spawn.GetComponent<RectTransform>();
 
+            //Set position
             rect.anchoredPosition = new Vector2(gridPosArray[i].x * dotSpacing, gridPosArray[i].y * dotSpacing);
 
-            //testDots[i] = targetDot;
             dotsArray[i] = targetDot;
-
-
-            switch(i)
-            {
-                case 0:
-                    dotsArray[i].dotType = DotType.Red;
-                    break;
-                case 1:
-                    dotsArray[i].dotType = DotType.Blue;
-                    break;
-                case 2:
-                    dotsArray[i].dotType = DotType.Yellow;
-                    break;
-            }
-
-            targetDot.Setup(dotsArray[i].dotType, this);
+            targetDot.Setup(seriPiece.dotsArray[i].dotType, this);
         }
 
 
@@ -101,7 +76,7 @@ public class Piece : MonoBehaviour, IDragHandler
         // Distance is used to differentiate adjacent and diagonal dot connections. 
         for (int i = 0; i < dotsArray.Length; i++)
         {
-            
+
             //dotsArray[i].gameObject.transform.localPosition = gridPosArray[i];
 
             if (!dotsArray[i].IsConnected)
@@ -134,9 +109,7 @@ public class Piece : MonoBehaviour, IDragHandler
                     }
                 }
             }
-
         }
-
     }
 
 
@@ -166,7 +139,7 @@ public class Piece : MonoBehaviour, IDragHandler
     {
         GameObject newObject = new GameObject();
         CanvasRenderer cR = newObject.AddComponent<CanvasRenderer>();
-        
+
         RectTransform newRectTrans = newObject.AddComponent<RectTransform>();
         newRectTrans.SetParent(lineHolder.transform, false);
         newRectTrans.anchoredPosition = gameObject.transform.localPosition;
@@ -200,5 +173,19 @@ public class Piece : MonoBehaviour, IDragHandler
     {
         gameObject.transform.SetParent(pieceHolder);
         rectTransform.anchoredPosition = Vector2.zero;
+    }
+
+    public SerializablePiece ConvertToSerializablePiece(Piece targetPiece)
+    {
+        SerializablePiece piece = new SerializablePiece();
+        //Position
+        piece.gridPosArray = targetPiece.gridPosArray;
+        //Dots
+        SerializableDot[] saveDots = new SerializableDot[targetPiece.dotsArray.Length];
+        for (int i = 0; i < targetPiece.dotsArray.Length; i++)
+            saveDots[i] = targetPiece.dotsArray[i].ConvertToSerializableDot(targetPiece.dotsArray[i]);
+        piece.dotsArray = saveDots;
+
+        return piece;
     }
 }

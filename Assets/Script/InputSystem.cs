@@ -19,6 +19,9 @@ public class InputSystem : MonoBehaviour
 
     public Vector2 touchPosition { get; private set; }
 
+    [Header("Refences")]
+    [SerializeField] private Board board;
+
     [Header("Pieces")]
     [SerializeField] private GameObject moveingPiecesHolder;
     [SerializeField] Transform piecesHolder;
@@ -127,7 +130,7 @@ public class InputSystem : MonoBehaviour
                     {
                         holdingPiece = targetDot.parentPiece;
                         holdingPiece.transform.SetParent(moveingPiecesHolder.transform);
-                        Board.Instance.PickupPiece(holdingPiece);
+                        board.PickupPiece(holdingPiece);
                         holdingPiece.GetComponent<Image>().raycastTarget = true;
                     }
                 }
@@ -164,12 +167,12 @@ public class InputSystem : MonoBehaviour
                 //See if we hit a cell
                 if (result.gameObject.TryGetComponent(out Cell cell))
                 {
-                    bool placeResult = Board.Instance.PlacePiece(cell.gridPos, holdingPiece);
+                    bool placeResult = board.PlacePiece(cell.gridPos, holdingPiece);
 
                     if (placeResult)
                     {
                         //Place piece on board
-                        holdingPiece.transform.SetParent(Board.Instance.transform);
+                        holdingPiece.transform.SetParent(board.transform);
                         holdingPiece.GetComponent<Image>().raycastTarget = false;
                         holdingPiece = null;
                         canPlacePiece = true;
