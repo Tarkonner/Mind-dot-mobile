@@ -7,17 +7,17 @@ using UnityEngine;
 public class Board : MonoBehaviour
 {    
     [Header("Refrences")]
-    [SerializeField] private LevelManager levelManager;
+    [SerializeField] protected LevelManager levelManager;
 
     [Header("Grid system")]
     public Cell[,] grid;
-    [SerializeField] private GameObject cellPrefab;
-    [SerializeField] private float gridSize;
-    [SerializeField] private float spaceingBetweenCells = .2f;
+    [SerializeField] protected GameObject cellPrefab;
+    [SerializeField] protected float gridSize;
+    [SerializeField] protected float spaceingBetweenCells = .2f;
 
     public Action onChange;
 
-    [SerializeField] GameObject testDot;
+    [SerializeField] protected GameObject testDot;
 
     private bool testLoadedLevel = false;
 
