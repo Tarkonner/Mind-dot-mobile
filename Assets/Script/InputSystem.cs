@@ -135,7 +135,7 @@ public class InputSystem : MonoBehaviour
                     if (targetDot.parentPiece != null)
                     {
                         holdingPiece = targetDot.parentPiece;
-                        holdingPiece.transform.SetParent(moveingPiecesHolder.transform);
+                        holdingPiece.transform.SetParent(movingPiecesHolder.transform);
                         board.PickupPiece(holdingPiece);
                         holdingPiece.GetComponent<Image>().raycastTarget = true;
                     }
@@ -212,7 +212,7 @@ public class InputSystem : MonoBehaviour
         ShapeGoal[] shapeGoals = goalHolder.GetComponentsInChildren<ShapeGoal>();
         foreach (var child in shapeGoals)
         {
-            if (child.CheckFulfilment(Board.Instance))
+            if (child.CheckFulfilment(board))
             {
                 completedGoals++;
             }
