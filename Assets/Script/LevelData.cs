@@ -13,6 +13,6 @@ public class LevelData
     public SerializableCell[,] levelCells;
 
     
-    public Piece[] levelsPieces;
+    public SerializablePiece[] levelsPieces;
        
 }

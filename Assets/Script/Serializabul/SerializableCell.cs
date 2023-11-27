@@ -9,8 +9,6 @@ public class SerializableCell
     public SerializableDot occupying = null;
     public Vector2Int gridPos;
 
-    public Action OnPlacement;
-
     public bool isNullCell;
 
     public SerializableCell(Cell cell)
@@ -19,13 +17,12 @@ public class SerializableCell
 
         this.content = cell.content;
         this.gridPos = cell.gridPos;
-        this.OnPlacement = cell.OnPlacement;
 
         if (cell.occupying is Dot)
         {
             Dot refDot = (Dot)cell.occupying;
 
-            this.occupying = refDot.ConvertToSerializableDot(refDot);
+            this.occupying = SaveConverter.ConvertToSerializableDot(refDot);
         }
         else
             this.occupying = null;
@@ -40,6 +37,5 @@ public class SerializableCell
         this.content = null;
         this.occupying = null;
         this.gridPos = new Vector2Int();
-        this.OnPlacement = null;
     }
 }

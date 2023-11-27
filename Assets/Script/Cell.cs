@@ -15,7 +15,6 @@ public class Cell : MonoBehaviour
         this.content = serializableCell.content;
         this.occupying = serializableCell.occupying;
         this.gridPos = serializableCell.gridPos;
-        this.OnPlacement = serializableCell.OnPlacement;
     }
 }
 

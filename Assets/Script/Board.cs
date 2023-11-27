@@ -6,31 +6,28 @@ using UnityEngine;
 
 public class Board : MonoBehaviour
 {    
-    public static Board Instance;
+    [Header("Refrences")]
+    [SerializeField] protected LevelManager levelManager;
 
     [Header("Grid system")]
     public Cell[,] grid;
-    [SerializeField] private GameObject cellPrefab;
-    [SerializeField] private float gridSize;
-    [SerializeField] private float spaceingBetweenCells = .2f;
+    [SerializeField] protected GameObject cellPrefab;
+    [SerializeField] protected float gridSize;
+    [SerializeField] protected float spaceingBetweenCells = .2f;
 
     public Action onChange;
 
-    [SerializeField] GameObject testDot;
+    [SerializeField] protected GameObject testDot;
 
     private bool testLoadedLevel = false;
 
-    private void Awake()
-    {
-        Instance = this;
-    }
 
     private void Update()
     {
         if (!testLoadedLevel && Input.GetKeyDown(KeyCode.K))
         {
             testLoadedLevel = true;
-            LevelManager.instance.LoadLevel(0);
+            levelManager.LoadLevel(0);
             Debug.Log("T");
         }
     }
@@ -78,7 +75,8 @@ public class Board : MonoBehaviour
 
                         //Load saved dot
                         SerializableDot seriDot = level.levelCells[x, y].occupying;
-                        makedDot = makedDot.ConvertToDot(seriDot);
+                        Dot savedDot = SaveConverter.ConvertToDot(seriDot);
+                        makedDot.Setup(savedDot.dotType);
 
                         //Place on Board
                         PlaceDot(new Vector2Int(x, y), makedDot);
