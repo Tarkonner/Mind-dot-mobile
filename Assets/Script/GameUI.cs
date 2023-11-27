@@ -20,7 +20,7 @@ public class GameUI : MonoBehaviour
         for (int i = 0; i < goals.Length; i++)
         {
             GameObject spawn = Instantiate(goals[i], transform);
-            spawn.transform.SetParent(goalHolder.transform);
+            spawn.transform.SetParent(goalHolder.transform,false);
         }
 
         //Pieces

@@ -11,62 +11,101 @@ public class ShapeGoal : MonoBehaviour
     private int goalsizeY;
     private bool completed = false;
 
-    private List<Cell> cellList;
+    private List<Cell> cellList = new List<Cell>();
+
+    private Image background;
+    private Color uncompletedColor;
+    private Color completedColor;
 
     // Start is called before the first frame update
     void Start()
     {
-        goalsizeX = (int)goalSpecifications[0].gridPos.x;
-        goalsizeY = (int)goalSpecifications[0].gridPos.y;
+        int goalMaxX = (int)goalSpecifications[0].gridPos.x;
+        int goalMaxY = (int)goalSpecifications[0].gridPos.x;
+        int goalMinX = (int)goalSpecifications[0].gridPos.y;
+        int goalMinY = (int)goalSpecifications[0].gridPos.y;
         for (int i = 1; i < goalSpecifications.Length; i++)
         {
-            if (goalsizeX < goalSpecifications[i].gridPos.x)
-            {
-                goalsizeX = (int)goalSpecifications[i].gridPos.x;
-            }
-            if (goalsizeY < goalSpecifications[i].gridPos.y)
-            {
-                goalsizeY = (int)goalSpecifications[i].gridPos.y;
-            }
+            goalMaxX = Mathf.Max(goalMaxX, (int)goalSpecifications[i].gridPos.x);
+            goalMinX = Mathf.Min(goalMinX, (int)goalSpecifications[i].gridPos.x);
+
+            goalMaxY = Mathf.Max(goalMaxY, (int)goalSpecifications[i].gridPos.y);
+            goalMinY = Mathf.Min(goalMinY, (int)goalSpecifications[i].gridPos.y);
         }
-        Image background = GetComponent<Image>();
-        background.color = new Color(0.85f, 0.85f, 0.85f, 1);
+        goalsizeX = goalMaxX - goalMinX + 1;
+        goalsizeY = goalMaxY - goalMinY + 1;
+        
+        RectTransform goalRect = gameObject.GetComponent<RectTransform>();
+        //The dots need to be scaled according to how many can fit within the square
+        //The +1 is to account for the 0-indexed grid position.
+        int detSize = Mathf.Max(new int[] { goalsizeX, goalsizeY});
+        Debug.Log(goalSpecifications);
+        foreach (GoalDot goalDot in goalSpecifications)
+        {
+            RectTransform dotRect = goalDot.GetComponent<RectTransform>();
+            dotRect.sizeDelta = goalRect.sizeDelta/detSize;
+            Debug.Log(goalDot.gridPos);
+            //Debug.Log(new Vector2(goalsizeX / 2, goalsizeY / 2) * dotRect.sizeDelta); 
+            dotRect.anchoredPosition = goalRect.anchoredPosition +(goalDot.gridPos-
+                new Vector2(goalsizeX/2-0.5f*((goalsizeX+1)%2),goalsizeY/2-0.5f * ((goalsizeY+1) % 2))) * dotRect.sizeDelta;
+        }
+
+        background = GetComponent<Image>();
+        if (uncompletedColor==Color.clear) 
+        {
+            uncompletedColor = new Color(0.75f, 0.75f, 0.75f, 1);
+        }
+        if (completedColor==Color.clear)
+        {
+            completedColor = new Color(0.1f, 0.9f, 0.2f, 1);
+        }
+        background.color = uncompletedColor;
     }
 
-    bool CheckFulfilment(Board board)
+    public bool CheckFulfilment(Board board)
     {
-        for (int x = 0; x < board.grid.GetLength(1)-goalsizeX; x++)
+        Debug.Log("In CheckFulfilment");
+        for (int x = 0; x < board.grid.GetLength(0)-goalsizeX; x++)
         {
-            for (int y = 0; y < board.grid.GetLength(2)-goalsizeY; y++)
+            for (int y = 0; y < board.grid.GetLength(1)-goalsizeY; y++)
             {
+                if (board.grid[x, y] == null) { continue; }
+
                 if (board.grid[x,y].occupying is Dot currentDot)
                 {
+                    Debug.Log($"Dot in {x},{y} of type {currentDot.dotType}");
+                    Debug.Log($"{currentDot.dotType} and {goalSpecifications[0].dotType}");
                     if(currentDot.dotType == goalSpecifications[0].dotType)
                     {
+                        Debug.Log(goalSpecifications[0].dotType);
                         if (CheckForPatternAtPosition(board,new Vector2(x, y)))
                         {
                             completed = true;
+                            background.color = completedColor;
                             return true;
                         }
                     }
                 }
-                else
-                {
-                    continue;
-                }
             }
         }
+        completed = false;
+        background.color=uncompletedColor;
         return false;
     }
     private bool CheckForPatternAtPosition(Board board, Vector2 currentPos) 
     {
+        cellList.Clear();
         for (int i = 1; i < goalSpecifications.Length; i++)
         {
-            cellList.Clear();
-            Vector2 assumedPos = new Vector2(currentPos.x, currentPos.y) + goalSpecifications[i].gridPos;
+            Vector2 assumedPos = new Vector2(currentPos.x, currentPos.y) + (goalSpecifications[i].gridPos - goalSpecifications[0].gridPos);
+            Debug.Log(currentPos);
+            Debug.Log(assumedPos);
+            if (board.grid[(int)assumedPos.x, (int)assumedPos.y] == null) { return false; }
+
             if (board.grid[(int)assumedPos.x, (int)assumedPos.y].occupying is Dot checkDot &&
                 checkDot.dotType == goalSpecifications[i].dotType)
             {
+                Debug.Log(checkDot.dotType);
                 cellList.Add(board.grid[(int)assumedPos.x, (int)assumedPos.y]);
             }
             else
@@ -74,7 +113,12 @@ public class ShapeGoal : MonoBehaviour
                 return false;
             }
         }
+        Debug.Log("Pattern found!");
         //Act on cellList
+        foreach (var cell in cellList)
+        {
+            Debug.Log($"Pattern found in: {cell}");
+        }
         return true;
     }
 }

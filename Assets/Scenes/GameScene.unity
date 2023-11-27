@@ -1177,7 +1177,8 @@ MonoBehaviour:
   - {fileID: 8531125797756845785, guid: 9d51e8cd845c8f34cae447f656c3388d, type: 3}
   goals:
   - {fileID: 6877320353712221094, guid: 9ef2906d5d53e144d8029e17e3e8f875, type: 3}
-  - {fileID: 6877320353712221094, guid: 9ef2906d5d53e144d8029e17e3e8f875, type: 3}
+  - {fileID: 6877320353712221094, guid: 4f348fa20d5515d43acaf52b8abb3db8, type: 3}
+  - {fileID: 6877320353712221094, guid: 8db8954bc05069e418877aa34bb73c9b, type: 3}
 --- !u!114 &1886755113
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1220,9 +1221,12 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f3d5d00100aec8841b9019aea6569be1, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  moveingPiecesHolder: {fileID: 1042911372}
+  movingPiecesHolder: {fileID: 1442661175}
   piecesHolder: {fileID: 1442661176}
   pieceSizeWhileHolding: 0.35
+  goalHolder: {fileID: 107049031}
+  uncompleteGoalColor: {r: 0.8584906, g: 0.8584906, b: 0.8584906, a: 1}
+  completedGoalColor: {r: 0.3254902, g: 1, b: 0.3647059, a: 0}
   boardRaycast: {fileID: 321381868}
   piecesRaycast: {fileID: 1403032273}
   distanceBeforeSwipe: 25

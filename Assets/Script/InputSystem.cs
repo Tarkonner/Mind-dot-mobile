@@ -20,13 +20,18 @@ public class InputSystem : MonoBehaviour
     public Vector2 touchPosition { get; private set; }
 
     [Header("Pieces")]
-    [SerializeField] private GameObject moveingPiecesHolder;
+    [SerializeField] private GameObject movingPiecesHolder;
     [SerializeField] Transform piecesHolder;
     [SerializeField] private float pieceSizeWhileHolding = .2f;
     private Piece holdingPiece;
     private Transform takenFrom;
 
-    [Header("Raycating")]
+    [Header("Goals")]
+    [SerializeField] private GameObject goalHolder;
+    [SerializeField] private Color uncompleteGoalColor;
+    [SerializeField] private Color completedGoalColor;
+
+    [Header("Raycasting")]
     [SerializeField] GraphicRaycaster boardRaycast;
     [SerializeField] GraphicRaycaster piecesRaycast;
     PointerEventData pointerEventData;
@@ -108,7 +113,8 @@ public class InputSystem : MonoBehaviour
                 //Set piece to moveing
                 takenFrom = targetPiece.transform;
                 holdingPiece = targetPiece;
-                holdingPiece.transform.SetParent(moveingPiecesHolder.transform);
+                holdingPiece.transform.SetParent(movingPiecesHolder.transform);
+                CheckGoals();
                 break;
             }
         }
@@ -126,7 +132,7 @@ public class InputSystem : MonoBehaviour
                     if (targetDot.parentPiece != null)
                     {
                         holdingPiece = targetDot.parentPiece;
-                        holdingPiece.transform.SetParent(moveingPiecesHolder.transform);
+                        holdingPiece.transform.SetParent(movingPiecesHolder.transform);
                         Board.Instance.PickupPiece(holdingPiece);
                         holdingPiece.GetComponent<Image>().raycastTarget = true;
                     }
@@ -173,6 +179,8 @@ public class InputSystem : MonoBehaviour
                         holdingPiece.GetComponent<Image>().raycastTarget = false;
                         holdingPiece = null;
                         canPlacePiece = true;
+
+                        CheckGoals();
                         break;
                     }
                 }
@@ -190,8 +198,29 @@ public class InputSystem : MonoBehaviour
     {
         if(holdingPiece != null && touchPosition.y < rotateLine.position.y)
         {
-            Debug.Log($"Tocuh positon y: {touchPosition.y}");
+            Debug.Log($"Touch positon y: {touchPosition.y}");
             holdingPiece.Rotate();
+            CheckGoals();
+        }
+    }
+    private bool CheckGoals()
+    {
+        int completedGoals = 0;
+        ShapeGoal[] shapeGoals = goalHolder.GetComponentsInChildren<ShapeGoal>();
+        foreach (var child in shapeGoals)
+        {
+            if (child.CheckFulfilment(Board.Instance))
+            {
+                completedGoals++;
+            }
+        }
+        if (completedGoals >= shapeGoals.Length)
+        {
+            return true;
+        }
+        else
+        {
+            return false;            
         }
     }
 }
