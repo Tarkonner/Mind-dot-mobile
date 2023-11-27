@@ -87,12 +87,12 @@ public class Board : MonoBehaviour
     }
 
     #region Board interaction
-    public bool PlaceDot(Vector2Int coordinat, Dot targetDot)
+    public bool PlaceDot(Vector2Int coordinate, Dot targetDot)
     {
-        if (grid[coordinat.x, coordinat.y].occupying == null)
+        if (grid[coordinate.x, coordinate.y].occupying == null)
         {
-            grid[coordinat.x, coordinat.y].occupying = targetDot;
-            GameObject targetCell = grid[coordinat.x, coordinat.y].gameObject;
+            grid[coordinate.x, coordinate.y].occupying = targetDot;
+            GameObject targetCell = grid[coordinate.x, coordinate.y].gameObject;
             targetDot.transform.position = targetCell.transform.position;
             targetDot.transform.parent = targetCell.transform;
             return true;
