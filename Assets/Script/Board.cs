@@ -19,7 +19,7 @@ public class Board : MonoBehaviour
 
     [SerializeField] protected GameObject testDot;
 
-    private bool testLoadedLevel = false;
+    protected bool testLoadedLevel = false;
 
 
     private void Update()
