@@ -113,7 +113,7 @@ public class InputSystem : MonoBehaviour
         {
             if(result.gameObject.TryGetComponent(out Piece targetPiece))
             {
-                //Set piece to moveing
+                //Set piece to moving
                 takenFrom = targetPiece.transform;
                 holdingPiece = targetPiece;
                 holdingPiece.transform.SetParent(movingPiecesHolder.transform);
@@ -128,10 +128,10 @@ public class InputSystem : MonoBehaviour
         {
             if (result.gameObject.TryGetComponent(out Cell targetCell))
             {
-                Dot targetDot = null;
-                if (targetCell.occupying is Dot)
+                //Dot targetDot = null;
+                if (targetCell.occupying is Dot targetDot)
                 {
-                    targetDot = (Dot)targetCell.occupying;
+                    //targetDot = (Dot)targetCell.occupying;
                     if (targetDot.parentPiece != null)
                     {
                         holdingPiece = targetDot.parentPiece;
@@ -173,12 +173,12 @@ public class InputSystem : MonoBehaviour
                 //See if we hit a cell
                 if (result.gameObject.TryGetComponent(out Cell cell))
                 {
+                    holdingPiece.transform.SetParent(board.transform);
                     bool placeResult = board.PlacePiece(cell.gridPos, holdingPiece);
 
                     if (placeResult)
                     {
                         //Place piece on board
-                        holdingPiece.transform.SetParent(board.transform);
                         holdingPiece.GetComponent<Image>().raycastTarget = false;
                         holdingPiece = null;
                         canPlacePiece = true;

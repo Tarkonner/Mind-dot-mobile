@@ -123,6 +123,11 @@ NavMeshSettings:
     debug:
       m_Flags: 0
   m_NavMeshData: {fileID: 0}
+--- !u!1 &161695130 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 8485062217576329147, guid: 8cbdc0a76d6bc7148968a7757584fc92, type: 3}
+  m_PrefabInstance: {fileID: 3645564560661746013}
+  m_PrefabAsset: {fileID: 0}
 --- !u!114 &224558969 stripped
 MonoBehaviour:
   m_CorrespondingSourceObject: {fileID: 8884140376160804173, guid: 8cbdc0a76d6bc7148968a7757584fc92, type: 3}
@@ -472,6 +477,42 @@ PrefabInstance:
     - target: {fileID: 5677348850388921294, guid: 8cbdc0a76d6bc7148968a7757584fc92, type: 3}
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 5746726367402340195, guid: 8cbdc0a76d6bc7148968a7757584fc92, type: 3}
+      propertyPath: goalHolder
+      value: 
+      objectReference: {fileID: 161695130}
+    - target: {fileID: 5746726367402340195, guid: 8cbdc0a76d6bc7148968a7757584fc92, type: 3}
+      propertyPath: completedGoalColor.a
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 5746726367402340195, guid: 8cbdc0a76d6bc7148968a7757584fc92, type: 3}
+      propertyPath: completedGoalColor.b
+      value: 0.28547525
+      objectReference: {fileID: 0}
+    - target: {fileID: 5746726367402340195, guid: 8cbdc0a76d6bc7148968a7757584fc92, type: 3}
+      propertyPath: completedGoalColor.g
+      value: 0.9339623
+      objectReference: {fileID: 0}
+    - target: {fileID: 5746726367402340195, guid: 8cbdc0a76d6bc7148968a7757584fc92, type: 3}
+      propertyPath: completedGoalColor.r
+      value: 0.44573364
+      objectReference: {fileID: 0}
+    - target: {fileID: 5746726367402340195, guid: 8cbdc0a76d6bc7148968a7757584fc92, type: 3}
+      propertyPath: uncompleteGoalColor.a
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 5746726367402340195, guid: 8cbdc0a76d6bc7148968a7757584fc92, type: 3}
+      propertyPath: uncompleteGoalColor.b
+      value: 0.7075472
+      objectReference: {fileID: 0}
+    - target: {fileID: 5746726367402340195, guid: 8cbdc0a76d6bc7148968a7757584fc92, type: 3}
+      propertyPath: uncompleteGoalColor.g
+      value: 0.7075472
+      objectReference: {fileID: 0}
+    - target: {fileID: 5746726367402340195, guid: 8cbdc0a76d6bc7148968a7757584fc92, type: 3}
+      propertyPath: uncompleteGoalColor.r
+      value: 0.7075472
       objectReference: {fileID: 0}
     - target: {fileID: 8884140376160804173, guid: 8cbdc0a76d6bc7148968a7757584fc92, type: 3}
       propertyPath: levelManager

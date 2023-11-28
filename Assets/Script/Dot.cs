@@ -10,6 +10,9 @@ public class Dot : MonoBehaviour, IOccupying
     private bool isConnected;
 
     public Piece parentPiece;
+    public Vector2 relativePosition;
+
+    public Cell cell;
 
     //Consider moving Grid Position storage into here.
 

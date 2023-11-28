@@ -110,7 +110,15 @@ public class Piece : MonoBehaviour, IDragHandler
             }
         }
     }
-
+    public void EnforceDotPositions()
+    {
+        for (int i = 0;i < dotsArray.Length; i++)
+        {
+            RectTransform rect = dotsArray[i].GetComponent<RectTransform>();
+            //Set position
+            rect.anchoredPosition = new Vector2(gridPosArray[i].x * dotSpacing, gridPosArray[i].y * dotSpacing);
+        }
+    }
 
     public void Rotate()
     {
@@ -125,7 +133,8 @@ public class Piece : MonoBehaviour, IDragHandler
             gridPosArray[i] = new Vector2((pivotPoint.x - (gridPosArray[i].y - pivotPoint.y)),
                 (pivotPoint.y + (gridPosArray[i].x - pivotPoint.y)));
 
-            dotsArray[i].gameObject.transform.localPosition = gridPosArray[i] * dotSpacing;
+            dotsArray[i].relativePosition = gridPosArray[i] * dotSpacing;
+            dotsArray[i].gameObject.transform.localPosition = dotsArray[i].relativePosition;
         }
         foreach (var line in connections)
         {
