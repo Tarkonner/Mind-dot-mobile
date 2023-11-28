@@ -12,16 +12,12 @@ public class LevelEditor : EditorWindow
 
     int editTypeIndex = 0;
 
-    [MenuItem("Tools/My Custom Editor")]
+    [MenuItem("Tools/Level Editor")]
     public static void ShowMyEditor()
     {
         // This method is called when the user selects the menu item in the Editor
         EditorWindow wnd = GetWindow<LevelEditor>();
-        wnd.titleContent = new GUIContent("My Custom Editor");
-
-        //Limit size of window
-        wnd.minSize = new Vector2(450, 200);
-        wnd.maxSize = new Vector2(1920, 720);
+        wnd.titleContent = new GUIContent("Level Editor");
     }
 
 
@@ -54,7 +50,6 @@ public class LevelEditor : EditorWindow
         // Set the width and height of the grid
         grid.style.width = gridSize * blueprint.style.width.value.value + gridSize * spaceing; // cellWidth is the width of each cell
         grid.style.height = gridSize * blueprint.style.height.value.value + gridSize * spaceing; // cellHeight is the height of each cell
-        Sprite cellBackgorund = Resources.Load<Sprite>("Square");
 
         // Add cells to the grid
         for (int i = 0; i < 7; i++)
@@ -64,9 +59,6 @@ public class LevelEditor : EditorWindow
                 var cell = new Cell();
                 cell.ConvertToCell(new SerializableCell { gridPos = new Vector2Int(i, j) });
                 var cellElement = new CellElement(cell, new Vector2Int(i, j), this);
-
-                // Set a sprite for the cell
-                cellElement.SetSprite(cellBackgorund);
 
                 //Set spacing
                 cellElement.style.marginRight = new StyleLength(spaceing / 2);
@@ -89,23 +81,17 @@ public class LevelEditor : EditorWindow
                 break;
 
             case 1:
+                if (cellElement.childCount > 1)
+                    return;
+
+                DotElement dotElement = new DotElement(DotType.Red);
+
+                cellElement.Add(dotElement);
+
+                dotElement.style.left = (cellElement.resolvedStyle.width - dotElement.resolvedStyle.width) / 2;
+                dotElement.style.top = (cellElement.resolvedStyle.height - dotElement.resolvedStyle.height) / 2;
+
                 break;
         }
-    }
-}
-
-public class ListViewContainer : VisualElement
-{
-    private ListView listView;
-
-    public ListViewContainer()
-    {
-        listView = new ListView();
-        Add(listView);
-    }
-
-    public void AddCellElement(CellElement cellElement)
-    {
-        listView.Add(cellElement);
     }
 }

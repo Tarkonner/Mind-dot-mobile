@@ -25,16 +25,11 @@ public class CellElement : VisualElement
         // Create an Image to hold the sprite
         image = new Image();
         image.scaleMode = ScaleMode.ScaleToFit;
+        image.sprite = Resources.Load<Sprite>("Square");
         Add(image);
 
         // Add event handlers for mouse down and up events
         RegisterCallback<MouseDownEvent>(OnMouseDown);
-    }
-
-    public void SetSprite(Sprite sprite)
-    {
-        // Set the sprite for the cell
-        image.sprite = sprite;
     }
 
     private void OnMouseDown(MouseDownEvent evt)
@@ -44,4 +39,5 @@ public class CellElement : VisualElement
     }
 
     public void ChangeShowSprite() => image.SetEnabled(!image.enabledSelf);
+
 }
