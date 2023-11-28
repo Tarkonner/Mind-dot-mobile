@@ -71,15 +71,16 @@ public class Board : MonoBehaviour
                     {
                         //Make dot & get component
                         GameObject spawn = Instantiate(testDot, cellSpawn.transform);
-                        Dot makedDot = spawn.GetComponent<Dot>();
+                        Dot newDot = spawn.GetComponent<Dot>();
+                        cell.occupying= newDot;
 
                         //Load saved dot
                         SerializableDot seriDot = level.levelCells[x, y].occupying;
                         Dot savedDot = SaveConverter.ConvertToDot(seriDot);
-                        makedDot.Setup(savedDot.dotType);
+                        newDot.Setup(savedDot.dotType);
 
                         //Place on Board
-                        PlaceDot(new Vector2Int(x, y), makedDot);
+                        PlaceDot(new Vector2Int(x, y), newDot);
                     }
                 }
             }
