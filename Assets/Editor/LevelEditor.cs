@@ -9,8 +9,12 @@ public class LevelEditor : EditorWindow
     //Editor
     VisualElement rightPanel;
     VisualElement grid;
+    List<CellElement> cells = new List<CellElement>();
 
     int editTypeIndex = 0;
+
+    IntegerField horizontal;
+    IntegerField vertical;
 
     [MenuItem("Tools/Level Editor")]
     public static void ShowMyEditor()
@@ -23,19 +27,29 @@ public class LevelEditor : EditorWindow
 
     public void CreateGUI()
     {
+
         // Create a two-pane view with the left pane being fixed with
         var splitView = new TwoPaneSplitView(0, 250, TwoPaneSplitViewOrientation.Horizontal);
         // Add the panel to the visual tree by adding it as a child to the root element
         rootVisualElement.Add(splitView);
         // A TwoPaneSplitView always needs exactly two child elements
-        var leftPane = new ListViewContainer();
+        var leftPanel = new ListViewContainer();
         rightPanel = new ListViewContainer();
-        splitView.Add(leftPane);
+        splitView.Add(leftPanel);
         splitView.Add(rightPanel);
 
-        // Add buttons to the left pane
-        leftPane.Add(new Button(() => { editTypeIndex = 0; }) { text = "Turn cells on & off" });
-        leftPane.Add(new Button(() => { editTypeIndex = 1; }) { text = "Button 2" });
+        //Left planel
+        //Grid
+        leftPanel.Add(new Label("Grid size"));
+        leftPanel.Add(new Button(() => { editTypeIndex = 0; }) { text = "Turn cells on & off" });
+        horizontal = new IntegerField("Horizontal", 7);
+        leftPanel.Add(horizontal);
+        vertical = new IntegerField("Vertical", 7);
+        leftPanel.Add(vertical);
+        leftPanel.Add(new Button(() => { ResizeGrid(); }) { text = "Resize grid" });
+        //Dots
+        leftPanel.Add(new Label("Dots"));
+        leftPanel.Add(new Button(() => { editTypeIndex = 1; }) { text = "Red Dot" });
 
         // Create a grid layout
         grid = new VisualElement();
@@ -65,11 +79,36 @@ public class LevelEditor : EditorWindow
                 cellElement.style.marginTop = new StyleLength(spaceing);
 
                 grid.Add(cellElement);
+
+                cells.Add(cellElement);
             }
         }
 
         // Add the grid to the right pane
         rightPanel.Add(grid);
+    }
+
+    private void ResizeGrid()
+    {
+        if (horizontal.value > 7)
+            horizontal.value = 7;
+        if(vertical.value > 7)
+            vertical.value = 7;
+
+        for (int x = 0; x < 7; x++)
+        {
+            for (int y = 0; y < 7; y++)
+            {
+                if (horizontal.value <= x || vertical.value <= y)
+                    cells[y * 7 + x].ChangeShowSprite(false);
+                else
+                    cells[y * 7 + x].ChangeShowSprite(true);
+            }
+        }
+
+        //Reset
+        horizontal.value = 0;
+        vertical.value = 0;
     }
 
     public void OnCellClicked(CellElement cellElement)

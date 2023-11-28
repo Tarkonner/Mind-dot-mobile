@@ -39,5 +39,6 @@ public class CellElement : VisualElement
     }
 
     public void ChangeShowSprite() => image.SetEnabled(!image.enabledSelf);
+    public void ChangeShowSprite(bool targetState) => image.SetEnabled(targetState);
 
 }
