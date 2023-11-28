@@ -12,8 +12,6 @@ public class LevelManager : MonoBehaviour
     [SerializeField] private Board board;
     [SerializeField] private GameUI gameUI;
 
-    [Header("Folder")]
-    [SerializeField] private string levelFolderPath;
 
     private void Awake()
     {
