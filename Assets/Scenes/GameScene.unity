@@ -128,6 +128,11 @@ GameObject:
   m_CorrespondingSourceObject: {fileID: 8485062217576329147, guid: 8cbdc0a76d6bc7148968a7757584fc92, type: 3}
   m_PrefabInstance: {fileID: 3645564560661746013}
   m_PrefabAsset: {fileID: 0}
+--- !u!1 &191146027 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 7455748012478152145, guid: 8cbdc0a76d6bc7148968a7757584fc92, type: 3}
+  m_PrefabInstance: {fileID: 3645564560661746013}
+  m_PrefabAsset: {fileID: 0}
 --- !u!114 &224558969 stripped
 MonoBehaviour:
   m_CorrespondingSourceObject: {fileID: 8884140376160804173, guid: 8cbdc0a76d6bc7148968a7757584fc92, type: 3}
@@ -482,6 +487,10 @@ PrefabInstance:
       propertyPath: goalHolder
       value: 
       objectReference: {fileID: 161695130}
+    - target: {fileID: 5746726367402340195, guid: 8cbdc0a76d6bc7148968a7757584fc92, type: 3}
+      propertyPath: movingPiecesHolder
+      value: 
+      objectReference: {fileID: 191146027}
     - target: {fileID: 5746726367402340195, guid: 8cbdc0a76d6bc7148968a7757584fc92, type: 3}
       propertyPath: completedGoalColor.a
       value: 1
