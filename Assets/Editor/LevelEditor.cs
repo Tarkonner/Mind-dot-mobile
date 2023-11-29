@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using UnityEditor;
 using UnityEngine;
 using UnityEngine.UIElements;
+using static UnityEngine.GraphicsBuffer;
 
 public class LevelEditor : EditorWindow
 {
@@ -50,6 +51,9 @@ public class LevelEditor : EditorWindow
         //Dots
         leftPanel.Add(new Label("Dots"));
         leftPanel.Add(new Button(() => { editTypeIndex = 1; }) { text = "Red Dot" });
+        leftPanel.Add(new Button(() => { editTypeIndex = 2; }) { text = "Blue Dot" });
+        leftPanel.Add(new Button(() => { editTypeIndex = 3; }) { text = "Yellow Dot" });
+        leftPanel.Add(new Button(() => { editTypeIndex = 4; }) { text = "Remove Dot"});
 
         // Create a grid layout
         grid = new VisualElement();
@@ -99,10 +103,16 @@ public class LevelEditor : EditorWindow
         {
             for (int y = 0; y < 7; y++)
             {
+                CellElement target = cells[y * 7 + x];
+                
                 if (horizontal.value <= x || vertical.value <= y)
-                    cells[y * 7 + x].ChangeShowSprite(false);
+                {
+                    target.ChangeShowSprite(false);
+
+                    RemoveDot(target);
+                }
                 else
-                    cells[y * 7 + x].ChangeShowSprite(true);
+                    target.ChangeShowSprite(true);
             }
         }
 
@@ -119,18 +129,37 @@ public class LevelEditor : EditorWindow
                 cellElement.ChangeShowSprite();
                 break;
 
+            //Dots
+            //Placement
             case 1:
-                if (cellElement.childCount > 1)
+                if (cellElement.childCount > 0)
                     return;
-
-                DotElement dotElement = new DotElement(DotType.Red);
-
-                cellElement.Add(dotElement);
-
-                dotElement.style.left = (cellElement.resolvedStyle.width - dotElement.resolvedStyle.width) / 2;
-                dotElement.style.top = (cellElement.resolvedStyle.height - dotElement.resolvedStyle.height) / 2;
-
+                cellElement.SetDot(new DotElement(DotType.Red));
                 break;
+            case 2:
+                if (cellElement.childCount > 0)
+                    return;
+                cellElement.SetDot(new DotElement(DotType.Blue));
+                break;
+            case 3:
+                if (cellElement.childCount > 0)
+                    return;
+                cellElement.SetDot(new DotElement(DotType.Yellow));
+                break;
+            //Remove
+            case 4:
+                RemoveDot(cellElement);
+                break;
+        }
+    }
+
+    private void RemoveDot(VisualElement element)
+    {
+        //Remove dots
+        if (element.childCount > 0)
+        {
+            for (int i = element.childCount - 1; i >= 0; i--)
+                element.RemoveAt(i);
         }
     }
 }
