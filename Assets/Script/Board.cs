@@ -72,12 +72,14 @@ public class Board : MonoBehaviour
                         //Make dot & get component
                         GameObject spawn = Instantiate(testDot, cellSpawn.transform);
                         Dot newDot = spawn.GetComponent<Dot>();
-                        cell.occupying= newDot;
 
                         //Load saved dot
                         SerializableDot seriDot = level.levelCells[x, y].occupying;
                         Dot savedDot = SaveConverter.ConvertToDot(seriDot);
                         newDot.Setup(savedDot.dotType);
+
+                        newDot.cell = cell;
+                        cell.occupying = newDot;
 
                         //Place on Board
                         PlaceDot(new Vector2Int(x, y), newDot);
@@ -94,9 +96,6 @@ public class Board : MonoBehaviour
         {
             grid[coordinate.x, coordinate.y].occupying = targetDot;
             GameObject targetCell = grid[coordinate.x, coordinate.y].gameObject;
-
-            RectTransform dotRect = targetDot.GetComponent<RectTransform>();
-            RectTransform cellRect = targetCell.GetComponent<RectTransform>();
 
             targetDot.transform.position = targetCell.transform.position;
             targetDot.cell = targetCell.GetComponent<Cell>();

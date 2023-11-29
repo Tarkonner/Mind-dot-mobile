@@ -39,7 +39,6 @@ public class ShapeGoal : MonoBehaviour
         //The dots need to be scaled according to how many can fit within the square
         //The +1 is to account for the 0-indexed grid position.
         int detSize = Mathf.Max(new int[] { goalsizeX, goalsizeY});
-        Debug.Log(goalSpecifications);
         foreach (GoalDot goalDot in goalSpecifications)
         {
             RectTransform dotRect = goalDot.GetComponent<RectTransform>();
@@ -64,17 +63,14 @@ public class ShapeGoal : MonoBehaviour
 
     public bool CheckFulfilment(Board board)
     {
-        Debug.Log("In CheckFulfilment");
-        for (int x = 0; x < board.grid.GetLength(0)-goalsizeX; x++)
+        for (int x = 0; x < board.grid.GetLength(0); x++)
         {
-            for (int y = 0; y < board.grid.GetLength(1)-goalsizeY; y++)
+            for (int y = 0; y < board.grid.GetLength(1); y++)
             {
                 if (board.grid[x, y] == null) { continue; }
 
                 if (board.grid[x,y].occupying is Dot currentDot)
                 {
-                    Debug.Log($"Dot in {x},{y} of type {currentDot.dotType}");
-                    Debug.Log($"{currentDot.dotType} and {goalSpecifications[0].dotType}");
                     if(currentDot.dotType == goalSpecifications[0].dotType)
                     {
                         Debug.Log(goalSpecifications[0].dotType);
@@ -95,17 +91,15 @@ public class ShapeGoal : MonoBehaviour
     private bool CheckForPatternAtPosition(Board board, Vector2 currentPos) 
     {
         cellList.Clear();
-        for (int i = 1; i < goalSpecifications.Length; i++)
+        for (int i = 0; i < goalSpecifications.Length; i++)
         {
             Vector2 assumedPos = new Vector2(currentPos.x, currentPos.y) + (goalSpecifications[i].gridPos - goalSpecifications[0].gridPos);
-            Debug.Log(currentPos);
-            Debug.Log(assumedPos);
+            if ((int)assumedPos.x > board.grid.GetLength(0)-1 || (int)assumedPos.y > board.grid.GetLength(1)-1) { return false; }
             if (board.grid[(int)assumedPos.x, (int)assumedPos.y] == null) { return false; }
 
             if (board.grid[(int)assumedPos.x, (int)assumedPos.y].occupying is Dot checkDot &&
                 checkDot.dotType == goalSpecifications[i].dotType)
             {
-                Debug.Log(checkDot.dotType);
                 cellList.Add(board.grid[(int)assumedPos.x, (int)assumedPos.y]);
             }
             else
@@ -113,7 +107,6 @@ public class ShapeGoal : MonoBehaviour
                 return false;
             }
         }
-        Debug.Log("Pattern found!");
         //Act on cellList
         foreach (var cell in cellList)
         {
