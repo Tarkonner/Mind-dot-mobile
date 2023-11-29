@@ -6,9 +6,12 @@ using UnityEngine.UIElements;
 public class DotElement : VisualElement
 {
     private Image image;
+    public DotType dotType { get; private set; }
 
     public DotElement(DotType type) 
     {
+        this.dotType = type;
+
         image = new Image();
         image.sprite = Resources.Load<Sprite>("Circle");
         style.width = 30;

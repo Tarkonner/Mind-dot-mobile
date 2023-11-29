@@ -14,8 +14,15 @@ public class LevelEditor : EditorWindow
 
     int editTypeIndex = 0;
 
+    //Resize grid
     IntegerField horizontal;
     IntegerField vertical;
+
+    //Pieces & goals
+    private List<CellElement> savedCellElements = new List<CellElement>();
+    VisualElement pieceHolder;
+    VisualElement goalHolder;
+
 
     [MenuItem("Tools/Level Editor")]
     public static void ShowMyEditor()
@@ -54,7 +61,13 @@ public class LevelEditor : EditorWindow
         leftPanel.Add(new Button(() => { editTypeIndex = 2; }) { text = "Blue Dot" });
         leftPanel.Add(new Button(() => { editTypeIndex = 3; }) { text = "Yellow Dot" });
         leftPanel.Add(new Button(() => { editTypeIndex = 4; }) { text = "Remove Dot"});
+        //Pieces
+        leftPanel.Add(new Label("Pieces"));
+        leftPanel.Add(new Button(() => { editTypeIndex = 5; }) { text = "Mark piece dots" });
+        leftPanel.Add(new Button(() => { MakePiece(); }) { text = "Make piece" });
 
+
+        //Right panel
         // Create a grid layout
         grid = new VisualElement();
         grid.style.flexDirection = FlexDirection.Row;
@@ -88,8 +101,23 @@ public class LevelEditor : EditorWindow
             }
         }
 
-        // Add the grid to the right pane
+        // Add the grid to the right panel
         rightPanel.Add(grid);
+
+        //Pieces
+        rightPanel.Add(new Label("Pieces"));
+        pieceHolder = new VisualElement();
+        //Flexbox
+        pieceHolder.style.flexDirection = FlexDirection.Row;
+        pieceHolder.style.flexWrap = Wrap.Wrap;
+
+
+        //Goals
+        rightPanel.Add(new Label("Goals"));
+        goalHolder = new VisualElement();
+        //Flexbox
+        goalHolder.style.flexDirection = FlexDirection.Row;
+        goalHolder.style.flexWrap = Wrap.Wrap;
     }
 
     private void ResizeGrid()
@@ -123,8 +151,11 @@ public class LevelEditor : EditorWindow
 
     public void OnCellClicked(CellElement cellElement)
     {
+        
+
         switch (editTypeIndex)
         {
+            //Cells
             case 0:
                 cellElement.ChangeShowSprite();
                 break;
@@ -150,6 +181,20 @@ public class LevelEditor : EditorWindow
             case 4:
                 RemoveDot(cellElement);
                 break;
+
+            //Pieces
+            case 5:
+                if(!savedCellElements.Contains(cellElement))
+                {
+                    savedCellElements.Add(cellElement);
+                    cellElement.tintColor = Color.cyan;
+                }
+                else
+                {
+                    savedCellElements.Remove(cellElement);
+                    cellElement.tintColor = Color.white;
+                }
+                break;
         }
     }
 
@@ -161,5 +206,25 @@ public class LevelEditor : EditorWindow
             for (int i = element.childCount - 1; i >= 0; i--)
                 element.RemoveAt(i);
         }
+    }
+
+    private void MakePiece()
+    {
+        if (savedCellElements.Count > 0)
+        {
+            for (int i = 0; i < savedCellElements.Count; i++)
+            {
+                savedCellElements[i].tintColor = Color.white;
+
+                if (savedCellElements[i].holding == null)
+                    continue;
+
+                Debug.Log($"Cordinats: {savedCellElements[i].gridCoordinates}, with color {savedCellElements[i].holding.dotType}");
+            }            
+
+            savedCellElements.Clear();
+        }
+        else
+            Debug.Log("No cells chosen");
     }
 }

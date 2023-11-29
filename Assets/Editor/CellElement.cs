@@ -8,7 +8,7 @@ using UnityEngine.UIElements;
 public class CellElement : Image
 {
     public Cell cell { get; private set; }
-    private Vector2Int gridCoordinates;
+    public Vector2Int gridCoordinates { get; private set; }
     private LevelEditor levelEditor;
 
     public DotElement holding;
