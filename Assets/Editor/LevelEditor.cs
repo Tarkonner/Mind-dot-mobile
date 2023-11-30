@@ -107,6 +107,7 @@ public class LevelEditor : EditorWindow
         //Pieces
         rightPanel.Add(new Label("Pieces"));
         pieceHolder = new VisualElement();
+        rightPanel.Add(pieceHolder);
         //Flexbox
         pieceHolder.style.flexDirection = FlexDirection.Row;
         pieceHolder.style.flexWrap = Wrap.Wrap;
@@ -115,6 +116,7 @@ public class LevelEditor : EditorWindow
         //Goals
         rightPanel.Add(new Label("Goals"));
         goalHolder = new VisualElement();
+        rightPanel.Add(goalHolder);
         //Flexbox
         goalHolder.style.flexDirection = FlexDirection.Row;
         goalHolder.style.flexWrap = Wrap.Wrap;
@@ -212,15 +214,37 @@ public class LevelEditor : EditorWindow
     {
         if (savedCellElements.Count > 0)
         {
+            Vector2Int refencePoint = new Vector2Int(-88, -88);
+            PieceElement pieceElement = new PieceElement();
+
             for (int i = 0; i < savedCellElements.Count; i++)
-            {
+            {               
                 savedCellElements[i].tintColor = Color.white;
 
                 if (savedCellElements[i].holding == null)
                     continue;
 
-                Debug.Log($"Cordinats: {savedCellElements[i].gridCoordinates}, with color {savedCellElements[i].holding.dotType}");
-            }            
+                Vector2Int targetCoor;
+                //Set refence point
+                if (refencePoint == new Vector2Int(-88, -88))
+                {
+                    refencePoint = savedCellElements[i].gridCoordinates;
+                    targetCoor = new Vector2Int(0, 0);
+                }
+                else
+                {
+                    //Calculate coordinats
+                    targetCoor = refencePoint - savedCellElements[i].gridCoordinates;
+                }
+
+                pieceElement.AddDot(targetCoor, savedCellElements[i].holding);
+
+
+                Debug.Log($"Cordinats: {targetCoor}, with color {savedCellElements[i].holding.dotType}");
+            }
+
+            pieceElement.MakePiece();
+            pieceHolder.Add(pieceElement);
 
             savedCellElements.Clear();
         }
