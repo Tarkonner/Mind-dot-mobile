@@ -22,6 +22,8 @@ public class LevelEditor : EditorWindow
     private List<CellElement> savedCellElements = new List<CellElement>();
     VisualElement pieceHolder;
     VisualElement goalHolder;
+    List<PieceElement> pieces = new List<PieceElement>();
+   
 
 
     [MenuItem("Tools/Level Editor")]
@@ -111,7 +113,7 @@ public class LevelEditor : EditorWindow
         //Flexbox
         pieceHolder.style.flexDirection = FlexDirection.Row;
         pieceHolder.style.flexWrap = Wrap.Wrap;
-
+        pieceHolder.style.justifyContent = Justify.SpaceAround;
 
         //Goals
         rightPanel.Add(new Label("Goals"));
@@ -216,6 +218,7 @@ public class LevelEditor : EditorWindow
         {
             Vector2Int refencePoint = new Vector2Int(-88, -88);
             PieceElement pieceElement = new PieceElement();
+            pieces.Add(pieceElement);
 
             for (int i = 0; i < savedCellElements.Count; i++)
             {               
@@ -243,7 +246,9 @@ public class LevelEditor : EditorWindow
                 Debug.Log($"Cordinats: {targetCoor}, with color {savedCellElements[i].holding.dotType}");
             }
 
-            pieceElement.MakePiece();
+            pieceElement.ConstructPiece();
+            pieceElement.style.marginRight = new StyleLength(10); // Add right margin
+            pieceElement.style.marginBottom = new StyleLength(10); // Add bottom margin
             pieceHolder.Add(pieceElement);
 
             savedCellElements.Clear();
