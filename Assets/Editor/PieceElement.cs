@@ -10,16 +10,29 @@ public class PieceElement : VisualElement
 
     private Vector2Int gridSize;
 
-    public void MakePiece()
+    private int imageSize = 30;
+    private int spaceing = 3;
+
+    public PieceElement() 
     {
+        style.flexDirection = FlexDirection.Row;
+        style.flexWrap = Wrap.Wrap;
+        style.justifyContent = Justify.SpaceAround;
+    }
+
+    public void ConstructPiece()
+    {
+        style.width = gridSize.x * imageSize + gridSize.x * spaceing; // cellWidth is the width of each cell
+        style.height = gridSize.y * imageSize + gridSize.y * spaceing; // cellHeight is the height of each cell
+
         for (int x = 0; x < gridSize.x; x++)
         {
             for (int y = 0; y < gridSize.y; y++)
             {
                 Image targetImage = new Image();
                 targetImage.sprite = Resources.Load<Sprite>("Square");
-                targetImage.style.width = 30;
-                targetImage.style.height = 30;
+                targetImage.style.width = imageSize;
+                targetImage.style.height = imageSize;
 
                 //Flexbox
                 targetImage.style.flexDirection = FlexDirection.Row;
@@ -34,7 +47,8 @@ public class PieceElement : VisualElement
                 //Dot
                 if(dots.ContainsKey(new Vector2Int(x, y)))
                 {
-                    
+                    DotElement spawnedDot = new DotElement(dots[new Vector2Int(x, y)].dotType);
+                    targetImage.Add(spawnedDot);
                 }
             }
         }
@@ -43,12 +57,16 @@ public class PieceElement : VisualElement
 
     public void AddDot(Vector2Int coordinats, DotElement dot)
     {
-        dots.Add(coordinats, dot);
+        Vector2Int calculation = new Vector2Int(
+            Mathf.Abs(coordinats.x), 
+            Mathf.Abs(coordinats.y));
+
+        dots.Add(calculation, dot);
 
         //Grid size
-        if(Mathf.Abs(coordinats.x) + 1 > gridSize.x)
-            gridSize.x = Mathf.Abs(coordinats.x) + 1;
-        if(Mathf.Abs(coordinats.y) + 1 > gridSize.y)
-            gridSize.y = Mathf.Abs(coordinats.y) + 1;
+        if(calculation.x + 1 > gridSize.x)
+            gridSize.x = calculation.x + 1;
+        if(calculation.y + 1 > gridSize.y)
+            gridSize.y = calculation.y + 1;
     }
 }
