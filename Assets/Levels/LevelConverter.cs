@@ -2,14 +2,17 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class LevelConverter
+public class LevelConverter : MonoBehaviour
 {
-    private string version;
-    public bool SaveLevel()
+    // Start is called before the first frame update
+    void Start()
     {
-        bool success = true;
-
-        return success;
+        
     }
 
+    // Update is called once per frame
+    void Update()
+    {
+        
+    }
 }
