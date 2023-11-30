@@ -91,7 +91,7 @@ public class LevelEditor : EditorWindow
             {
                 var cell = new Cell();
                 cell.ConvertToCell(new SerializableCell { gridPos = new Vector2Int(i, j) });
-                var cellElement = new CellElement(cell, new Vector2Int(i, j), this);
+                var cellElement = new CellElement(cell, new Vector2Int(j, i), this);
 
                 //Set spacing
                 cellElement.style.marginRight = new StyleLength(spaceing / 2);
@@ -216,36 +216,49 @@ public class LevelEditor : EditorWindow
     {
         if (savedCellElements.Count > 0)
         {
-            Vector2Int refencePoint = new Vector2Int(-88, -88);
+            //Remove cells without dots
+            for (int i = savedCellElements.Count - 1; i >= 0; i--)
+            {
+                if (savedCellElements[i].holding == null)
+                    savedCellElements.RemoveAt(i);
+            }
+
             PieceElement pieceElement = new PieceElement();
             pieces.Add(pieceElement);
+
+
+
+            //Calculate position
+            int lowX = 10;
+            int highX = 0;
+            int lowY = 10;
+            int highY = 0;
+            for (int i = 0; i < savedCellElements.Count; i++)
+            {
+                //Low
+                if (lowX > savedCellElements[i].gridCoordinates.x)
+                    lowX = savedCellElements[i].gridCoordinates.x;
+                if (lowY > savedCellElements[i].gridCoordinates.y)
+                    lowY = savedCellElements[i].gridCoordinates.y;
+
+                //High
+                if (highX < savedCellElements[i].gridCoordinates.x)
+                    highX = savedCellElements[i].gridCoordinates.x;
+                if (highY < savedCellElements[i].gridCoordinates.y)
+                    highY = savedCellElements[i].gridCoordinates.y;
+            }
 
             for (int i = 0; i < savedCellElements.Count; i++)
             {               
                 savedCellElements[i].tintColor = Color.white;
 
-                if (savedCellElements[i].holding == null)
-                    continue;
-
-                Vector2Int targetCoor;
                 //Set refence point
-                if (refencePoint == new Vector2Int(-88, -88))
-                {
-                    refencePoint = savedCellElements[i].gridCoordinates;
-                    targetCoor = new Vector2Int(0, 0);
-                }
-                else
-                {
-                    //Calculate coordinats
-                    targetCoor = refencePoint - savedCellElements[i].gridCoordinates;
-                }
+                Vector2Int targetCoor = new Vector2Int(lowX, lowY) - savedCellElements[i].gridCoordinates; 
 
                 pieceElement.AddDot(targetCoor, savedCellElements[i].holding);
-
-
-                Debug.Log($"Cordinats: {targetCoor}, with color {savedCellElements[i].holding.dotType}");
             }
 
+            Debug.Log($"Grid size X:{highX - lowX + 1}; Y:{highY - lowY + 1}");
             pieceElement.ConstructPiece();
             pieceElement.style.marginRight = new StyleLength(10); // Add right margin
             pieceElement.style.marginBottom = new StyleLength(10); // Add bottom margin
