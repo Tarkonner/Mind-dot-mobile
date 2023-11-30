@@ -5,12 +5,13 @@ using UnityEditor;
 using UnityEngine;
 using UnityEngine.UIElements;
 
-public class CellElement : VisualElement
+public class CellElement : Image
 {
     public Cell cell { get; private set; }
-    private Image image;
-    private Vector2Int gridCoordinates;
+    public Vector2Int gridCoordinates { get; private set; }
     private LevelEditor levelEditor;
+
+    public DotElement holding;
 
     public CellElement(Cell cell, Vector2Int coordinats, LevelEditor editor)
     {
@@ -23,18 +24,22 @@ public class CellElement : VisualElement
         gridCoordinates = coordinats;
 
         // Create an Image to hold the sprite
-        image = new Image();
-        image.scaleMode = ScaleMode.ScaleToFit;
-        Add(image);
+        this.scaleMode = ScaleMode.ScaleToFit;
+        this.sprite = Resources.Load<Sprite>("Square");
 
         // Add event handlers for mouse down and up events
         RegisterCallback<MouseDownEvent>(OnMouseDown);
+
+        //Flexbox
+        style.flexDirection = FlexDirection.Row;
+        style.justifyContent = Justify.Center;
+        style.alignItems = Align.Center;
     }
 
-    public void SetSprite(Sprite sprite)
+    public void SetDot(DotElement dot)
     {
-        // Set the sprite for the cell
-        image.sprite = sprite;
+        holding = dot;
+        this.Add(dot);
     }
 
     private void OnMouseDown(MouseDownEvent evt)
@@ -43,5 +48,7 @@ public class CellElement : VisualElement
         levelEditor.OnCellClicked(this);
     }
 
-    public void ChangeShowSprite() => image.SetEnabled(!image.enabledSelf);
+    public void ChangeShowSprite() => this.SetEnabled(!this.enabledSelf);
+    public void ChangeShowSprite(bool targetState) => this.SetEnabled(targetState);
+
 }
