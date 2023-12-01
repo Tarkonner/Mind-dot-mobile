@@ -3,23 +3,26 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UIElements;
 
-public class PieceElement : VisualElement
+public class GridElement : VisualElement
 {
-    public Dictionary<Vector2Int, DotElement> dots = new Dictionary<Vector2Int, DotElement>();
+    protected Vector2Int gridSize;
 
-    private Vector2Int gridSize;
+    protected int imageSize = 30;
+    protected int spaceing = 3;
 
-    private int imageSize = 30;
-    private int spaceing = 3;
+    protected Sprite cellBackground;
 
-    public PieceElement() 
+    public GridElement()
     {
         style.flexDirection = FlexDirection.Row;
         style.flexWrap = Wrap.Wrap;
         style.justifyContent = Justify.SpaceAround;
+
+        //Set sprite
+        cellBackground = Resources.Load<Sprite>("Square");
     }
 
-    public void ConstructPiece()
+    public virtual void Construct()
     {
         style.width = gridSize.x * imageSize + gridSize.x * spaceing; // cellWidth is the width of each cell
         style.height = gridSize.y * imageSize + gridSize.y * spaceing; // cellHeight is the height of each cell
@@ -29,7 +32,7 @@ public class PieceElement : VisualElement
             for (int y = 0; y < gridSize.y; y++)
             {
                 Image targetImage = new Image();
-                targetImage.sprite = Resources.Load<Sprite>("Square");
+                targetImage.sprite = cellBackground;
                 targetImage.style.width = imageSize;
                 targetImage.style.height = imageSize;
 
@@ -42,31 +45,17 @@ public class PieceElement : VisualElement
                 var cell = new VisualElement();
                 cell.Add(targetImage);
                 this.Add(targetImage);
-
-                //Dot
-                if(dots.ContainsKey(new Vector2Int(x, y)))
-                {
-                    DotElement spawnedDot = new DotElement(dots[new Vector2Int(x, y)].dotType);
-                    targetImage.Add(spawnedDot);
-                }
             }
         }
     }
 
-
-
-    public void AddDot(Vector2Int coordinats, DotElement dot)
+    public virtual void PlaceDot()
     {
-        Vector2Int calculation = new Vector2Int(
-            Mathf.Abs(coordinats.x), 
-            Mathf.Abs(coordinats.y));
 
-        dots.Add(calculation, dot);
+    }
 
-        //Grid size
-        if(calculation.x + 1 > gridSize.x)
-            gridSize.x = calculation.x + 1;
-        if(calculation.y + 1 > gridSize.y)
-            gridSize.y = calculation.y + 1;
+    public virtual void SetGridSize(Vector2Int size)
+    {
+        gridSize = size;
     }
 }
