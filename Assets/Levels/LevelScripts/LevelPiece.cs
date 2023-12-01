@@ -16,4 +16,14 @@ public class LevelPiece
             dotTypes[i] = piece.dotsArray[i].dotType;
         }
     }
+    public LevelPiece(PieceElement pE)
+    {
+        int i = 0;
+        foreach (KeyValuePair<Vector2Int,DotElement> kVPair in pE.dots)
+        {
+            dotTypes[i] = kVPair.Value.dotType;
+            dotPositions[i] = kVPair.Key;
+            i++;
+        }
+    }
 }

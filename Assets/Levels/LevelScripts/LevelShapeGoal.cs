@@ -17,4 +17,9 @@ public class LevelShapeGoal
             goalDots[i] = goal.goalSpecifications[i].dotType;
         }
     }
+    public LevelShapeGoal(Vector2[] goalSpecifications, DotType[] goalDots)
+    {
+        this.goalSpecifications = goalSpecifications;
+        this.goalDots = goalDots;
+    }
 }
