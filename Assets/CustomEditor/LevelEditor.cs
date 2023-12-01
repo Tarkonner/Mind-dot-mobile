@@ -1,9 +1,7 @@
-using System.Collections;
 using System.Collections.Generic;
 using UnityEditor;
 using UnityEngine;
 using UnityEngine.UIElements;
-using static UnityEngine.GraphicsBuffer;
 
 public class LevelEditor : EditorWindow
 {
@@ -23,7 +21,8 @@ public class LevelEditor : EditorWindow
     VisualElement pieceHolder;
     VisualElement goalHolder;
     List<PieceElement> pieces = new List<PieceElement>();
-   
+    List<ShapeGoalElement> shapeGoals = new List<ShapeGoalElement>();
+
 
 
     [MenuItem("Tools/Level Editor")]
@@ -62,12 +61,14 @@ public class LevelEditor : EditorWindow
         leftPanel.Add(new Button(() => { editTypeIndex = 1; }) { text = "Red Dot" });
         leftPanel.Add(new Button(() => { editTypeIndex = 2; }) { text = "Blue Dot" });
         leftPanel.Add(new Button(() => { editTypeIndex = 3; }) { text = "Yellow Dot" });
-        leftPanel.Add(new Button(() => { editTypeIndex = 4; }) { text = "Remove Dot"});
+        leftPanel.Add(new Button(() => { editTypeIndex = 4; }) { text = "Remove Dot" });
         //Pieces
         leftPanel.Add(new Label("Pieces"));
         leftPanel.Add(new Button(() => { editTypeIndex = 5; }) { text = "Mark piece dots" });
         leftPanel.Add(new Button(() => { MakePiece(); }) { text = "Make piece" });
-
+        //Goals
+        leftPanel.Add(new Label("Goals"));
+        leftPanel.Add(new Button(() => { MakeGoal(); }) { text = "TestShapeGoal" });
 
         //Right panel
         // Create a grid layout
@@ -80,6 +81,7 @@ public class LevelEditor : EditorWindow
         int gridSize = 7;
         int spaceing = 2;
 
+
         // Set the width and height of the grid
         grid.style.width = gridSize * blueprint.style.width.value.value + gridSize * spaceing; // cellWidth is the width of each cell
         grid.style.height = gridSize * blueprint.style.height.value.value + gridSize * spaceing; // cellHeight is the height of each cell
@@ -90,8 +92,8 @@ public class LevelEditor : EditorWindow
             for (int j = 0; j < 7; j++)
             {
                 var cell = new Cell();
-                cell.ConvertToCell(new SerializableCell { gridPos = new Vector2Int(i, j) });
-                var cellElement = new CellElement(cell, new Vector2Int(i, j), this);
+                cell.ConvertToCell(new SerializableCell { gridPos = new Vector2Int(i, j) }); //try change i & j placing
+                var cellElement = new CellElement(cell, new Vector2Int(j, i), this);
 
                 //Set spacing
                 cellElement.style.marginRight = new StyleLength(spaceing / 2);
@@ -122,13 +124,14 @@ public class LevelEditor : EditorWindow
         //Flexbox
         goalHolder.style.flexDirection = FlexDirection.Row;
         goalHolder.style.flexWrap = Wrap.Wrap;
+        goalHolder.style.justifyContent = Justify.SpaceAround;
     }
 
     private void ResizeGrid()
     {
         if (horizontal.value > 7)
             horizontal.value = 7;
-        if(vertical.value > 7)
+        if (vertical.value > 7)
             vertical.value = 7;
 
         for (int x = 0; x < 7; x++)
@@ -136,7 +139,7 @@ public class LevelEditor : EditorWindow
             for (int y = 0; y < 7; y++)
             {
                 CellElement target = cells[y * 7 + x];
-                
+
                 if (horizontal.value <= x || vertical.value <= y)
                 {
                     target.ChangeShowSprite(false);
@@ -155,7 +158,7 @@ public class LevelEditor : EditorWindow
 
     public void OnCellClicked(CellElement cellElement)
     {
-        
+
 
         switch (editTypeIndex)
         {
@@ -188,7 +191,7 @@ public class LevelEditor : EditorWindow
 
             //Pieces
             case 5:
-                if(!savedCellElements.Contains(cellElement))
+                if (!savedCellElements.Contains(cellElement))
                 {
                     savedCellElements.Add(cellElement);
                     cellElement.tintColor = Color.cyan;
@@ -216,37 +219,48 @@ public class LevelEditor : EditorWindow
     {
         if (savedCellElements.Count > 0)
         {
-            Vector2Int refencePoint = new Vector2Int(-88, -88);
+            //Change back color
+            for (int i = 0; i < savedCellElements.Count; i++)
+                savedCellElements[i].tintColor = Color.white;
+
+
+            //Remove cells without dots
+            for (int i = savedCellElements.Count - 1; i >= 0; i--)
+            {
+                if (savedCellElements[i].holding == null)
+                    savedCellElements.RemoveAt(i);
+            }
+
             PieceElement pieceElement = new PieceElement();
             pieces.Add(pieceElement);
 
+            //Calculate position
+            Vector2Int lowPoint = new Vector2Int(10, 10);
+            Vector2Int highPoint = new Vector2Int(0, 0);
             for (int i = 0; i < savedCellElements.Count; i++)
-            {               
-                savedCellElements[i].tintColor = Color.white;
+            {
+                //Low
+                if (lowPoint.x > savedCellElements[i].gridCoordinates.x)
+                    lowPoint.x = savedCellElements[i].gridCoordinates.x;
+                if (lowPoint.y > savedCellElements[i].gridCoordinates.y)
+                    lowPoint.y = savedCellElements[i].gridCoordinates.y;
 
-                if (savedCellElements[i].holding == null)
-                    continue;
-
-                Vector2Int targetCoor;
-                //Set refence point
-                if (refencePoint == new Vector2Int(-88, -88))
-                {
-                    refencePoint = savedCellElements[i].gridCoordinates;
-                    targetCoor = new Vector2Int(0, 0);
-                }
-                else
-                {
-                    //Calculate coordinats
-                    targetCoor = refencePoint - savedCellElements[i].gridCoordinates;
-                }
-
-                pieceElement.AddDot(targetCoor, savedCellElements[i].holding);
-
-
-                Debug.Log($"Cordinats: {targetCoor}, with color {savedCellElements[i].holding.dotType}");
+                //High
+                if (highPoint.x < savedCellElements[i].gridCoordinates.x)
+                    highPoint.x = savedCellElements[i].gridCoordinates.x;
+                if (highPoint.y < savedCellElements[i].gridCoordinates.y)
+                    highPoint.y = savedCellElements[i].gridCoordinates.y;
             }
 
-            pieceElement.ConstructPiece();
+            for (int i = 0; i < savedCellElements.Count; i++)
+            {
+                //Set refence point
+                Vector2Int targetCoor = savedCellElements[i].gridCoordinates - new Vector2Int(lowPoint.x, lowPoint.y);
+
+                pieceElement.AddDot(targetCoor, savedCellElements[i].holding);
+            }
+
+            pieceElement.Construct();
             pieceElement.style.marginRight = new StyleLength(10); // Add right margin
             pieceElement.style.marginBottom = new StyleLength(10); // Add bottom margin
             pieceHolder.Add(pieceElement);
@@ -255,5 +269,16 @@ public class LevelEditor : EditorWindow
         }
         else
             Debug.Log("No cells chosen");
+    }
+
+    private void MakeGoal()
+    {
+        //Make object
+        ShapeGoalElement shapeGoalElement = new ShapeGoalElement();
+        shapeGoals.Add(shapeGoalElement);
+        goalHolder.Add(shapeGoalElement);
+
+        shapeGoalElement.SetGridSize(new Vector2Int(2, 2));
+        shapeGoalElement.Construct();
     }
 }
