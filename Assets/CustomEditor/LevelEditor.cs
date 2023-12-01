@@ -260,7 +260,7 @@ public class LevelEditor : EditorWindow
                 pieceElement.AddDot(targetCoor, savedCellElements[i].holding);
             }
 
-            pieceElement.ConstructPiece();
+            pieceElement.Construct();
             pieceElement.style.marginRight = new StyleLength(10); // Add right margin
             pieceElement.style.marginBottom = new StyleLength(10); // Add bottom margin
             pieceHolder.Add(pieceElement);
