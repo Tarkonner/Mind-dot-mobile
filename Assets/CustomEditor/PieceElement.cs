@@ -17,6 +17,8 @@ public class PieceElement : GridElement
         if(calculation.y + 1 > gridSize.y)
             gridSize.y = calculation.y + 1;
 
+        Debug.Log($"Dot[{dot.dotType}] coordinats x:{coordinats.x}, y:{coordinats.y}");
+
         base.AddDot(coordinats, dot);
     }
 }

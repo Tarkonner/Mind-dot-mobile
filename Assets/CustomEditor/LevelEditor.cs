@@ -16,13 +16,14 @@ public class LevelEditor : EditorWindow
     IntegerField horizontal;
     IntegerField vertical;
 
-    //Pieces & goals
-    private List<CellElement> savedCellElements = new List<CellElement>();
+    //Pieces
+    private List<CellElement> piecesSavedCells = new List<CellElement>();
     VisualElement pieceHolder;
-    VisualElement goalHolder;
     List<PieceElement> pieces = new List<PieceElement>();
+    //Goals
+    private List<CellElement> goalSavedCells = new List<CellElement>();
+    VisualElement goalHolder;
     List<ShapeGoalElement> shapeGoals = new List<ShapeGoalElement>();
-
 
 
     [MenuItem("Tools/Level Editor")]
@@ -68,6 +69,7 @@ public class LevelEditor : EditorWindow
         leftPanel.Add(new Button(() => { MakePiece(); }) { text = "Make piece" });
         //Goals
         leftPanel.Add(new Label("Goals"));
+        leftPanel.Add(new Button(() => { editTypeIndex = 6; }) { text = "Mark goal dots" });
         leftPanel.Add(new Button(() => { MakeGoal(); }) { text = "TestShapeGoal" });
         //Board
         leftPanel.Add(new Label("Board"));
@@ -148,7 +150,7 @@ public class LevelEditor : EditorWindow
                 {
                     target.ChangeShowSprite(false);
 
-                    RemoveDot(target);
+                    target.RemoveDot();
                 }
                 else
                     target.ChangeShowSprite(true);
@@ -174,66 +176,79 @@ public class LevelEditor : EditorWindow
             //Dots
             //Placement
             case 1:
-                if (cellElement.childCount > 0)
+                if (!cellElement.turnedOff && cellElement.childCount > 0)
                     return;
                 cellElement.SetDot(new DotElement(DotType.Red));
                 break;
             case 2:
-                if (cellElement.childCount > 0)
+                if (!cellElement.turnedOff && cellElement.childCount > 0)
                     return;
                 cellElement.SetDot(new DotElement(DotType.Blue));
                 break;
             case 3:
-                if (cellElement.childCount > 0)
+                if (!cellElement.turnedOff && cellElement.childCount > 0)
                     return;
                 cellElement.SetDot(new DotElement(DotType.Yellow));
                 break;
             //Remove
             case 4:
-                RemoveDot(cellElement);
+                cellElement.RemoveDot();
                 break;
 
             //Pieces
             case 5:
-                if (!savedCellElements.Contains(cellElement))
+                if (cellElement.partOfPiece || cellElement.partOfGoal)
+                    break;
+
+                if (!piecesSavedCells.Contains(cellElement))
                 {
-                    savedCellElements.Add(cellElement);
+                    piecesSavedCells.Add(cellElement);
                     cellElement.tintColor = Color.cyan;
                 }
                 else
                 {
-                    savedCellElements.Remove(cellElement);
-                    cellElement.tintColor = Color.white;
+                    piecesSavedCells.Remove(cellElement);
+                    cellElement.SetDefultColor();
                 }
                 break;
-        }
-    }
 
-    private void RemoveDot(VisualElement element)
-    {
-        //Remove dots
-        if (element.childCount > 0)
-        {
-            for (int i = element.childCount - 1; i >= 0; i--)
-                element.RemoveAt(i);
+            //Goals
+            case 6:
+                if (cellElement.partOfPiece || cellElement.partOfGoal)
+                    break;
+
+                if(!goalSavedCells.Contains(cellElement))
+                {
+                    goalSavedCells.Add(cellElement);
+                    cellElement.tintColor = Color.yellow;
+                }
+                else
+                {
+                    goalSavedCells.Remove(cellElement);
+                    cellElement.SetDefultColor();
+                }
+                break;
         }
     }
 
     private void MakePiece()
     {
-        if (savedCellElements.Count > 0)
+        if (piecesSavedCells.Count > 0)
         {
             //Change back color
-            for (int i = 0; i < savedCellElements.Count; i++)
-                savedCellElements[i].tintColor = Color.white;
+            for (int i = 0; i < piecesSavedCells.Count; i++)
+                piecesSavedCells[i].tintColor = Color.white;
 
 
             //Remove cells without dots
-            for (int i = savedCellElements.Count - 1; i >= 0; i--)
+            for (int i = piecesSavedCells.Count - 1; i >= 0; i--)
             {
-                if (savedCellElements[i].holding == null)
-                    savedCellElements.RemoveAt(i);
+                if (piecesSavedCells[i].holding == null)
+                    piecesSavedCells.RemoveAt(i);
             }
+
+            if (piecesSavedCells.Count == 0)
+                return;
 
             PieceElement pieceElement = new PieceElement();
             pieces.Add(pieceElement);
@@ -241,27 +256,30 @@ public class LevelEditor : EditorWindow
             //Calculate position
             Vector2Int lowPoint = new Vector2Int(10, 10);
             Vector2Int highPoint = new Vector2Int(0, 0);
-            for (int i = 0; i < savedCellElements.Count; i++)
+            for (int i = 0; i < piecesSavedCells.Count; i++)
             {
                 //Low
-                if (lowPoint.x > savedCellElements[i].gridCoordinates.x)
-                    lowPoint.x = savedCellElements[i].gridCoordinates.x;
-                if (lowPoint.y > savedCellElements[i].gridCoordinates.y)
-                    lowPoint.y = savedCellElements[i].gridCoordinates.y;
+                if (lowPoint.x > piecesSavedCells[i].gridCoordinates.x)
+                    lowPoint.x = piecesSavedCells[i].gridCoordinates.x;
+                if (lowPoint.y > piecesSavedCells[i].gridCoordinates.y)
+                    lowPoint.y = piecesSavedCells[i].gridCoordinates.y;
 
                 //High
-                if (highPoint.x < savedCellElements[i].gridCoordinates.x)
-                    highPoint.x = savedCellElements[i].gridCoordinates.x;
-                if (highPoint.y < savedCellElements[i].gridCoordinates.y)
-                    highPoint.y = savedCellElements[i].gridCoordinates.y;
+                if (highPoint.x < piecesSavedCells[i].gridCoordinates.x)
+                    highPoint.x = piecesSavedCells[i].gridCoordinates.x;
+                if (highPoint.y < piecesSavedCells[i].gridCoordinates.y)
+                    highPoint.y = piecesSavedCells[i].gridCoordinates.y;
             }
 
-            for (int i = 0; i < savedCellElements.Count; i++)
+            for (int i = 0; i < piecesSavedCells.Count; i++)
             {
                 //Set refence point
-                Vector2Int targetCoor = savedCellElements[i].gridCoordinates - new Vector2Int(lowPoint.x, lowPoint.y);
+                Vector2Int targetCoor = piecesSavedCells[i].gridCoordinates - new Vector2Int(lowPoint.x, lowPoint.y);
 
-                pieceElement.AddDot(targetCoor, savedCellElements[i].holding);
+                pieceElement.AddDot(targetCoor, piecesSavedCells[i].holding);
+
+                //Change background color
+                piecesSavedCells[i].SetPiece(pieceElement);
             }
 
             pieceElement.Construct();
@@ -269,7 +287,7 @@ public class LevelEditor : EditorWindow
             pieceElement.style.marginBottom = new StyleLength(10); // Add bottom margin
             pieceHolder.Add(pieceElement);
 
-            savedCellElements.Clear();
+            piecesSavedCells.Clear();
         }
         else
             Debug.Log("No cells chosen");
@@ -288,7 +306,6 @@ public class LevelEditor : EditorWindow
 
     private void ClearAll()
     {
-
         //Dots
         for (int x = 0; x < 7; x++)
         {
@@ -297,9 +314,13 @@ public class LevelEditor : EditorWindow
                 CellElement target = cells[y * 7 + x];
                 target.ChangeShowSprite(true);
 
-                RemoveDot(target);
+                target.RemoveDot();
+                target.RemovePiece();
+                target.RemoveGoal();
             }
         }
+
+        piecesSavedCells.Clear();
 
         //Pieces
         if (pieces.Count > 0)
@@ -314,7 +335,5 @@ public class LevelEditor : EditorWindow
             for (int i = shapeGoals.Count - 1; i >= 0; i--)
                 goalHolder.Remove(shapeGoals[i]);
         }
-
-
     }
 }

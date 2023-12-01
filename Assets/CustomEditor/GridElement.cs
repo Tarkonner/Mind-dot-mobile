@@ -33,9 +33,9 @@ public class GridElement : VisualElement
         style.width = gridSize.x * imageSize + gridSize.x * spaceing; // cellWidth is the width of each cell
         style.height = gridSize.y * imageSize + gridSize.y * spaceing; // cellHeight is the height of each cell
 
-        for (int x = 0; x < gridSize.x; x++)
+        for (int y = 0; y < gridSize.y; y++)            
         {
-            for (int y = 0; y < gridSize.y; y++)
+            for (int x = 0; x < gridSize.x; x++)
             {
                 Image targetImage = new Image();
                 images[x, y] = targetImage;
