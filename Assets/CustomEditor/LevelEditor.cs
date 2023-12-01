@@ -69,6 +69,10 @@ public class LevelEditor : EditorWindow
         //Goals
         leftPanel.Add(new Label("Goals"));
         leftPanel.Add(new Button(() => { MakeGoal(); }) { text = "TestShapeGoal" });
+        //Board
+        leftPanel.Add(new Label("Board"));
+        leftPanel.Add(new Button(() => { ClearAll(); }) { text = "Clear board" });
+
 
         //Right panel
         // Create a grid layout
@@ -280,5 +284,37 @@ public class LevelEditor : EditorWindow
 
         shapeGoalElement.SetGridSize(new Vector2Int(2, 2));
         shapeGoalElement.Construct();
+    }
+
+    private void ClearAll()
+    {
+
+        //Dots
+        for (int x = 0; x < 7; x++)
+        {
+            for (int y = 0; y < 7; y++)
+            {
+                CellElement target = cells[y * 7 + x];
+                target.ChangeShowSprite(true);
+
+                RemoveDot(target);
+            }
+        }
+
+        //Pieces
+        if (pieces.Count > 0)
+        {            
+            for (int i = pieces.Count - 1; i >= 0; i--)
+                pieceHolder.Remove(pieces[i]);
+        }
+
+        //Goals
+        if(shapeGoals.Count > 0)
+        {
+            for (int i = shapeGoals.Count - 1; i >= 0; i--)
+                goalHolder.Remove(shapeGoals[i]);
+        }
+
+
     }
 }
