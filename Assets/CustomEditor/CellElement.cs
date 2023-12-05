@@ -56,15 +56,19 @@ public class CellElement : Image
         if (holding == null)
             return;
 
+        //Remove Pieces
         if (partOfPiece)
             levelEditor.RemovePiece(piece);
 
-        if(partOfShapeGoals.Count > 0)
-        {
-            for (int i = partOfShapeGoals.Count - 1; i >= 0; i--)
-                levelEditor.RemoveGoal(partOfShapeGoals[i]);
-        }
+        //Remove Shape goals
+        levelEditor.RemoveGoal(partOfShapeGoals);
+        //for (int i = partOfShapeGoals.Count - 1; i >= 0; i--)
+        //{
+        //    levelEditor.RemoveGoal(partOfShapeGoals[i]);
+        //}
+        partOfShapeGoals.Clear();
 
+        //Remove dot
         this.Remove(holding);
         holding = null; 
     }

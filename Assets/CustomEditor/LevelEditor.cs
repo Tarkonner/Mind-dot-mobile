@@ -385,14 +385,34 @@ public class LevelEditor : EditorWindow
     }
     public void RemoveGoal(ShapeGoalElement target)
     {
-        //for (int i = target.siblings.Count - 1; i >= 0; i--)
-        //{
-        //    target.siblings[i].RemoveGoal();
-        //    target.siblings.RemoveAt(i);
-        //}
+        for (int i = target.siblings.Count - 1; i >= 0; i--)
+        {
+            target.siblings[i].RemoveGoal();
+        }
 
         shapeGoals.Remove(target);
         goalHolder.Remove(target);
+    }
+    public void RemoveGoal(List<ShapeGoalElement> target)
+    {
+        HashSet<CellElement> allSiblings = new HashSet<CellElement>();
+
+        for (int i = 0; i < target.Count; i++)
+        {
+            for (int j = 0; j < target[i].siblings.Count; j++)
+                allSiblings.Add(target[i].siblings[j]);
+        }
+
+        for (int i = target.Count - 1; i >= 0; i--)
+        {
+            shapeGoals.Remove(target[i]);
+            goalHolder.Remove(target[i]);
+        }
+        foreach (CellElement item in allSiblings)
+        {
+            item.RemoveGoal();
+        }
+
     }
 
     private void ClearAll()
@@ -426,5 +446,6 @@ public class LevelEditor : EditorWindow
             for (int i = shapeGoals.Count - 1; i >= 0; i--)
                 goalHolder.Remove(shapeGoals[i]);
         }
+        shapeGoals.Clear();
     }
 }
