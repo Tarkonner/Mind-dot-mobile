@@ -16,7 +16,7 @@ public class CellElement : Image
     
     public bool partOfPiece { get; private set; } = false;
     public PieceElement piece { get; private set; }
-    public List<ShapeGoalElement> shapeGoal { get; private set; } = new List<ShapeGoalElement>();
+    public List<ShapeGoalElement> partOfShapeGoals { get; private set; } = new List<ShapeGoalElement>();
 
 
     public DotElement holding;
@@ -56,6 +56,15 @@ public class CellElement : Image
         if (holding == null)
             return;
 
+        if (partOfPiece)
+            levelEditor.RemovePiece(piece);
+
+        if(partOfShapeGoals.Count > 0)
+        {
+            for (int i = partOfShapeGoals.Count - 1; i >= 0; i--)
+                levelEditor.RemoveGoal(partOfShapeGoals[i]);
+        }
+
         this.Remove(holding);
         holding = null; 
     }
@@ -78,14 +87,14 @@ public class CellElement : Image
 
     public void SetGoal(ShapeGoalElement shapeGoalElement)
     {
-        shapeGoal.Add(shapeGoalElement);
+        partOfShapeGoals.Add(shapeGoalElement);
 
         this.tintColor = Color.green;
     }
 
     public void RemoveGoal()
     {
-        shapeGoal.Clear();
+        partOfShapeGoals.Clear();
 
         SetDefultColor();
     }

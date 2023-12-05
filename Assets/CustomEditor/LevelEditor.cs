@@ -198,7 +198,7 @@ public class LevelEditor : EditorWindow
 
             //Pieces
             case 5:
-                if (cellElement.partOfPiece)
+                if (cellElement.turnedOff || cellElement.partOfPiece)
                     break;
 
                 if (!piecesSavedCells.Contains(cellElement))
@@ -215,6 +215,9 @@ public class LevelEditor : EditorWindow
 
             //Goals
             case 6:
+                if (cellElement.turnedOff)
+                    break;
+
                 if (!goalSavedCells.Contains(cellElement))
                 {
                     goalSavedCells.Add(cellElement);
@@ -239,21 +242,14 @@ public class LevelEditor : EditorWindow
             //Remove piece
             case 7:
                 if (targetGrid is PieceElement)
-                {
-                    pieces.Remove((PieceElement)targetGrid);
-                    pieceHolder.Remove(targetGrid);
-
-                }
+                    RemovePiece((PieceElement)targetGrid);
                 break;
 
 
             //Remove goal
             case 8:
                 if(targetGrid is ShapeGoalElement)
-                {
-                    shapeGoals.Remove((ShapeGoalElement)targetGrid);
-                    goalHolder.Remove(targetGrid);
-                }
+                    RemoveGoal((ShapeGoalElement)targetGrid);
                 break;
 
             //No rotation piece
@@ -305,7 +301,7 @@ public class LevelEditor : EditorWindow
             }
 
             if (targetElements.Count == 0)
-                return null;
+                return null;            
 
             //Goal or piece
             GridElement spawnedGrid;
@@ -323,6 +319,12 @@ public class LevelEditor : EditorWindow
             {
                 Debug.LogError($"Not implementet gridtype: {gridType}");
                 return null;
+            }
+
+            //Save siblings
+            for (int i = 0; i < targetElements.Count; i++)
+            {
+                spawnedGrid.siblings.Add(targetElements[i]);
             }
 
             //Calculate position
@@ -370,7 +372,28 @@ public class LevelEditor : EditorWindow
         }
     }
 
+    public void RemovePiece(PieceElement target)
+    {
+        for (int i = target.siblings.Count - 1; i >= 0; i--)
+        {
+            target.siblings[i].RemovePiece();
+            target.siblings.RemoveAt(i);
+        }
 
+        pieces.Remove(target);
+        pieceHolder.Remove(target);
+    }
+    public void RemoveGoal(ShapeGoalElement target)
+    {
+        //for (int i = target.siblings.Count - 1; i >= 0; i--)
+        //{
+        //    target.siblings[i].RemoveGoal();
+        //    target.siblings.RemoveAt(i);
+        //}
+
+        shapeGoals.Remove(target);
+        goalHolder.Remove(target);
+    }
 
     private void ClearAll()
     {
