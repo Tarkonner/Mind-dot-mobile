@@ -19,7 +19,7 @@ public class LevelPiece
     public LevelPiece(PieceElement pE)
     {
         int i = 0;
-        foreach (KeyValuePair<Vector2Int,DotElement> kVPair in pE.dots)
+        foreach (KeyValuePair<Vector2Int,DotElement> kVPair in pE.dotDictionary)
         {
             dotTypes[i] = kVPair.Value.dotType;
             dotPositions[i] = kVPair.Key;

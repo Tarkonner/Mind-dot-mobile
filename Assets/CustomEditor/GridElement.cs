@@ -6,7 +6,7 @@ using UnityEngine.UIElements;
 
 public class GridElement : VisualElement
 {
-    protected Dictionary<Vector2Int, DotElement> dotDictionary = new Dictionary<Vector2Int, DotElement>();
+    public Dictionary<Vector2Int, DotElement> dotDictionary = new Dictionary<Vector2Int, DotElement>();
 
     protected Vector2Int gridSize;
     protected Image[,] images = null;

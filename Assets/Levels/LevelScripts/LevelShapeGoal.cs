@@ -17,6 +17,23 @@ public class LevelShapeGoal
             goalDots[i] = goal.goalSpecifications[i].dotType;
         }
     }
+    public LevelShapeGoal(List<Vector2Int> goalSpecifications, List<DotElement> goalDots)
+    {
+        this.goalSpecifications = new Vector2[goalSpecifications.Count];
+        int i = 0;
+        foreach (var pos in goalSpecifications) 
+        {
+            this.goalSpecifications[i]= pos;
+            i++;            
+        }
+        i = 0;
+        this.goalDots = new DotType[goalDots.Count];
+        foreach (var dot in goalDots)
+        {
+            this.goalDots[i] = goalDots[i].dotType;
+            i++;
+        }
+    }
     public LevelShapeGoal(Vector2[] goalSpecifications, DotType[] goalDots)
     {
         this.goalSpecifications = goalSpecifications;

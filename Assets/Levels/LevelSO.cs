@@ -22,6 +22,7 @@ public class LevelSO : ScriptableObject
     {
         if (version != null) { this.version = version; }
         this.levelTitle = levelTitle;
+        this.name = levelTitle;
         this.levelGrid = levelGrid;
         this.levelPieces = levelPieces;
         this.levelGoals = levelGoals;
