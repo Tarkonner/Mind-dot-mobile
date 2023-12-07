@@ -51,6 +51,12 @@ public class CellElement : Image
         holding = dot;
         this.Add(dot);
     }
+    public void ChangeDotColor()
+    {
+        if (holding != null)
+            holding.ChangeColor();
+    }
+
     public void RemoveDot()
     {
         if (holding == null)
@@ -62,10 +68,6 @@ public class CellElement : Image
 
         //Remove Shape goals
         levelEditor.RemoveGoal(partOfShapeGoals);
-        //for (int i = partOfShapeGoals.Count - 1; i >= 0; i--)
-        //{
-        //    levelEditor.RemoveGoal(partOfShapeGoals[i]);
-        //}
         partOfShapeGoals.Clear();
 
         //Remove dot
@@ -107,7 +109,7 @@ public class CellElement : Image
     private void OnMouseDown(MouseDownEvent evt)
     {
         // Call the OnCellClicked method of the LevelEditor window
-        levelEditor.OnCellClicked(this);
+        levelEditor.OnCellClicked(this, evt.button);
     }
 
 

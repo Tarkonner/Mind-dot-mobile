@@ -165,7 +165,7 @@ public class LevelEditor : EditorWindow
         vertical.value = 0;
     }
 
-    public void OnCellClicked(CellElement cellElement)
+    public void OnCellClicked(CellElement cellElement, int buttonIndex)
     {
         switch (editTypeIndex)
         {
@@ -177,20 +177,47 @@ public class LevelEditor : EditorWindow
             //Dots
             //Placement
             case 1:
-                if (cellElement.turnedOff || cellElement.childCount > 0)
+                if (cellElement.turnedOff)
                     return;
-                cellElement.SetDot(new DotElement(DotType.Red));
+                if (buttonIndex == 0) //Left click
+                {
+                    if (cellElement.childCount > 0)
+                        cellElement.ChangeDotColor();
+                    else
+                        cellElement.SetDot(new DotElement(DotType.Red));
+                }
+                else if(buttonIndex == 1) //Right click
+                    cellElement.RemoveDot();
                 break;
+
             case 2:
-                if (cellElement.turnedOff || cellElement.childCount > 0)
+                if (cellElement.turnedOff)
                     return;
-                cellElement.SetDot(new DotElement(DotType.Blue));
-                break;
+                if (buttonIndex == 0) //Left click
+                {
+                    if (cellElement.childCount > 0)
+                        cellElement.ChangeDotColor();
+                    else
+                        cellElement.SetDot(new DotElement(DotType.Blue));
+                }
+                else if (buttonIndex == 1) //Right click
+                    cellElement.RemoveDot();
+                break;                
+
             case 3:
-                if (cellElement.turnedOff || cellElement.childCount > 0)
+                if (cellElement.turnedOff)
                     return;
-                cellElement.SetDot(new DotElement(DotType.Yellow));
+                if (buttonIndex == 0) //Left click
+                {
+                    if (cellElement.childCount > 0)
+                        cellElement.ChangeDotColor();
+                    else
+                        cellElement.SetDot(new DotElement(DotType.Yellow));
+                }
+                else if (buttonIndex == 1) //Right click
+                    cellElement.RemoveDot();
                 break;
+                
             //Remove
             case 4:
                 cellElement.RemoveDot();
