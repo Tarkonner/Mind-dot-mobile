@@ -18,8 +18,20 @@ public class CellElement : Image
     public PieceElement piece { get; private set; }
     public List<ShapeGoalElement> partOfShapeGoals { get; private set; } = new List<ShapeGoalElement>();
 
-
     public DotElement holding;
+
+    //Color control
+    public CellColorState myColorState { get; private set; } = CellColorState.normal;
+    Color[] cellColorState = new Color[]
+        {
+            new Color(.2f, 1, 0.333f),
+            new Color(0, .7f, .7f),
+            new Color(0.01f, .6f, .5f),
+            new Color(1, 0, 0.666f),
+            new Color(1, .2f, 1),
+            Color.black,
+            Color.white
+        };
 
     public CellElement(Cell cell, Vector2Int coordinats, LevelEditor editor)
     {
@@ -44,7 +56,27 @@ public class CellElement : Image
         style.alignItems = Align.Center;
     }
 
-    public void SetDefultColor() => this.tintColor = Color.white;
+    public void SetDefultColor()
+    {
+        if (myColorState == CellColorState.partGoalAndPiece)
+        {
+            if(!partOfPiece)
+                myColorState = CellColorState.partGoal;
+            if (partOfShapeGoals.Count == 0)
+                myColorState = CellColorState.partPiece;
+        }
+        else if(partOfShapeGoals.Count > 1)
+            myColorState |= CellColorState.partGoal;
+        else
+            myColorState = CellColorState.normal;
+
+        this.tintColor = cellColorState[(int)myColorState];
+    }
+    public void ChangeCellColor(CellColorState targetColor)
+    {
+        myColorState = targetColor;
+        this.tintColor = cellColorState[(int)targetColor];
+    }
 
     public void SetDot(DotElement dot)
     {
@@ -53,9 +85,12 @@ public class CellElement : Image
     }
     public void ChangeDotColor()
     {
-        if (holding != null)
+        if (holding != null && (!partOfPiece || partOfShapeGoals.Count == 0))
+        {
             holding.ChangeColor();
+        }
     }
+
 
     public void RemoveDot()
     {
@@ -72,7 +107,11 @@ public class CellElement : Image
 
         //Remove dot
         this.Remove(holding);
-        holding = null; 
+        holding = null;
+
+        //Change color
+        myColorState = CellColorState.normal;
+        this.tintColor = cellColorState[(int)myColorState];
     }
 
     public void SetPiece(PieceElement pieceElement)
@@ -80,7 +119,12 @@ public class CellElement : Image
         partOfPiece = true;
         piece = pieceElement;
 
-        this.tintColor = Color.grey;
+        //Change color
+        if (myColorState == CellColorState.partGoal)
+            myColorState = CellColorState.partGoalAndPiece;
+        else
+            myColorState = CellColorState.partPiece;
+        this.tintColor = cellColorState[(int)myColorState];
     }
 
     public void RemovePiece()
@@ -95,12 +139,25 @@ public class CellElement : Image
     {
         partOfShapeGoals.Add(shapeGoalElement);
 
-        this.tintColor = Color.green;
+        if (myColorState == CellColorState.partPiece)
+            myColorState = CellColorState.partGoalAndPiece;
+        else
+            myColorState = CellColorState.partGoal;
+
+        this.tintColor = cellColorState[(int)myColorState];
     }
 
     public void RemoveGoal()
     {
         partOfShapeGoals.Clear();
+
+        SetDefultColor();
+    }
+
+    public void RemoveGoal(ShapeGoalElement shapeGoalElement)
+    {
+        if (partOfShapeGoals.Contains(shapeGoalElement))
+            partOfShapeGoals.Remove(shapeGoalElement);
 
         SetDefultColor();
     }
@@ -113,8 +170,8 @@ public class CellElement : Image
     }
 
 
-    public void ChangeShowSprite() => ChangeShowSprite(turnedOff);
-    public void ChangeShowSprite(bool targetState)
+    public void TurnOffCell() => SetActiveState(turnedOff);
+    public void SetActiveState(bool targetState)
     {
         if (targetState)
         {
@@ -124,7 +181,9 @@ public class CellElement : Image
         else
         {
             turnedOff = true;
-            this.tintColor = Color.black;
+
+            myColorState = CellColorState.turnedOff;
+            this.tintColor = cellColorState[(int)myColorState];
 
             RemoveDot();
         }

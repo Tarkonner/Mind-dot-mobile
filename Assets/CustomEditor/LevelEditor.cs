@@ -11,6 +11,7 @@ public class LevelEditor : EditorWindow
     List<CellElement> cells = new List<CellElement>();
 
     int editTypeIndex = 0;
+    int dotIndex = 0;
 
     //Resize grid
     IntegerField horizontal;
@@ -59,9 +60,9 @@ public class LevelEditor : EditorWindow
         leftPanel.Add(new Button(() => { ResizeGrid(); }) { text = "Resize grid" });
         //Dots
         leftPanel.Add(new Label("Dots"));
-        leftPanel.Add(new Button(() => { editTypeIndex = 1; }) { text = "Red Dot" });
-        leftPanel.Add(new Button(() => { editTypeIndex = 2; }) { text = "Blue Dot" });
-        leftPanel.Add(new Button(() => { editTypeIndex = 3; }) { text = "Yellow Dot" });
+        leftPanel.Add(new Button(() => { editTypeIndex = 1; dotIndex = 0; }) { text = "Red Dot" });
+        leftPanel.Add(new Button(() => { editTypeIndex = 1; dotIndex = 1; }) { text = "Blue Dot" });
+        leftPanel.Add(new Button(() => { editTypeIndex = 1; dotIndex = 2; }) { text = "Yellow Dot" });
         leftPanel.Add(new Button(() => { editTypeIndex = 4; }) { text = "Remove Dot" });
         //Pieces
         leftPanel.Add(new Label("Pieces"));
@@ -151,12 +152,12 @@ public class LevelEditor : EditorWindow
 
                 if (horizontal.value <= x || vertical.value <= y)
                 {
-                    target.ChangeShowSprite(false);
+                    target.SetActiveState(false);
 
                     target.RemoveDot();
                 }
                 else
-                    target.ChangeShowSprite(true);
+                    target.SetActiveState(true);
             }
         }
 
@@ -165,57 +166,19 @@ public class LevelEditor : EditorWindow
         vertical.value = 0;
     }
 
+    #region Switch machine
     public void OnCellClicked(CellElement cellElement, int buttonIndex)
     {
         switch (editTypeIndex)
         {
             //Cells
             case 0:
-                cellElement.ChangeShowSprite();
+                cellElement.TurnOffCell();
                 break;
 
             //Dots
-            //Placement
             case 1:
-                if (cellElement.turnedOff)
-                    return;
-                if (buttonIndex == 0) //Left click
-                {
-                    if (cellElement.childCount > 0)
-                        cellElement.ChangeDotColor();
-                    else
-                        cellElement.SetDot(new DotElement(DotType.Red));
-                }
-                else if(buttonIndex == 1) //Right click
-                    cellElement.RemoveDot();
-                break;
-
-            case 2:
-                if (cellElement.turnedOff)
-                    return;
-                if (buttonIndex == 0) //Left click
-                {
-                    if (cellElement.childCount > 0)
-                        cellElement.ChangeDotColor();
-                    else
-                        cellElement.SetDot(new DotElement(DotType.Blue));
-                }
-                else if (buttonIndex == 1) //Right click
-                    cellElement.RemoveDot();
-                break;                
-
-            case 3:
-                if (cellElement.turnedOff)
-                    return;
-                if (buttonIndex == 0) //Left click
-                {
-                    if (cellElement.childCount > 0)
-                        cellElement.ChangeDotColor();
-                    else
-                        cellElement.SetDot(new DotElement(DotType.Yellow));
-                }
-                else if (buttonIndex == 1) //Right click
-                    cellElement.RemoveDot();
+                PlaceDot(cellElement, buttonIndex);
                 break;
                 
             //Remove
@@ -231,7 +194,7 @@ public class LevelEditor : EditorWindow
                 if (!piecesSavedCells.Contains(cellElement))
                 {
                     piecesSavedCells.Add(cellElement);
-                    cellElement.tintColor = Color.cyan;
+                    cellElement.ChangeCellColor(CellColorState.choosenPiece);
                 }
                 else
                 {
@@ -248,7 +211,7 @@ public class LevelEditor : EditorWindow
                 if (!goalSavedCells.Contains(cellElement))
                 {
                     goalSavedCells.Add(cellElement);
-                    cellElement.tintColor = Color.gray;
+                    cellElement.ChangeCellColor(CellColorState.choosenGoal);
                 }
                 else
                 {
@@ -258,6 +221,7 @@ public class LevelEditor : EditorWindow
                 break;
         }
     }
+    
 
     public void ContentManagement(GridElement targetGrid)
     {
@@ -289,6 +253,40 @@ public class LevelEditor : EditorWindow
                 break;
         }
     }
+    #endregion
+
+    private void PlaceDot(CellElement targetCell, int buttonIndex)
+    {
+        if (targetCell.turnedOff || targetCell.partOfPiece || targetCell.partOfShapeGoals.Count > 0)
+            return;
+             
+
+        if (buttonIndex == 0) //Left click
+        {
+            if (targetCell.childCount > 0)
+                targetCell.ChangeDotColor();
+            else
+            {
+                DotElement targetDot = null;
+                switch (dotIndex)
+                {
+                    case 0:
+                        targetDot = new DotElement(DotType.Red);
+                        break;
+                    case 1:
+                        targetDot = new DotElement(DotType.Blue);
+                        break;
+                    case 2:
+                        targetDot = new DotElement(DotType.Yellow);
+                        break;
+                }
+
+                targetCell.SetDot(targetDot);
+            }
+        }
+        else if (buttonIndex == 1) //Right click
+            targetCell.RemoveDot();
+    }
 
     private void MakePiece()
     {
@@ -296,6 +294,7 @@ public class LevelEditor : EditorWindow
 
         if (grid != null)
         {
+            
             pieceHolder.Add(grid);
             piecesSavedCells.Clear();
         }
@@ -317,7 +316,7 @@ public class LevelEditor : EditorWindow
         {
             //Change back color
             for (int i = 0; i < targetElements.Count; i++)
-                targetElements[i].tintColor = Color.white;
+                targetElements[i].SetDefultColor();
 
 
             //Remove cells without dots
@@ -390,6 +389,20 @@ public class LevelEditor : EditorWindow
             spawnedGrid.style.marginRight = new StyleLength(10); // Add right margin
             spawnedGrid.style.marginBottom = new StyleLength(10); // Add bottom margin
 
+            //Set color
+            for (int i = 0; i < targetElements.Count; i++)
+            {
+                if (targetElements[i].partOfPiece && gridType is ShapeGoalElement
+                    || targetElements[i].partOfShapeGoals.Count > 0 && gridType is PieceElement)
+                {
+                    targetElements[i].ChangeCellColor(CellColorState.partGoalAndPiece);
+                }
+                else if (gridType is ShapeGoalElement)
+                    targetElements[i].ChangeCellColor(CellColorState.partGoal);
+                else if (gridType is PieceElement)
+                    targetElements[i].ChangeCellColor(CellColorState.partPiece);
+            }
+
             return spawnedGrid;
         }
         else
@@ -399,6 +412,7 @@ public class LevelEditor : EditorWindow
         }
     }
 
+    #region Removel
     public void RemovePiece(PieceElement target)
     {
         for (int i = target.siblings.Count - 1; i >= 0; i--)
@@ -423,23 +437,34 @@ public class LevelEditor : EditorWindow
     public void RemoveGoal(List<ShapeGoalElement> target)
     {
         HashSet<CellElement> allSiblings = new HashSet<CellElement>();
-
         for (int i = 0; i < target.Count; i++)
         {
             for (int j = 0; j < target[i].siblings.Count; j++)
                 allSiblings.Add(target[i].siblings[j]);
         }
 
+        //Remove from holdeers
         for (int i = target.Count - 1; i >= 0; i--)
         {
             shapeGoals.Remove(target[i]);
             goalHolder.Remove(target[i]);
         }
-        foreach (CellElement item in allSiblings)
+
+        //Remove same goals from all siblings
+        for (int i = target.Count - 1; i >= 0; i--)
         {
-            item.RemoveGoal();
+            foreach(CellElement item in allSiblings)
+            {
+                if (item.partOfShapeGoals.Contains(target[i]))
+                    item.RemoveGoal(target[i]);
+            }
         }
 
+        //foreach (CellElement item in allSiblings)
+        //{
+        //    for (int i = targetCell.partOfShapeGoals.Count - 1; i >= 0; i--)
+        //        item.RemoveGoal(targetCell.partOfShapeGoals[i]);
+        //}
     }
 
     private void ClearAll()
@@ -450,7 +475,7 @@ public class LevelEditor : EditorWindow
             for (int y = 0; y < 7; y++)
             {
                 CellElement target = cells[y * 7 + x];
-                target.ChangeShowSprite(true);
+                target.SetActiveState(true);
 
                 target.RemoveDot();
                 target.RemovePiece();
@@ -475,4 +500,5 @@ public class LevelEditor : EditorWindow
         }
         shapeGoals.Clear();
     }
+    #endregion
 }

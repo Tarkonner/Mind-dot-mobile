@@ -8,3 +8,15 @@ public enum DotType
     Yellow,
     Red
 }
+
+[Serializable]
+public enum CellColorState
+{
+    partGoal,
+    partPiece,
+    partGoalAndPiece,
+    choosenPiece,
+    choosenGoal,
+    turnedOff,
+    normal
+};
