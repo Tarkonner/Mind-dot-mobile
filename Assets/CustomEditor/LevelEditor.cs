@@ -11,18 +11,20 @@ public class LevelEditor : EditorWindow
     List<CellElement> cells = new List<CellElement>();
 
     int editTypeIndex = 0;
+    int dotIndex = 0;
 
     //Resize grid
     IntegerField horizontal;
     IntegerField vertical;
 
-    //Pieces & goals
-    private List<CellElement> savedCellElements = new List<CellElement>();
+    //Pieces
+    List<CellElement> piecesSavedCells = new List<CellElement>();
     VisualElement pieceHolder;
-    VisualElement goalHolder;
     List<PieceElement> pieces = new List<PieceElement>();
+    //Goals
+    List<CellElement> goalSavedCells = new List<CellElement>();
+    VisualElement goalHolder;
     List<ShapeGoalElement> shapeGoals = new List<ShapeGoalElement>();
-
 
 
     [MenuItem("Tools/Level Editor")]
@@ -58,17 +60,25 @@ public class LevelEditor : EditorWindow
         leftPanel.Add(new Button(() => { ResizeGrid(); }) { text = "Resize grid" });
         //Dots
         leftPanel.Add(new Label("Dots"));
-        leftPanel.Add(new Button(() => { editTypeIndex = 1; }) { text = "Red Dot" });
-        leftPanel.Add(new Button(() => { editTypeIndex = 2; }) { text = "Blue Dot" });
-        leftPanel.Add(new Button(() => { editTypeIndex = 3; }) { text = "Yellow Dot" });
+        leftPanel.Add(new Button(() => { editTypeIndex = 1; dotIndex = 0; }) { text = "Red Dot" });
+        leftPanel.Add(new Button(() => { editTypeIndex = 1; dotIndex = 1; }) { text = "Blue Dot" });
+        leftPanel.Add(new Button(() => { editTypeIndex = 1; dotIndex = 2; }) { text = "Yellow Dot" });
         leftPanel.Add(new Button(() => { editTypeIndex = 4; }) { text = "Remove Dot" });
         //Pieces
         leftPanel.Add(new Label("Pieces"));
         leftPanel.Add(new Button(() => { editTypeIndex = 5; }) { text = "Mark piece dots" });
         leftPanel.Add(new Button(() => { MakePiece(); }) { text = "Make piece" });
+        leftPanel.Add(new Button(() => { editTypeIndex = 9; }) { text = "Change rotation setting"}) ;
+        leftPanel.Add(new Button(() => { editTypeIndex = 7; }) { text = "Remove piece" });
         //Goals
         leftPanel.Add(new Label("Goals"));
-        leftPanel.Add(new Button(() => { MakeGoal(); }) { text = "TestShapeGoal" });
+        leftPanel.Add(new Button(() => { editTypeIndex = 6; }) { text = "Mark shape goal dots" });
+        leftPanel.Add(new Button(() => { MakeShapeGoal(); }) { text = "Make Shape Goal" });
+        leftPanel.Add(new Button(() => { editTypeIndex = 8; }) { text = "Remove Shape Goal" });
+        //Board
+        leftPanel.Add(new Label("Board"));
+        leftPanel.Add(new Button(() => { ClearAll(); }) { text = "Clear board" });
+
 
         //Right panel
         // Create a grid layout
@@ -142,12 +152,12 @@ public class LevelEditor : EditorWindow
 
                 if (horizontal.value <= x || vertical.value <= y)
                 {
-                    target.ChangeShowSprite(false);
+                    target.SetActiveState(false);
 
-                    RemoveDot(target);
+                    target.RemoveDot();
                 }
                 else
-                    target.ChangeShowSprite(true);
+                    target.SetActiveState(true);
             }
         }
 
@@ -156,129 +166,339 @@ public class LevelEditor : EditorWindow
         vertical.value = 0;
     }
 
-    public void OnCellClicked(CellElement cellElement)
+    #region Switch machine
+    public void OnCellClicked(CellElement cellElement, int buttonIndex)
     {
-
-
         switch (editTypeIndex)
         {
             //Cells
             case 0:
-                cellElement.ChangeShowSprite();
+                cellElement.TurnOffCell();
                 break;
 
             //Dots
-            //Placement
             case 1:
-                if (cellElement.childCount > 0)
-                    return;
-                cellElement.SetDot(new DotElement(DotType.Red));
+                PlaceDot(cellElement, buttonIndex);
                 break;
-            case 2:
-                if (cellElement.childCount > 0)
-                    return;
-                cellElement.SetDot(new DotElement(DotType.Blue));
-                break;
-            case 3:
-                if (cellElement.childCount > 0)
-                    return;
-                cellElement.SetDot(new DotElement(DotType.Yellow));
-                break;
+                
             //Remove
             case 4:
-                RemoveDot(cellElement);
+                cellElement.RemoveDot();
                 break;
 
             //Pieces
             case 5:
-                if (!savedCellElements.Contains(cellElement))
+                if (cellElement.turnedOff || cellElement.partOfPiece)
+                    break;
+
+                if (!piecesSavedCells.Contains(cellElement))
                 {
-                    savedCellElements.Add(cellElement);
-                    cellElement.tintColor = Color.cyan;
+                    piecesSavedCells.Add(cellElement);
+                    cellElement.ChangeCellColor(CellColorState.choosenPiece);
                 }
                 else
                 {
-                    savedCellElements.Remove(cellElement);
-                    cellElement.tintColor = Color.white;
+                    piecesSavedCells.Remove(cellElement);
+                    cellElement.SetDefultColor();
+                }
+                break;
+
+            //Goals
+            case 6:
+                if (cellElement.turnedOff)
+                    break;
+
+                if (!goalSavedCells.Contains(cellElement))
+                {
+                    goalSavedCells.Add(cellElement);
+                    cellElement.ChangeCellColor(CellColorState.choosenGoal);
+                }
+                else
+                {
+                    goalSavedCells.Remove(cellElement);
+                    cellElement.SetDefultColor();
                 }
                 break;
         }
     }
+    
 
-    private void RemoveDot(VisualElement element)
+    public void ContentManagement(GridElement targetGrid)
     {
-        //Remove dots
-        if (element.childCount > 0)
+        if (editTypeIndex <= 6)
+            return;
+
+        switch (editTypeIndex)
         {
-            for (int i = element.childCount - 1; i >= 0; i--)
-                element.RemoveAt(i);
+            //Remove piece
+            case 7:
+                if (targetGrid is PieceElement)
+                    RemovePiece((PieceElement)targetGrid);
+                break;
+
+
+            //Remove goal
+            case 8:
+                if(targetGrid is ShapeGoalElement)
+                    RemoveGoal((ShapeGoalElement)targetGrid);
+                break;
+
+            //No rotation piece
+            case 9:
+                if (targetGrid is PieceElement)
+                {
+                    PieceElement t = targetGrid as PieceElement;
+                    t.ChangeRotationStatus();
+                }
+                break;
         }
+    }
+    #endregion
+
+    private void PlaceDot(CellElement targetCell, int buttonIndex)
+    {
+        if (targetCell.turnedOff || targetCell.partOfPiece || targetCell.partOfShapeGoals.Count > 0)
+            return;
+             
+
+        if (buttonIndex == 0) //Left click
+        {
+            if (targetCell.childCount > 0)
+                targetCell.ChangeDotColor();
+            else
+            {
+                DotElement targetDot = null;
+                switch (dotIndex)
+                {
+                    case 0:
+                        targetDot = new DotElement(DotType.Red);
+                        break;
+                    case 1:
+                        targetDot = new DotElement(DotType.Blue);
+                        break;
+                    case 2:
+                        targetDot = new DotElement(DotType.Yellow);
+                        break;
+                }
+
+                targetCell.SetDot(targetDot);
+            }
+        }
+        else if (buttonIndex == 1) //Right click
+            targetCell.RemoveDot();
     }
 
     private void MakePiece()
     {
-        if (savedCellElements.Count > 0)
+        GridElement grid = MakeGridElement(piecesSavedCells, new PieceElement(this));
+
+        if (grid != null)
+        {
+            
+            pieceHolder.Add(grid);
+            piecesSavedCells.Clear();
+        }
+    }
+    private void MakeShapeGoal()
+    {
+        GridElement grid = MakeGridElement(goalSavedCells, new ShapeGoalElement(this));
+
+        if (grid != null)
+        {
+            goalHolder.Add(grid);
+            goalSavedCells.Clear();
+        }
+    }
+
+    private GridElement MakeGridElement(List<CellElement> targetElements, GridElement gridType)
+    {
+        if (targetElements.Count > 0)
         {
             //Change back color
-            for (int i = 0; i < savedCellElements.Count; i++)
-                savedCellElements[i].tintColor = Color.white;
+            for (int i = 0; i < targetElements.Count; i++)
+                targetElements[i].SetDefultColor();
 
 
             //Remove cells without dots
-            for (int i = savedCellElements.Count - 1; i >= 0; i--)
+            for (int i = targetElements.Count - 1; i >= 0; i--)
             {
-                if (savedCellElements[i].holding == null)
-                    savedCellElements.RemoveAt(i);
+                if (targetElements[i].holding == null)
+                    targetElements.RemoveAt(i);
             }
 
-            PieceElement pieceElement = new PieceElement();
-            pieces.Add(pieceElement);
+            if (targetElements.Count == 0)
+                return null;            
+
+            //Goal or piece
+            GridElement spawnedGrid;
+            if (gridType is PieceElement)
+            {
+                spawnedGrid = new PieceElement(this);
+                pieces.Add((PieceElement)spawnedGrid);
+            }
+            else if (gridType is ShapeGoalElement)
+            {
+                spawnedGrid = new ShapeGoalElement(this);
+                shapeGoals.Add((ShapeGoalElement)spawnedGrid);
+            }
+            else
+            {
+                Debug.LogError($"Not implementet gridtype: {gridType}");
+                return null;
+            }
+
+            //Save siblings
+            for (int i = 0; i < targetElements.Count; i++)
+            {
+                spawnedGrid.siblings.Add(targetElements[i]);
+            }
 
             //Calculate position
             Vector2Int lowPoint = new Vector2Int(10, 10);
             Vector2Int highPoint = new Vector2Int(0, 0);
-            for (int i = 0; i < savedCellElements.Count; i++)
+            for (int i = 0; i < targetElements.Count; i++)
             {
                 //Low
-                if (lowPoint.x > savedCellElements[i].gridCoordinates.x)
-                    lowPoint.x = savedCellElements[i].gridCoordinates.x;
-                if (lowPoint.y > savedCellElements[i].gridCoordinates.y)
-                    lowPoint.y = savedCellElements[i].gridCoordinates.y;
+                if (lowPoint.x > targetElements[i].gridCoordinates.x)
+                    lowPoint.x = targetElements[i].gridCoordinates.x;
+                if (lowPoint.y > targetElements[i].gridCoordinates.y)
+                    lowPoint.y = targetElements[i].gridCoordinates.y;
 
                 //High
-                if (highPoint.x < savedCellElements[i].gridCoordinates.x)
-                    highPoint.x = savedCellElements[i].gridCoordinates.x;
-                if (highPoint.y < savedCellElements[i].gridCoordinates.y)
-                    highPoint.y = savedCellElements[i].gridCoordinates.y;
+                if (highPoint.x < targetElements[i].gridCoordinates.x)
+                    highPoint.x = targetElements[i].gridCoordinates.x;
+                if (highPoint.y < targetElements[i].gridCoordinates.y)
+                    highPoint.y = targetElements[i].gridCoordinates.y;
             }
 
-            for (int i = 0; i < savedCellElements.Count; i++)
+            for (int i = 0; i < targetElements.Count; i++)
             {
                 //Set refence point
-                Vector2Int targetCoor = savedCellElements[i].gridCoordinates - new Vector2Int(lowPoint.x, lowPoint.y);
+                Vector2Int targetCoor = targetElements[i].gridCoordinates - new Vector2Int(lowPoint.x, lowPoint.y);
 
-                pieceElement.AddDot(targetCoor, savedCellElements[i].holding);
+                spawnedGrid.AddDot(targetCoor, targetElements[i].holding);
+
+                //Change background color
+                if (gridType is PieceElement)
+                    targetElements[i].SetPiece((PieceElement)spawnedGrid);
+                else if (gridType is ShapeGoalElement)
+                    targetElements[i].SetGoal((ShapeGoalElement)spawnedGrid);
             }
 
-            pieceElement.Construct();
-            pieceElement.style.marginRight = new StyleLength(10); // Add right margin
-            pieceElement.style.marginBottom = new StyleLength(10); // Add bottom margin
-            pieceHolder.Add(pieceElement);
+            spawnedGrid.Construct();
+            spawnedGrid.style.marginRight = new StyleLength(10); // Add right margin
+            spawnedGrid.style.marginBottom = new StyleLength(10); // Add bottom margin
 
-            savedCellElements.Clear();
+            //Set color
+            for (int i = 0; i < targetElements.Count; i++)
+            {
+                if (targetElements[i].partOfPiece && gridType is ShapeGoalElement
+                    || targetElements[i].partOfShapeGoals.Count > 0 && gridType is PieceElement)
+                {
+                    targetElements[i].ChangeCellColor(CellColorState.partGoalAndPiece);
+                }
+                else if (gridType is ShapeGoalElement)
+                    targetElements[i].ChangeCellColor(CellColorState.partGoal);
+                else if (gridType is PieceElement)
+                    targetElements[i].ChangeCellColor(CellColorState.partPiece);
+            }
+
+            return spawnedGrid;
         }
         else
+        {
             Debug.Log("No cells chosen");
+            return null;
+        }
     }
 
-    private void MakeGoal()
+    #region Removel
+    public void RemovePiece(PieceElement target)
     {
-        //Make object
-        ShapeGoalElement shapeGoalElement = new ShapeGoalElement();
-        shapeGoals.Add(shapeGoalElement);
-        goalHolder.Add(shapeGoalElement);
+        for (int i = target.siblings.Count - 1; i >= 0; i--)
+        {
+            target.siblings[i].RemovePiece();
+            target.siblings.RemoveAt(i);
+        }
 
-        shapeGoalElement.SetGridSize(new Vector2Int(2, 2));
-        shapeGoalElement.Construct();
+        pieces.Remove(target);
+        pieceHolder.Remove(target);
     }
+    public void RemoveGoal(ShapeGoalElement target)
+    {
+        for (int i = target.siblings.Count - 1; i >= 0; i--)
+        {
+            target.siblings[i].RemoveGoal();
+        }
+
+        shapeGoals.Remove(target);
+        goalHolder.Remove(target);
+    }
+    public void RemoveGoal(List<ShapeGoalElement> target)
+    {
+        HashSet<CellElement> allSiblings = new HashSet<CellElement>();
+        for (int i = 0; i < target.Count; i++)
+        {
+            for (int j = 0; j < target[i].siblings.Count; j++)
+                allSiblings.Add(target[i].siblings[j]);
+        }
+
+        //Remove from holdeers
+        for (int i = target.Count - 1; i >= 0; i--)
+        {
+            shapeGoals.Remove(target[i]);
+            goalHolder.Remove(target[i]);
+        }
+
+        //Remove same goals from all siblings
+        for (int i = target.Count - 1; i >= 0; i--)
+        {
+            foreach(CellElement item in allSiblings)
+            {
+                if (item.partOfShapeGoals.Contains(target[i]))
+                    item.RemoveGoal(target[i]);
+            }
+        }
+
+        //foreach (CellElement item in allSiblings)
+        //{
+        //    for (int i = targetCell.partOfShapeGoals.Count - 1; i >= 0; i--)
+        //        item.RemoveGoal(targetCell.partOfShapeGoals[i]);
+        //}
+    }
+
+    private void ClearAll()
+    {
+        //Dots
+        for (int x = 0; x < 7; x++)
+        {
+            for (int y = 0; y < 7; y++)
+            {
+                CellElement target = cells[y * 7 + x];
+                target.SetActiveState(true);
+
+                target.RemoveDot();
+                target.RemovePiece();
+                target.RemoveGoal();
+            }
+        }
+
+        piecesSavedCells.Clear();
+
+        //Pieces
+        if (pieces.Count > 0)
+        {
+            for (int i = pieces.Count - 1; i >= 0; i--)
+                pieceHolder.Remove(pieces[i]);
+        }
+
+        //Goals
+        if (shapeGoals.Count > 0)
+        {
+            for (int i = shapeGoals.Count - 1; i >= 0; i--)
+                goalHolder.Remove(shapeGoals[i]);
+        }
+        shapeGoals.Clear();
+    }
+    #endregion
 }

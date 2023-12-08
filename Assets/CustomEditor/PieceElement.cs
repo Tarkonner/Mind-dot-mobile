@@ -6,19 +6,26 @@ using UnityEngine.UIElements;
 
 public class PieceElement : GridElement
 {
-    public override void AddDot(Vector2Int coordinats, DotElement dot)
-    {      
-        Vector2Int calculation = new Vector2Int(
-            Mathf.Abs(coordinats.x), 
-            Mathf.Abs(coordinats.y));
+    private bool canRotate = true;
 
-        //Grid size
-        if(calculation.x + 1 > gridSize.x)
-            gridSize.x = calculation.x + 1;
-        if(calculation.y + 1 > gridSize.y)
-            gridSize.y = calculation.y + 1;
+    public PieceElement(LevelEditor editor) : base(editor)
+    {
+    }
 
-        base.AddDot(coordinats, dot);
+    public void ChangeRotationStatus()
+    {
+        canRotate = !canRotate;
+
+        if(canRotate)
+        {
+            foreach (Image i in images)
+                i.tintColor = Color.white;
+        }
+        else
+        {
+            foreach(Image i in images)
+                i.tintColor = Color.cyan;
+        }    
     }
     public override void Construct()
     {

@@ -1,4 +1,3 @@
-using System.Collections;
 using System.Collections.Generic;
 using Unity.VisualScripting;
 using UnityEngine;
@@ -16,7 +15,11 @@ public class GridElement : VisualElement
 
     protected Sprite cellBackground;
 
-    public GridElement()
+    protected LevelEditor editor;
+
+    public List<CellElement> siblings = new List<CellElement>();
+
+    public GridElement(LevelEditor editor)
     {
         style.flexDirection = FlexDirection.Row;
         style.flexWrap = Wrap.Wrap;
@@ -24,6 +27,11 @@ public class GridElement : VisualElement
 
         //Set sprite
         cellBackground = Resources.Load<Sprite>("Square");
+
+        // Add event handlers for mouse down and up events
+        RegisterCallback<MouseDownEvent>(OnMouseDown);
+
+        this.editor = editor;
     }
 
     public virtual void Construct()
@@ -33,9 +41,9 @@ public class GridElement : VisualElement
         style.width = gridSize.x * imageSize + gridSize.x * spacing; // cellWidth is the width of each cell
         style.height = gridSize.y * imageSize + gridSize.y * spacing; // cellHeight is the height of each cell
 
-        for (int x = 0; x < gridSize.x; x++)
+        for (int y = 0; y < gridSize.y; y++)
         {
-            for (int y = 0; y < gridSize.y; y++)
+            for (int x = 0; x < gridSize.x; x++)
             {
                 Image targetImage = new Image();
                 images[x, y] = targetImage;
@@ -54,7 +62,7 @@ public class GridElement : VisualElement
                 cell.Add(targetImage);
                 this.Add(targetImage);
 
-                if(dotDictionary.ContainsKey(new Vector2Int(x, y)))
+                if (dotDictionary.ContainsKey(new Vector2Int(x, y)))
                 {
                     DotElement spawendDot = new DotElement(dotDictionary[new Vector2Int(x, y)].dotType);
                     images[x, y].Add(spawendDot);
@@ -65,12 +73,22 @@ public class GridElement : VisualElement
 
     public virtual void AddDot(Vector2Int coordinat, DotElement dot)
     {
+        Vector2Int calculation = new Vector2Int(
+            Mathf.Abs(coordinat.x),
+            Mathf.Abs(coordinat.y));
+
+        //Grid size
+        if (calculation.x + 1 > gridSize.x)
+            gridSize.x = calculation.x + 1;
+        if (calculation.y + 1 > gridSize.y)
+            gridSize.y = calculation.y + 1;
+
         dotDictionary.Add(coordinat, dot);
     }
 
     public virtual bool PlaceDot(Vector2Int coordinats)
     {
-        if(dotDictionary.ContainsKey(coordinats))
+        if (dotDictionary.ContainsKey(coordinats))
         {
             DotElement targetDot = dotDictionary[coordinats];
             images[coordinats.x, coordinats.y].Add(targetDot);
@@ -84,5 +102,11 @@ public class GridElement : VisualElement
     public virtual void SetGridSize(Vector2Int size)
     {
         gridSize = size;
+    }
+
+    private void OnMouseDown(MouseDownEvent evt)
+    {
+        // Call the OnCellClicked method of the LevelEditor window
+        editor.ContentManagement(this);
     }
 }
