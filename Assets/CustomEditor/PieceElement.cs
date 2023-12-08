@@ -54,6 +54,7 @@ public class PieceElement : GridElement
                 {
                     foreach (var diagonal in diagonalList)
                     {
+                        dotDictionary[dotPos].isConnected = true;
                         dotDictionary[diagonal].isConnected = true;
                     }
                 }
