@@ -28,4 +28,5 @@ public class LevelSO : ScriptableObject
         this.levelGoals = levelGoals;
         this.levelPlaceGoals = levelPlaceGoals;
     }
+#nullable disable
 }
