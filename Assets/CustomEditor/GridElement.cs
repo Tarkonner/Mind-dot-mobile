@@ -12,7 +12,7 @@ public class GridElement : VisualElement
     protected Image[,] images = null;
 
     protected int imageSize = 30;
-    protected int spaceing = 3;
+    protected int spacing = 3;
 
     protected Sprite cellBackground;
 
@@ -30,8 +30,8 @@ public class GridElement : VisualElement
     {
         images = new Image[gridSize.x, gridSize.y];
 
-        style.width = gridSize.x * imageSize + gridSize.x * spaceing; // cellWidth is the width of each cell
-        style.height = gridSize.y * imageSize + gridSize.y * spaceing; // cellHeight is the height of each cell
+        style.width = gridSize.x * imageSize + gridSize.x * spacing; // cellWidth is the width of each cell
+        style.height = gridSize.y * imageSize + gridSize.y * spacing; // cellHeight is the height of each cell
 
         for (int x = 0; x < gridSize.x; x++)
         {

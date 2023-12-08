@@ -8,6 +8,8 @@ public class DotElement : VisualElement
     private Image image;
     public DotType dotType { get; private set; }
 
+    public bool isConnected;
+
     public DotElement(DotType type) 
     {
         this.dotType = type;
