@@ -102,7 +102,7 @@ public class CellElement : Image
             levelEditor.RemovePiece(piece);
 
         //Remove Shape goals
-        levelEditor.RemoveGoal(partOfShapeGoals);
+        levelEditor.RemoveGoal(partOfShapeGoals, this);
         partOfShapeGoals.Clear();
 
         //Remove dot
