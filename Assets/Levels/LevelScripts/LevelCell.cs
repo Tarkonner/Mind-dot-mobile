@@ -13,6 +13,19 @@ public class LevelCell
         if (cell.occupying is Dot dot)
         {
             spawnDot = dot.dotType;
+            Debug.Log("Dot not null!");
+        }
+        else
+        {
+            spawnDot = DotType.Null;
+        }
+    }
+    public LevelCell(CellElement cell)
+    {
+        if (cell.holding != null)
+        {
+            spawnDot = cell.holding.dotType;
+            Debug.Log("Dot not null!");
         }
         else
         {
