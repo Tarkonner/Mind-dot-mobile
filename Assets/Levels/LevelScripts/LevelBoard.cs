@@ -31,6 +31,7 @@ public class LevelBoard
         levelGrid=new LevelCell[(int)boardSize.x, (int)boardSize.y];
         for (int i = 0; i < cells.Count; i++)
         {
+            if (cells[i].turnedOff==true) { continue; }
             levelGrid[cells[i].gridCoordinates.x,cells[i].gridCoordinates.y] = new LevelCell(cells[i]);
         }
     }
