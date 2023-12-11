@@ -6,7 +6,7 @@ using UnityEngine.UIElements;
 
 public class PieceElement : GridElement
 {
-    private bool canRotate = true;
+    public bool canRotate = true;
 
     public PieceElement(LevelEditor editor) : base(editor)
     {
