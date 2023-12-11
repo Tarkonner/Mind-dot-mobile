@@ -7,7 +7,7 @@ using UnityEngine.UIElements;
 
 public class CellElement : Image
 {
-    public Cell cell { get; private set; }
+    //public Cell cell { get; private set; }
     public Vector2Int gridCoordinates { get; private set; }
     private LevelEditor levelEditor;
 
@@ -36,7 +36,7 @@ public class CellElement : Image
     public CellElement(Cell cell, Vector2Int coordinats, LevelEditor editor)
     {
         levelEditor = editor;
-        this.cell = cell;
+        //this.cell = cell;
         style.width = 50;
         style.height = 50;
 
