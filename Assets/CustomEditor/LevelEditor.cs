@@ -1,5 +1,6 @@
 using System.Collections.Generic;
 using UnityEditor;
+using UnityEditor.UIElements;
 using UnityEngine;
 using UnityEngine.UIElements;
 
@@ -42,6 +43,8 @@ public class LevelEditor : EditorWindow
     Button removeGoalButton;
 
     #endregion
+
+    ObjectField levelField;
 
     [MenuItem("Tools/Level Editor")]
     public static void ShowMyEditor()
@@ -110,7 +113,10 @@ public class LevelEditor : EditorWindow
         //Save and Load
         leftPanel.Add(new Label("Save & Load"));
         leftPanel.Add(new Button(() => { SaveLevelToSO(); }) { text = "Save Level" });
-
+        leftPanel.Add(new Button(() => { LoadLevel(); }) { text = "Load level" });
+        levelField = new ObjectField();
+        levelField.objectType = typeof(LevelSO);
+        leftPanel.Add(levelField);
 
         //Right panel
         // Create a grid layout
@@ -318,6 +324,11 @@ public class LevelEditor : EditorWindow
         }
         else if (buttonIndex == 1) //Right click
             targetCell.RemoveDot();
+    }
+
+    private void PlaceDot(Vector2Int coordinats, DotType type)
+    {
+        cells[coordinats.y * 7 + coordinats.x].SetDot(new DotElement(type));
     }
 
     private void MakePiece()
@@ -567,6 +578,32 @@ public class LevelEditor : EditorWindow
         {
             Debug.Log("Error saving level");
         }
+    }
+
+    private void LoadLevel()
+    {
+        if(levelField.value == null)
+        {
+            Debug.Log("No level selected");
+            return;
+        }
+
+        ClearAll();
+
+        LevelSO targetLevel = (LevelSO)levelField.value;
+        LevelCell[,] grid = targetLevel.levelGrid.levelGrid;
+        for (int x = 0; x < grid.GetLength(0); x++)
+        {
+            for (int y = 0; y < grid.GetLength(1); y++)
+            {
+                if (grid[x, y].spawnDot == DotType.Null)
+                    continue;
+
+                PlaceDot(new Vector2Int(x, y), grid[x, y].spawnDot);
+            }
+        }
+
+        levelField.value = null;
     }
     #endregion
 }
