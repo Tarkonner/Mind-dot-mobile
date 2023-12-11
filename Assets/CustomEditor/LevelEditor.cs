@@ -106,7 +106,11 @@ public class LevelEditor : EditorWindow
         //Board
         leftPanel.Add(new Label("Board"));
         leftPanel.Add(new Button(() => { ClearAll(); }) { text = "Reset board" });
-        
+
+        //Save and Load
+        leftPanel.Add(new Label("Save & Load"));
+        leftPanel.Add(new Button(() => { SaveLevelToSO(); }) { text = "Save Level" });
+
 
         //Right panel
         // Create a grid layout
@@ -440,7 +444,7 @@ public class LevelEditor : EditorWindow
         }
     }
 
-    #region Removel
+    #region Removal
     public void RemovePiece(PieceElement target)
     {
         for (int i = target.siblings.Count - 1; i >= 0; i--)
@@ -542,4 +546,27 @@ public class LevelEditor : EditorWindow
             choosenButton.style.backgroundColor = new Color(0.5f, 0.5f, 0.5f);
         }
     }
+    #region save and load
+    //Saving the level
+    public void SaveLevelToSO()
+    {
+        int boardSizeX = cells[0].gridCoordinates.x;
+        int boardSizeY = cells[0].gridCoordinates.y;
+        foreach (var cell in cells)
+        {
+            if (cell == null) continue;
+            if (cell.gridCoordinates.x > boardSizeX) { boardSizeX = cell.gridCoordinates.x; }
+            if (cell.gridCoordinates.y > boardSizeY) { boardSizeY = cell.gridCoordinates.y; }
+        }
+        boardSizeX += 1;
+        boardSizeY += 1;
+        if(LevelConverter.SaveLevel(null, pieces, cells, new Vector2(boardSizeX, boardSizeY), shapeGoals, new LevelPlaceGoal[0])){
+            Debug.Log("Level Saved!");
+        }
+        else
+        {
+            Debug.Log("Error saving level");
+        }
+    }
+    #endregion
 }
