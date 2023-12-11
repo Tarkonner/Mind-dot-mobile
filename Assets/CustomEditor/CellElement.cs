@@ -7,7 +7,6 @@ using UnityEngine.UIElements;
 
 public class CellElement : Image
 {
-    //public Cell cell { get; private set; }
     public Vector2Int gridCoordinates { get; private set; }
     private LevelEditor levelEditor;
 
@@ -33,14 +32,12 @@ public class CellElement : Image
             Color.white
         };
 
-    public CellElement(Cell cell, Vector2Int coordinats, LevelEditor editor)
+    public CellElement(Vector2Int coordinats, LevelEditor editor)
     {
         levelEditor = editor;
-        //this.cell = cell;
         style.width = 50;
         style.height = 50;
 
-        cell.gridPos = coordinats;
         gridCoordinates = coordinats;
 
         // Create an Image to hold the sprite

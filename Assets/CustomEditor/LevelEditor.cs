@@ -125,7 +125,7 @@ public class LevelEditor : EditorWindow
         grid.style.flexWrap = Wrap.Wrap;
         grid.style.justifyContent = Justify.SpaceAround; // Optional: Add space around the items
 
-        CellElement blueprint = new CellElement(new Cell(), Vector2Int.zero, this);
+        CellElement blueprint = new CellElement(Vector2Int.zero, this);
         int gridSize = 7;
         int spaceing = 2;
 
@@ -139,9 +139,7 @@ public class LevelEditor : EditorWindow
         {
             for (int j = 0; j < 7; j++)
             {
-                var cell = new Cell();
-                cell.ConvertToCell(new SerializableCell { gridPos = new Vector2Int(i, j) }); //try change i & j placing
-                var cellElement = new CellElement(cell, new Vector2Int(j, i), this);
+                var cellElement = new CellElement( new Vector2Int(j, i), this);
 
                 //Set spacing
                 cellElement.style.marginRight = new StyleLength(spaceing / 2);
@@ -591,15 +589,18 @@ public class LevelEditor : EditorWindow
         ClearAll();
 
         LevelSO targetLevel = (LevelSO)levelField.value;
-        LevelCell[,] grid = targetLevel.levelGrid.levelGrid;
-        for (int x = 0; x < grid.GetLength(0); x++)
+        LevelCell[,] targetGrid = targetLevel.levelGrid.levelGrid;
+        for (int x = 0; x < targetGrid.GetLength(0); x++)
         {
-            for (int y = 0; y < grid.GetLength(1); y++)
+            for (int y = 0; y < targetGrid.GetLength(1); y++)
             {
-                if (grid[x, y].spawnDot == DotType.Null)
+                if (targetGrid[x, y] == null)
+                    cells[y * 7 + x].TurnOffCell();
+
+                if (targetGrid[x, y].spawnDot == DotType.Null)
                     continue;
 
-                PlaceDot(new Vector2Int(x, y), grid[x, y].spawnDot);
+                PlaceDot(new Vector2Int(x, y), targetGrid[x, y].spawnDot);
             }
         }
 
