@@ -7,13 +7,13 @@ public class LevelSO : ScriptableObject
     private string version;
     public string levelTitle;
 
-    public LevelBoard levelGrid;
+    [SerializeField] public LevelBoard levelGrid;
 
-    public LevelPiece[] levelPieces;
+    [SerializeField]public LevelPiece[] levelPieces;
 
-    public LevelShapeGoal[] levelGoals;
+    [SerializeField] public LevelShapeGoal[] levelGoals;
 
-    public LevelPlaceGoal[] levelPlaceGoals;
+    [SerializeField] public LevelPlaceGoal[] levelPlaceGoals;
 
     public LevelSO() { }
 #nullable enable
@@ -22,7 +22,7 @@ public class LevelSO : ScriptableObject
     {
         if (version != null) { this.version = version; }
         this.levelTitle = levelTitle;
-        this.name = levelTitle;
+        if (levelTitle != null) { this.name = levelTitle; }        
         this.levelGrid = levelGrid;
         this.levelPieces = levelPieces;
         this.levelGoals = levelGoals;

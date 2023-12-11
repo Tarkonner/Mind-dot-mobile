@@ -1,8 +1,9 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UIElements;
-
+[Serializable]
 public class LevelBoard
 {
     public LevelCell[,] levelGrid;
@@ -29,8 +30,10 @@ public class LevelBoard
     {
 
         levelGrid=new LevelCell[(int)boardSize.x, (int)boardSize.y];
+        Debug.Log(boardSize);
         for (int i = 0; i < cells.Count; i++)
         {
+            Debug.Log(cells[i].gridCoordinates);
             levelGrid[cells[i].gridCoordinates.x,cells[i].gridCoordinates.y] = new LevelCell(cells[i].cell);
         }
     }

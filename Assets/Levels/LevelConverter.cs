@@ -1,18 +1,21 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using UnityEditor;
 using UnityEngine;
 
-public class LevelConverter
+[Serializable]
+public static class LevelConverter
 {
-    private string version;
-    public bool SaveLevel(string title, List<PieceElement> pEs, List<CellElement> board, Vector2 boardSize, List<GridElement> sGEs, LevelPlaceGoal[] lPGs)
+    private static string version = "0.1";
+    public static bool SaveLevel(string title, List<PieceElement> pEs, List<CellElement> board, Vector2 boardSize, List<ShapeGoalElement> sGEs, LevelPlaceGoal[] lPGs)
     {
         bool success = true;
-
+        /*
         try
         {
+        */
             LevelPiece[] pieces = new LevelPiece[pEs.Count];
             for (int i = 0; i < pEs.Count; i++)
             {
@@ -48,16 +51,17 @@ public class LevelConverter
             AssetDatabase.SaveAssets();
             AssetDatabase.Refresh();
 
-        }
-        catch (System.Exception)
+        /*}
+        catch (System.Exception exception)
         {
+            Debug.LogError(exception.Message);
             return false;
-        }
+        }*/
         
         return success;
     }
 
-    public void LoadLevel(LevelSO levelObject)
+    public static void LoadLevel(LevelSO levelObject)
     {
 
     }
