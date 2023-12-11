@@ -67,6 +67,8 @@ public class CellElement : Image
         }
         else if(partOfShapeGoals.Count > 1)
             myColorState |= CellColorState.partGoal;
+        else if(turnedOff)
+            myColorState = CellColorState.turnedOff;
         else
             myColorState = CellColorState.normal;
 
@@ -186,6 +188,7 @@ public class CellElement : Image
             this.tintColor = cellColorState[(int)myColorState];
 
             RemoveDot();
+            SetDefultColor();
         }
     }
 
