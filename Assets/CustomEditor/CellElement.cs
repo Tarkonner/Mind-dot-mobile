@@ -29,7 +29,7 @@ public class CellElement : Image
             new Color(0.01f, .6f, .5f),
             new Color(1, 0, 0.666f),
             new Color(1, .2f, 1),
-            Color.black,
+            new Color(.2f, .2f, .2f),
             Color.white
         };
 

@@ -26,6 +26,22 @@ public class LevelEditor : EditorWindow
     VisualElement goalHolder;
     List<ShapeGoalElement> shapeGoals = new List<ShapeGoalElement>();
 
+    #region Buttons
+    //Buttons
+    private Button choosenButton;
+    //Dot
+    Button redDotButton;
+    Button blueDotButton;
+    Button yellowDotButton;
+    //Piece
+    Button choosePieceButton;
+    Button changeRotationStateButton;
+    Button removePieceButton;
+    //Goal
+    Button chooseGoalButton;
+    Button removeGoalButton;
+
+    #endregion
 
     [MenuItem("Tools/Level Editor")]
     public static void ShowMyEditor()
@@ -38,6 +54,19 @@ public class LevelEditor : EditorWindow
 
     public void CreateGUI()
     {
+        //Create buttons
+        //Dots
+        redDotButton = new Button(() => { editTypeIndex = 1; dotIndex = 0; ChangeButtonColor(redDotButton); }) { text = "Red Dot" };
+        blueDotButton = new Button(() => { editTypeIndex = 1; dotIndex = 1; ChangeButtonColor(blueDotButton); }) { text = "Blue Dot" };
+        yellowDotButton = new Button(() => { editTypeIndex = 1; dotIndex = 1; ChangeButtonColor(yellowDotButton); }) { text = "Blue Dot" };
+        //Pieces
+        choosePieceButton = new Button(() => { editTypeIndex = 5; ChangeButtonColor(choosePieceButton); }) { text = "Mark piece dots" };
+        changeRotationStateButton = new Button(() => { editTypeIndex = 9; ChangeButtonColor(changeRotationStateButton); }) { text = "Change rotation setting" };
+        removePieceButton = new Button(() => { editTypeIndex = 7; ChangeButtonColor(removePieceButton); }) { text = "Remove piece" };
+        //Goal
+        chooseGoalButton = new Button(() => { editTypeIndex = 6; ChangeButtonColor(chooseGoalButton); }) { text = "Mark shape goal dots" };
+        removeGoalButton = new Button(() => { editTypeIndex = 8; ChangeButtonColor(removeGoalButton); }) { text = "Remove Shape Goal" };
+
 
         // Create a two-pane view with the left pane being fixed with
         var splitView = new TwoPaneSplitView(0, 250, TwoPaneSplitViewOrientation.Horizontal);
@@ -60,25 +89,24 @@ public class LevelEditor : EditorWindow
         leftPanel.Add(new Button(() => { ResizeGrid(); }) { text = "Resize grid" });
         //Dots
         leftPanel.Add(new Label("Dots"));
-        leftPanel.Add(new Button(() => { editTypeIndex = 1; dotIndex = 0; }) { text = "Red Dot" });
-        leftPanel.Add(new Button(() => { editTypeIndex = 1; dotIndex = 1; }) { text = "Blue Dot" });
-        leftPanel.Add(new Button(() => { editTypeIndex = 1; dotIndex = 2; }) { text = "Yellow Dot" });
-        leftPanel.Add(new Button(() => { editTypeIndex = 4; }) { text = "Remove Dot" });
+        leftPanel.Add(redDotButton);
+        leftPanel.Add(blueDotButton);
+        leftPanel.Add(yellowDotButton);
         //Pieces
         leftPanel.Add(new Label("Pieces"));
-        leftPanel.Add(new Button(() => { editTypeIndex = 5; }) { text = "Mark piece dots" });
+        leftPanel.Add(choosePieceButton);
         leftPanel.Add(new Button(() => { MakePiece(); }) { text = "Make piece" });
-        leftPanel.Add(new Button(() => { editTypeIndex = 9; }) { text = "Change rotation setting"}) ;
-        leftPanel.Add(new Button(() => { editTypeIndex = 7; }) { text = "Remove piece" });
+        leftPanel.Add(changeRotationStateButton) ;
+        leftPanel.Add(removePieceButton);
         //Goals
         leftPanel.Add(new Label("Goals"));
-        leftPanel.Add(new Button(() => { editTypeIndex = 6; }) { text = "Mark shape goal dots" });
+        leftPanel.Add(chooseGoalButton);
         leftPanel.Add(new Button(() => { MakeShapeGoal(); }) { text = "Make Shape Goal" });
-        leftPanel.Add(new Button(() => { editTypeIndex = 8; }) { text = "Remove Shape Goal" });
+        leftPanel.Add(removeGoalButton);
         //Board
         leftPanel.Add(new Label("Board"));
-        leftPanel.Add(new Button(() => { ClearAll(); }) { text = "Clear board" });
-
+        leftPanel.Add(new Button(() => { ClearAll(); }) { text = "Reset board" });
+        
 
         //Right panel
         // Create a grid layout
@@ -496,4 +524,22 @@ public class LevelEditor : EditorWindow
         shapeGoals.Clear();
     }
     #endregion
+
+    private void ChangeButtonColor(Button targetButton)
+    {
+        if (targetButton == choosenButton)
+            return;
+
+        if(choosenButton == null)
+        {
+            choosenButton = targetButton;
+            choosenButton.style.backgroundColor = new Color(0.5f, 0.5f, 0.5f);
+        }
+        else
+        {
+            choosenButton.style.backgroundColor = new Color(0.345f, 0.345f, 0.345f);
+            choosenButton = targetButton;
+            choosenButton.style.backgroundColor = new Color(0.5f, 0.5f, 0.5f);
+        }
+    }
 }
