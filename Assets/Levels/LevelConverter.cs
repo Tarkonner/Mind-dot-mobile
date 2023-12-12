@@ -24,10 +24,12 @@ public static class LevelConverter
         LevelShapeGoal[] levelShapeGoals = new LevelShapeGoal[sGEs.Count];
         for (int i = 0; i < sGEs.Count; i++)
         {
+            /*
             List<Vector2Int> positions = sGEs[i].dotDictionary.Keys.ToList();
             List<DotElement> types = sGEs[i].dotDictionary.Values.ToList();
 
-            levelShapeGoals[i] = new LevelShapeGoal(positions, types);
+            levelShapeGoals[i] = new LevelShapeGoal(positions, types, sGEs[i].gridPosRef); */
+            levelShapeGoals[i] = new LevelShapeGoal(sGEs[i]);
         }
 
         string name;

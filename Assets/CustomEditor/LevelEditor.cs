@@ -27,7 +27,6 @@ public class LevelEditor : EditorWindow
     List<CellElement> goalSavedCells = new List<CellElement>();
     VisualElement goalHolder;
     List<ShapeGoalElement> shapeGoals = new List<ShapeGoalElement>();
-
     #region Buttons    
     private Button choosenButton;
     //Cells
@@ -47,6 +46,7 @@ public class LevelEditor : EditorWindow
     #endregion
 
     ObjectField levelField;
+    List<CellElement> placeGoalCells = new List<CellElement>();
 
     [MenuItem("Tools/Level Editor")]
     public static void ShowMyEditor()
@@ -110,6 +110,8 @@ public class LevelEditor : EditorWindow
         leftPanel.Add(chooseGoalButton);
         leftPanel.Add(new Button(() => { MakeShapeGoal(); }) { text = "Make Shape Goal" });
         leftPanel.Add(removeGoalButton);
+        leftPanel.Add(new Button(() => { editTypeIndex = 8; }) { text = "Remove Shape Goal" });
+        leftPanel.Add(new Button(() => { editTypeIndex = 10; }) { text = "Mark Placement Goal" });
         //Board
         leftPanel.Add(new Label("Board"));
         leftPanel.Add(new Button(() => { ClearAll(); }) { text = "Reset board" });
@@ -259,6 +261,26 @@ public class LevelEditor : EditorWindow
                     cellElement.SetDefultColor();
                 }
                 break;
+            case 10:
+                //if (cellElement.turnedOff)
+                //    break;
+                //if (!placeGoalCells.Contains(cellElement))
+                //{
+                //    placeGoalCells.Add(cellElement);
+                //    cellElement.AddPlacementGoal(0);
+                //}
+                //else
+                //{
+                //    if (cellElement.placeGoal.goalType==DotType.Red)
+                //    {
+                //        cellElement.RemovePlacementGoal();
+                //    }
+                //    else
+                //    {
+                //        cellElement.AddPlacementGoal(cellElement.placeGoal.goalType++);
+                //    }
+                //}
+                break;
         }
     }
     
@@ -394,7 +416,11 @@ public class LevelEditor : EditorWindow
 
         //MakeShapeGoal(result);
     }
+    private void MakePlaceGoal()
+    {
 
+
+    }
     private GridElement MakeGridElement(List<CellElement> targetElements, Type gridType)
     {
         if (targetElements.Count > 0)
@@ -455,7 +481,7 @@ public class LevelEditor : EditorWindow
                 if (highPoint.y < targetElements[i].gridCoordinates.y)
                     highPoint.y = targetElements[i].gridCoordinates.y;
             }
-
+            spawnedGrid.gridPosRef = targetElements[0].gridCoordinates;
             for (int i = 0; i < targetElements.Count; i++)
             {
                 //Set refence point
