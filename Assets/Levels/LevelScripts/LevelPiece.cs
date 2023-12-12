@@ -9,6 +9,7 @@ public class LevelPiece
     public Vector2[] dotPositions;
     public DotType[] dotTypes;
     public bool rotatable;
+    public Vector2Int gridPosRef;
 
     public LevelPiece(Piece piece)
     {
@@ -25,11 +26,13 @@ public class LevelPiece
         dotTypes = new DotType[pE.dotDictionary.Count];
         dotPositions = new Vector2[pE.dotDictionary.Count];
         rotatable = pE.canRotate;
-        foreach (KeyValuePair<Vector2Int,DotElement> kVPair in pE.dotDictionary)
+        foreach (KeyValuePair<Vector2Int, DotElement> kVPair in pE.dotDictionary)
         {
             dotTypes[i] = kVPair.Value.dotType;
             dotPositions[i] = kVPair.Key;
             i++;
         }
+
+        this.gridPosRef = pE.gridPosRef;
     }
 }

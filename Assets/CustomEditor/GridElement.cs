@@ -19,6 +19,8 @@ public class GridElement : VisualElement
 
     public List<CellElement> siblings = new List<CellElement>();
 
+    public Vector2Int gridPosRef;
+
     public GridElement(LevelEditor editor)
     {
         style.flexDirection = FlexDirection.Row;

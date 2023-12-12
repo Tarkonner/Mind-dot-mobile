@@ -20,6 +20,8 @@ public class CellElement : Image
 
     public DotElement holding;
 
+    public PlaceGoalElement placeGoal;
+
     //Color control
     public CellColorState myColorState { get; private set; } = CellColorState.normal;
     Color[] cellColorState = new Color[]
@@ -186,6 +188,21 @@ public class CellElement : Image
             this.tintColor = cellColorState[(int)myColorState];
 
             RemoveDot();
+        }
+    }
+
+    public void AddPlacementGoal(DotType type)
+    {
+        RemovePlacementGoal();
+        placeGoal = new PlaceGoalElement(type);
+        Add(placeGoal);
+    }
+    public void RemovePlacementGoal()
+    {
+        if (placeGoal!=null)
+        {
+            this.Remove(placeGoal);
+            placeGoal = null;
         }
     }
 
