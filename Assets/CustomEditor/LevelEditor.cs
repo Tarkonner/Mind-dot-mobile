@@ -27,9 +27,10 @@ public class LevelEditor : EditorWindow
     VisualElement goalHolder;
     List<ShapeGoalElement> shapeGoals = new List<ShapeGoalElement>();
 
-    #region Buttons
-    //Buttons
+    #region Buttons    
     private Button choosenButton;
+    //Cells
+    Button cellButton;
     //Dot
     Button redDotButton;
     Button blueDotButton;
@@ -58,6 +59,8 @@ public class LevelEditor : EditorWindow
     public void CreateGUI()
     {
         //Create buttons
+        //Cells
+        cellButton = new Button(() => { editTypeIndex = 0; ChangeButtonColor(redDotButton); }) { text = "Turn cells on & off" };
         //Dots
         redDotButton = new Button(() => { editTypeIndex = 1; dotIndex = 0; ChangeButtonColor(redDotButton); }) { text = "Red Dot" };
         blueDotButton = new Button(() => { editTypeIndex = 1; dotIndex = 1; ChangeButtonColor(blueDotButton); }) { text = "Blue Dot" };
@@ -84,7 +87,7 @@ public class LevelEditor : EditorWindow
         //Left planel
         //Grid
         leftPanel.Add(new Label("Grid size"));
-        leftPanel.Add(new Button(() => { editTypeIndex = 0; }) { text = "Turn cells on & off" });
+        leftPanel.Add(cellButton);
         horizontal = new IntegerField("Horizontal", 7);
         leftPanel.Add(horizontal);
         vertical = new IntegerField("Vertical", 7);
@@ -590,12 +593,22 @@ public class LevelEditor : EditorWindow
 
         LevelSO targetLevel = (LevelSO)levelField.value;
         LevelCell[,] targetGrid = targetLevel.levelGrid.levelGrid;
+
+        if(targetGrid == null)
+        {
+            Debug.LogError("No grid found on level");
+            return;
+        }
+
         for (int x = 0; x < targetGrid.GetLength(0); x++)
         {
             for (int y = 0; y < targetGrid.GetLength(1); y++)
             {
                 if (targetGrid[x, y] == null)
+                {
                     cells[y * 7 + x].TurnOffCell();
+                    continue;
+                }
 
                 if (targetGrid[x, y].spawnDot == DotType.Null)
                     continue;
