@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using UnityEditor;
 using UnityEditor.UIElements;
@@ -64,7 +65,7 @@ public class LevelEditor : EditorWindow
         //Dots
         redDotButton = new Button(() => { editTypeIndex = 1; dotIndex = 0; ChangeButtonColor(redDotButton); }) { text = "Red Dot" };
         blueDotButton = new Button(() => { editTypeIndex = 1; dotIndex = 1; ChangeButtonColor(blueDotButton); }) { text = "Blue Dot" };
-        yellowDotButton = new Button(() => { editTypeIndex = 1; dotIndex = 1; ChangeButtonColor(yellowDotButton); }) { text = "Blue Dot" };
+        yellowDotButton = new Button(() => { editTypeIndex = 1; dotIndex = 2; ChangeButtonColor(yellowDotButton); }) { text = "Yellow Dot" };
         //Pieces
         choosePieceButton = new Button(() => { editTypeIndex = 5; ChangeButtonColor(choosePieceButton); }) { text = "Mark piece dots" };
         changeRotationStateButton = new Button(() => { editTypeIndex = 9; ChangeButtonColor(changeRotationStateButton); }) { text = "Change rotation setting" };
@@ -332,20 +333,44 @@ public class LevelEditor : EditorWindow
         cells[coordinats.y * 7 + coordinats.x].SetDot(new DotElement(type));
     }
 
-    private void MakePiece()
+    private void MakePiece(List<CellElement> parts = null)
     {
-        GridElement grid = MakeGridElement(piecesSavedCells, new PieceElement(this));
+        GridElement grid;
+
+        if (parts == null)
+            grid = MakeGridElement(piecesSavedCells, typeof(PieceElement));
+        else
+            grid = MakeGridElement(parts, typeof(PieceElement));
 
         if (grid != null)
-        {
-            
+        {            
             pieceHolder.Add(grid);
             piecesSavedCells.Clear();
         }
     }
-    private void MakeShapeGoal()
+    private void LoadPiece(LevelPiece targetPiece)
     {
-        GridElement grid = MakeGridElement(goalSavedCells, new ShapeGoalElement(this));
+        List<CellElement> result = new List<CellElement>();
+
+        //Get dots on Cells
+        for (int i = 0; i < targetPiece.dotPositions.Length; i++)
+        {
+            CellElement spawnCell = new CellElement(new Vector2Int((int)targetPiece.dotPositions[i].x, (int)targetPiece.dotPositions[i].y), this);
+            DotElement spawnDot = new DotElement(targetPiece.dotTypes[i]);
+            spawnCell.SetDot(spawnDot);
+            result.Add(spawnCell);
+        }
+
+        MakePiece(result);
+    }
+
+    private void MakeShapeGoal(List<CellElement> parts = null)
+    {
+        GridElement grid;
+        if (parts == null)
+            grid = MakeGridElement(goalSavedCells, typeof(ShapeGoalElement));
+        else
+            grid = MakeGridElement(parts, typeof(ShapeGoalElement));
 
         if (grid != null)
         {
@@ -353,8 +378,22 @@ public class LevelEditor : EditorWindow
             goalSavedCells.Clear();
         }
     }
+    private void LoadShapeGoal(LevelShapeGoal targetShapeGoal)
+    {
+        List<CellElement> result = new List<CellElement>();
 
-    private GridElement MakeGridElement(List<CellElement> targetElements, GridElement gridType)
+        for (int i = 0; i < targetShapeGoal.goalSpecifications.Length; i++)
+        {
+            CellElement spawnCell = new CellElement(new Vector2Int((int)targetShapeGoal.goalSpecifications[i].x, (int)targetShapeGoal.goalSpecifications[i].y), this);
+            DotElement spawnDot = new DotElement(targetShapeGoal.goalDots[i]);
+            spawnCell.SetDot(spawnDot);
+            result.Add(spawnCell);
+        }
+
+        MakeShapeGoal(result);
+    }
+
+    private GridElement MakeGridElement(List<CellElement> targetElements, Type gridType)
     {
         if (targetElements.Count > 0)
         {
@@ -375,12 +414,12 @@ public class LevelEditor : EditorWindow
 
             //Goal or piece
             GridElement spawnedGrid;
-            if (gridType is PieceElement)
+            if (gridType == typeof(PieceElement))
             {
                 spawnedGrid = new PieceElement(this);
                 pieces.Add((PieceElement)spawnedGrid);
             }
-            else if (gridType is ShapeGoalElement)
+            else if (gridType == typeof(ShapeGoalElement))
             {
                 spawnedGrid = new ShapeGoalElement(this);
                 shapeGoals.Add((ShapeGoalElement)spawnedGrid);
@@ -423,9 +462,9 @@ public class LevelEditor : EditorWindow
                 spawnedGrid.AddDot(targetCoor, targetElements[i].holding);
 
                 //Change background color
-                if (gridType is PieceElement)
+                if (gridType == typeof(PieceElement))
                     targetElements[i].SetPiece((PieceElement)spawnedGrid);
-                else if (gridType is ShapeGoalElement)
+                else if (gridType == typeof(ShapeGoalElement))
                     targetElements[i].SetGoal((ShapeGoalElement)spawnedGrid);
             }
 
@@ -436,14 +475,14 @@ public class LevelEditor : EditorWindow
             //Set color
             for (int i = 0; i < targetElements.Count; i++)
             {
-                if (targetElements[i].partOfPiece && gridType is ShapeGoalElement
-                    || targetElements[i].partOfShapeGoals.Count > 0 && gridType is PieceElement)
+                if (targetElements[i].partOfPiece && gridType == typeof(ShapeGoalElement)
+                    || targetElements[i].partOfShapeGoals.Count > 0 && gridType == typeof(PieceElement))
                 {
                     targetElements[i].ChangeCellColor(CellColorState.partGoalAndPiece);
                 }
-                else if (gridType is ShapeGoalElement)
+                else if (gridType == typeof(ShapeGoalElement))
                     targetElements[i].ChangeCellColor(CellColorState.partGoal);
-                else if (gridType is PieceElement)
+                else if (gridType == typeof(PieceElement))
                     targetElements[i].ChangeCellColor(CellColorState.partPiece);
             }
 
@@ -592,31 +631,41 @@ public class LevelEditor : EditorWindow
         ClearAll();
 
         LevelSO targetLevel = (LevelSO)levelField.value;
-        LevelCell[,] targetGrid = targetLevel.levelGrid.levelGrid;
 
+        //Grid
+        LevelCell[,] targetGrid = targetLevel.levelGrid.levelGrid;
         if(targetGrid == null)
         {
             Debug.LogError("No grid found on level");
             return;
         }
-
         for (int x = 0; x < targetGrid.GetLength(0); x++)
         {
             for (int y = 0; y < targetGrid.GetLength(1); y++)
             {
+                //Turn Cells off
                 if (targetGrid[x, y] == null)
                 {
                     cells[y * 7 + x].TurnOffCell();
                     continue;
                 }
-
+                //Leave empty cells if dotType is null
                 if (targetGrid[x, y].spawnDot == DotType.Null)
                     continue;
-
+                //Place dot
                 PlaceDot(new Vector2Int(x, y), targetGrid[x, y].spawnDot);
             }
         }
 
+        //Load Pieces
+        foreach (LevelPiece item in targetLevel.levelPieces)
+            LoadPiece(item);
+
+        //Load Shape goals
+        foreach (LevelShapeGoal item in targetLevel.levelShapeGoals)
+            LoadShapeGoal(item);
+
+        //Cleanup
         levelField.value = null;
     }
     #endregion
