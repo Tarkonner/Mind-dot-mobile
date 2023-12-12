@@ -319,7 +319,16 @@ public class LevelEditor : EditorWindow
 
     private void PlaceDot(CellElement targetCell, int buttonIndex)
     {
-        if (targetCell.turnedOff || targetCell.partOfPiece || targetCell.partOfShapeGoals.Count > 0)
+        if (targetCell.turnedOff)
+            return;
+
+        if (buttonIndex == 1) //Right click
+        {
+            targetCell.RemoveDot();
+            return;
+        }
+
+        if (targetCell.partOfPiece || targetCell.partOfShapeGoals.Count > 0)
             return;
              
 
@@ -346,8 +355,6 @@ public class LevelEditor : EditorWindow
                 targetCell.SetDot(targetDot);
             }
         }
-        else if (buttonIndex == 1) //Right click
-            targetCell.RemoveDot();
     }
 
     private void PlaceDot(Vector2Int coordinats, DotType type)
@@ -368,22 +375,17 @@ public class LevelEditor : EditorWindow
     private void LoadPiece(LevelPiece targetPiece)
     {
         List<CellElement> result = new List<CellElement>();
-        
-        //Get dots on Cells
+        //Set Cells to be part of piece
         for (int i = 0; i < targetPiece.dotPositions.Length; i++)
         {
-            CellElement spawnCell = new CellElement(new Vector2Int((int)targetPiece.dotPositions[i].x, (int)targetPiece.dotPositions[i].y), this);
-            DotElement spawnDot = new DotElement(targetPiece.dotTypes[i]);
-            spawnCell.SetDot(spawnDot);
-            result.Add(spawnCell);
+            Vector2Int cal = targetPiece.gridPosRef + new Vector2Int(
+                (int)(targetPiece.dotPositions[i].x - targetPiece.dotPositions[0].x), 
+                (int)(targetPiece.dotPositions[i].y - targetPiece.dotPositions[0].y));
+            result.Add(cells[cal.y * 7 + cal.x]);
         }
 
         //Make grid
         GridElement grid = MakeGridElement(result, typeof(PieceElement));
-        
-        //Set Cells to be part of piece
-        for (int i = 0; i < result.Count; i++)
-            result[i].SetPiece(grid as PieceElement);
 
         //Add to holder
         if (grid != null)
@@ -405,16 +407,25 @@ public class LevelEditor : EditorWindow
     private void LoadShapeGoal(LevelShapeGoal targetShapeGoal)
     {
         List<CellElement> result = new List<CellElement>();
+        //Make grid
 
+        //Set Cells to be part of goal
         for (int i = 0; i < targetShapeGoal.goalSpecifications.Length; i++)
         {
-            CellElement spawnCell = new CellElement(new Vector2Int((int)targetShapeGoal.goalSpecifications[i].x, (int)targetShapeGoal.goalSpecifications[i].y), this);
-            DotElement spawnDot = new DotElement(targetShapeGoal.goalDots[i]);
-            spawnCell.SetDot(spawnDot);
-            result.Add(spawnCell);
+            Vector2Int cal = targetShapeGoal.gridPosRef + new Vector2Int(
+                (int)(targetShapeGoal.goalSpecifications[i].x - targetShapeGoal.goalSpecifications[0].x), 
+                (int)(targetShapeGoal.goalSpecifications[i].y - targetShapeGoal.goalSpecifications[0].y));
+            result.Add(cells[cal.y * 7 + cal.x]);
         }
 
-        //MakeShapeGoal(result);
+        GridElement grid = MakeGridElement(result, typeof(ShapeGoalElement));
+
+        //Add to holder
+        if (grid != null)
+        {
+            goalHolder.Add(grid);
+            goalSavedCells.Clear();
+        }
     }
     private void MakePlaceGoal()
     {

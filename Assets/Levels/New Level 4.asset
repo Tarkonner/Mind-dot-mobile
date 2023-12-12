@@ -17,9 +17,24 @@ MonoBehaviour:
     levelPG: []
   levelPieces:
   - dotPositions:
+    - {x: 0, y: 0}
     - {x: 0, y: 1}
-    - {x: 1, y: 0}
-    dotTypes: 0300000003000000
+    dotTypes: 0300000002000000
     rotatable: 1
-  levelShapeGoals: []
+    gridPosRef: {x: 0, y: 1}
+  - dotPositions:
+    - {x: 0, y: 0}
+    - {x: 0, y: 1}
+    - {x: 1, y: 1}
+    - {x: 1, y: 2}
+    dotTypes: 03000000010000000300000002000000
+    rotatable: 1
+    gridPosRef: {x: 1, y: 0}
+  levelShapeGoals:
+  - goalSpecifications:
+    - {x: 0, y: 1}
+    - {x: 0, y: 0}
+    - {x: 1, y: 0}
+    goalDots: 020000000100000002000000
+    gridPosRef: {x: 1, y: 3}
   levelPlaceGoals: []
