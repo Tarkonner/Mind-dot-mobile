@@ -262,24 +262,24 @@ public class LevelEditor : EditorWindow
                 }
                 break;
             case 10:
-                //if (cellElement.turnedOff)
-                //    break;
-                //if (!placeGoalCells.Contains(cellElement))
-                //{
-                //    placeGoalCells.Add(cellElement);
-                //    cellElement.AddPlacementGoal(0);
-                //}
-                //else
-                //{
-                //    if (cellElement.placeGoal.goalType==DotType.Red)
-                //    {
-                //        cellElement.RemovePlacementGoal();
-                //    }
-                //    else
-                //    {
-                //        cellElement.AddPlacementGoal(cellElement.placeGoal.goalType++);
-                //    }
-                //}
+                if (cellElement.turnedOff)
+                    break;
+                if (!placeGoalCells.Contains(cellElement))
+                {
+                    placeGoalCells.Add(cellElement);
+                    cellElement.AddPlacementGoal(0);
+                }
+                else
+                {
+                    if (cellElement.placeGoal.goalType == DotType.Red)
+                    {
+                        cellElement.RemovePlacementGoal();
+                    }
+                    else
+                    {
+                        cellElement.AddPlacementGoal(cellElement.placeGoal.goalType++);
+                    }
+                }
                 break;
         }
     }
