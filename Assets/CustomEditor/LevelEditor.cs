@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using UnityEditor;
 using UnityEditor.UIElements;
 using UnityEngine;
+using UnityEngine.Networking.PlayerConnection;
 using UnityEngine.UIElements;
 
 public class LevelEditor : EditorWindow
@@ -46,6 +47,7 @@ public class LevelEditor : EditorWindow
     #endregion
 
     ObjectField levelField;
+    TextField savedFieldName;
     List<CellElement> placeGoalCells = new List<CellElement>();
 
     [MenuItem("Tools/Level Editor")]
@@ -79,11 +81,24 @@ public class LevelEditor : EditorWindow
         var splitView = new TwoPaneSplitView(0, 250, TwoPaneSplitViewOrientation.Horizontal);
         // Add the panel to the visual tree by adding it as a child to the root element
         rootVisualElement.Add(splitView);
+
+        // Create a ScrollView for the left panel
+        var scrollView = new ScrollView(ScrollViewMode.Horizontal);
+        scrollView.name = "Left Scroll View";
+             
         // A TwoPaneSplitView always needs exactly two child elements
         var leftPanel = new ListViewContainer();
+
+        // Add the left panel to the ScrollView
+        scrollView.Add(leftPanel);
+
+        // Add the ScrollView to the split view
+        splitView.Add(scrollView);
+
+        //Right panel
         rightPanel = new ListViewContainer();
-        splitView.Add(leftPanel);
         splitView.Add(rightPanel);
+
 
         //Left planel
         //Grid
@@ -118,6 +133,9 @@ public class LevelEditor : EditorWindow
 
         //Save and Load
         leftPanel.Add(new Label("Save & Load"));
+        savedFieldName = new TextField();
+        savedFieldName.label = "Save file name";
+        leftPanel.Add(savedFieldName);
         leftPanel.Add(new Button(() => { SaveLevelToSO(); }) { text = "Save Level" });
         leftPanel.Add(new Button(() => { LoadLevel(); }) { text = "Load level" });
         levelField = new ObjectField();
@@ -650,13 +668,21 @@ public class LevelEditor : EditorWindow
         }
         boardSizeX += 1;
         boardSizeY += 1;
-        if(LevelConverter.SaveLevel(null, pieces, cells, new Vector2(boardSizeX, boardSizeY), shapeGoals, new LevelPlaceGoal[0])){
+
+        //Set typed name
+        string levelName = "";
+        if(savedFieldName.value != null)
+            levelName = savedFieldName.value.ToString();
+
+        if(LevelConverter.SaveLevel(levelName, pieces, cells, new Vector2(boardSizeX, boardSizeY), shapeGoals, new LevelPlaceGoal[0])){
             Debug.Log("Level Saved!");
         }
         else
         {
             Debug.Log("Error saving level");
         }
+
+        savedFieldName.value = null;
     }
 
     private void LoadLevel()
@@ -700,8 +726,4 @@ public class LevelEditor : EditorWindow
     }
     #endregion
 
-    void gzdfdg()
-    {
-        
-    }
 }
