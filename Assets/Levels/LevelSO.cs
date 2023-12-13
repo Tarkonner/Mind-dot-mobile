@@ -10,7 +10,7 @@ public class LevelSO : ScriptableObject
 
     [SerializeField] public LevelBoard levelGrid;
 
-    [SerializeField]public LevelPiece[] levelPieces;
+    [SerializeField] public LevelPiece[] levelPieces;
 
     [SerializeField] public LevelShapeGoal[] levelShapeGoals;
 

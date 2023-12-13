@@ -672,27 +672,18 @@ public class LevelEditor : EditorWindow
         LevelSO targetLevel = (LevelSO)levelField.value;
 
         //Grid
-        LevelCell[,] targetGrid = targetLevel.levelGrid.levelGrid;
-        if(targetGrid == null)
+        LevelBoard targetGrid = targetLevel.levelGrid;
+
+        //Load Dots
+        for (int x = 0; x < 7; x++)
         {
-            Debug.LogError("No grid found on level");
-            return;
-        }
-        for (int x = 0; x < targetGrid.GetLength(0); x++)
-        {
-            for (int y = 0; y < targetGrid.GetLength(1); y++)
+            for (int y = 0; y < 7; y++)
             {
-                //Turn Cells off
-                if (targetGrid[x, y] == null)
-                {
-                    cells[y * 7 + x].TurnOffCell();
-                    continue;
-                }
-                //Leave empty cells if dotType is null
-                if (targetGrid[x, y].spawnDot == DotType.Null)
-                    continue;
-                //Place dot
-                PlaceDot(new Vector2Int(x, y), targetGrid[x, y].spawnDot);
+                int targetIndex = y * 7 + x;
+                if (!targetGrid.activeCells[targetIndex])
+                    cells[targetIndex].TurnOffCell();
+                else if (targetGrid.dots[targetIndex] != DotType.Null)
+                    PlaceDot(new Vector2Int(x, y), targetGrid.dots[targetIndex]);
             }
         }
 
@@ -708,4 +699,9 @@ public class LevelEditor : EditorWindow
         levelField.value = null;
     }
     #endregion
+
+    void gzdfdg()
+    {
+        
+    }
 }
