@@ -8,7 +8,8 @@ using UnityEngine;
 public static class LevelConverter
 {
     private static string version = "0.1";
-    public static bool SaveLevel(string title, List<PieceElement> pEs, List<CellElement> board, Vector2 boardSize, List<ShapeGoalElement> sGEs, LevelPlaceGoal[] lPGs)
+    public static bool SaveLevel(string title, List<PieceElement> pEs, 
+        List<CellElement> board, Vector2 boardSize, List<ShapeGoalElement> sGEs, List<PlaceGoalElement> pGEs)
     {
         bool success = true;
         /*
@@ -32,6 +33,11 @@ public static class LevelConverter
             levelShapeGoals[i] = new LevelShapeGoal(sGEs[i]);
         }
 
+        LevelPlaceGoal[] lPGs = new LevelPlaceGoal[pGEs.Count];
+        for (int i = 0; i < pGEs.Count; i++)
+        {
+            lPGs[i] = new LevelPlaceGoal(pGEs[i].goalPosition, pGEs[i].goalType);
+        }
         string name;
         if (title == null || title == "")
         {

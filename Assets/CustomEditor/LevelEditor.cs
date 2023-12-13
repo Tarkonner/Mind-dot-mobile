@@ -227,6 +227,12 @@ public class LevelEditor : EditorWindow
             case 10:
                 if (cellElement.turnedOff)
                     break;
+                if (buttonIndex == 1)
+                {
+                    cellElement.RemovePlacementGoal();
+                    placeGoalCells.Remove(cellElement);
+                    break;
+                }
                 if (!placeGoalCells.Contains(cellElement))
                 {
                     placeGoalCells.Add(cellElement);
@@ -234,14 +240,7 @@ public class LevelEditor : EditorWindow
                 }
                 else
                 {
-                    if (cellElement.placeGoal.goalType==DotType.Red)
-                    {
-                        cellElement.RemovePlacementGoal();
-                    }
-                    else
-                    {
-                        cellElement.AddPlacementGoal(cellElement.placeGoal.goalType++);
-                    }
+                    cellElement.placeGoal.ChangeColor();
                 }
                 break;
         }
@@ -288,7 +287,7 @@ public class LevelEditor : EditorWindow
 
         if (buttonIndex == 0) //Left click
         {
-            if (targetCell.childCount > 0)
+            if (targetCell.holding != null)
                 targetCell.ChangeDotColor();
             else
             {
@@ -538,7 +537,12 @@ public class LevelEditor : EditorWindow
         }
         boardSizeX += 1;
         boardSizeY += 1;
-        if(LevelConverter.SaveLevel(null, pieces, cells, new Vector2(boardSizeX, boardSizeY), shapeGoals, new LevelPlaceGoal[0])){
+        List<PlaceGoalElement> placeGoals = new List<PlaceGoalElement>();
+        foreach (var cell in placeGoalCells)
+        {
+            placeGoals.Add(cell.placeGoal);
+        }
+        if(LevelConverter.SaveLevel(null, pieces, cells, new Vector2(boardSizeX, boardSizeY), shapeGoals, placeGoals)){
             Debug.Log("Level Saved!");
         }
         else

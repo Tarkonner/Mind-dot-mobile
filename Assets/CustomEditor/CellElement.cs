@@ -194,7 +194,7 @@ public class CellElement : Image
     public void AddPlacementGoal(DotType type)
     {
         RemovePlacementGoal();
-        placeGoal = new PlaceGoalElement(type);
+        placeGoal = new PlaceGoalElement(type, this);
         Add(placeGoal);
     }
     public void RemovePlacementGoal()
