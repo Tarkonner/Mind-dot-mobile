@@ -7,7 +7,6 @@ using UnityEngine.UIElements;
 
 public class CellElement : Image
 {
-    //public Cell cell { get; private set; }
     public Vector2Int gridCoordinates { get; private set; }
     private LevelEditor levelEditor;
 
@@ -31,18 +30,16 @@ public class CellElement : Image
             new Color(0.01f, .6f, .5f),
             new Color(1, 0, 0.666f),
             new Color(1, .2f, 1),
-            Color.black,
+            new Color(.2f, .2f, .2f),
             Color.white
         };
 
-    public CellElement(Cell cell, Vector2Int coordinats, LevelEditor editor)
+    public CellElement(Vector2Int coordinats, LevelEditor editor)
     {
         levelEditor = editor;
-        //this.cell = cell;
         style.width = 50;
         style.height = 50;
 
-        cell.gridPos = coordinats;
         gridCoordinates = coordinats;
 
         // Create an Image to hold the sprite
@@ -69,6 +66,8 @@ public class CellElement : Image
         }
         else if(partOfShapeGoals.Count > 1)
             myColorState |= CellColorState.partGoal;
+        else if(turnedOff)
+            myColorState = CellColorState.turnedOff;
         else
             myColorState = CellColorState.normal;
 
@@ -188,6 +187,7 @@ public class CellElement : Image
             this.tintColor = cellColorState[(int)myColorState];
 
             RemoveDot();
+            SetDefultColor();
         }
     }
 
@@ -199,11 +199,10 @@ public class CellElement : Image
     }
     public void RemovePlacementGoal()
     {
-        if (placeGoal!=null)
+        if (placeGoal != null)
         {
             this.Remove(placeGoal);
             placeGoal = null;
         }
     }
-
 }

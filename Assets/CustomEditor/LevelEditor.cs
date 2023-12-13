@@ -1,5 +1,7 @@
+using System;
 using System.Collections.Generic;
 using UnityEditor;
+using UnityEditor.UIElements;
 using UnityEngine;
 using UnityEngine.UIElements;
 
@@ -25,6 +27,25 @@ public class LevelEditor : EditorWindow
     List<CellElement> goalSavedCells = new List<CellElement>();
     VisualElement goalHolder;
     List<ShapeGoalElement> shapeGoals = new List<ShapeGoalElement>();
+    #region Buttons    
+    private Button choosenButton;
+    //Cells
+    Button cellButton;
+    //Dot
+    Button redDotButton;
+    Button blueDotButton;
+    Button yellowDotButton;
+    //Piece
+    Button choosePieceButton;
+    Button changeRotationStateButton;
+    Button removePieceButton;
+    //Goal
+    Button chooseGoalButton;
+    Button removeGoalButton;
+
+    #endregion
+
+    ObjectField levelField;
     List<CellElement> placeGoalCells = new List<CellElement>();
 
     [MenuItem("Tools/Level Editor")]
@@ -38,6 +59,21 @@ public class LevelEditor : EditorWindow
 
     public void CreateGUI()
     {
+        //Create buttons
+        //Cells
+        cellButton = new Button(() => { editTypeIndex = 0; ChangeButtonColor(cellButton); }) { text = "Turn cells on & off" };
+        //Dots
+        redDotButton = new Button(() => { editTypeIndex = 1; dotIndex = 0; ChangeButtonColor(redDotButton); }) { text = "Red Dot" };
+        blueDotButton = new Button(() => { editTypeIndex = 1; dotIndex = 1; ChangeButtonColor(blueDotButton); }) { text = "Blue Dot" };
+        yellowDotButton = new Button(() => { editTypeIndex = 1; dotIndex = 2; ChangeButtonColor(yellowDotButton); }) { text = "Yellow Dot" };
+        //Pieces
+        choosePieceButton = new Button(() => { editTypeIndex = 5; ChangeButtonColor(choosePieceButton); }) { text = "Mark piece dots" };
+        changeRotationStateButton = new Button(() => { editTypeIndex = 9; ChangeButtonColor(changeRotationStateButton); }) { text = "Change rotation setting" };
+        removePieceButton = new Button(() => { editTypeIndex = 7; ChangeButtonColor(removePieceButton); }) { text = "Remove piece" };
+        //Goal
+        chooseGoalButton = new Button(() => { editTypeIndex = 6; ChangeButtonColor(chooseGoalButton); }) { text = "Mark shape goal dots" };
+        removeGoalButton = new Button(() => { editTypeIndex = 8; ChangeButtonColor(removeGoalButton); }) { text = "Remove Shape Goal" };
+
 
         // Create a two-pane view with the left pane being fixed with
         var splitView = new TwoPaneSplitView(0, 250, TwoPaneSplitViewOrientation.Horizontal);
@@ -52,7 +88,7 @@ public class LevelEditor : EditorWindow
         //Left planel
         //Grid
         leftPanel.Add(new Label("Grid size"));
-        leftPanel.Add(new Button(() => { editTypeIndex = 0; }) { text = "Turn cells on & off" });
+        leftPanel.Add(cellButton);
         horizontal = new IntegerField("Horizontal", 7);
         leftPanel.Add(horizontal);
         vertical = new IntegerField("Vertical", 7);
@@ -60,30 +96,33 @@ public class LevelEditor : EditorWindow
         leftPanel.Add(new Button(() => { ResizeGrid(); }) { text = "Resize grid" });
         //Dots
         leftPanel.Add(new Label("Dots"));
-        leftPanel.Add(new Button(() => { editTypeIndex = 1; dotIndex = 0; }) { text = "Red Dot" });
-        leftPanel.Add(new Button(() => { editTypeIndex = 1; dotIndex = 1; }) { text = "Blue Dot" });
-        leftPanel.Add(new Button(() => { editTypeIndex = 1; dotIndex = 2; }) { text = "Yellow Dot" });
-        leftPanel.Add(new Button(() => { editTypeIndex = 4; }) { text = "Remove Dot" });
+        leftPanel.Add(redDotButton);
+        leftPanel.Add(blueDotButton);
+        leftPanel.Add(yellowDotButton);
         //Pieces
         leftPanel.Add(new Label("Pieces"));
-        leftPanel.Add(new Button(() => { editTypeIndex = 5; }) { text = "Mark piece dots" });
+        leftPanel.Add(choosePieceButton);
         leftPanel.Add(new Button(() => { MakePiece(); }) { text = "Make piece" });
-        leftPanel.Add(new Button(() => { editTypeIndex = 9; }) { text = "Change rotation setting"}) ;
-        leftPanel.Add(new Button(() => { editTypeIndex = 7; }) { text = "Remove piece" });
+        leftPanel.Add(changeRotationStateButton) ;
+        leftPanel.Add(removePieceButton);
         //Goals
         leftPanel.Add(new Label("Goals"));
-        leftPanel.Add(new Button(() => { editTypeIndex = 6; }) { text = "Mark shape goal dots" });
+        leftPanel.Add(chooseGoalButton);
         leftPanel.Add(new Button(() => { MakeShapeGoal(); }) { text = "Make Shape Goal" });
+        leftPanel.Add(removeGoalButton);
         leftPanel.Add(new Button(() => { editTypeIndex = 8; }) { text = "Remove Shape Goal" });
         leftPanel.Add(new Button(() => { editTypeIndex = 10; }) { text = "Mark Placement Goal" });
         //Board
         leftPanel.Add(new Label("Board"));
-        leftPanel.Add(new Button(() => { ClearAll(); }) { text = "Clear board" });
+        leftPanel.Add(new Button(() => { ClearAll(); }) { text = "Reset board" });
 
         //Save and Load
         leftPanel.Add(new Label("Save & Load"));
         leftPanel.Add(new Button(() => { SaveLevelToSO(); }) { text = "Save Level" });
-
+        leftPanel.Add(new Button(() => { LoadLevel(); }) { text = "Load level" });
+        levelField = new ObjectField();
+        levelField.objectType = typeof(LevelSO);
+        leftPanel.Add(levelField);
 
         //Right panel
         // Create a grid layout
@@ -92,7 +131,7 @@ public class LevelEditor : EditorWindow
         grid.style.flexWrap = Wrap.Wrap;
         grid.style.justifyContent = Justify.SpaceAround; // Optional: Add space around the items
 
-        CellElement blueprint = new CellElement(new Cell(), Vector2Int.zero, this);
+        CellElement blueprint = new CellElement(Vector2Int.zero, this);
         int gridSize = 7;
         int spaceing = 2;
 
@@ -106,9 +145,7 @@ public class LevelEditor : EditorWindow
         {
             for (int j = 0; j < 7; j++)
             {
-                var cell = new Cell();
-                cell.ConvertToCell(new SerializableCell { gridPos = new Vector2Int(i, j) }); //try change i & j placing
-                var cellElement = new CellElement(cell, new Vector2Int(j, i), this);
+                var cellElement = new CellElement( new Vector2Int(j, i), this);
 
                 //Set spacing
                 cellElement.style.marginRight = new StyleLength(spaceing / 2);
@@ -281,7 +318,16 @@ public class LevelEditor : EditorWindow
 
     private void PlaceDot(CellElement targetCell, int buttonIndex)
     {
-        if (targetCell.turnedOff || targetCell.partOfPiece || targetCell.partOfShapeGoals.Count > 0)
+        if (targetCell.turnedOff)
+            return;
+
+        if (buttonIndex == 1) //Right click
+        {
+            targetCell.RemoveDot();
+            return;
+        }
+
+        if (targetCell.partOfPiece || targetCell.partOfShapeGoals.Count > 0)
             return;
              
 
@@ -308,25 +354,72 @@ public class LevelEditor : EditorWindow
                 targetCell.SetDot(targetDot);
             }
         }
-        else if (buttonIndex == 1) //Right click
-            targetCell.RemoveDot();
+    }
+
+    private void PlaceDot(Vector2Int coordinats, DotType type)
+    {
+        cells[coordinats.y * 7 + coordinats.x].SetDot(new DotElement(type));
     }
 
     private void MakePiece()
     {
-        GridElement grid = MakeGridElement(piecesSavedCells, new PieceElement(this));
+        GridElement grid = MakeGridElement(piecesSavedCells, typeof(PieceElement));
 
         if (grid != null)
-        {
-            
+        {            
             pieceHolder.Add(grid);
             piecesSavedCells.Clear();
         }
     }
+    private void LoadPiece(LevelPiece targetPiece)
+    {
+        List<CellElement> result = new List<CellElement>();
+        //Set Cells to be part of piece
+        for (int i = 0; i < targetPiece.dotPositions.Length; i++)
+        {
+            Vector2Int cal = targetPiece.gridPosRef + new Vector2Int(
+                (int)(targetPiece.dotPositions[i].x - targetPiece.dotPositions[0].x), 
+                (int)(targetPiece.dotPositions[i].y - targetPiece.dotPositions[0].y));
+            result.Add(cells[cal.y * 7 + cal.x]);
+        }
+
+        //Make grid
+        GridElement grid = MakeGridElement(result, typeof(PieceElement));
+
+        //Add to holder
+        if (grid != null)
+        {
+            pieceHolder.Add(grid);
+            piecesSavedCells.Clear();
+        }
+    }
+
     private void MakeShapeGoal()
     {
-        GridElement grid = MakeGridElement(goalSavedCells, new ShapeGoalElement(this));
+        GridElement grid = MakeGridElement(goalSavedCells, typeof(ShapeGoalElement));
+        if (grid != null)
+        {
+            goalHolder.Add(grid);
+            goalSavedCells.Clear();
+        }
+    }
+    private void LoadShapeGoal(LevelShapeGoal targetShapeGoal)
+    {
+        List<CellElement> result = new List<CellElement>();
+        //Make grid
 
+        //Set Cells to be part of goal
+        for (int i = 0; i < targetShapeGoal.goalSpecifications.Length; i++)
+        {
+            Vector2Int cal = targetShapeGoal.gridPosRef + new Vector2Int(
+                (int)(targetShapeGoal.goalSpecifications[i].x - targetShapeGoal.goalSpecifications[0].x), 
+                (int)(targetShapeGoal.goalSpecifications[i].y - targetShapeGoal.goalSpecifications[0].y));
+            result.Add(cells[cal.y * 7 + cal.x]);
+        }
+
+        GridElement grid = MakeGridElement(result, typeof(ShapeGoalElement));
+
+        //Add to holder
         if (grid != null)
         {
             goalHolder.Add(grid);
@@ -336,8 +429,9 @@ public class LevelEditor : EditorWindow
     private void MakePlaceGoal()
     {
 
+
     }
-    private GridElement MakeGridElement(List<CellElement> targetElements, GridElement gridType)
+    private GridElement MakeGridElement(List<CellElement> targetElements, Type gridType)
     {
         if (targetElements.Count > 0)
         {
@@ -358,12 +452,12 @@ public class LevelEditor : EditorWindow
 
             //Goal or piece
             GridElement spawnedGrid;
-            if (gridType is PieceElement)
+            if (gridType == typeof(PieceElement))
             {
                 spawnedGrid = new PieceElement(this);
                 pieces.Add((PieceElement)spawnedGrid);
             }
-            else if (gridType is ShapeGoalElement)
+            else if (gridType == typeof(ShapeGoalElement))
             {
                 spawnedGrid = new ShapeGoalElement(this);
                 shapeGoals.Add((ShapeGoalElement)spawnedGrid);
@@ -406,9 +500,9 @@ public class LevelEditor : EditorWindow
                 spawnedGrid.AddDot(targetCoor, targetElements[i].holding);
 
                 //Change background color
-                if (gridType is PieceElement)
+                if (gridType == typeof(PieceElement))
                     targetElements[i].SetPiece((PieceElement)spawnedGrid);
-                else if (gridType is ShapeGoalElement)
+                else if (gridType == typeof(ShapeGoalElement))
                     targetElements[i].SetGoal((ShapeGoalElement)spawnedGrid);
             }
 
@@ -419,14 +513,14 @@ public class LevelEditor : EditorWindow
             //Set color
             for (int i = 0; i < targetElements.Count; i++)
             {
-                if (targetElements[i].partOfPiece && gridType is ShapeGoalElement
-                    || targetElements[i].partOfShapeGoals.Count > 0 && gridType is PieceElement)
+                if (targetElements[i].partOfPiece && gridType == typeof(ShapeGoalElement)
+                    || targetElements[i].partOfShapeGoals.Count > 0 && gridType == typeof(PieceElement))
                 {
                     targetElements[i].ChangeCellColor(CellColorState.partGoalAndPiece);
                 }
-                else if (gridType is ShapeGoalElement)
+                else if (gridType == typeof(ShapeGoalElement))
                     targetElements[i].ChangeCellColor(CellColorState.partGoal);
-                else if (gridType is PieceElement)
+                else if (gridType == typeof(PieceElement))
                     targetElements[i].ChangeCellColor(CellColorState.partPiece);
             }
 
@@ -523,6 +617,24 @@ public class LevelEditor : EditorWindow
         shapeGoals.Clear();
     }
     #endregion
+
+    private void ChangeButtonColor(Button targetButton)
+    {
+        if (targetButton == choosenButton)
+            return;
+
+        if(choosenButton == null)
+        {
+            choosenButton = targetButton;
+            choosenButton.style.backgroundColor = new Color(0.5f, 0.5f, 0.5f);
+        }
+        else
+        {
+            choosenButton.style.backgroundColor = new Color(0.345f, 0.345f, 0.345f);
+            choosenButton = targetButton;
+            choosenButton.style.backgroundColor = new Color(0.5f, 0.5f, 0.5f);
+        }
+    }
     #region save and load
     //Saving the level
     public void SaveLevelToSO()
@@ -550,5 +662,50 @@ public class LevelEditor : EditorWindow
             Debug.Log("Error saving level");
         }
     }
+
+    private void LoadLevel()
+    {
+        if(levelField.value == null)
+        {
+            Debug.Log("No level selected");
+            return;
+        }
+
+        ClearAll();
+
+        LevelSO targetLevel = (LevelSO)levelField.value;
+
+        //Grid
+        LevelBoard targetGrid = targetLevel.levelGrid;
+
+        //Load Dots
+        for (int x = 0; x < 7; x++)
+        {
+            for (int y = 0; y < 7; y++)
+            {
+                int targetIndex = y * 7 + x;
+                if (!targetGrid.activeCells[targetIndex])
+                    cells[targetIndex].TurnOffCell();
+                else if (targetGrid.dots[targetIndex] != DotType.Null)
+                    PlaceDot(new Vector2Int(x, y), targetGrid.dots[targetIndex]);
+            }
+        }
+
+        //Load Pieces
+        foreach (LevelPiece item in targetLevel.levelPieces)
+            LoadPiece(item);
+
+        //Load Shape goals
+        foreach (LevelShapeGoal item in targetLevel.levelShapeGoals)
+            LoadShapeGoal(item);
+
+        //Cleanup
+        levelField.value = null;
+    }
     #endregion
+
+    void gzdfdg()
+    {
+        
+    }
 }

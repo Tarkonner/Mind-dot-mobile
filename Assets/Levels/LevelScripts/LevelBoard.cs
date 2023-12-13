@@ -1,38 +1,35 @@
 using System;
-using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-using UnityEngine.UIElements;
 [Serializable]
 public class LevelBoard
 {
-    public LevelCell[,] levelGrid;
+    public DotType[] dots;
+    public bool[] activeCells;
 
-    public LevelPlaceGoal[] levelPG;
-
-    public LevelBoard(Board board)
-    {
-        levelGrid = new LevelCell[board.grid.GetLength(0),board.grid.GetLength(1)];
-        int i = 0;
-        for (int x = 0; x < board.grid.GetLength(0); x++)
-        {
-            for (int y = 0; y < board.grid.GetLength(1); y++)
-            {
-                if (board.grid[x, y] != null)
-                {
-                    levelGrid[x,y] = new LevelCell(board.grid[x,y]);
-                    i++;
-                }
-            }
-        }
-    }
     public LevelBoard(List<CellElement> cells, Vector2 boardSize)
     {
-        levelGrid=new LevelCell[(int)boardSize.x, (int)boardSize.y];
+        dots = new DotType[cells.Count];
+        activeCells = new bool[cells.Count];
+
         for (int i = 0; i < cells.Count; i++)
         {
-            if (cells[i].turnedOff==true) { continue; }
-            levelGrid[cells[i].gridCoordinates.x,cells[i].gridCoordinates.y] = new LevelCell(cells[i]);
+            if (!cells[i].turnedOff)
+            {
+                activeCells[i] = true;
+
+                DotElement occupying = cells[i].holding;
+                if (occupying == null)
+                    dots[i] = DotType.Null;
+                else
+                    dots[i] = occupying.dotType;
+            }
+            else
+            {
+                activeCells[i] = false;
+            }
+
+
         }
     }
 }

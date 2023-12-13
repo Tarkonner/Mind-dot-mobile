@@ -10,9 +10,9 @@ public class LevelSO : ScriptableObject
 
     [SerializeField] public LevelBoard levelGrid;
 
-    [SerializeField]public LevelPiece[] levelPieces;
+    [SerializeField] public LevelPiece[] levelPieces;
 
-    [SerializeField] public LevelShapeGoal[] levelGoals;
+    [SerializeField] public LevelShapeGoal[] levelShapeGoals;
 
     [SerializeField] public LevelPlaceGoal[] levelPlaceGoals;
 
@@ -26,7 +26,7 @@ public class LevelSO : ScriptableObject
         if (levelTitle != null) { this.name = levelTitle; }        
         this.levelGrid = levelGrid;
         this.levelPieces = levelPieces;
-        this.levelGoals = levelGoals;
+        this.levelShapeGoals = levelGoals;
         this.levelPlaceGoals = levelPlaceGoals;
     }
     private void Init(string? version, string? levelTitle, LevelBoard levelGrid,
@@ -37,7 +37,7 @@ public class LevelSO : ScriptableObject
         if (levelTitle != null) { this.name = levelTitle; }
         this.levelGrid = levelGrid;
         this.levelPieces = levelPieces;
-        this.levelGoals = levelGoals;
+        this.levelShapeGoals = levelGoals;
         this.levelPlaceGoals = levelPlaceGoals;
     }
     public static LevelSO CreateLevelSO(string? version, string? levelTitle, LevelBoard levelGrid,
