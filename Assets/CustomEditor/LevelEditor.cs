@@ -88,6 +88,7 @@ public class LevelEditor : EditorWindow
              
         // A TwoPaneSplitView always needs exactly two child elements
         var leftPanel = new ListViewContainer();
+        leftPanel.style.width = 250;
 
         // Add the left panel to the ScrollView
         scrollView.Add(leftPanel);
@@ -660,9 +661,9 @@ public class LevelEditor : EditorWindow
     {
         int boardSizeX = cells[0].gridCoordinates.x;
         int boardSizeY = cells[0].gridCoordinates.y;
-        foreach (var cell in cells)
+        foreach (CellElement cell in cells)
         {
-            if (cell == null) continue;
+            if (cell.turnedOff) continue;
             if (cell.gridCoordinates.x > boardSizeX) { boardSizeX = cell.gridCoordinates.x; }
             if (cell.gridCoordinates.y > boardSizeY) { boardSizeY = cell.gridCoordinates.y; }
         }
@@ -701,15 +702,26 @@ public class LevelEditor : EditorWindow
         LevelBoard targetGrid = targetLevel.levelGrid;
 
         //Load Dots
-        for (int x = 0; x < 7; x++)
+        for (int y = 0; y < 7; y++)
         {
-            for (int y = 0; y < 7; y++)
+            for (int x = 0; x < 7; x++)
             {
-                int targetIndex = y * 7 + x;
-                if (!targetGrid.activeCells[targetIndex])
-                    cells[targetIndex].TurnOffCell();
-                else if (targetGrid.dots[targetIndex] != DotType.Null)
-                    PlaceDot(new Vector2Int(x, y), targetGrid.dots[targetIndex]);
+                //Turn out of level cells off
+                if (x >= (int)targetGrid.boardSize.x ||
+                    y >= (int)targetGrid.boardSize.y)
+                {
+                    cells[y * 7 + x].TurnOffCell();
+                    continue;
+                }
+
+                int loadGridIndex = y * (int)targetGrid.boardSize.x + x;
+                int editorGridIndex = y * 7 + x;
+
+                //See if grid is atice & if there is a dot
+                if (!targetGrid.activeCells[loadGridIndex])
+                    cells[editorGridIndex].TurnOffCell();
+                else if (targetGrid.dots[loadGridIndex] != DotType.Null)
+                    PlaceDot(new Vector2Int(x, y), targetGrid.dots[editorGridIndex]);
             }
         }
 
