@@ -721,7 +721,7 @@ public class LevelEditor : EditorWindow
                 if (!targetGrid.activeCells[loadGridIndex])
                     cells[editorGridIndex].TurnOffCell();
                 else if (targetGrid.dots[loadGridIndex] != DotType.Null)
-                    PlaceDot(new Vector2Int(x, y), targetGrid.dots[editorGridIndex]);
+                    PlaceDot(new Vector2Int(x, y), targetGrid.dots[loadGridIndex]);
             }
         }
 
