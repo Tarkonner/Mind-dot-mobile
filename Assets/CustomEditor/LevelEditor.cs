@@ -118,7 +118,7 @@ public class LevelEditor : EditorWindow
 
         //Save and Load
         leftPanel.Add(new Label("Save & Load"));
-        leftPanel.Add(new Button(() => { SaveLevelToSO(); }) { text = "Save Level" });
+        leftPanel.Add(new Button(() => { TrySave(); }) { text = "Save Level" });
         leftPanel.Add(new Button(() => { LoadLevel(); }) { text = "Load level" });
         levelField = new ObjectField();
         levelField.objectType = typeof(LevelSO);
@@ -270,15 +270,7 @@ public class LevelEditor : EditorWindow
                     placeGoalCells.Remove(cellElement);
                     break;
                 }
-                if (!placeGoalCells.Contains(cellElement))
-                {
-                    placeGoalCells.Add(cellElement);
-                    cellElement.AddPlacementGoal(0);
-                }
-                else
-                {
-                    cellElement.placeGoal.ChangeColor();
-                }
+                MakePlaceGoal(cellElement);
                 break;
         }
     }
@@ -426,9 +418,17 @@ public class LevelEditor : EditorWindow
             goalSavedCells.Clear();
         }
     }
-    private void MakePlaceGoal()
+    private void MakePlaceGoal(CellElement cellElement)
     {
-
+        if (!placeGoalCells.Contains(cellElement))
+        {
+            placeGoalCells.Add(cellElement);
+            cellElement.AddPlacementGoal(0);
+        }
+        else
+        {
+            cellElement.placeGoal.ChangeColor();
+        }
 
     }
     private GridElement MakeGridElement(List<CellElement> targetElements, Type gridType)
@@ -637,6 +637,21 @@ public class LevelEditor : EditorWindow
     }
     #region save and load
     //Saving the level
+    private bool TrySave()
+    {
+        bool elligible = true;
+        
+        foreach (var pG in placeGoalCells)
+        {
+            if (!pG.placeGoal.GoalCompletionStatus())
+            {
+                elligible = false;
+                Debug.LogError($"Placement goal in {pG.gridCoordinates} not fulfilled!");
+            }
+        }
+        SaveLevelToSO();
+        return elligible;
+    }
     public void SaveLevelToSO()
     {
         int boardSizeX = cells[0].gridCoordinates.x;
@@ -698,6 +713,11 @@ public class LevelEditor : EditorWindow
         //Load Shape goals
         foreach (LevelShapeGoal item in targetLevel.levelShapeGoals)
             LoadShapeGoal(item);
+
+        //Load Placement goals
+        foreach(LevelPlaceGoal item in targetLevel.levelPlaceGoals)
+        {
+        }
 
         //Cleanup
         levelField.value = null;
