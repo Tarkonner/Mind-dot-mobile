@@ -27,64 +27,72 @@ public class Board : MonoBehaviour
         if (!testLoadedLevel && Input.GetKeyDown(KeyCode.K))
         {
             testLoadedLevel = true;
-            levelManager.LoadLevel(0);
             Debug.Log("T");
         }
     }
 
-    public void LoadLevel(LevelData level)
+    public void LoadLevel(LevelSO level)
     {
-        Vector2Int levelSize = new Vector2Int(level.levelCells.GetLength(0), level.levelCells.GetLength(1));
+        Vector2Int levelSize = new Vector2Int((int)level.levelGrid.boardSize.x, (int)level.levelGrid.boardSize.y);
         grid = new Cell[levelSize.x, levelSize.y];
 
         Vector2 gridStartPosition = new Vector2(
             ((levelSize.x - 1) * (gridSize + spaceingBetweenCells) - spaceingBetweenCells) / 2,
             ((levelSize.y - 1) * (gridSize + spaceingBetweenCells) - spaceingBetweenCells) / 2);
-        
+
+        //Piece position
+        List<Vector2> PiecePositions = new List<Vector2>();
+        //Pieces
+        for (int i = 0; i < level.levelPieces.Length; i++)
+        {
+            for (int k = 0; k < level.levelPieces[i].dotPositions.Length; k++)
+                PiecePositions.Add(level.levelPieces[i].dotPositions[k]);
+        }
 
         for (int x = 0; x < grid.GetLength(0); x++)
         {
             for (int y = 0; y < grid.GetLength(1); y++)
             {
-                //make grid
-                if(!level.levelCells[x, y].isNullCell)
-                {
-                    //Make Cell
-                    GameObject cellSpawn = Instantiate(cellPrefab, transform);
-                    cellSpawn.name = $"Cell: {x}, {y}";
+                //See if cell is active
+                if (!level.levelGrid.activeCells[y * (int)level.levelGrid.boardSize.x + x])
+                    continue;
 
-                    //Placement
-                    Vector2 spawnPoint = new Vector2(
-                        x * (gridSize + spaceingBetweenCells) - gridStartPosition.x - spaceingBetweenCells / 2,
-                        y * (gridSize + spaceingBetweenCells) - gridStartPosition.y - spaceingBetweenCells / 2
-                        );
-                    cellSpawn.GetComponent<RectTransform>().anchoredPosition = spawnPoint;
+                //Make Cell
+                GameObject cellSpawn = Instantiate(cellPrefab, transform);
+                cellSpawn.name = $"Cell: {x}, {y}";
 
-                    //Setup cell
-                    Cell cell = cellSpawn.GetComponent<Cell>();
-                    cell.ConvertToCell(level.levelCells[x, y]);
-                    grid[x, y] = cell;
-                    cell.gridPos = new Vector2Int(x, y);
+                //Placement
+                Vector2 spawnPoint = new Vector2(
+                    x * (gridSize + spaceingBetweenCells) - gridStartPosition.x - spaceingBetweenCells / 2,
+                    y * (-(gridSize + spaceingBetweenCells)) + gridStartPosition.y - spaceingBetweenCells / 2
+                    );
+                cellSpawn.GetComponent<RectTransform>().anchoredPosition = spawnPoint;
 
-                    //Spawn level
-                    if (cell.occupying != null)
-                    {
-                        //Make dot & get component
-                        GameObject spawn = Instantiate(testDot, cellSpawn.transform);
-                        Dot newDot = spawn.GetComponent<Dot>();
+                //Setup cell
+                Cell cell = cellSpawn.GetComponent<Cell>();
+                grid[x, y] = cell;
+                cell.gridPos = new Vector2Int(x, y);
 
-                        //Load saved dot
-                        SerializableDot seriDot = level.levelCells[x, y].occupying;
-                        Dot savedDot = SaveConverter.ConvertToDot(seriDot);
-                        newDot.Setup(savedDot.dotType);
+                //Part of a piece
+                if (PiecePositions.Contains(new Vector2(x, y)))
+                    continue;
+                //Le
+                int targetDotIndex = y * (int)level.levelGrid.boardSize.x + x;
+                if (level.levelGrid.dots[targetDotIndex] == DotType.Null)
+                    continue;
 
-                        newDot.cell = cell;
-                        cell.occupying = newDot;
+                //Make dot & get component
+                GameObject spawn = Instantiate(testDot, cellSpawn.transform);
+                Dot newDot = spawn.GetComponent<Dot>();
 
-                        //Place on Board
-                        PlaceDot(new Vector2Int(x, y), newDot);
-                    }
-                }
+                //Load saved dot
+                newDot.Setup(level.levelGrid.dots[targetDotIndex]);
+
+                newDot.cell = cell;
+                cell.occupying = newDot;
+
+                //Place on Board
+                PlaceDot(new Vector2Int(x, y), newDot);
             }
         }
     }
@@ -99,8 +107,6 @@ public class Board : MonoBehaviour
 
             targetDot.transform.position = targetCell.transform.position;
             targetDot.cell = targetCell.GetComponent<Cell>();
-            //dotRect.anchoredPosition = cellRect.anchoredPosition;
-            //targetDot.transform.parent = targetCell.transform;
             return true;
         }
         else
@@ -188,8 +194,6 @@ public class Board : MonoBehaviour
             Vector2Int coordinates = d.cell.gridPos;
             RemoveDot(coordinates);
             Debug.Log($"Relative position for dot {d} is {d.relativePosition}");
-            //d.transform.localPosition = d.relativePosition;
-            //d.transform.SetParent(targetPiece.transform);
         }
     }
     #endregion
