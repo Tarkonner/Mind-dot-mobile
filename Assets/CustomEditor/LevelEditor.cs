@@ -614,6 +614,7 @@ public class LevelEditor : EditorWindow
                 target.RemoveDot();
                 target.RemovePiece();
                 target.RemoveGoal();
+                target.RemovePlacementGoal();
             }
         }
 
@@ -665,6 +666,7 @@ public class LevelEditor : EditorWindow
             {
                 elligible = false;
                 Debug.LogError($"Placement goal in {pG.gridCoordinates} not fulfilled!");
+                return elligible;
             }
         }
         SaveLevelToSO();
@@ -744,6 +746,7 @@ public class LevelEditor : EditorWindow
         //Load Placement goals
         foreach(LevelPlaceGoal item in targetLevel.levelPlaceGoals)
         {
+            cells[(int)(item.goalPosition.y * 7 + item.goalPosition.x)].AddPlacementGoal(item.type);
         }
 
         //Cleanup
