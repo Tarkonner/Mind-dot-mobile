@@ -212,10 +212,10 @@ public class InputSystem : MonoBehaviour
         ShapeGoal[] shapeGoals = goalHolder.GetComponentsInChildren<ShapeGoal>();
         foreach (var child in shapeGoals)
         {
-            if (child.CheckFulfilment(board))
-            {
-                completedGoals++;
-            }
+            //if (child.CheckFulfilment(board))
+            //{
+            //    completedGoals++;
+            //}
         }
         if (completedGoals >= shapeGoals.Length)
         {

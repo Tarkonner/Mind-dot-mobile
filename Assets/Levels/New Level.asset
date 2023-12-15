@@ -35,15 +35,16 @@ MonoBehaviour:
     pieceSize: {x: 2, y: 1}
   levelShapeGoals:
   - goalSpecifications:
-    - {x: 0, y: 1}
-    - {x: 1, y: 0}
-    - {x: 0, y: 0}
-    - {x: 1, y: 1}
     - {x: 0, y: 2}
+    - {x: 0, y: 1}
+    - {x: 0, y: 0}
+    - {x: 1, y: 0}
+    - {x: 1, y: 1}
     - {x: 1, y: 2}
     - {x: 2, y: 2}
     - {x: 2, y: 1}
     - {x: 2, y: 0}
-    goalDots: 030000000100000003000000010000000300000001000000020000000200000002000000
-    gridPosRef: {x: 0, y: 1}
+    goalDots: 030000000300000003000000010000000100000001000000020000000200000002000000
+    gridPosRef: {x: 0, y: 2}
+    goalSize: {x: 3, y: 3}
   levelPlaceGoals: []

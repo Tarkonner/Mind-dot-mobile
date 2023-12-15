@@ -7,15 +7,10 @@ using UnityEngine.SceneManagement;
 
 public class LevelManager : MonoBehaviour
 {
-    [Header("Holders")]
-    [SerializeField] GameObject goalHolder;
-    [SerializeField] GameObject pieceBackground;
-    [SerializeField] float paddingBetweenPieces = 300;
-
     [Header("Refences")]
     [SerializeField] Board board;
     [SerializeField] PieceMaker pieceHolder;
-
+    [SerializeField] GoalMaker goalMaker;
 
     [SerializeField] private LevelSO[] levels;
 
@@ -31,6 +26,7 @@ public class LevelManager : MonoBehaviour
     public void LoadLevel(LevelSO targetLevel)
     {
         board.LoadLevel(targetLevel);
+        goalMaker.MakeGoals(targetLevel.levelShapeGoals);
         pieceHolder.MakePieces(targetLevel.levelPieces);
     }
 }

@@ -9,16 +9,17 @@ public class LevelShapeGoal
     public Vector2[] goalSpecifications;
     public DotType[] goalDots;
     public Vector2Int gridPosRef;
-    public LevelShapeGoal(ShapeGoal goal)
-    {
-        goalSpecifications = new Vector2[goalSpecifications.Length];
-        goalDots = new DotType[goalSpecifications.Length];
-        for (int i = 0; i < goal.goalSpecifications.Length; i++)
-        {
-            goalSpecifications[i] = goal.goalSpecifications[i].gridPos;
-            goalDots[i] = goal.goalSpecifications[i].dotType;
-        }
-    }
+    public Vector2Int goalSize;
+    //public LevelShapeGoal(ShapeGoal goal)
+    //{
+    //    goalSpecifications = new Vector2[goalSpecifications.Length];
+    //    goalDots = new DotType[goalSpecifications.Length];
+    //    for (int i = 0; i < goal.goalSpecifications.Length; i++)
+    //    {
+    //        goalSpecifications[i] = goal.goalSpecifications[i].gridPos;
+    //        goalDots[i] = goal.goalSpecifications[i].dotType;
+    //    }
+    //}
     public LevelShapeGoal(List<Vector2Int> goalSpecifications, List<DotElement> goalDots, Vector2Int gridposref)
     {
         this.goalSpecifications = new Vector2[goalSpecifications.Count];
@@ -55,6 +56,8 @@ public class LevelShapeGoal
         }
 
         gridPosRef = goal.gridPosRef;
+
+        goalSize = goal.gridSize;
     }
     public LevelShapeGoal(Vector2[] goalSpecifications, DotType[] goalDots)
     {
