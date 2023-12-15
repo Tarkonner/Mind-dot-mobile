@@ -17,19 +17,7 @@ public class Board : MonoBehaviour
 
     public Action onChange;
 
-    [SerializeField] protected GameObject testDot;
-
-    protected bool testLoadedLevel = false;
-
-
-    private void Update()
-    {
-        if (!testLoadedLevel && Input.GetKeyDown(KeyCode.K))
-        {
-            testLoadedLevel = true;
-            Debug.Log("T");
-        }
-    }
+    [SerializeField] protected GameObject dotPrefab;
 
     public void LoadLevel(LevelSO level)
     {
@@ -42,13 +30,13 @@ public class Board : MonoBehaviour
 
         //Piece position
         List<Vector2> PiecePositions = new List<Vector2>();
-        //Pieces
         for (int i = 0; i < level.levelPieces.Length; i++)
         {
             for (int k = 0; k < level.levelPieces[i].dotPositions.Length; k++)
                 PiecePositions.Add(level.levelPieces[i].dotPositions[k]);
         }
 
+        //Dots
         for (int x = 0; x < grid.GetLength(0); x++)
         {
             for (int y = 0; y < grid.GetLength(1); y++)
@@ -76,13 +64,13 @@ public class Board : MonoBehaviour
                 //Part of a piece
                 if (PiecePositions.Contains(new Vector2(x, y)))
                     continue;
-                //Le
+                //Open space
                 int targetDotIndex = y * (int)level.levelGrid.boardSize.x + x;
                 if (level.levelGrid.dots[targetDotIndex] == DotType.Null)
                     continue;
 
                 //Make dot & get component
-                GameObject spawn = Instantiate(testDot, cellSpawn.transform);
+                GameObject spawn = Instantiate(dotPrefab, cellSpawn.transform);
                 Dot newDot = spawn.GetComponent<Dot>();
 
                 //Load saved dot

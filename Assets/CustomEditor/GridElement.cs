@@ -7,7 +7,7 @@ public class GridElement : VisualElement
 {
     public Dictionary<Vector2Int, DotElement> dotDictionary = new Dictionary<Vector2Int, DotElement>();
 
-    protected Vector2Int gridSize;
+    public Vector2Int gridSize;
     protected Image[,] images = null;
 
     protected int imageSize = 30;

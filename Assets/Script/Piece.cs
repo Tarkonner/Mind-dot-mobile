@@ -48,27 +48,28 @@ public class Piece : MonoBehaviour, IDragHandler
             testTimer = 0;
         }
     }
-    public void LoadPiece(SerializablePiece seriPiece)
+    public void LoadPiece(LevelPiece targetPiece)
     {
         lineHolder = new GameObject();
         lineHolder.transform.SetParent(transform, false);
 
         //Set cordinats
-        gridPosArray = seriPiece.gridPosArray;
+        gridPosArray = targetPiece.dotPositions;
 
         //Setup dots
-        for (int i = 0; i < seriPiece.dotsArray.Length; i++)
+        for (int i = 0; i < targetPiece.dotPositions.Length; i++)
         {
             //Make object
             GameObject spawn = Instantiate(dotPrefab, transform);
             Dot targetDot = spawn.GetComponent<Dot>();
             RectTransform rect = spawn.GetComponent<RectTransform>();
 
-            //Set position
-            rect.anchoredPosition = new Vector2(gridPosArray[i].x * dotSpacing, gridPosArray[i].y * dotSpacing);
+            Vector2 offset = new Vector2((targetPiece.pieceSize.x - 1) * 0.5f, (targetPiece.pieceSize.y - 1) * 0.5f);
+
+            rect.anchoredPosition = new Vector2(gridPosArray[i].x * dotSpacing - offset.x * dotSpacing, gridPosArray[i].y * dotSpacing - offset.y * dotSpacing);
 
             dotsArray[i] = targetDot;
-            targetDot.Setup(seriPiece.dotsArray[i].dotType, this);
+            targetDot.Setup(targetPiece.dotTypes[i], this);
         }
 
 

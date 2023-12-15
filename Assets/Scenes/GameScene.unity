@@ -315,17 +315,6 @@ Transform:
   m_Children: []
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &1886755111 stripped
-MonoBehaviour:
-  m_CorrespondingSourceObject: {fileID: 3724272712511738389, guid: 8cbdc0a76d6bc7148968a7757584fc92, type: 3}
-  m_PrefabInstance: {fileID: 3645564560661746013}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 0}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 51631dd63b2a39b46ac5c395a06c3456, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
 --- !u!1001 &56585487374016792
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -341,7 +330,11 @@ PrefabInstance:
     - target: {fileID: 65025732663852158, guid: ece83fda2ae00364da4f4bd42689e64a, type: 3}
       propertyPath: gameUI
       value: 
-      objectReference: {fileID: 1886755111}
+      objectReference: {fileID: 0}
+    - target: {fileID: 65025732663852158, guid: ece83fda2ae00364da4f4bd42689e64a, type: 3}
+      propertyPath: TargetLevel
+      value: 
+      objectReference: {fileID: 11400000, guid: bfaf0e79dc8b91a4c8792c87454881c2, type: 2}
     - target: {fileID: 1035492846910417328, guid: ece83fda2ae00364da4f4bd42689e64a, type: 3}
       propertyPath: m_LocalPosition.x
       value: 0
@@ -527,7 +520,8 @@ PrefabInstance:
       propertyPath: levelManager
       value: 
       objectReference: {fileID: 716659779}
-    m_RemovedComponents: []
+    m_RemovedComponents:
+    - {fileID: 3724272712511738389, guid: 8cbdc0a76d6bc7148968a7757584fc92, type: 3}
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
     m_AddedComponents: []
