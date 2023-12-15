@@ -2,6 +2,7 @@ using ES3Types;
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using Unity.VisualScripting;
 using UnityEngine;
 
 public class Board : MonoBehaviour
@@ -94,6 +95,10 @@ public class Board : MonoBehaviour
                 //Place on Board
                 PlaceDot(new Vector2Int(x, y), newDot);
             }
+        }
+        foreach (var item in level.levelPlaceGoals)
+        {
+            PlaceGoal.MakeGoal(item, grid);
         }
     }
 
