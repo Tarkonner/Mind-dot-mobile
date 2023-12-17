@@ -25,7 +25,7 @@ public class LevelManager : MonoBehaviour
 
     public void LoadLevel(LevelSO targetLevel)
     {
-        board.LoadLevel(targetLevel);
+        board.LoadLevel(targetLevel); //Uses info from both board & pieces, so piece dots don't get loadet in
         goalMaker.MakeGoals(targetLevel.levelShapeGoals);
         pieceHolder.MakePieces(targetLevel.levelPieces);
     }

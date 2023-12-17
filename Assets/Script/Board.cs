@@ -29,11 +29,11 @@ public class Board : MonoBehaviour
             ((levelSize.y - 1) * (gridSize + spaceingBetweenCells) - spaceingBetweenCells) / 2);
 
         //Piece position
-        List<Vector2> PiecePositions = new List<Vector2>();
+        List<Vector2> piecePositions = new List<Vector2>();
         for (int i = 0; i < level.levelPieces.Length; i++)
         {
             for (int k = 0; k < level.levelPieces[i].dotPositions.Length; k++)
-                PiecePositions.Add(level.levelPieces[i].dotPositions[k]);
+                piecePositions.Add(level.levelPieces[i].dotPositions[k] + level.levelPieces[i].gridPosRef);
         }
 
         //Dots
@@ -62,7 +62,7 @@ public class Board : MonoBehaviour
                 cell.gridPos = new Vector2Int(x, y);
 
                 //Part of a piece
-                if (PiecePositions.Contains(new Vector2(x, y)))
+                if (piecePositions.Contains(new Vector2(x, y)))
                     continue;
                 //Open space
                 int targetDotIndex = y * (int)level.levelGrid.boardSize.x + x;
