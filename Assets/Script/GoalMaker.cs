@@ -22,7 +22,6 @@ public class GoalMaker : MonoBehaviour
             GameObject spawnedGoal = Instantiate(shapeGoalPrefab, holder);
             ShapeGoal shapeGoal = spawnedGoal.GetComponent<ShapeGoal>();
             shapeGoal.LoadGoal(levelGoals[i]);
-            spawnedGoal.GetComponent<RectTransform>().localScale = new Vector2(.5f, .5f);
         }
     }
 }
