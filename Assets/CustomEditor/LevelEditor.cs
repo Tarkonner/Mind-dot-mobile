@@ -137,7 +137,7 @@ public class LevelEditor : EditorWindow
         savedFieldName = new TextField();
         savedFieldName.label = "Save file name";
         leftPanel.Add(savedFieldName);
-        leftPanel.Add(new Button(() => { SaveLevelToSO(); }) { text = "Save Level" });
+        leftPanel.Add(new Button(() => { TrySave(); }) { text = "Save Level" });
         leftPanel.Add(new Button(() => { LoadLevel(); }) { text = "Load level" });
         levelField = new ObjectField();
         levelField.objectType = typeof(LevelSO);
@@ -283,22 +283,13 @@ public class LevelEditor : EditorWindow
             case 10:
                 if (cellElement.turnedOff)
                     break;
-                if (!placeGoalCells.Contains(cellElement))
+                if (buttonIndex == 1)
                 {
-                    placeGoalCells.Add(cellElement);
-                    cellElement.AddPlacementGoal(0);
+                    cellElement.RemovePlacementGoal();
+                    placeGoalCells.Remove(cellElement);
+                    break;
                 }
-                else
-                {
-                    if (cellElement.placeGoal.goalType == DotType.Red)
-                    {
-                        cellElement.RemovePlacementGoal();
-                    }
-                    else
-                    {
-                        cellElement.AddPlacementGoal(cellElement.placeGoal.goalType++);
-                    }
-                }
+                MakePlaceGoal(cellElement);
                 break;
         }
     }
@@ -353,7 +344,7 @@ public class LevelEditor : EditorWindow
 
         if (buttonIndex == 0) //Left click
         {
-            if (targetCell.childCount > 0)
+            if (targetCell.holding != null)
                 targetCell.ChangeDotColor();
             else
             {
@@ -446,9 +437,17 @@ public class LevelEditor : EditorWindow
             goalSavedCells.Clear();
         }
     }
-    private void MakePlaceGoal()
+    private void MakePlaceGoal(CellElement cellElement)
     {
-
+        if (!placeGoalCells.Contains(cellElement))
+        {
+            placeGoalCells.Add(cellElement);
+            cellElement.AddPlacementGoal(0);
+        }
+        else
+        {
+            cellElement.placeGoal.ChangeColor();
+        }
 
     }
     private GridElement MakeGridElement(List<CellElement> targetElements, Type gridType)
@@ -616,6 +615,7 @@ public class LevelEditor : EditorWindow
                 target.RemoveDot();
                 target.RemovePiece();
                 target.RemoveGoal();
+                target.RemovePlacementGoal();
             }
         }
 
@@ -657,6 +657,22 @@ public class LevelEditor : EditorWindow
     }
     #region save and load
     //Saving the level
+    private bool TrySave()
+    {
+        bool elligible = true;
+        
+        foreach (var pG in placeGoalCells)
+        {
+            if (!pG.placeGoal.GoalCompletionStatus())
+            {
+                elligible = false;
+                Debug.LogError($"Placement goal in {pG.gridCoordinates} not fulfilled!");
+                return elligible;
+            }
+        }
+        SaveLevelToSO();
+        return elligible;
+    }
     public void SaveLevelToSO()
     {
         int boardSizeX = cells[0].gridCoordinates.x;
@@ -669,13 +685,19 @@ public class LevelEditor : EditorWindow
         }
         boardSizeX += 1;
         boardSizeY += 1;
+        List<PlaceGoalElement> placeGoals = new List<PlaceGoalElement>();
+        foreach (var cell in placeGoalCells)
+        {
+            placeGoals.Add(cell.placeGoal);
+        }
+        
 
         //Set typed name
         string levelName = "";
         if(savedFieldName.value != null)
             levelName = savedFieldName.value.ToString();
 
-        if(LevelConverter.SaveLevel(levelName, pieces, cells, new Vector2(boardSizeX, boardSizeY), shapeGoals, new LevelPlaceGoal[0])){
+        if(LevelConverter.SaveLevel(levelName, pieces, cells, new Vector2(boardSizeX, boardSizeY), shapeGoals, placeGoals)){
             Debug.Log("Level Saved!");
         }
         else
@@ -732,6 +754,12 @@ public class LevelEditor : EditorWindow
         //Load Shape goals
         foreach (LevelShapeGoal item in targetLevel.levelShapeGoals)
             LoadShapeGoal(item);
+
+        //Load Placement goals
+        foreach(LevelPlaceGoal item in targetLevel.levelPlaceGoals)
+        {
+            cells[(int)(item.goalPosition.y * 7 + item.goalPosition.x)].AddPlacementGoal(item.type);
+        }
 
         //Cleanup
         levelField.value = null;
