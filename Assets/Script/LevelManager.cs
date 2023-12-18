@@ -8,23 +8,25 @@ using UnityEngine.SceneManagement;
 public class LevelManager : MonoBehaviour
 {
     [Header("Refences")]
-    [SerializeField] private Board board;
-    [SerializeField] private GameUI gameUI;
+    [SerializeField] Board board;
+    [SerializeField] PieceMaker pieceHolder;
+    [SerializeField] GoalMaker goalMaker;
 
     [SerializeField] private LevelSO[] levels;
 
     [Header("Testing")]
-    [SerializeField] private LevelSO TargetLevel;
+    [SerializeField] private LevelSO testLevel;
 
     private void Start()
     {
-        if(TargetLevel != null)
-        {
-            board.LoadLevel(TargetLevel);
-        }
+        if(testLevel != null)
+            LoadLevel(testLevel);
     }
 
-    public void LoadLevel()
+    public void LoadLevel(LevelSO targetLevel)
     {
+        board.LoadLevel(targetLevel); //Uses info from both board & pieces, so piece dots don't get loadet in
+        goalMaker.MakeGoals(targetLevel.levelShapeGoals);
+        pieceHolder.MakePieces(targetLevel.levelPieces);
     }
 }

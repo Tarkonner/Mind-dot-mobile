@@ -42,7 +42,7 @@ public class GameUI : MonoBehaviour
             Piece piece = spawn.GetComponent<Piece>();
             spawn.GetComponent<RectTransform>().anchoredPosition = Vector2.zero;
 
-            piece.LoadPiece(levelData.levelsPieces[i]);
+            //piece.LoadPiece(levelData.levelsPieces[i]);
         }
     }
 }

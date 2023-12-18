@@ -10,41 +10,40 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 7929adc3e2ba8f241ae51a04999eb8fd, type: 3}
-  m_Name: New Level
+  m_Name: New Level 2
   m_EditorClassIdentifier: 
-  levelTitle: New Level
+  levelTitle: New Level 2
   levelGrid:
-    dots: 030000000100000002000000030000000100000002000000030000000100000002000000
-    activeCells: 010101010101010101
-    boardSize: {x: 3, y: 3}
+    dots: 030000000100000002000000030000000100000002000000
+    activeCells: 010101010101
+    boardSize: {x: 3, y: 2}
   levelPieces:
-  - dotPositions:
-    - {x: 0, y: 0}
-    - {x: 1, y: 1}
-    - {x: 2, y: 2}
-    dotTypes: 030000000100000002000000
-    rotatable: 1
-    gridPosRef: {x: 0, y: 0}
-    pieceSize: {x: 3, y: 3}
   - dotPositions:
     - {x: 0, y: 0}
     - {x: 1, y: 0}
     dotTypes: 0300000001000000
     rotatable: 1
-    gridPosRef: {x: 0, y: 2}
+    gridPosRef: {x: 0, y: 0}
     pieceSize: {x: 2, y: 1}
+  - dotPositions:
+    - {x: 0, y: 1}
+    - {x: 1, y: 0}
+    dotTypes: 0100000002000000
+    rotatable: 1
+    gridPosRef: {x: 1, y: 1}
+    pieceSize: {x: 2, y: 2}
   levelShapeGoals:
   - goalSpecifications:
-    - {x: 0, y: 2}
-    - {x: 0, y: 1}
     - {x: 0, y: 0}
     - {x: 1, y: 0}
-    - {x: 1, y: 1}
-    - {x: 1, y: 2}
-    - {x: 2, y: 2}
-    - {x: 2, y: 1}
-    - {x: 2, y: 0}
-    goalDots: 030000000300000003000000010000000100000001000000020000000200000002000000
-    gridPosRef: {x: 0, y: 2}
-    goalSize: {x: 3, y: 3}
+    - {x: 0, y: 1}
+    goalDots: 030000000100000003000000
+    gridPosRef: {x: 0, y: 0}
+    goalSize: {x: 2, y: 2}
+  - goalSpecifications:
+    - {x: 0, y: 0}
+    - {x: 1, y: 0}
+    goalDots: 0100000002000000
+    gridPosRef: {x: 1, y: 1}
+    goalSize: {x: 2, y: 1}
   levelPlaceGoals: []

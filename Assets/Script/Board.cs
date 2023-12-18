@@ -20,19 +20,7 @@ public class Board : MonoBehaviour
 
     public Action onChange;
 
-    [SerializeField] protected GameObject testDot;
-
-    protected bool testLoadedLevel = false;
-
-
-    private void Update()
-    {
-        if (!testLoadedLevel && Input.GetKeyDown(KeyCode.K))
-        {
-            testLoadedLevel = true;
-            Debug.Log("T");
-        }
-    }
+    [SerializeField] protected GameObject dotPrefab;
 
     public void LoadLevel(LevelSO level)
     {
@@ -44,14 +32,14 @@ public class Board : MonoBehaviour
             ((levelSize.y - 1) * (gridSize + spaceingBetweenCells) - spaceingBetweenCells) / 2);
 
         //Piece position
-        List<Vector2> PiecePositions = new List<Vector2>();
-        //Pieces
+        List<Vector2> piecePositions = new List<Vector2>();
         for (int i = 0; i < level.levelPieces.Length; i++)
         {
             for (int k = 0; k < level.levelPieces[i].dotPositions.Length; k++)
-                PiecePositions.Add(level.levelPieces[i].dotPositions[k]);
+                piecePositions.Add(level.levelPieces[i].dotPositions[k] + level.levelPieces[i].gridPosRef);
         }
 
+        //Dots
         for (int x = 0; x < grid.GetLength(0); x++)
         {
             for (int y = 0; y < grid.GetLength(1); y++)
@@ -77,15 +65,15 @@ public class Board : MonoBehaviour
                 cell.gridPos = new Vector2Int(x, y);
 
                 //Part of a piece
-                if (PiecePositions.Contains(new Vector2(x, y)))
+                if (piecePositions.Contains(new Vector2(x, y)))
                     continue;
-                //Le
+                //Open space
                 int targetDotIndex = y * (int)level.levelGrid.boardSize.x + x;
                 if (level.levelGrid.dots[targetDotIndex] == DotType.Null)
                     continue;
 
                 //Make dot & get component
-                GameObject spawn = Instantiate(testDot, cellSpawn.transform);
+                GameObject spawn = Instantiate(dotPrefab, cellSpawn.transform);
                 Dot newDot = spawn.GetComponent<Dot>();
 
                 //Load saved dot

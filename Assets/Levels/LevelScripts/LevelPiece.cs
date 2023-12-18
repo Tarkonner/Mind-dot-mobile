@@ -10,16 +10,17 @@ public class LevelPiece
     public DotType[] dotTypes;
     public bool rotatable;
     public Vector2Int gridPosRef;
+    public Vector2Int pieceSize;
 
-    public LevelPiece(Piece piece)
-    {
-        dotPositions = piece.gridPosArray;
-        dotTypes = new DotType[piece.dotsArray.Length];
-        for (int i = 0; i < piece.dotsArray.Length;)
-        {
-            dotTypes[i] = piece.dotsArray[i].dotType;
-        }
-    }
+    //public LevelPiece(Piece piece)
+    //{
+    //    dotPositions = piece.gridPosArray;
+    //    dotTypes = new DotType[piece.dotsArray.Length];
+    //    for (int i = 0; i < piece.dotsArray.Length;)
+    //    {
+    //        dotTypes[i] = piece.dotsArray[i].dotType;
+    //    }
+    //}
     public LevelPiece(PieceElement pE)
     {
         int i = 0;
@@ -34,5 +35,7 @@ public class LevelPiece
         }
 
         this.gridPosRef = pE.gridPosRef;
+
+        pieceSize = pE.gridSize;
     }
 }

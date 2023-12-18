@@ -5,56 +5,74 @@ using UnityEngine.UI;
 
 public class ShapeGoal : MonoBehaviour
 {
-    [SerializeField] public GoalDot[] goalSpecifications;
+    [SerializeField] GameObject dotPrefab;
+    [SerializeField] float spaceingBetweenDots = 100;
 
     private int goalsizeX;
     private int goalsizeY;
-    private bool completed = false;
+
+    int goalMaxX;
+    int goalMaxY;
+
+    public bool completed { get; private set; } = false;
 
     private List<Cell> cellList = new List<Cell>();
+    private List<Dot> goalsDots = new List<Dot>();
+    private List<Vector2> dotCoordinats = new List<Vector2>();  
 
     private Image background;
     private Color uncompletedColor;
     private Color completedColor;
 
-    // Start is called before the first frame update
+    public void LoadGoal(LevelShapeGoal targetGoal)
+    {
+        for (int i = 0; i < targetGoal.goalSpecifications.Length; i++)
+        {
+            //Set position
+            Vector2 offset = new Vector2((targetGoal.goalSize.x - 1) * 0.5f, (targetGoal.goalSize.y - 1) * 0.5f);
+            GameObject spawnedDot = Instantiate(dotPrefab, transform);
+            RectTransform dotRec = spawnedDot.GetComponent<RectTransform>();
+            dotRec.anchoredPosition = new Vector2(
+                targetGoal.goalSpecifications[i].x * spaceingBetweenDots - offset.x * spaceingBetweenDots,
+                targetGoal.goalSpecifications[i].y * spaceingBetweenDots - offset.y * spaceingBetweenDots);
+
+            //Find highets & lowest
+            if (targetGoal.goalSpecifications[i].x > goalMaxX)
+                goalMaxX = (int)targetGoal.goalSpecifications[i].x;
+            if (targetGoal.goalSpecifications[i].y > goalMaxY)
+                goalMaxY = (int)targetGoal.goalSpecifications[i].y;
+
+            //Setup dot
+            Dot d = spawnedDot.GetComponent<Dot>();
+            d.Setup(targetGoal.goalDots[i]);
+            goalsDots.Add(d);
+            dotCoordinats.Add(new Vector2(targetGoal.goalSpecifications[i].x, targetGoal.goalSpecifications[i].y));
+        }
+    }
+
     void Start()
     {
-        int goalMaxX = (int)goalSpecifications[0].gridPos.x;
-        int goalMaxY = (int)goalSpecifications[0].gridPos.x;
-        int goalMinX = (int)goalSpecifications[0].gridPos.y;
-        int goalMinY = (int)goalSpecifications[0].gridPos.y;
-        for (int i = 1; i < goalSpecifications.Length; i++)
-        {
-            goalMaxX = Mathf.Max(goalMaxX, (int)goalSpecifications[i].gridPos.x);
-            goalMinX = Mathf.Min(goalMinX, (int)goalSpecifications[i].gridPos.x);
+        goalsizeX = goalMaxX + 1;
+        goalsizeY = goalMaxY + 1;
 
-            goalMaxY = Mathf.Max(goalMaxY, (int)goalSpecifications[i].gridPos.y);
-            goalMinY = Mathf.Min(goalMinY, (int)goalSpecifications[i].gridPos.y);
-        }
-        goalsizeX = goalMaxX - goalMinX + 1;
-        goalsizeY = goalMaxY - goalMinY + 1;
-        
         RectTransform goalRect = gameObject.GetComponent<RectTransform>();
         //The dots need to be scaled according to how many can fit within the square
         //The +1 is to account for the 0-indexed grid position.
-        int detSize = Mathf.Max(new int[] { goalsizeX, goalsizeY});
-        foreach (GoalDot goalDot in goalSpecifications)
+        int detSize = Mathf.Max(new int[] { goalsizeX, goalsizeY });
+        for (int i = 0; i < goalsDots.Count; i++)
         {
-            RectTransform dotRect = goalDot.GetComponent<RectTransform>();
-            dotRect.sizeDelta = goalRect.sizeDelta/detSize;
-            Debug.Log(goalDot.gridPos);
-            //Debug.Log(new Vector2(goalsizeX / 2, goalsizeY / 2) * dotRect.sizeDelta); 
-            dotRect.anchoredPosition = goalRect.anchoredPosition +(goalDot.gridPos-
-                new Vector2(goalsizeX/2-0.5f*((goalsizeX+1)%2),goalsizeY/2-0.5f * ((goalsizeY+1) % 2))) * dotRect.sizeDelta;
+            RectTransform dotRect = goalsDots[i].GetComponent<RectTransform>();
+            dotRect.sizeDelta = goalRect.sizeDelta / detSize;
+            dotRect.anchoredPosition = goalRect.anchoredPosition + (dotCoordinats[i] -
+                new Vector2(goalsizeX / 2 - 0.5f * ((goalsizeX + 1) % 2), goalsizeY / 2 - 0.5f * ((goalsizeY + 1) % 2))) * dotRect.sizeDelta;
         }
 
         background = GetComponent<Image>();
-        if (uncompletedColor==Color.clear) 
+        if (uncompletedColor == Color.clear)
         {
             uncompletedColor = new Color(0.75f, 0.75f, 0.75f, 1);
         }
-        if (completedColor==Color.clear)
+        if (completedColor == Color.clear)
         {
             completedColor = new Color(0.1f, 0.9f, 0.2f, 1);
         }
@@ -69,12 +87,12 @@ public class ShapeGoal : MonoBehaviour
             {
                 if (board.grid[x, y] == null) { continue; }
 
-                if (board.grid[x,y].occupying is Dot currentDot)
+                if (board.grid[x, y].occupying is Dot currentDot)
                 {
-                    if(currentDot.dotType == goalSpecifications[0].dotType)
+                    if (currentDot.dotType == goalsDots[0].dotType)
                     {
-                        Debug.Log(goalSpecifications[0].dotType);
-                        if (CheckForPatternAtPosition(board,new Vector2(x, y)))
+                        Debug.Log(goalsDots[0].dotType);
+                        if (CheckForPatternAtPosition(board, new Vector2(x, y)))
                         {
                             completed = true;
                             background.color = completedColor;
@@ -85,20 +103,20 @@ public class ShapeGoal : MonoBehaviour
             }
         }
         completed = false;
-        background.color=uncompletedColor;
+        background.color = uncompletedColor;
         return false;
     }
-    private bool CheckForPatternAtPosition(Board board, Vector2 currentPos) 
+    private bool CheckForPatternAtPosition(Board board, Vector2 currentPos)
     {
         cellList.Clear();
-        for (int i = 0; i < goalSpecifications.Length; i++)
+        for (int i = 0; i < goalsDots.Count; i++)
         {
-            Vector2 assumedPos = new Vector2(currentPos.x, currentPos.y) + (goalSpecifications[i].gridPos - goalSpecifications[0].gridPos);
-            if ((int)assumedPos.x > board.grid.GetLength(0)-1 || (int)assumedPos.y > board.grid.GetLength(1)-1) { return false; }
+            Vector2 assumedPos = new Vector2(currentPos.x, currentPos.y) + (dotCoordinats[i] - dotCoordinats[0]);
+            if ((int)assumedPos.x > board.grid.GetLength(0) - 1 || (int)assumedPos.y > board.grid.GetLength(1) - 1) { return false; }
             if (board.grid[(int)assumedPos.x, (int)assumedPos.y] == null) { return false; }
 
             if (board.grid[(int)assumedPos.x, (int)assumedPos.y].occupying is Dot checkDot &&
-                checkDot.dotType == goalSpecifications[i].dotType)
+                checkDot.dotType == goalsDots[i].dotType)
             {
                 cellList.Add(board.grid[(int)assumedPos.x, (int)assumedPos.y]);
             }
