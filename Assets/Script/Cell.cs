@@ -9,12 +9,5 @@ public class Cell : MonoBehaviour
     public Vector2Int gridPos;
 
     public Action OnPlacement;
-
-    public void ConvertToCell(SerializableCell serializableCell)
-    {
-        this.content = serializableCell.content;
-        this.occupying = serializableCell.occupying;
-        this.gridPos = serializableCell.gridPos;
-    }
 }
 

@@ -2,7 +2,6 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-[ES3Serializable]
 public class LevelData
 {
     public string test;
@@ -10,9 +9,5 @@ public class LevelData
     public int levelIndex;
 
     //Board
-    public SerializableCell[,] levelCells;
-
-    
-    public SerializablePiece[] levelsPieces;
        
 }

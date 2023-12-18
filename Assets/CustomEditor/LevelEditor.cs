@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using UnityEditor;
 using UnityEditor.UIElements;
 using UnityEngine;
-using UnityEngine.Networking.PlayerConnection;
 using UnityEngine.UIElements;
 
 public class LevelEditor : EditorWindow
