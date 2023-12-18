@@ -16,6 +16,8 @@ public class Board : MonoBehaviour
     [SerializeField] protected float gridSize;
     [SerializeField] protected float spaceingBetweenCells = .2f;
 
+    [SerializeField] protected GameObject placeGoalPrefab;
+
     public Action onChange;
 
     [SerializeField] protected GameObject testDot;
@@ -98,7 +100,8 @@ public class Board : MonoBehaviour
         }
         foreach (var item in level.levelPlaceGoals)
         {
-            PlaceGoal.MakeGoal(item, grid);
+            Debug.Log(item.goalPosition);
+            PlaceGoal.MakeGoal(item, grid, placeGoalPrefab);
         }
     }
 

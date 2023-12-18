@@ -342,6 +342,10 @@ PrefabInstance:
       propertyPath: gameUI
       value: 
       objectReference: {fileID: 1886755111}
+    - target: {fileID: 65025732663852158, guid: ece83fda2ae00364da4f4bd42689e64a, type: 3}
+      propertyPath: TargetLevel
+      value: 
+      objectReference: {fileID: 11400000, guid: e3c3731d18d2ece47b89a9f755604d81, type: 2}
     - target: {fileID: 1035492846910417328, guid: ece83fda2ae00364da4f4bd42689e64a, type: 3}
       propertyPath: m_LocalPosition.x
       value: 0
@@ -527,6 +531,10 @@ PrefabInstance:
       propertyPath: levelManager
       value: 
       objectReference: {fileID: 716659779}
+    - target: {fileID: 8884140376160804173, guid: 8cbdc0a76d6bc7148968a7757584fc92, type: 3}
+      propertyPath: placeGoalPrefab
+      value: 
+      objectReference: {fileID: 5813344588998344683, guid: bc22aae70f784e24ba6a89ca95c441fe, type: 3}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
