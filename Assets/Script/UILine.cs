@@ -24,13 +24,7 @@ public class UILine : Graphic
         this.vh = vh;
         vh.Clear();
 
-        Vector2[] points = new Vector2[] { startPoint.anchoredPosition, endPoint.anchoredPosition };
-        for (int i = 0; i < points.Length; i++)
-        {
-            points[i] = points[i];
-        }
-
-        AddQuad(vh, points[0], points[1]);
+        AddQuad(vh, startPoint.anchoredPosition, endPoint.anchoredPosition);
     }
     private void AddQuad(VertexHelper vh, Vector2 startPoint, Vector2 endPoint)
     {

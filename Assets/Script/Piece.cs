@@ -27,6 +27,8 @@ public class Piece : MonoBehaviour, IDragHandler
     public bool testRotate;
     int testTimer = 0;
 
+    Vector2 avgDotPos = Vector2.zero;
+
     private void Awake()
     {
         rectTransform = GetComponent<RectTransform>();
@@ -65,17 +67,23 @@ public class Piece : MonoBehaviour, IDragHandler
             RectTransform rect = spawn.GetComponent<RectTransform>();
 
             Vector2 offset = new Vector2((targetPiece.pieceSize.x - 1) * 0.5f, (targetPiece.pieceSize.y - 1) * 0.5f);
+            //Vector2 offset = Vector2.zero;
 
             rect.anchoredPosition = new Vector2(gridPosArray[i].x * dotSpacing - offset.x * dotSpacing, gridPosArray[i].y * dotSpacing - offset.y * dotSpacing);
 
             dotsArray[i] = targetDot;
             targetDot.Setup(targetPiece.dotTypes[i], this);
-        }
 
+            avgDotPos += (gridPosArray[i] * dotSpacing);
+        }
+        if (targetPiece.dotPositions.Length > 0)
+        {
+            avgDotPos = avgDotPos / targetPiece.dotPositions.Length;
+        }
 
         //Goes through each dot and measures grid distance to each other dot.
         // Distance is used to differentiate adjacent and diagonal dot connections. 
-        for (int i = 0; i < dotsArray.Length; i++)
+        for (int i = 0; i < gridPosArray.Length; i++)
         {
 
             //dotsArray[i].gameObject.transform.localPosition = gridPosArray[i];
@@ -84,7 +92,7 @@ public class Piece : MonoBehaviour, IDragHandler
             {
                 List<int> diagonalList = new List<int>();
                 bool foundAdjacent = false;
-                for (int j = 0; j < dotsArray.Length; j++)
+                for (int j = 0; j < gridPosArray.Length; j++)
                 {
                     if (i == j) continue;
 
@@ -134,7 +142,7 @@ public class Piece : MonoBehaviour, IDragHandler
             gridPosArray[i] = new Vector2((pivotPoint.x - (gridPosArray[i].y - pivotPoint.y)),
                 (pivotPoint.y + (gridPosArray[i].x - pivotPoint.y)));
 
-            dotsArray[i].relativePosition = gridPosArray[i] * dotSpacing;
+            dotsArray[i].relativePosition = gridPosArray[i] * dotSpacing - avgDotPos;
             dotsArray[i].gameObject.transform.localPosition = dotsArray[i].relativePosition;
         }
         foreach (var line in connections)
