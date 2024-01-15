@@ -22,18 +22,19 @@ public class PieceMaker : MonoBehaviour
     public void MakePieces(LevelPiece[] levelsPieces)
     {
         Vector2 offset;
-        offset.y = -100;
+        offset.y = 0;
         if (levelsPieces.Length == 1)
             offset.x = 0;
         else
         {
-            offset.x = -spaceBetweenPieces * levelsPieces.Length / 2;
-            if (levelsPieces.Length % 2 == 1)
-                offset.x -= spaceBetweenPieces / 2;
+            offset.x = -spaceBetweenPieces * (levelsPieces.Length / 2);
+            if (levelsPieces.Length % 2 == 0)
+                offset.x += spaceBetweenPieces / 2;
         }
+
         for (int i = 0; i < levelsPieces.Length; i++)
         {
-            Vector2 calPosition = new Vector2(offset.x + i * spaceBetweenPieces, offset.y);
+            Vector2 calPosition = new Vector2(i * spaceBetweenPieces + offset.x, offset.y);
 
             ////Make Background
             //GameObject spawnedBackground = Instantiate(pieceBackground, holder);
@@ -47,8 +48,6 @@ public class PieceMaker : MonoBehaviour
             pieceRec.localPosition = calPosition;
             pieceRec.localScale = new Vector2(0.5f, 0.5f);
             Piece piece = spawnedPiece.GetComponent<Piece>();
-            piece.LoadPiece(levelsPieces[i]);
-
-        }
+            piece.LoadPiece(levelsPieces[i]);        }
     }
 }
