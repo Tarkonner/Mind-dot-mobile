@@ -43,9 +43,9 @@ public class PieceMaker : MonoBehaviour
             //backgrundRec.localScale = new Vector2(3, 3);
 
             //Make piece
-            GameObject spawnedPiece = Instantiate(piecePrefab, holder);
+            GameObject spawnedPiece = Instantiate(piecePrefab, holder, false);
             RectTransform pieceRec = spawnedPiece.GetComponent<RectTransform>();
-            pieceRec.localPosition = calPosition;
+            pieceRec.anchoredPosition = calPosition;
             pieceRec.localScale = new Vector2(0.5f, 0.5f);
             Piece piece = spawnedPiece.GetComponent<Piece>();
             piece.LoadPiece(levelsPieces[i]);        }

@@ -388,7 +388,7 @@ PrefabInstance:
     - target: {fileID: 65025732663852158, guid: ece83fda2ae00364da4f4bd42689e64a, type: 3}
       propertyPath: testLevel
       value: 
-      objectReference: {fileID: 11400000, guid: b18e1bddd33ce3e4cacc03b5cec9f7c8, type: 2}
+      objectReference: {fileID: 11400000, guid: fb2b5bd2b44efe74697e5117ed1cae3f, type: 2}
     - target: {fileID: 65025732663852158, guid: ece83fda2ae00364da4f4bd42689e64a, type: 3}
       propertyPath: TargetLevel
       value: 
@@ -586,6 +586,10 @@ PrefabInstance:
       propertyPath: levelManager
       value: 
       objectReference: {fileID: 716659779}
+    - target: {fileID: 8884140376160804173, guid: 8cbdc0a76d6bc7148968a7757584fc92, type: 3}
+      propertyPath: placeGoalPrefab
+      value: 
+      objectReference: {fileID: 5813344588998344683, guid: bc22aae70f784e24ba6a89ca95c441fe, type: 3}
     m_RemovedComponents:
     - {fileID: 3724272712511738389, guid: 8cbdc0a76d6bc7148968a7757584fc92, type: 3}
     m_RemovedGameObjects: []
