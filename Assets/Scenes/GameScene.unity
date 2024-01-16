@@ -388,7 +388,7 @@ PrefabInstance:
     - target: {fileID: 65025732663852158, guid: ece83fda2ae00364da4f4bd42689e64a, type: 3}
       propertyPath: testLevel
       value: 
-      objectReference: {fileID: 11400000, guid: fb2b5bd2b44efe74697e5117ed1cae3f, type: 2}
+      objectReference: {fileID: 11400000, guid: 7b0c883a1f9f42e44bfac344f1853d32, type: 2}
     - target: {fileID: 65025732663852158, guid: ece83fda2ae00364da4f4bd42689e64a, type: 3}
       propertyPath: TargetLevel
       value: 

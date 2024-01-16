@@ -168,8 +168,6 @@ public class InputSystem : MonoBehaviour
             List<RaycastResult> deteced = HitDetection(touchPosition, boardRaycast);
             foreach (RaycastResult result in deteced)
             {
-                Debug.Log(result.gameObject.name);
-
                 //See if we hit a cell
                 if (result.gameObject.TryGetComponent(out Cell cell))
                 {
@@ -201,7 +199,6 @@ public class InputSystem : MonoBehaviour
     {
         if(holdingPiece != null && touchPosition.y < rotateLine.position.y)
         {
-            Debug.Log($"Touch positon y: {touchPosition.y}");
             holdingPiece.Rotate();
             CheckGoals();
         }

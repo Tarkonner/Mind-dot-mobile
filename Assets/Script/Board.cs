@@ -1,11 +1,9 @@
 using System;
-using System.Collections;
 using System.Collections.Generic;
-using Unity.VisualScripting;
 using UnityEngine;
 
 public class Board : MonoBehaviour
-{    
+{
     [Header("Refrences")]
     [SerializeField] protected LevelManager levelManager;
 
@@ -112,13 +110,16 @@ public class Board : MonoBehaviour
     {
         bool canPlace = true;
 
-        //Does place exits
+        List<Vector2Int> coordinatesResult = new List<Vector2Int>();
         for (int i = 0; i < piece.dotsArray.Length; i++)
+            coordinatesResult.Add(new Vector2Int(coordinates.x + (int)piece.gridPosArray[i].x, coordinates.y - (int)piece.gridPosArray[i].y)); //Don't know why y-axis need to be negetiv to work
+
+        //Does place exits
+        for (int i = 0; i < coordinatesResult.Count; i++)
         {
-            Vector2Int coor = new Vector2Int(coordinates.x + (int)piece.gridPosArray[i].x, coordinates.y + (int)piece.gridPosArray[i].y);
-            if (coor.x >= grid.GetLength(0) || coor.y >= grid.GetLength(1)
-                || coor.x < 0 || coor.y < 0
-                || grid[coor.x, coor.y] == null)
+            if (coordinatesResult[i].x >= grid.GetLength(0) || coordinatesResult[i].y >= grid.GetLength(1)
+                || coordinatesResult[i].x < 0 || coordinatesResult[i].y < 0
+                || grid[coordinatesResult[i].x, coordinatesResult[i].y] == null)
             {
                 return false;
             }
@@ -127,23 +128,20 @@ public class Board : MonoBehaviour
         //Check if all places are free
         for (int i = 0; i < piece.dotsArray.Length; i++)
         {
-            Debug.Log(GetDot(coordinates + new Vector2Int((int)piece.gridPosArray[i].x, (int)piece.gridPosArray[i].y)));
-
-            if (GetDot(coordinates + new Vector2Int((int)piece.gridPosArray[i].x, (int)piece.gridPosArray[i].y)) != null)
+            if (GetDot(coordinatesResult[i]) != null)
             {
-                canPlace = false; 
+                canPlace = false;
                 break;
             }
         }
 
         //Place dots
-        if(canPlace)
+        if (canPlace)
         {
             for (int i = 0; i < piece.dotsArray.Length; i++)
             {
-                Debug.Log($"{i}: {coordinates + new Vector2Int((int)piece.gridPosArray[i].x, (int)piece.gridPosArray[i].y)}");
-                PlaceDot(coordinates + new Vector2Int((int)piece.gridPosArray[i].x, (int)piece.gridPosArray[i].y), piece.dotsArray[i]);
-                piece.dotsArray[i].cell = grid[(int)(coordinates.x + piece.gridPosArray[i].x), (int)(coordinates.y + piece.gridPosArray[i].y)];
+                PlaceDot(coordinatesResult[i], piece.dotsArray[i]);
+                piece.dotsArray[i].cell = grid[coordinatesResult[i].x, coordinatesResult[i].y];
             }
         }
 
@@ -159,22 +157,22 @@ public class Board : MonoBehaviour
         return result;
     }
 
-    public List<Dot> GetDots(Vector2Int[] coordinates) 
+    public List<Dot> GetDots(Vector2Int[] coordinates)
     {
-        List<Dot> result = new List<Dot> ();
+        List<Dot> result = new List<Dot>();
 
         foreach (Vector2Int coor in coordinates)
         {
-            if(grid[coor.x, coor.y].occupying != null)
+            if (grid[coor.x, coor.y].occupying != null)
                 result.Add((Dot)grid[coor.x, coor.y].occupying);
         }
 
         return result;
     }
-    
+
     public void RemoveDot(Vector2Int coodinate)
     {
-        if (grid[coodinate.x,coodinate.y].occupying is Dot dot)
+        if (grid[coodinate.x, coodinate.y].occupying is Dot dot)
         {
             dot.cell = null;
         }
@@ -184,7 +182,7 @@ public class Board : MonoBehaviour
     public void PickupPiece(Piece targetPiece)
     {
         targetPiece.EnforceDotPositions();
-        foreach(Dot d in targetPiece.dotsArray)
+        foreach (Dot d in targetPiece.dotsArray)
         {
             Vector2Int coordinates = d.cell.gridPos;
             RemoveDot(coordinates);

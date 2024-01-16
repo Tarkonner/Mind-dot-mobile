@@ -25,7 +25,6 @@ public class Piece : MonoBehaviour, IDragHandler
     public float lineWidth = 10;
 
     public bool testRotate;
-    int testTimer = 0;
 
     Vector2 avgDotPos = Vector2.zero;
 
@@ -40,20 +39,13 @@ public class Piece : MonoBehaviour, IDragHandler
         testPivotPoint.transform.localPosition = pivotPoint;
 
     }
-    public void Update()
-    {
-        testTimer++;
-        if (testTimer >= 1000 && testRotate)
-        {
-            Debug.Log("In Update");
-            Rotate();
-            testTimer = 0;
-        }
-    }
+
     public void LoadPiece(LevelPiece targetPiece)
     {
         lineHolder = new GameObject();
         lineHolder.transform.SetParent(transform, false);
+
+        dotsArray = new Dot[targetPiece.dotPositions.Length];
 
         //Set cordinats
         gridPosArray = targetPiece.dotPositions;
@@ -139,8 +131,8 @@ public class Piece : MonoBehaviour, IDragHandler
             //Rotation math for vector rotation around a point. (x,y)->(x',y')=(a+(x-a)cos(t)-(y-?)sin(t),b+(x-a)sin(t)+(y-b)cos(t))
             //(x,y) is the point that is to be rotated. (a,b) is the pivot point of the rotation.
             //Since we want a 90 degree rotation, the formula effectively becomes: (x,y)?(??(y??),?+(x??))
-            gridPosArray[i] = new Vector2((pivotPoint.x - (gridPosArray[i].y - pivotPoint.y)),
-                (pivotPoint.y + (gridPosArray[i].x - pivotPoint.y)));
+            gridPosArray[i] = new Vector2((pivotPoint.x + (gridPosArray[i].y - pivotPoint.y)),
+               (pivotPoint.y - (gridPosArray[i].x - pivotPoint.y)));
 
             dotsArray[i].relativePosition = gridPosArray[i] * dotSpacing - avgDotPos;
             dotsArray[i].gameObject.transform.localPosition = dotsArray[i].relativePosition;
@@ -172,20 +164,8 @@ public class Piece : MonoBehaviour, IDragHandler
         dot2.IsConnected = true;
     }
 
-    public void Place(Vector2 coordinates)
-    {
-
-    }
-
-    public void Lift()
-    {
-        //Consider making a mathematical circle around the center of the piece. Lifting within the circle simply uses the lift location.
-        //Lifting outside the circle snaps into the circle's edge.
-    }
-
     public void OnDrag(PointerEventData eventData)
     {
-        //Debug.Log($"Draging: {gameObject.name}");
         rectTransform.position = InputSystem.instance.touchPosition;
     }
 
