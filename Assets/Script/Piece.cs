@@ -174,4 +174,14 @@ public class Piece : MonoBehaviour, IDragHandler
         gameObject.transform.SetParent(pieceHolder);
         rectTransform.anchoredPosition = Vector2.zero;
     }
+
+    public void SmallScale()
+    {
+        transform.localScale = new Vector3(.5f, .5f, .5f);
+    }
+
+    public void NormalScale()
+    {
+        transform.localScale = Vector3.one;
+    }
 }

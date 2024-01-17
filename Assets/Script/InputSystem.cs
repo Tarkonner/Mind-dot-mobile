@@ -154,14 +154,12 @@ public class InputSystem : MonoBehaviour
         //Tap or swipe
         if (Vector2.Distance(contactPosition, touchPosition) < distanceBeforeSwipe)
         {
-            Debug.Log("Tap");
             Tap();
             holdingPiece.ReturnToHolder();
             holdingPiece = null;
         }
         else
         {
-            Debug.Log("Place");
             bool canPlacePiece = false;
 
             //Raycast
@@ -176,6 +174,8 @@ public class InputSystem : MonoBehaviour
 
                     if (placeResult)
                     {
+
+
                         //Place piece on board
                         holdingPiece.GetComponent<Image>().raycastTarget = false;
                         holdingPiece = null;

@@ -83,11 +83,9 @@ public class Board : MonoBehaviour
                 PlaceDot(new Vector2Int(x, y), newDot);
             }
         }
+
         foreach (var item in level.levelPlaceGoals)
-        {
-            Debug.Log(item.goalPosition);
             PlaceGoal.MakeGoal(item, grid, placeGoalPrefab);
-        }
     }
 
     #region Board interaction
@@ -110,6 +108,7 @@ public class Board : MonoBehaviour
     {
         bool canPlace = true;
 
+        //Calculate target positions
         List<Vector2Int> coordinatesResult = new List<Vector2Int>();
         for (int i = 0; i < piece.dotsArray.Length; i++)
             coordinatesResult.Add(new Vector2Int(coordinates.x + (int)piece.gridPosArray[i].x, coordinates.y - (int)piece.gridPosArray[i].y)); //Don't know why y-axis need to be negetiv to work

@@ -12,10 +12,6 @@ public static class LevelConverter
         List<CellElement> board, Vector2 boardSize, List<ShapeGoalElement> sGEs, List<PlaceGoalElement> pGEs)
     {
         bool success = true;
-        /*
-        try
-        {
-        */
         LevelPiece[] pieces = new LevelPiece[pEs.Count];
         for (int i = 0; i < pEs.Count; i++)
         {
@@ -25,11 +21,6 @@ public static class LevelConverter
         LevelShapeGoal[] levelShapeGoals = new LevelShapeGoal[sGEs.Count];
         for (int i = 0; i < sGEs.Count; i++)
         {
-            /*
-            List<Vector2Int> positions = sGEs[i].dotDictionary.Keys.ToList();
-            List<DotElement> types = sGEs[i].dotDictionary.Values.ToList();
-
-            levelShapeGoals[i] = new LevelShapeGoal(positions, types, sGEs[i].gridPosRef); */
             levelShapeGoals[i] = new LevelShapeGoal(sGEs[i]);
         }
 
@@ -56,13 +47,6 @@ public static class LevelConverter
         AssetDatabase.CreateAsset(levelObject, uniquePath);
         AssetDatabase.SaveAssets();
         AssetDatabase.Refresh();
-
-        /*}
-        catch (System.Exception exception)
-        {
-            Debug.LogError(exception.Message);
-            return false;
-        }*/
 
         return success;
     }

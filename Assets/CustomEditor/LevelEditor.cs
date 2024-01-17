@@ -509,7 +509,8 @@ public class LevelEditor : EditorWindow
                 if (highPoint.y < targetElements[i].gridCoordinates.y)
                     highPoint.y = targetElements[i].gridCoordinates.y;
             }
-            spawnedGrid.gridPosRef = targetElements[0].gridCoordinates;
+            spawnedGrid.gridPosRef = lowPoint;
+            
             for (int i = 0; i < targetElements.Count; i++)
             {
                 //Set refence point

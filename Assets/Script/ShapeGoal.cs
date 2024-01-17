@@ -91,7 +91,6 @@ public class ShapeGoal : MonoBehaviour
                 {
                     if (currentDot.dotType == goalsDots[0].dotType)
                     {
-                        Debug.Log(goalsDots[0].dotType);
                         if (CheckForPatternAtPosition(board, new Vector2(x, y)))
                         {
                             completed = true;
