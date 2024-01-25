@@ -172,6 +172,7 @@ public class Piece : MonoBehaviour, IDragHandler
     public void ReturnToHolder()
     {
         gameObject.transform.SetParent(pieceHolder);
+        SmallScale();
         rectTransform.anchoredPosition = Vector2.zero;
     }
 

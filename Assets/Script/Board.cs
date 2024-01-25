@@ -137,11 +137,15 @@ public class Board : MonoBehaviour
         //Place dots
         if (canPlace)
         {
+            //Set Piece scale
+            piece.NormalScale();
+
             for (int i = 0; i < piece.dotsArray.Length; i++)
             {
                 PlaceDot(coordinatesResult[i], piece.dotsArray[i]);
                 piece.dotsArray[i].cell = grid[coordinatesResult[i].x, coordinatesResult[i].y];
             }
+
         }
 
         return canPlace;

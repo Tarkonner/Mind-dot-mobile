@@ -111,8 +111,10 @@ public class ShapeGoal : MonoBehaviour
         for (int i = 0; i < goalsDots.Count; i++)
         {
             Vector2 assumedPos = new Vector2(currentPos.x, currentPos.y) + (dotCoordinats[i] - dotCoordinats[0]);
-            if ((int)assumedPos.x > board.grid.GetLength(0) - 1 || (int)assumedPos.y > board.grid.GetLength(1) - 1) { return false; }
-            if (board.grid[(int)assumedPos.x, (int)assumedPos.y] == null) { return false; }
+            if ((int)assumedPos.x > board.grid.GetLength(0) - 1 || (int)assumedPos.y > board.grid.GetLength(1) - 1) 
+                return false;
+            if (board.grid[(int)assumedPos.x, (int)assumedPos.y] == null) 
+                return false;
 
             if (board.grid[(int)assumedPos.x, (int)assumedPos.y].occupying is Dot checkDot &&
                 checkDot.dotType == goalsDots[i].dotType)

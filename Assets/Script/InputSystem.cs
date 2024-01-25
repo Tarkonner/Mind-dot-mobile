@@ -174,8 +174,6 @@ public class InputSystem : MonoBehaviour
 
                     if (placeResult)
                     {
-
-
                         //Place piece on board
                         holdingPiece.GetComponent<Image>().raycastTarget = false;
                         holdingPiece = null;
@@ -200,7 +198,6 @@ public class InputSystem : MonoBehaviour
         if(holdingPiece != null && touchPosition.y < rotateLine.position.y)
         {
             holdingPiece.Rotate();
-            CheckGoals();
         }
     }
     private bool CheckGoals()
