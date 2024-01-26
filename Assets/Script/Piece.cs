@@ -28,6 +28,7 @@ public class Piece : MonoBehaviour, IDragHandler
 
     Vector2 avgDotPos = Vector2.zero;
 
+
     private void Awake()
     {
         rectTransform = GetComponent<RectTransform>();

@@ -1,4 +1,3 @@
-using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
@@ -36,18 +35,18 @@ public class PieceMaker : MonoBehaviour
         {
             Vector2 calPosition = new Vector2(i * spaceBetweenPieces + offset.x, offset.y);
 
-            ////Make Background
-            //GameObject spawnedBackground = Instantiate(pieceBackground, holder);
-            //RectTransform backgrundRec = spawnedBackground.GetComponent<RectTransform>();
-            //backgrundRec.localPosition = calPosition;
-            //backgrundRec.localScale = new Vector2(3, 3);
+            //Make Background
+            GameObject spawnedBackground = Instantiate(pieceBackground, holder);
+            RectTransform backgrundRec = spawnedBackground.GetComponent<RectTransform>();
+            backgrundRec.localPosition = calPosition;
+            int pieceBiggetsSize = Mathf.Max(levelsPieces[i].pieceSize.x, levelsPieces[i].pieceSize.y);
+            backgrundRec.sizeDelta = new Vector2(90 * pieceBiggetsSize, 90 * pieceBiggetsSize);
 
             //Make piece
-            GameObject spawnedPiece = Instantiate(piecePrefab, holder, false);
-            RectTransform pieceRec = spawnedPiece.GetComponent<RectTransform>();
-            pieceRec.anchoredPosition = calPosition;
-            pieceRec.localScale = new Vector2(0.5f, 0.5f);
+            GameObject spawnedPiece = Instantiate(piecePrefab, spawnedBackground.transform, false);    
             Piece piece = spawnedPiece.GetComponent<Piece>();
-            piece.LoadPiece(levelsPieces[i]);        }
+            piece.LoadPiece(levelsPieces[i]);
+            piece.SmallScale();
+        }
     }
 }
