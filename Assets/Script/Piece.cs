@@ -26,7 +26,7 @@ public class Piece : MonoBehaviour, IDragHandler
 
     public bool testRotate;
 
-    Vector2 avgDotPos = Vector2.zero;
+    Vector2[] dotOffset = new Vector2[4];
 
 
     private void Awake()
@@ -66,19 +66,12 @@ public class Piece : MonoBehaviour, IDragHandler
 
             dotsArray[i] = targetDot;
             targetDot.Setup(targetPiece.dotTypes[i], this);
-
-            avgDotPos += (gridPosArray[i] * dotSpacing);
-        }
-        if (targetPiece.dotPositions.Length > 0)
-        {
-            avgDotPos = avgDotPos / targetPiece.dotPositions.Length;
         }
 
         //Goes through each dot and measures grid distance to each other dot.
         // Distance is used to differentiate adjacent and diagonal dot connections. 
         for (int i = 0; i < gridPosArray.Length; i++)
         {
-
             //dotsArray[i].gameObject.transform.localPosition = gridPosArray[i];
 
             if (!dotsArray[i].IsConnected)
@@ -111,6 +104,27 @@ public class Piece : MonoBehaviour, IDragHandler
                 }
             }
         }
+
+        //Dot offset
+        Vector2 dotMaxPosition = Vector2.zero;
+        Vector2 dotMinPosition = new Vector2(10, 10);
+        for (int i = 0; i < targetPiece.dotPositions.Length; i++)
+        {
+            //Min
+            if(dotMinPosition.x > targetPiece.dotPositions[i].x)
+                dotMaxPosition.x = targetPiece.dotPositions[i].x;
+            if(dotMaxPosition.y > targetPiece.dotPositions[i].y)
+                dotMinPosition.y = targetPiece.dotPositions[i].y;
+            //Max
+            if (dotMaxPosition.x < targetPiece.dotPositions[i].x)
+                dotMaxPosition.x = targetPiece.dotPositions[i].x;
+            if (dotMaxPosition.y < targetPiece.dotPositions[i].y)
+                dotMaxPosition.y = targetPiece.dotPositions[i].y;
+        }
+        dotOffset[0] = new Vector2(-dotMaxPosition.x * dotSpacing, dotMaxPosition.y * dotSpacing);
+        dotOffset[1] = new Vector2(dotMaxPosition.x * dotSpacing, dotMaxPosition.y * dotSpacing);
+        dotOffset[2] = new Vector2(dotMaxPosition.x * dotSpacing, -dotMaxPosition.y * dotSpacing);
+        dotOffset[3] = new Vector2(-dotMaxPosition.x * dotSpacing, -dotMaxPosition.y * dotSpacing);
     }
     public void EnforceDotPositions()
     {
@@ -135,7 +149,7 @@ public class Piece : MonoBehaviour, IDragHandler
             gridPosArray[i] = new Vector2((pivotPoint.x + (gridPosArray[i].y - pivotPoint.y)),
                (pivotPoint.y - (gridPosArray[i].x - pivotPoint.y)));
 
-            dotsArray[i].relativePosition = gridPosArray[i] * dotSpacing - avgDotPos;
+            dotsArray[i].relativePosition = gridPosArray[i] * dotSpacing - dotOffset[rotationInt];
             dotsArray[i].gameObject.transform.localPosition = dotsArray[i].relativePosition;
         }
         foreach (var line in connections)
