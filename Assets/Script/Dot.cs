@@ -28,7 +28,7 @@ public class Dot : MonoBehaviour, IOccupying
         //Set color
         Image renderer = GetComponent<Image>();
         
-        switch (targetType)
+        switch (dotType)
         {
             case DotType.Red:
                 renderer.color = Color.red;

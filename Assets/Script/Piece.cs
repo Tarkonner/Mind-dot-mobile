@@ -43,15 +43,17 @@ public class Piece : MonoBehaviour, IDragHandler
 
     public void LoadPiece(LevelPiece targetPiece)
     {
+        //Lines
         lineHolder = new GameObject();
         lineHolder.transform.SetParent(transform, false);
 
-        dotsArray = new Dot[targetPiece.dotPositions.Length];
-
         //Set cordinats
-        gridPosArray = targetPiece.dotPositions;
+        gridPosArray = new Vector2[targetPiece.dotPositions.Length];
+        for (int i = 0; i < gridPosArray.Length; i++)
+            gridPosArray[i] = targetPiece.dotPositions[i];
 
         //Setup dots
+        dotsArray = new Dot[targetPiece.dotPositions.Length];
         for (int i = 0; i < targetPiece.dotPositions.Length; i++)
         {
             //Make object
@@ -60,7 +62,6 @@ public class Piece : MonoBehaviour, IDragHandler
             RectTransform rect = spawn.GetComponent<RectTransform>();
 
             Vector2 offset = new Vector2((targetPiece.pieceSize.x - 1) * 0.5f, (targetPiece.pieceSize.y - 1) * 0.5f);
-            //Vector2 offset = Vector2.zero;
 
             rect.anchoredPosition = new Vector2(gridPosArray[i].x * dotSpacing - offset.x * dotSpacing, gridPosArray[i].y * dotSpacing - offset.y * dotSpacing);
 
@@ -105,26 +106,26 @@ public class Piece : MonoBehaviour, IDragHandler
             }
         }
 
-        //Dot offset
-        Vector2 dotMaxPosition = Vector2.zero;
-        Vector2 dotMinPosition = new Vector2(10, 10);
-        for (int i = 0; i < targetPiece.dotPositions.Length; i++)
-        {
-            //Min
-            if(dotMinPosition.x > targetPiece.dotPositions[i].x)
-                dotMaxPosition.x = targetPiece.dotPositions[i].x;
-            if(dotMaxPosition.y > targetPiece.dotPositions[i].y)
-                dotMinPosition.y = targetPiece.dotPositions[i].y;
-            //Max
-            if (dotMaxPosition.x < targetPiece.dotPositions[i].x)
-                dotMaxPosition.x = targetPiece.dotPositions[i].x;
-            if (dotMaxPosition.y < targetPiece.dotPositions[i].y)
-                dotMaxPosition.y = targetPiece.dotPositions[i].y;
-        }
-        dotOffset[0] = new Vector2(-dotMaxPosition.x * dotSpacing, dotMaxPosition.y * dotSpacing);
-        dotOffset[1] = new Vector2(dotMaxPosition.x * dotSpacing, dotMaxPosition.y * dotSpacing);
-        dotOffset[2] = new Vector2(dotMaxPosition.x * dotSpacing, -dotMaxPosition.y * dotSpacing);
-        dotOffset[3] = new Vector2(-dotMaxPosition.x * dotSpacing, -dotMaxPosition.y * dotSpacing);
+        ////Dot offset
+        //Vector2 dotMaxPosition = Vector2.zero;
+        //Vector2 dotMinPosition = new Vector2(10, 10);
+        //for (int i = 0; i < targetPiece.dotPositions.Length; i++)
+        //{
+        //    //Min
+        //    if(dotMinPosition.x > targetPiece.dotPositions[i].x)
+        //        dotMaxPosition.x = targetPiece.dotPositions[i].x;
+        //    if(dotMaxPosition.y > targetPiece.dotPositions[i].y)
+        //        dotMinPosition.y = targetPiece.dotPositions[i].y;
+        //    //Max
+        //    if (dotMaxPosition.x < targetPiece.dotPositions[i].x)
+        //        dotMaxPosition.x = targetPiece.dotPositions[i].x;
+        //    if (dotMaxPosition.y < targetPiece.dotPositions[i].y)
+        //        dotMaxPosition.y = targetPiece.dotPositions[i].y;
+        //}
+        //dotOffset[0] = new Vector2(-dotMaxPosition.x * dotSpacing, dotMaxPosition.y * dotSpacing);
+        //dotOffset[1] = new Vector2(dotMaxPosition.x * dotSpacing, dotMaxPosition.y * dotSpacing);
+        //dotOffset[2] = new Vector2(dotMaxPosition.x * dotSpacing, -dotMaxPosition.y * dotSpacing);
+        //dotOffset[3] = new Vector2(-dotMaxPosition.x * dotSpacing, -dotMaxPosition.y * dotSpacing);
     }
     public void EnforceDotPositions()
     {
@@ -132,7 +133,9 @@ public class Piece : MonoBehaviour, IDragHandler
         {
             RectTransform rect = dotsArray[i].GetComponent<RectTransform>();
             //Set position
-            rect.anchoredPosition = new Vector2(gridPosArray[i].x * dotSpacing, gridPosArray[i].y * dotSpacing);
+            rect.localPosition = new Vector2(gridPosArray[i].x * dotSpacing, gridPosArray[i].y * dotSpacing);
+            //Set rotation
+            GetComponent<RectTransform>().rotation = Quaternion.Euler(0, 0, rotationInt * -90);
         }
     }
 
@@ -148,15 +151,9 @@ public class Piece : MonoBehaviour, IDragHandler
             //Since we want a 90 degree rotation, the formula effectively becomes: (x,y)?(??(y??),?+(x??))
             gridPosArray[i] = new Vector2((pivotPoint.x + (gridPosArray[i].y - pivotPoint.y)),
                (pivotPoint.y - (gridPosArray[i].x - pivotPoint.y)));
-
-            dotsArray[i].relativePosition = gridPosArray[i] * dotSpacing - dotOffset[rotationInt];
-            dotsArray[i].gameObject.transform.localPosition = dotsArray[i].relativePosition;
-        }
-        foreach (var line in connections)
-        {
-            line.UpdateLine();
         }
         rotationInt = (rotationInt + 1) % 4;
+        GetComponent<RectTransform>().rotation = Quaternion.Euler(0, 0, rotationInt * -90);
     }
 
     public void CreateLine(Dot dot1, Dot dot2)

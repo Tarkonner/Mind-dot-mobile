@@ -189,7 +189,6 @@ public class Board : MonoBehaviour
         {
             Vector2Int coordinates = d.cell.gridPos;
             RemoveDot(coordinates);
-            Debug.Log($"Relative position for dot {d} is {d.relativePosition}");
         }
     }
     #endregion
