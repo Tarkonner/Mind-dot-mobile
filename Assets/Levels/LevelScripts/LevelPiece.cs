@@ -11,6 +11,7 @@ public class LevelPiece
     public bool rotatable;
     public Vector2Int gridPosRef;
     public Vector2Int pieceSize;
+    public int startRotation;
 
     public LevelPiece(PieceElement pE)
     {

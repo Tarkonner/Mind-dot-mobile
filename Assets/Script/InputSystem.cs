@@ -107,7 +107,7 @@ public class InputSystem : MonoBehaviour
         //Save where first touching
         contactPosition = touchPosition;
 
-        //Raycast Piecehodler
+        //Raycast Pieceholder
         List<RaycastResult> piecesDeteced = HitDetection(touchPosition, piecesRaycast);
         foreach (RaycastResult result in piecesDeteced)
         {
@@ -117,7 +117,6 @@ public class InputSystem : MonoBehaviour
                 takenFrom = targetPiece.transform;
                 holdingPiece = targetPiece;
                 holdingPiece.transform.SetParent(movingPiecesHolder.transform);
-                CheckGoals();
                 break;
             }
         }
@@ -131,13 +130,13 @@ public class InputSystem : MonoBehaviour
                 //Dot targetDot = null;
                 if (targetCell.occupying is Dot targetDot)
                 {
-                    //targetDot = (Dot)targetCell.occupying;
                     if (targetDot.parentPiece != null)
                     {
                         holdingPiece = targetDot.parentPiece;
                         holdingPiece.transform.SetParent(movingPiecesHolder.transform);
                         board.PickupPiece(holdingPiece);
                         holdingPiece.GetComponent<Image>().raycastTarget = true;
+                        CheckGoals();
                     }
                 }
             }
