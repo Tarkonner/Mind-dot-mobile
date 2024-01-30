@@ -107,9 +107,9 @@ public class Piece : MonoBehaviour, IDragHandler
             }
         }
 
-        ////Rotation
-        //rotationInt = targetPiece.startRotation;
-        //GetComponent<RectTransform>().rotation = Quaternion.Euler(0, 0, rotationInt * -90);
+        //Rotation
+        rotationInt = targetPiece.startRotation;
+        GetComponent<RectTransform>().rotation = Quaternion.Euler(0, 0, rotationInt * -90);
     }
     public void EnforceDotPositions()
     {
