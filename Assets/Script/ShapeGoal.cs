@@ -127,10 +127,10 @@ public class ShapeGoal : MonoBehaviour
             }
         }
         //Act on cellList
-        foreach (var cell in cellList)
-        {
-            Debug.Log($"Pattern found in: {cell}");
-        }
+        //foreach (var cell in cellList)
+        //{
+        //    Debug.Log($"Pattern found in: {cell}");
+        //}
         return true;
     }
 }

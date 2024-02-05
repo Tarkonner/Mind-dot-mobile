@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.EventSystems;
@@ -11,14 +12,13 @@ public class Piece : MonoBehaviour, IDragHandler
     public Dot[] dotsArray;
     public Vector2 pivotPoint;
 
-    [SerializeField] private float dotSpacing;
-
-    private List<UILine> connections = new List<UILine>();
-
+    //Rotation
     private bool rotatable = true;
-
     private int rotationInt = 0;
 
+    [Header("Lines")]
+    [SerializeField] private float dotSpacing;
+    private List<UILine> connections = new List<UILine>();
     public GameObject testPivotPoint;
     private Transform pieceHolder;
     private GameObject lineHolder;
@@ -26,6 +26,8 @@ public class Piece : MonoBehaviour, IDragHandler
 
     public bool testRotate;
 
+    private Vector2Int savedCenterCoordinats;
+    public Vector2Int pieceCenter;
     
     Dictionary<GameObject, Vector2> dotsPosition = new Dictionary<GameObject, Vector2>();
 
@@ -107,9 +109,32 @@ public class Piece : MonoBehaviour, IDragHandler
             }
         }
 
+        //Find center
+        savedCenterCoordinats.x = (int)Mathf.Floor(targetPiece.pieceSize.x / 2);
+        savedCenterCoordinats.y = (int)Mathf.Floor(targetPiece.pieceSize.y / 2);
+        Debug.Log("Saved center: " + savedCenterCoordinats);
+        if (targetPiece.pieceSize.x % 2 == 0) //Even
+        {
+            savedCenterCoordinats.x = (int)Mathf.Floor(targetPiece.pieceSize.x / 2);
+        }
+        else //Odd
+        {
+            savedCenterCoordinats.x = (int)(targetPiece.pieceSize.x / 2);
+        }
+        if (targetPiece.pieceSize.y % 2 == 0) //Even
+        {
+            savedCenterCoordinats.y = (int)Mathf.Floor(targetPiece.pieceSize.y / 2);
+        }
+        else //Odd
+        {
+            savedCenterCoordinats.y = (int)(targetPiece.pieceSize.y / 2);
+        }
+
         //Rotation
         rotationInt = targetPiece.startRotation;
         GetComponent<RectTransform>().rotation = Quaternion.Euler(0, 0, rotationInt * -90);
+
+        CenterCalculation();
     }
     public void EnforceDotPositions()
     {
@@ -134,9 +159,14 @@ public class Piece : MonoBehaviour, IDragHandler
             //(x,y) is the point that is to be rotated. (a,b) is the pivot point of the rotation.
             //Since we want a 90 degree rotation, the formula effectively becomes: (x,y)?(??(y??),?+(x??))
             gridPosArray[i] = new Vector2((pivotPoint.x + (gridPosArray[i].y - pivotPoint.y)),
-               (pivotPoint.y - (gridPosArray[i].x - pivotPoint.y)));
+               (pivotPoint.y - (gridPosArray[i].x - pivotPoint.y)));           
         }
+
         rotationInt = (rotationInt + 1) % 4;
+
+        CenterCalculation();
+
+        //Set rotation
         GetComponent<RectTransform>().rotation = Quaternion.Euler(0, 0, rotationInt * -90);
     }
 
@@ -180,5 +210,33 @@ public class Piece : MonoBehaviour, IDragHandler
     public void NormalScale()
     {
         transform.localScale = Vector3.one;
+    }
+
+    private void CenterCalculation()
+    {
+        Debug.Log(rotationInt);
+
+        //Original
+        switch (rotationInt)
+        {
+            case 0:
+                pieceCenter = new Vector2Int(savedCenterCoordinats.x, -savedCenterCoordinats.y);
+                break;
+            case 1:
+                pieceCenter = new Vector2Int(savedCenterCoordinats.y, savedCenterCoordinats.x);
+                break;
+            case 2:
+                pieceCenter = new Vector2Int(-savedCenterCoordinats.x, savedCenterCoordinats.y);
+                break;
+            case 3:
+                pieceCenter = new Vector2Int(-savedCenterCoordinats.y, -savedCenterCoordinats.x);
+                break;
+        }
+
+        //pieceCenter = new Vector2Int(
+        //    (int)(pivotPoint.x + (pieceCenter.y - pivotPoint.y)),
+        //    (int)(pivotPoint.y - (pieceCenter.x - pivotPoint.y)));
+
+        Debug.Log("Piece center: " + pieceCenter);
     }
 }

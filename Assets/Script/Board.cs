@@ -104,14 +104,27 @@ public class Board : MonoBehaviour
             return false;
     }
 
-    public bool PlacePiece(Vector2Int coordinates, Piece piece)
+    public bool PlacePiece(Vector2Int inputCoordinates, Piece piece)
     {
         bool canPlace = true;
 
         //Calculate target positions
         List<Vector2Int> coordinatesResult = new List<Vector2Int>();
+
         for (int i = 0; i < piece.dotsArray.Length; i++)
-            coordinatesResult.Add(new Vector2Int(coordinates.x + (int)piece.gridPosArray[i].x, coordinates.y - (int)piece.gridPosArray[i].y)); //Don't know why y-axis need to be negetiv to work
+        {
+            //Don't know why y-axis need to be negetiv to work
+            coordinatesResult.Add(new Vector2Int(
+                inputCoordinates.x + piece.pieceCenter.x + (int)piece.gridPosArray[i].x, 
+                inputCoordinates.y + piece.pieceCenter.y - (int)piece.gridPosArray[i].y)); 
+
+        }
+
+        Debug.Log("Input: " + inputCoordinates);
+        for (int i = 0; i < coordinatesResult.Count; i++)
+        {
+            Debug.Log($"{i} Result: {coordinatesResult[i]}");
+        }
 
         //Does place exits
         for (int i = 0; i < coordinatesResult.Count; i++)
