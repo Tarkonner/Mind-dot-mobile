@@ -112,7 +112,6 @@ public class Piece : MonoBehaviour, IDragHandler
         //Find center
         savedCenterCoordinats.x = (int)Mathf.Floor(targetPiece.pieceSize.x / 2);
         savedCenterCoordinats.y = (int)Mathf.Floor(targetPiece.pieceSize.y / 2);
-        Debug.Log("Saved center: " + savedCenterCoordinats);
         if (targetPiece.pieceSize.x % 2 == 0) //Even
         {
             savedCenterCoordinats.x = (int)Mathf.Floor(targetPiece.pieceSize.x / 2);
@@ -129,13 +128,13 @@ public class Piece : MonoBehaviour, IDragHandler
         {
             savedCenterCoordinats.y = (int)(targetPiece.pieceSize.y / 2);
         }
+        CenterCalculation();
 
         //Rotation
-        rotationInt = targetPiece.startRotation;
-        GetComponent<RectTransform>().rotation = Quaternion.Euler(0, 0, rotationInt * -90);
-
-        CenterCalculation();
+        for (int i = 0; i < targetPiece.startRotation; i++)
+            Rotate();
     }
+
     public void EnforceDotPositions()
     {
         for (int i = 0;i < dotsArray.Length; i++)
@@ -144,7 +143,7 @@ public class Piece : MonoBehaviour, IDragHandler
             //Set position
             rect.anchoredPosition = dotsPosition[dotsArray[i].gameObject];
             //Set rotation
-            GetComponent<RectTransform>().rotation = Quaternion.Euler(0, 0, rotationInt * -90);
+            SetRotation();
         }
     }
 
@@ -163,11 +162,10 @@ public class Piece : MonoBehaviour, IDragHandler
         }
 
         rotationInt = (rotationInt + 1) % 4;
-
         CenterCalculation();
 
         //Set rotation
-        GetComponent<RectTransform>().rotation = Quaternion.Euler(0, 0, rotationInt * -90);
+        SetRotation();
     }
 
     public void CreateLine(Dot dot1, Dot dot2)
@@ -212,31 +210,40 @@ public class Piece : MonoBehaviour, IDragHandler
         transform.localScale = Vector3.one;
     }
 
+    private void SetRotation() => GetComponent<RectTransform>().rotation = Quaternion.Euler(0, 0, rotationInt * -90);
+
     private void CenterCalculation()
     {
-        Debug.Log(rotationInt);
-
         //Original
+        //switch (rotationInt)
+        //{
+        //    case 0:
+        //        pieceCenter = new Vector2Int(savedCenterCoordinats.x, -savedCenterCoordinats.y);
+        //        break;
+        //    case 1:
+        //        pieceCenter = new Vector2Int(savedCenterCoordinats.y, savedCenterCoordinats.x);
+        //        break;
+        //    case 2:
+        //        pieceCenter = new Vector2Int(-savedCenterCoordinats.x, savedCenterCoordinats.y);
+        //        break;
+        //    case 3:
+        //        pieceCenter = new Vector2Int(-savedCenterCoordinats.y, -savedCenterCoordinats.x);
+        //        break;
+        //}
         switch (rotationInt)
         {
             case 0:
-                pieceCenter = new Vector2Int(savedCenterCoordinats.x, -savedCenterCoordinats.y);
-                break;
-            case 1:
-                pieceCenter = new Vector2Int(savedCenterCoordinats.y, savedCenterCoordinats.x);
-                break;
-            case 2:
                 pieceCenter = new Vector2Int(-savedCenterCoordinats.x, savedCenterCoordinats.y);
                 break;
-            case 3:
+            case 1:
                 pieceCenter = new Vector2Int(-savedCenterCoordinats.y, -savedCenterCoordinats.x);
                 break;
+            case 2:
+                pieceCenter = new Vector2Int(savedCenterCoordinats.x, -savedCenterCoordinats.y);
+                break;
+            case 3:
+                pieceCenter = new Vector2Int(savedCenterCoordinats.y, savedCenterCoordinats.x);
+                break;
         }
-
-        //pieceCenter = new Vector2Int(
-        //    (int)(pivotPoint.x + (pieceCenter.y - pivotPoint.y)),
-        //    (int)(pivotPoint.y - (pieceCenter.x - pivotPoint.y)));
-
-        Debug.Log("Piece center: " + pieceCenter);
     }
 }

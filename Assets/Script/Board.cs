@@ -117,13 +117,6 @@ public class Board : MonoBehaviour
             coordinatesResult.Add(new Vector2Int(
                 inputCoordinates.x + piece.pieceCenter.x + (int)piece.gridPosArray[i].x, 
                 inputCoordinates.y + piece.pieceCenter.y - (int)piece.gridPosArray[i].y)); 
-
-        }
-
-        Debug.Log("Input: " + inputCoordinates);
-        for (int i = 0; i < coordinatesResult.Count; i++)
-        {
-            Debug.Log($"{i} Result: {coordinatesResult[i]}");
         }
 
         //Does place exits
