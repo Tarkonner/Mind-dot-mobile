@@ -117,6 +117,7 @@ public class InputSystem : MonoBehaviour
                 takenFrom = targetPiece.transform;
                 holdingPiece = targetPiece;
                 holdingPiece.transform.SetParent(movingPiecesHolder.transform);
+                targetPiece.NormalScale();
                 break;
             }
         }

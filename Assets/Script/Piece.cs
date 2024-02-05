@@ -19,7 +19,6 @@ public class Piece : MonoBehaviour, IDragHandler
     [Header("Lines")]
     [SerializeField] private float dotSpacing;
     private List<UILine> connections = new List<UILine>();
-    public GameObject testPivotPoint;
     private Transform pieceHolder;
     private GameObject lineHolder;
     public float lineWidth = 10;
@@ -40,8 +39,6 @@ public class Piece : MonoBehaviour, IDragHandler
     public void Start()
     {
         pieceHolder = transform.parent;
-        testPivotPoint.transform.localPosition = pivotPoint;
-
     }
 
     public void LoadPiece(LevelPiece targetPiece)
@@ -214,22 +211,6 @@ public class Piece : MonoBehaviour, IDragHandler
 
     private void CenterCalculation()
     {
-        //Original
-        //switch (rotationInt)
-        //{
-        //    case 0:
-        //        pieceCenter = new Vector2Int(savedCenterCoordinats.x, -savedCenterCoordinats.y);
-        //        break;
-        //    case 1:
-        //        pieceCenter = new Vector2Int(savedCenterCoordinats.y, savedCenterCoordinats.x);
-        //        break;
-        //    case 2:
-        //        pieceCenter = new Vector2Int(-savedCenterCoordinats.x, savedCenterCoordinats.y);
-        //        break;
-        //    case 3:
-        //        pieceCenter = new Vector2Int(-savedCenterCoordinats.y, -savedCenterCoordinats.x);
-        //        break;
-        //}
         switch (rotationInt)
         {
             case 0:
