@@ -117,7 +117,7 @@ public class InputSystem : MonoBehaviour
                 takenFrom = targetPiece.transform;
                 holdingPiece = targetPiece;
                 holdingPiece.transform.SetParent(movingPiecesHolder.transform);
-                targetPiece.NormalScale();
+                targetPiece.ChangeState(Piece.pieceStats.transparent);
                 break;
             }
         }
@@ -138,6 +138,8 @@ public class InputSystem : MonoBehaviour
                         board.PickupPiece(holdingPiece);
                         holdingPiece.GetComponent<Image>().raycastTarget = true;
                         CheckGoals();
+
+                        targetDot.parentPiece.ChangeState(Piece.pieceStats.transparent);
                     }
                 }
             }
@@ -184,6 +186,7 @@ public class InputSystem : MonoBehaviour
                     }
                 }
             }
+            holdingPiece.ChangeState(Piece.pieceStats.normal);
 
             if (!canPlacePiece)
             {

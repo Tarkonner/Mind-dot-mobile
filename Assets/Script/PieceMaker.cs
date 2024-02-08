@@ -46,7 +46,7 @@ public class PieceMaker : MonoBehaviour
             GameObject spawnedPiece = Instantiate(piecePrefab, spawnedBackground.transform, false);    
             Piece piece = spawnedPiece.GetComponent<Piece>();
             piece.LoadPiece(levelsPieces[i]);
-            piece.SmallScale();
+            piece.ChangeState(Piece.pieceStats.small);
         }
     }
 }

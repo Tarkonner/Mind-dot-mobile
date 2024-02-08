@@ -2,15 +2,16 @@ using System;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.EventSystems;
+using UnityEngine.UI;
 
 public class Piece : MonoBehaviour, IDragHandler
 {
     [SerializeField] private GameObject dotPrefab;
     RectTransform rectTransform;
 
-    public Vector2[] gridPosArray;
-    public Dot[] dotsArray;
-    public Vector2 pivotPoint;
+    [HideInInspector] public Vector2[] gridPosArray;
+    [HideInInspector] public Dot[] dotsArray;
+    [HideInInspector] public Vector2 pivotPoint;
 
     //Rotation
     private bool rotatable = true;
@@ -26,10 +27,13 @@ public class Piece : MonoBehaviour, IDragHandler
     public bool testRotate;
 
     private Vector2Int savedCenterCoordinats;
-    public Vector2Int pieceCenter;
+    public Vector2Int pieceCenter { get; private set; }
     
     Dictionary<GameObject, Vector2> dotsPosition = new Dictionary<GameObject, Vector2>();
 
+    //Stats
+    public enum pieceStats { small, transparent, normal};
+    private pieceStats currentState;
 
     private void Awake()
     {
@@ -39,6 +43,31 @@ public class Piece : MonoBehaviour, IDragHandler
     public void Start()
     {
         pieceHolder = transform.parent;
+
+        ChangeState(pieceStats.small);
+    }
+
+    public void ChangeState(pieceStats targetState) 
+    {
+        currentState = targetState;
+
+        switch (currentState)
+        {
+            case pieceStats.small:
+                transform.localScale = new Vector3(.5f, .5f, .5f);
+                SetAplha(1);
+                break;
+            case pieceStats.transparent:
+                transform.localScale = Vector3.one;
+                SetAplha(.5f);
+                break;
+            case pieceStats.normal:
+                transform.localScale = Vector3.one;
+                SetAplha(1);
+                break;
+            default:
+                break;
+        }
     }
 
     public void LoadPiece(LevelPiece targetPiece)
@@ -193,18 +222,28 @@ public class Piece : MonoBehaviour, IDragHandler
     public void ReturnToHolder()
     {
         gameObject.transform.SetParent(pieceHolder);
-        SmallScale();
+        ChangeState(pieceStats.small);
         rectTransform.anchoredPosition = Vector2.zero;
     }
-
-    public void SmallScale()
+    
+    private void SetAplha(float alphaValue)
     {
-        transform.localScale = new Vector3(.5f, .5f, .5f);
-    }
+        //Lines
+        foreach (UILine item in connections)
+        {
+            Color targetColor = item.color;
+            targetColor.a = alphaValue;
+            item.color = targetColor;
+        }
 
-    public void NormalScale()
-    {
-        transform.localScale = Vector3.one;
+        //Dots
+        foreach (var item in dotsArray)
+        {
+            Image image = item.gameObject.GetComponent<Image>();
+            Color targetColor = image.color;
+            targetColor.a = alphaValue;
+            image.color = targetColor;
+        }
     }
 
     private void SetRotation() => GetComponent<RectTransform>().rotation = Quaternion.Euler(0, 0, rotationInt * -90);

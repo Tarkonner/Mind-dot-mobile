@@ -144,7 +144,7 @@ public class Board : MonoBehaviour
         if (canPlace)
         {
             //Set Piece scale
-            piece.NormalScale();
+            piece.ChangeState(Piece.pieceStats.normal);
 
             for (int i = 0; i < piece.dotsArray.Length; i++)
             {
