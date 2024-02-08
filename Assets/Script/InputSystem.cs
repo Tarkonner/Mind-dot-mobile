@@ -25,8 +25,8 @@ public class InputSystem : MonoBehaviour
     [Header("Pieces")]
     [SerializeField] private GameObject movingPiecesHolder;
     [SerializeField] Transform piecesHolder;
-    [SerializeField] private float pieceSizeWhileHolding = .2f;
     private Piece holdingPiece;
+    private RectTransform holdingPieceRect;
     private Transform takenFrom;
 
     [Header("Goals")]
@@ -44,6 +44,8 @@ public class InputSystem : MonoBehaviour
     [SerializeField] float distanceBeforeSwipe = 50;
     [SerializeField] RectTransform rotateLine;
     private Vector2 contactPosition;
+    [SerializeField] float touchOffsetY = 50;
+    
 
     private void Awake()
     {
@@ -80,7 +82,18 @@ public class InputSystem : MonoBehaviour
             touchPosition = Touchscreen.current.primaryTouch.position.ReadValue();
         }
         if (holdingPiece != null)
-            holdingPiece.OnDrag(pointerEventData);
+        {
+            holdingPiece.OnDrag(pointerEventData); //Not doing anything right now
+            
+            //Move
+            if(holdingPieceRect == null)
+                holdingPieceRect = holdingPiece.gameObject.GetComponent<RectTransform>();
+            Vector2 targetPosition = touchPosition + new Vector2(0, 
+                touchOffsetY + Mathf.RoundToInt(Mathf.Abs(holdingPiece.pieceCenter.y) / 2) * holdingPiece.DotSpacing);
+            holdingPieceRect.position = targetPosition;
+        }
+        else
+            holdingPieceRect = null;
     }
 
     List<RaycastResult> HitDetection(Vector2 inputPosition, GraphicRaycaster raycaster)
@@ -165,7 +178,7 @@ public class InputSystem : MonoBehaviour
             bool canPlacePiece = false;
 
             //Raycast
-            List<RaycastResult> deteced = HitDetection(touchPosition, boardRaycast);
+            List<RaycastResult> deteced = HitDetection(holdingPiece.GetComponent<RectTransform>().position, boardRaycast);
             foreach (RaycastResult result in deteced)
             {
                 //See if we hit a cell

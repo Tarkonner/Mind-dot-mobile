@@ -557,6 +557,10 @@ PrefabInstance:
       value: 
       objectReference: {fileID: 161695130}
     - target: {fileID: 5746726367402340195, guid: 8cbdc0a76d6bc7148968a7757584fc92, type: 3}
+      propertyPath: touchOffsetY
+      value: 75
+      objectReference: {fileID: 0}
+    - target: {fileID: 5746726367402340195, guid: 8cbdc0a76d6bc7148968a7757584fc92, type: 3}
       propertyPath: movingPiecesHolder
       value: 
       objectReference: {fileID: 191146027}

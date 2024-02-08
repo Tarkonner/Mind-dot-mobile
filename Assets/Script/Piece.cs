@@ -19,6 +19,7 @@ public class Piece : MonoBehaviour, IDragHandler
 
     [Header("Lines")]
     [SerializeField] private float dotSpacing;
+    public float DotSpacing { get { return dotSpacing; } }
     private List<UILine> connections = new List<UILine>();
     private Transform pieceHolder;
     private GameObject lineHolder;
@@ -216,7 +217,7 @@ public class Piece : MonoBehaviour, IDragHandler
 
     public void OnDrag(PointerEventData eventData)
     {
-        rectTransform.position = InputSystem.instance.touchPosition;
+        //rectTransform.position = InputSystem.instance.touchPosition;
     }
 
     public void ReturnToHolder()
