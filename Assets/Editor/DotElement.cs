@@ -2,17 +2,17 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UIElements;
+using SharedData;
 
 public class DotElement : VisualElement
 {
     private Image image;
-    public DotType dotType { get; private set; }
 
-    public bool isConnected;
+    public DotData DotData = new DotData();
 
     public DotElement(DotType type) 
     {
-        this.dotType = type;
+        DotData.dotType = type;
 
         image = new Image();
         image.sprite = Resources.Load<Sprite>("Circle");
@@ -40,18 +40,18 @@ public class DotElement : VisualElement
 
     public void ChangeColor()
     {
-        switch(dotType) 
+        switch(DotData.dotType) 
         {
             case DotType.Blue:
-                dotType = DotType.Red;
+                DotData.dotType = DotType.Red;
                 image.tintColor = Color.red;
                 break;
             case DotType.Red:
-                dotType = DotType.Yellow;
+                DotData.dotType = DotType.Yellow;
                 image.tintColor = Color.yellow;
                 break;
             case DotType.Yellow:
-                dotType = DotType.Blue;
+                DotData.dotType = DotType.Blue;
                 image.tintColor = Color.blue;
                 break;
         }

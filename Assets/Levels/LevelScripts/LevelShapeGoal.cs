@@ -1,3 +1,4 @@
+using SharedData;
 using System;
 using System.Collections;
 using System.Collections.Generic;
@@ -10,17 +11,8 @@ public class LevelShapeGoal
     public DotType[] goalDots;
     public Vector2Int gridPosRef;
     public Vector2Int goalSize;
-    //public LevelShapeGoal(ShapeGoal goal)
-    //{
-    //    goalSpecifications = new Vector2[goalSpecifications.Length];
-    //    goalDots = new DotType[goalSpecifications.Length];
-    //    for (int i = 0; i < goal.goalSpecifications.Length; i++)
-    //    {
-    //        goalSpecifications[i] = goal.goalSpecifications[i].gridPos;
-    //        goalDots[i] = goal.goalSpecifications[i].dotType;
-    //    }
-    //}
-    public LevelShapeGoal(List<Vector2Int> goalSpecifications, List<DotElement> goalDots, Vector2Int gridposref)
+
+    public LevelShapeGoal(List<Vector2Int> goalSpecifications, List<DotData> goalDots, Vector2Int gridposref)
     {
         this.goalSpecifications = new Vector2[goalSpecifications.Count];
         int i = 0;
@@ -38,7 +30,7 @@ public class LevelShapeGoal
         }
         gridPosRef = gridposref;
     }
-    public LevelShapeGoal(ShapeGoalElement goal)
+    public LevelShapeGoal(GridData goal)
     {
         goalSpecifications = new Vector2[goal.dotDictionary.Keys.Count];
         goalDots = new DotType[goal.dotDictionary.Values.Count];

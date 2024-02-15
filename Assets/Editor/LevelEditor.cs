@@ -1,3 +1,4 @@
+using SharedData;
 using System;
 using System.Collections.Generic;
 using UnityEditor;
@@ -248,7 +249,7 @@ public class LevelEditor : EditorWindow
 
             //Pieces
             case 5:
-                if (cellElement.turnedOff || cellElement.partOfPiece)
+                if (cellElement.cellData.turnedOff || cellElement.cellData.partOfPiece)
                     break;
 
                 if (!piecesSavedCells.Contains(cellElement))
@@ -265,7 +266,7 @@ public class LevelEditor : EditorWindow
 
             //Goals
             case 6:
-                if (cellElement.turnedOff)
+                if (cellElement.cellData.turnedOff)
                     break;
 
                 if (!goalSavedCells.Contains(cellElement))
@@ -280,7 +281,7 @@ public class LevelEditor : EditorWindow
                 }
                 break;
             case 10:
-                if (cellElement.turnedOff)
+                if (cellElement.cellData.turnedOff)
                     break;
                 if (buttonIndex == 1)
                 {
@@ -328,7 +329,7 @@ public class LevelEditor : EditorWindow
 
     private void PlaceDot(CellElement targetCell, int buttonIndex)
     {
-        if (targetCell.turnedOff)
+        if (targetCell.cellData.turnedOff)
             return;
 
         if (buttonIndex == 1) //Right click
@@ -337,13 +338,13 @@ public class LevelEditor : EditorWindow
             return;
         }
 
-        if (targetCell.partOfPiece || targetCell.partOfShapeGoals.Count > 0)
+        if (targetCell.cellData.partOfPiece || targetCell.partOfShapeGoals.Count > 0)
             return;
              
 
         if (buttonIndex == 0) //Left click
         {
-            if (targetCell.holding != null)
+            if (targetCell.cellData.holding != null)
                 targetCell.ChangeDotColor();
             else
             {
@@ -461,7 +462,7 @@ public class LevelEditor : EditorWindow
             //Remove cells without dots
             for (int i = targetElements.Count - 1; i >= 0; i--)
             {
-                if (targetElements[i].holding == null)
+                if (targetElements[i].cellData.holding == null)
                     targetElements.RemoveAt(i);
             }
 
@@ -498,25 +499,25 @@ public class LevelEditor : EditorWindow
             for (int i = 0; i < targetElements.Count; i++)
             {
                 //Low
-                if (lowPoint.x > targetElements[i].gridCoordinates.x)
-                    lowPoint.x = targetElements[i].gridCoordinates.x;
-                if (lowPoint.y > targetElements[i].gridCoordinates.y)
-                    lowPoint.y = targetElements[i].gridCoordinates.y;
+                if (lowPoint.x > targetElements[i].cellData.gridCoordinates.x)
+                    lowPoint.x = targetElements[i].cellData.gridCoordinates.x;
+                if (lowPoint.y > targetElements[i].cellData.gridCoordinates.y)
+                    lowPoint.y = targetElements[i].cellData.gridCoordinates.y;
 
                 //High
-                if (highPoint.x < targetElements[i].gridCoordinates.x)
-                    highPoint.x = targetElements[i].gridCoordinates.x;
-                if (highPoint.y < targetElements[i].gridCoordinates.y)
-                    highPoint.y = targetElements[i].gridCoordinates.y;
+                if (highPoint.x < targetElements[i].cellData.gridCoordinates.x)
+                    highPoint.x = targetElements[i].cellData.gridCoordinates.x;
+                if (highPoint.y < targetElements[i].cellData.gridCoordinates.y)
+                    highPoint.y = targetElements[i].cellData.gridCoordinates.y;
             }
-            spawnedGrid.gridPosRef = lowPoint;
+            spawnedGrid.gridData.gridPosRef = lowPoint;
             
             for (int i = 0; i < targetElements.Count; i++)
             {
                 //Set refence point
-                Vector2Int targetCoor = targetElements[i].gridCoordinates - new Vector2Int(lowPoint.x, lowPoint.y);
+                Vector2Int targetCoor = targetElements[i].cellData.gridCoordinates - new Vector2Int(lowPoint.x, lowPoint.y);
 
-                spawnedGrid.AddDot(targetCoor, targetElements[i].holding);
+                spawnedGrid.AddDot(targetCoor, targetElements[i].dotRef);
 
                 //Change background color
                 if (gridType == typeof(PieceElement))
@@ -532,7 +533,7 @@ public class LevelEditor : EditorWindow
             //Set color
             for (int i = 0; i < targetElements.Count; i++)
             {
-                if (targetElements[i].partOfPiece && gridType == typeof(ShapeGoalElement)
+                if (targetElements[i].cellData.partOfPiece && gridType == typeof(ShapeGoalElement)
                     || targetElements[i].partOfShapeGoals.Count > 0 && gridType == typeof(PieceElement))
                 {
                     targetElements[i].ChangeCellColor(CellColorState.partGoalAndPiece);
@@ -556,8 +557,7 @@ public class LevelEditor : EditorWindow
     public void RemovePiece(PieceElement target)
     {
         for (int i = target.siblings.Count - 1; i >= 0; i--)
-        {
-            target.siblings[i].RemovePiece();
+        {            
             target.siblings.RemoveAt(i);
         }
 
@@ -666,7 +666,7 @@ public class LevelEditor : EditorWindow
             if (!pG.placeGoal.GoalCompletionStatus())
             {
                 elligible = false;
-                Debug.LogError($"Placement goal in {pG.gridCoordinates} not fulfilled!");
+                Debug.LogError($"Placement goal in {pG.cellData.gridCoordinates} not fulfilled!");
                 return elligible;
             }
         }
@@ -675,13 +675,13 @@ public class LevelEditor : EditorWindow
     }
     public void SaveLevelToSO()
     {
-        int boardSizeX = cells[0].gridCoordinates.x;
-        int boardSizeY = cells[0].gridCoordinates.y;
+        int boardSizeX = cells[0].cellData.gridCoordinates.x;
+        int boardSizeY = cells[0].cellData.gridCoordinates.y;
         foreach (CellElement cell in cells)
         {
-            if (cell.turnedOff) continue;
-            if (cell.gridCoordinates.x > boardSizeX) { boardSizeX = cell.gridCoordinates.x; }
-            if (cell.gridCoordinates.y > boardSizeY) { boardSizeY = cell.gridCoordinates.y; }
+            if (cell.cellData.turnedOff) continue;
+            if (cell.cellData.gridCoordinates.x > boardSizeX) { boardSizeX = cell.cellData.gridCoordinates.x; }
+            if (cell.cellData.gridCoordinates.y > boardSizeY) { boardSizeY = cell.cellData.gridCoordinates.y; }
         }
         boardSizeX += 1;
         boardSizeY += 1;
@@ -697,7 +697,25 @@ public class LevelEditor : EditorWindow
         if(savedFieldName.value != null)
             levelName = savedFieldName.value.ToString();
 
-        if(LevelConverter.SaveLevel(levelName, pieces, cells, new Vector2(boardSizeX, boardSizeY), shapeGoals, placeGoals)){
+        //Converter
+        //Piece
+        List<PieceData> pieceDatas = new List<PieceData>();
+        foreach (PieceElement data in pieces)
+            pieceDatas.Add(data.gridData as PieceData);
+        //Cell
+        List<CellData> cellDatas = new List<CellData>();
+        foreach (CellElement item in cells)
+            cellDatas.Add(item.cellData);
+        //Shape goals
+        List<GridData> gridDatas = new List<GridData>();
+        foreach (GridElement item in shapeGoals)
+            gridDatas.Add(item.gridData);
+        //Placement goals
+        List<PlaceGoalData> placeGoalDatas = new List<PlaceGoalData>();
+        foreach (PlaceGoalElement item in placeGoals)
+            placeGoalDatas.Add(item.placeGoalData);
+
+        if (LevelConverter.SaveLevel(levelName, pieceDatas, cellDatas, new Vector2(boardSizeX, boardSizeY), gridDatas, placeGoalDatas)){
             Debug.Log("Level Saved!");
         }
         else

@@ -1,3 +1,4 @@
+using SharedData;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -5,16 +6,15 @@ using UnityEngine.UIElements;
 
 public class PlaceGoalElement : VisualElement
 {
-    public DotType goalType;
-    public Vector2 goalPosition;
-    public CellElement goalCell;
+    public PlaceGoalData placeGoalData;
+
+    public CellElement cellRef { get; private set; }
     private Image sprite;
 
     public PlaceGoalElement(DotType goalType, CellElement cell)
     {
-        this.goalType = goalType;
-        goalCell = cell;
-        goalPosition = cell.gridCoordinates;
+        placeGoalData.goalType = goalType;
+        cellRef = cell;
 
         sprite = new Image();
         sprite.sprite = Resources.Load<Sprite>("Triangle");
@@ -48,31 +48,31 @@ public class PlaceGoalElement : VisualElement
     }
     public void ChangeColor()
     {
-        switch (goalType)
+        switch (placeGoalData.goalType)
         {
             case DotType.Blue:
-                goalType = DotType.Red;
+                placeGoalData.goalType = DotType.Red;
                 sprite.tintColor = Color.red;
                 break;
             case DotType.Red:
-                goalType = DotType.Yellow;
+                placeGoalData.goalType = DotType.Yellow;
                 sprite.tintColor = Color.yellow;
                 break;
             case DotType.Yellow:
-                goalType = DotType.Null;
+                placeGoalData.goalType = DotType.Null;
                 sprite.tintColor = Color.grey;
                 break;
             case DotType.Null:
-                goalType = DotType.Blue;
+                placeGoalData.goalType = DotType.Blue;
                 sprite.tintColor = Color.blue;
                 break;
         }
     }
     public bool GoalCompletionStatus()
     {
-        if (goalCell.holding!=null)
+        if (cellRef.cellData.holding != null)
         {
-            if (goalType == DotType.Null || goalCell.holding.dotType == goalType)
+            if (placeGoalData.goalType == DotType.Null || placeGoalData.cellData.holding.dotType == placeGoalData.goalType)
             {
                 return true;
             }

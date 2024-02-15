@@ -1,9 +1,10 @@
+using SharedData;
 using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-[Serializable]
 
+[Serializable]
 public class LevelPiece
 {
     public Vector2[] dotPositions;
@@ -13,13 +14,13 @@ public class LevelPiece
     public Vector2Int pieceSize;
     public int startRotation;
 
-    public LevelPiece(PieceElement pE)
+    public LevelPiece(PieceData pE)
     {
         int i = 0;
         dotTypes = new DotType[pE.dotDictionary.Count];
         dotPositions = new Vector2[pE.dotDictionary.Count];
         rotatable = pE.canRotate;
-        foreach (KeyValuePair<Vector2Int, DotElement> kVPair in pE.dotDictionary)
+        foreach (KeyValuePair<Vector2Int, DotData> kVPair in pE.dotDictionary)
         {
             dotTypes[i] = kVPair.Value.dotType;
             dotPositions[i] = kVPair.Key;

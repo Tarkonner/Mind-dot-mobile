@@ -1,3 +1,4 @@
+using SharedData;
 using System.Collections.Generic;
 using Unity.VisualScripting;
 using UnityEngine;
@@ -5,21 +6,19 @@ using UnityEngine.UIElements;
 
 public class GridElement : VisualElement
 {
-    public Dictionary<Vector2Int, DotElement> dotDictionary = new Dictionary<Vector2Int, DotElement>();
+    public GridData gridData;
 
-    public Vector2Int gridSize;
     protected Image[,] images = null;
 
     protected int imageSize = 30;
     protected int spacing = 3;
 
+    public List<CellElement> siblings = new List<CellElement>();
+
     protected Sprite cellBackground;
 
     protected LevelEditor editor;
 
-    public List<CellElement> siblings = new List<CellElement>();
-
-    public Vector2Int gridPosRef;
 
     public GridElement(LevelEditor editor)
     {
@@ -38,14 +37,14 @@ public class GridElement : VisualElement
 
     public virtual void Construct()
     {
-        images = new Image[gridSize.x, gridSize.y];
+        images = new Image[gridData.gridSize.x, gridData.gridSize.y];
 
-        style.width = gridSize.x * imageSize + gridSize.x * spacing; // cellWidth is the width of each cell
-        style.height = gridSize.y * imageSize + gridSize.y * spacing; // cellHeight is the height of each cell
+        style.width = gridData.gridSize.x * imageSize + gridData.gridSize.x * spacing; // cellWidth is the width of each cell
+        style.height = gridData.gridSize.y * imageSize + gridData.gridSize.y * spacing; // cellHeight is the height of each cell
 
-        for (int y = 0; y < gridSize.y; y++)
+        for (int y = 0; y < gridData.gridSize.y; y++)
         {
-            for (int x = 0; x < gridSize.x; x++)
+            for (int x = 0; x < gridData.gridSize.x; x++)
             {
                 Image targetImage = new Image();
                 images[x, y] = targetImage;
@@ -64,9 +63,9 @@ public class GridElement : VisualElement
                 cell.Add(targetImage);
                 this.Add(targetImage);
 
-                if (dotDictionary.ContainsKey(new Vector2Int(x, y)))
+                if (gridData.dotDictionary.ContainsKey(new Vector2Int(x, y)))
                 {
-                    DotElement spawendDot = new DotElement(dotDictionary[new Vector2Int(x, y)].dotType);
+                    DotElement spawendDot = new DotElement(gridData.dotDictionary[new Vector2Int(x, y)].dotType);
                     images[x, y].Add(spawendDot);
                 }
             }
@@ -80,30 +79,31 @@ public class GridElement : VisualElement
             Mathf.Abs(coordinat.y));
 
         //Grid size
-        if (calculation.x + 1 > gridSize.x)
-            gridSize.x = calculation.x + 1;
-        if (calculation.y + 1 > gridSize.y)
-            gridSize.y = calculation.y + 1;
+        if (calculation.x + 1 > gridData.gridSize.x)
+            gridData.gridSize.x = calculation.x + 1;
+        if (calculation.y + 1 > gridData.gridSize.y)
+            gridData.gridSize.y = calculation.y + 1;
 
-        dotDictionary.Add(coordinat, dot);
+        gridData.dotDictionary.Add(coordinat, dot.DotData);
     }
 
-    public virtual bool PlaceDot(Vector2Int coordinats)
-    {
-        if (dotDictionary.ContainsKey(coordinats))
-        {
-            DotElement targetDot = dotDictionary[coordinats];
-            images[coordinats.x, coordinats.y].Add(targetDot);
+    //Broke then change to shared variables
+    //public virtual bool PlaceDot(Vector2Int coordinats)
+    //{
+    //    if (gridData.dotDictionary.ContainsKey(coordinats))
+    //    {
+    //        DotElement targetDot = gridData.dotDictionary[coordinats];
+    //        images[coordinats.x, coordinats.y].Add(targetDot);
 
-            return true;
-        }
-        else
-            return false;
-    }
+    //        return true;
+    //    }
+    //    else
+    //        return false;
+    //}
 
     public virtual void SetGridSize(Vector2Int size)
     {
-        gridSize = size;
+        gridData.gridSize = size;
     }
 
     private void OnMouseDown(MouseDownEvent evt)

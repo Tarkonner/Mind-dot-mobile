@@ -1,3 +1,4 @@
+using SharedData;
 using System.Collections;
 using System.Collections.Generic;
 using Unity.VisualScripting;
@@ -7,19 +8,14 @@ using UnityEngine.UIElements;
 
 public class CellElement : Image
 {
-    public Vector2Int gridCoordinates { get; private set; }
     private LevelEditor levelEditor;
+    public DotElement dotRef { get; private set; }
 
-    public bool turnedOff { get; private set; } = false;
-
-    
-    public bool partOfPiece { get; private set; } = false;
+    public CellData cellData { get; private set;}
     public PieceElement piece { get; private set; }
     public List<ShapeGoalElement> partOfShapeGoals { get; private set; } = new List<ShapeGoalElement>();
 
-    public DotElement holding;
-
-    public PlaceGoalElement placeGoal;
+    public PlaceGoalElement placeGoal { get; private set; }
 
     //Color control
     public CellColorState myColorState { get; private set; } = CellColorState.normal;
@@ -40,7 +36,7 @@ public class CellElement : Image
         style.width = 50;
         style.height = 50;
 
-        gridCoordinates = coordinats;
+        cellData.gridCoordinates = coordinats;
 
         // Create an Image to hold the sprite
         this.scaleMode = ScaleMode.ScaleToFit;
@@ -59,14 +55,14 @@ public class CellElement : Image
     {
         if (myColorState == CellColorState.partGoalAndPiece)
         {
-            if(!partOfPiece)
+            if(!cellData.partOfPiece)
                 myColorState = CellColorState.partGoal;
             if (partOfShapeGoals.Count == 0)
                 myColorState = CellColorState.partPiece;
         }
         else if(partOfShapeGoals.Count > 1)
             myColorState |= CellColorState.partGoal;
-        else if(turnedOff)
+        else if(cellData.turnedOff)
             myColorState = CellColorState.turnedOff;
         else
             myColorState = CellColorState.normal;
@@ -81,25 +77,24 @@ public class CellElement : Image
 
     public void SetDot(DotElement dot)
     {
-        holding = dot;
+        dotRef = dot;
+        cellData.holding = dot.DotData;
         this.Add(dot);
     }
     public void ChangeDotColor()
     {
-        if (holding != null && (!partOfPiece || partOfShapeGoals.Count == 0))
-        {
-            holding.ChangeColor();
-        }
+        if (dotRef != null && (!cellData.partOfPiece || partOfShapeGoals.Count == 0))
+            dotRef.ChangeColor();
     }
 
 
     public void RemoveDot()
     {
-        if (holding == null)
+        if (cellData.holding == null)
             return;
 
         //Remove Pieces
-        if (partOfPiece)
+        if (cellData.partOfPiece)
             levelEditor.RemovePiece(piece);
 
         //Remove Shape goals
@@ -107,8 +102,8 @@ public class CellElement : Image
         partOfShapeGoals.Clear();
 
         //Remove dot
-        this.Remove(holding);
-        holding = null;
+        dotRef = null;
+        cellData.holding = null;
 
         //Change color
         myColorState = CellColorState.normal;
@@ -117,7 +112,7 @@ public class CellElement : Image
 
     public void SetPiece(PieceElement pieceElement)
     {
-        partOfPiece = true;
+        cellData.partOfPiece = true;
         piece = pieceElement;
 
         //Change color
@@ -130,7 +125,7 @@ public class CellElement : Image
 
     public void RemovePiece()
     {
-        partOfPiece = false;
+        cellData.partOfPiece = false;
         piece = null;
 
         SetDefultColor();
@@ -171,17 +166,17 @@ public class CellElement : Image
     }
 
 
-    public void TurnOffCell() => SetActiveState(turnedOff);
+    public void TurnOffCell() => SetActiveState(cellData.turnedOff);
     public void SetActiveState(bool targetState)
     {
         if (targetState)
         {
-            turnedOff = false;
+            cellData.turnedOff = false;
             SetDefultColor();
         }
         else
         {
-            turnedOff = true;
+            cellData.turnedOff = true;
 
             myColorState = CellColorState.turnedOff;
             this.tintColor = cellColorState[(int)myColorState];

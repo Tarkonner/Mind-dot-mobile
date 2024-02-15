@@ -1,3 +1,4 @@
+using SharedData;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -8,8 +9,8 @@ using UnityEngine;
 public static class LevelConverter
 {
     private static string version = "0.1";
-    public static bool SaveLevel(string title, List<PieceElement> pEs, 
-        List<CellElement> board, Vector2 boardSize, List<ShapeGoalElement> sGEs, List<PlaceGoalElement> pGEs)
+    public static bool SaveLevel(string title, List<PieceData> pEs, 
+        List<CellData> board, Vector2 boardSize, List<GridData> sGEs, List<PlaceGoalData> pGEs)
     {
         bool success = true;
         LevelPiece[] pieces = new LevelPiece[pEs.Count];
@@ -27,7 +28,7 @@ public static class LevelConverter
         LevelPlaceGoal[] lPGs = new LevelPlaceGoal[pGEs.Count];
         for (int i = 0; i < pGEs.Count; i++)
         {
-            lPGs[i] = new LevelPlaceGoal(pGEs[i].goalPosition, pGEs[i].goalType);
+            lPGs[i] = new LevelPlaceGoal(pGEs[i].cellData.gridCoordinates, pGEs[i].goalType);
         }
         string name;
         if (title == null || title == "")
