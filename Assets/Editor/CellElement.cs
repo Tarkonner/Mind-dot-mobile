@@ -11,7 +11,7 @@ public class CellElement : Image
     private LevelEditor levelEditor;
     public DotElement dotRef { get; private set; }
 
-    public CellData cellData { get; private set;}
+    public CellData cellData { get; private set;} = new CellData();
     public PieceElement piece { get; private set; }
     public List<ShapeGoalElement> partOfShapeGoals { get; private set; } = new List<ShapeGoalElement>();
 

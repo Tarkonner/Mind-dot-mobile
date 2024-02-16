@@ -6,7 +6,7 @@ using UnityEngine.UIElements;
 
 public class GridElement : VisualElement
 {
-    public GridData gridData;
+    public GridData gridData = new GridData();
 
     protected Image[,] images = null;
 
@@ -35,8 +35,11 @@ public class GridElement : VisualElement
         this.editor = editor;
     }
 
-    public virtual void Construct()
+    public virtual void Construct(Vector2Int targetSize)
     {
+        //Setup data
+        gridData.gridSize = targetSize;
+
         images = new Image[gridData.gridSize.x, gridData.gridSize.y];
 
         style.width = gridData.gridSize.x * imageSize + gridData.gridSize.x * spacing; // cellWidth is the width of each cell
@@ -58,11 +61,12 @@ public class GridElement : VisualElement
                 targetImage.style.justifyContent = Justify.Center;
                 targetImage.style.alignItems = Align.Center;
 
-                //Add scell
+                //Add cell
                 var cell = new VisualElement();
                 cell.Add(targetImage);
                 this.Add(targetImage);
 
+                //Place dot
                 if (gridData.dotDictionary.ContainsKey(new Vector2Int(x, y)))
                 {
                     DotElement spawendDot = new DotElement(gridData.dotDictionary[new Vector2Int(x, y)].dotType);
@@ -87,19 +91,19 @@ public class GridElement : VisualElement
         gridData.dotDictionary.Add(coordinat, dot.DotData);
     }
 
-    //Broke then change to shared variables
-    //public virtual bool PlaceDot(Vector2Int coordinats)
-    //{
-    //    if (gridData.dotDictionary.ContainsKey(coordinats))
-    //    {
-    //        DotElement targetDot = gridData.dotDictionary[coordinats];
-    //        images[coordinats.x, coordinats.y].Add(targetDot);
+    public virtual bool PlaceDot(Vector2Int coordinats)
+    {
+        if (gridData.dotDictionary.ContainsKey(coordinats))
+        {
+            DotData dotData = gridData.dotDictionary[coordinats];
+            DotElement targetDot = new DotElement(dotData.dotType);
+            images[coordinats.x, coordinats.y].Add(targetDot);
 
-    //        return true;
-    //    }
-    //    else
-    //        return false;
-    //}
+            return true;
+        }
+        else
+            return false;
+    }
 
     public virtual void SetGridSize(Vector2Int size)
     {

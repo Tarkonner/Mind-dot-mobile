@@ -35,9 +35,13 @@ public class PieceElement : GridElement
         }    
     }
 
-    public override void Construct()
+    public override void Construct(Vector2Int targetSize)
     {
-        gridData = new PieceData();
+        PieceData temp = new PieceData();
+        temp.dotDictionary = gridData.dotDictionary;
+        temp.gridSize = gridData.gridSize;
+        temp.gridPosRef = gridData.gridPosRef;
+        gridData = temp;
 
         bool legalPiece = true;
 
@@ -84,7 +88,7 @@ public class PieceElement : GridElement
         }
 
         if (legalPiece)
-            base.Construct();
+            base.Construct(targetSize);
         else
             Debug.Log("Error in making piece. Illegal dot placement.");
     }

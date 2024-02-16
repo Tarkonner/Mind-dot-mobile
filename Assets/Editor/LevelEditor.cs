@@ -28,6 +28,7 @@ public class LevelEditor : EditorWindow
     List<CellElement> goalSavedCells = new List<CellElement>();
     VisualElement goalHolder;
     List<ShapeGoalElement> shapeGoals = new List<ShapeGoalElement>();
+
     #region Buttons    
     private Button choosenButton;
     //Cells
@@ -46,6 +47,7 @@ public class LevelEditor : EditorWindow
 
     #endregion
 
+    //Load levels
     ObjectField levelField;
     TextField savedFieldName;
     List<CellElement> placeGoalCells = new List<CellElement>();
@@ -526,7 +528,7 @@ public class LevelEditor : EditorWindow
                     targetElements[i].SetGoal((ShapeGoalElement)spawnedGrid);
             }
 
-            spawnedGrid.Construct();
+            spawnedGrid.Construct(new Vector2Int(highPoint.x, highPoint.y));
             spawnedGrid.style.marginRight = new StyleLength(10); // Add right margin
             spawnedGrid.style.marginBottom = new StyleLength(10); // Add bottom margin
 
