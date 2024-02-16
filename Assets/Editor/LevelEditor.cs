@@ -528,7 +528,7 @@ public class LevelEditor : EditorWindow
                     targetElements[i].SetGoal((ShapeGoalElement)spawnedGrid);
             }
 
-            spawnedGrid.Construct(new Vector2Int(highPoint.x, highPoint.y));
+            spawnedGrid.Construct(new Vector2Int(spawnedGrid.gridData.gridSize.x, spawnedGrid.gridData.gridSize.y));
             spawnedGrid.style.marginRight = new StyleLength(10); // Add right margin
             spawnedGrid.style.marginBottom = new StyleLength(10); // Add bottom margin
 
