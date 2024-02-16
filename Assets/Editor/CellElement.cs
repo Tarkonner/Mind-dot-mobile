@@ -102,6 +102,7 @@ public class CellElement : Image
         partOfShapeGoals.Clear();
 
         //Remove dot
+        this.Remove(dotRef);
         dotRef = null;
         cellData.holding = null;
 
