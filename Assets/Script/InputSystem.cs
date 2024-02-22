@@ -190,6 +190,7 @@ public class InputSystem : MonoBehaviour
                     if (placeResult)
                     {
                         //Place piece on board
+                        holdingPiece.ChangeState(Piece.pieceStats.normal);
                         holdingPiece.GetComponent<Image>().raycastTarget = false;
                         holdingPiece = null;
                         canPlacePiece = true;
@@ -198,8 +199,7 @@ public class InputSystem : MonoBehaviour
                         break;
                     }
                 }
-            }
-            holdingPiece.ChangeState(Piece.pieceStats.normal);
+            }            
 
             if (!canPlacePiece)
             {

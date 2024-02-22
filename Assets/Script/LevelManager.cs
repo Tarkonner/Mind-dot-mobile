@@ -15,12 +15,19 @@ public class LevelManager : MonoBehaviour
     [SerializeField] private LevelSO[] levels;
 
     [Header("Testing")]
+    [SerializeField] bool loadTestlevel = false;
     [SerializeField] private LevelSO testLevel;
 
     private void Start()
     {
-        if(testLevel != null)
+#if (UNITY_EDITOR)
+        if(loadTestlevel && testLevel != null)
+        {
             LoadLevel(testLevel);
+            return;
+        }
+#endif
+        LoadLevel(levels[0]);
     }
 
     public void LoadLevel(LevelSO targetLevel)
