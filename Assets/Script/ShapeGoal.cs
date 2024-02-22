@@ -16,7 +16,6 @@ public class ShapeGoal : MonoBehaviour
 
     public bool completed { get; private set; } = false;
 
-    private List<Cell> cellList = new List<Cell>();
     private List<Dot> goalsDots = new List<Dot>();
     private List<Vector2> dotCoordinats = new List<Vector2>();  
 
@@ -107,10 +106,9 @@ public class ShapeGoal : MonoBehaviour
     }
     private bool CheckForPatternAtPosition(Board board, Vector2 currentPos)
     {
-        cellList.Clear();
         for (int i = 0; i < goalsDots.Count; i++)
         {
-            Vector2 assumedPos = new Vector2(currentPos.x, currentPos.y) + (dotCoordinats[i] - dotCoordinats[0]);
+            Vector2 assumedPos = new Vector2(currentPos.x, currentPos.y) + (dotCoordinats[i]);
             if ((int)assumedPos.x > board.grid.GetLength(0) - 1 || (int)assumedPos.y > board.grid.GetLength(1) - 1) 
                 return false;
             if (board.grid[(int)assumedPos.x, (int)assumedPos.y] == null) 
@@ -119,18 +117,13 @@ public class ShapeGoal : MonoBehaviour
             if (board.grid[(int)assumedPos.x, (int)assumedPos.y].occupying is Dot checkDot &&
                 checkDot.dotType == goalsDots[i].dotType)
             {
-                cellList.Add(board.grid[(int)assumedPos.x, (int)assumedPos.y]);
+
             }
             else
             {
                 return false;
             }
         }
-        //Act on cellList
-        //foreach (var cell in cellList)
-        //{
-        //    Debug.Log($"Pattern found in: {cell}");
-        //}
         return true;
     }
 }

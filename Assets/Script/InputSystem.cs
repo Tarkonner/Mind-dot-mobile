@@ -29,11 +29,6 @@ public class InputSystem : MonoBehaviour
     private RectTransform holdingPieceRect;
     private Transform takenFrom;
 
-    [Header("Goals")]
-    [SerializeField] private GameObject goalHolder;
-    [SerializeField] private Color uncompleteGoalColor;
-    [SerializeField] private Color completedGoalColor;
-
     [Header("Raycasting")]
     [SerializeField] GraphicRaycaster boardRaycast;
     [SerializeField] GraphicRaycaster piecesRaycast;
@@ -45,7 +40,12 @@ public class InputSystem : MonoBehaviour
     [SerializeField] RectTransform rotateLine;
     private Vector2 contactPosition;
     [SerializeField] float touchOffsetY = 50;
-    
+
+    //Event
+    public delegate void OnDotsChange();
+    public static event OnDotsChange onDotChange;
+
+
 
     private void Awake()
     {
@@ -216,24 +216,8 @@ public class InputSystem : MonoBehaviour
             holdingPiece.Rotate();
         }
     }
-    private bool CheckGoals()
+    private void CheckGoals()
     {
-        int completedGoals = 0;
-        ShapeGoal[] shapeGoals = goalHolder.GetComponentsInChildren<ShapeGoal>();
-        foreach (var child in shapeGoals)
-        {
-            if (child.CheckFulfilment(board))
-            {
-                completedGoals++;
-            }
-        }
-        if (completedGoals >= shapeGoals.Length)
-        {
-            return true;
-        }
-        else
-        {
-            return false;            
-        }
+        onDotChange?.Invoke();
     }
 }
