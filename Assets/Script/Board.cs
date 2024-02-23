@@ -1,6 +1,8 @@
 using System;
 using System.Collections.Generic;
 using UnityEngine;
+using DG.Tweening;
+using System.Collections;
 
 public class Board : MonoBehaviour
 {
@@ -18,6 +20,11 @@ public class Board : MonoBehaviour
     public Action onChange;
 
     [SerializeField] protected GameObject dotPrefab;
+
+    [Header("Animation")]
+    [SerializeField] private float cellAnimationTime = .2f;
+    [SerializeField] private float dotAnimationTime = .2f;
+    private List<Transform> dotsTransform = new List<Transform>();
 
 
     public void LoadLevel(LevelSO level)
@@ -44,6 +51,8 @@ public class Board : MonoBehaviour
                 piecePositions.Add(level.levelPieces[i].dotPositions[k] + level.levelPieces[i].gridPosRef);
         }
 
+        Sequence sequence = DOTween.Sequence();
+
         //Dots
         for (int x = 0; x < grid.GetLength(0); x++)
         {
@@ -56,6 +65,10 @@ public class Board : MonoBehaviour
                 //Make Cell
                 GameObject cellSpawn = Instantiate(cellPrefab, transform);
                 cellSpawn.name = $"Cell: {x}, {y}";
+
+                //Animate cell
+                cellSpawn.transform.localScale = Vector3.zero;
+                cellSpawn.transform.DOScale(1, .2f);
 
                 //Placement
                 Vector2 spawnPoint = new Vector2(
@@ -89,12 +102,29 @@ public class Board : MonoBehaviour
 
                 //Place on Board
                 PlaceDot(new Vector2Int(x, y), newDot);
+
+                //Ready to animate
+                spawn.transform.localScale = Vector2.zero;
+                dotsTransform.Add(spawn.transform);
             }
         }
 
         foreach (var item in level.levelPlaceGoals)
             PlaceGoal.MakeGoal(item, grid, placeGoalPrefab);
+
+        StartCoroutine(DotAnimation());
     }
+
+    #region Animations
+    IEnumerator DotAnimation()
+    {
+        yield return new WaitForSeconds(cellAnimationTime);
+        for (int i = 0; i < dotsTransform.Count; i++)
+        {
+            dotsTransform[i].DOScale(1, dotAnimationTime);
+        }
+    }
+    #endregion
 
     #region Board interaction
     public bool PlaceDot(Vector2Int coordinate, Dot targetDot)
