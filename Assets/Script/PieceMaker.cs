@@ -20,6 +20,14 @@ public class PieceMaker : MonoBehaviour
 
     public void MakePieces(LevelPiece[] levelsPieces)
     {
+        //Remove old level
+        //Background
+        for (int i = holder.transform.childCount - 1; i >= 0; i--)
+        {
+            Destroy(holder.transform.GetChild(i).gameObject);
+        }
+
+        //Calculation
         Vector2 offset;
         offset.y = 0;
         if (levelsPieces.Length == 1)

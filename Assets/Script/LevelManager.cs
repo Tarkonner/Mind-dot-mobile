@@ -16,12 +16,13 @@ public class LevelManager : MonoBehaviour
     [SerializeField] private GameObject goalHolder;
     [SerializeField] private Color uncompleteGoalColor;
     [SerializeField] private Color completedGoalColor;
-
     [SerializeField] private LevelSO[] levels;
 
     [Header("Testing")]
     [SerializeField] bool loadTestlevel = false;
     [SerializeField] private LevelSO testLevel;
+
+    public int targetLevel = 0;
 
     private void Start()
     {
@@ -33,7 +34,8 @@ public class LevelManager : MonoBehaviour
             return;
         }
 #endif
-        LoadLevel(levels[0]);
+        //Load first level
+        LoadLevel(levels[targetLevel]);
     }
 
     private void OnEnable()
@@ -65,7 +67,22 @@ public class LevelManager : MonoBehaviour
         }
         if (completedGoals >= shapeGoals.Length)
         {
-            Debug.Log("Level Complete");
+            //Tell test levels
+#if (UNITY_EDITOR)
+            if(testLevel)
+            {
+                Debug.Log("Complete level");
+            }
+#endif
+            targetLevel++;
+
+            if (targetLevel == levels.Length)
+                Debug.Log("All levels complete");
+            else
+            {
+                Debug.Log("Level Complete");
+                LoadLevel(levels[targetLevel]);
+            }
         }
     }
 }

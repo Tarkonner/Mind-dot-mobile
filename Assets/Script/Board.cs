@@ -19,8 +19,16 @@ public class Board : MonoBehaviour
 
     [SerializeField] protected GameObject dotPrefab;
 
+
     public void LoadLevel(LevelSO level)
     {
+        //Remove load level
+        for (int i = transform.childCount - 1; i >= 0; i--)
+        {
+            Destroy(transform.GetChild(i).gameObject);
+        }
+
+        //Calculations
         Vector2Int levelSize = new Vector2Int((int)level.levelGrid.boardSize.x, (int)level.levelGrid.boardSize.y);
         grid = new Cell[levelSize.x, levelSize.y];
 

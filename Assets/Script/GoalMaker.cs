@@ -5,18 +5,17 @@ using UnityEngine;
 public class GoalMaker : MonoBehaviour
 {
     [SerializeField] GameObject shapeGoalPrefab;
-    [SerializeField] Transform holder;
-   
+    [SerializeField] Transform holder;   
 
-    List<ShapeGoal> goals = new List<ShapeGoal>();
-
-    public void RemoveAllGoals()
-    {
-
-    }
 
     public void MakeGoals(LevelShapeGoal[] levelGoals)
     {
+        if(holder.transform.childCount > 0)
+        {
+            for (int i = holder.transform.childCount - 1; i >= 0; i--)
+                Destroy(holder.transform.GetChild(i).gameObject);
+        }
+
         for (int i = 0; i < levelGoals.Length; i++)
         {
             GameObject spawnedGoal = Instantiate(shapeGoalPrefab, holder);
