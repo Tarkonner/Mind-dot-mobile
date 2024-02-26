@@ -154,12 +154,11 @@ public class LevelEditor : EditorWindow
 
         CellElement blueprint = new CellElement(Vector2Int.zero, this);
         int gridSize = 7;
-        int spaceing = 2;
 
 
         // Set the width and height of the grid
-        grid.style.width = gridSize * blueprint.style.width.value.value + gridSize * spaceing; // cellWidth is the width of each cell
-        grid.style.height = gridSize * blueprint.style.height.value.value + gridSize * spaceing; // cellHeight is the height of each cell
+        grid.style.width = gridSize * blueprint.style.width.value.value + gridSize; // cellWidth is the width of each cell
+        grid.style.height = gridSize * blueprint.style.height.value.value + gridSize; // cellHeight is the height of each cell
 
         // Add cells to the grid
         for (int i = 0; i < 7; i++)
@@ -167,10 +166,6 @@ public class LevelEditor : EditorWindow
             for (int j = 0; j < 7; j++)
             {
                 var cellElement = new CellElement( new Vector2Int(j, i), this);
-
-                //Set spacing
-                cellElement.style.marginRight = new StyleLength(spaceing / 2);
-                cellElement.style.marginTop = new StyleLength(spaceing);
 
                 grid.Add(cellElement);
 
@@ -614,10 +609,10 @@ public class LevelEditor : EditorWindow
                 CellElement target = cells[y * 7 + x];
                 target.SetActiveState(true);
 
-                target.RemoveDot();
                 target.RemovePiece();
                 target.RemoveGoal();
                 target.RemovePlacementGoal();
+                target.RemoveDot();
             }
         }
 

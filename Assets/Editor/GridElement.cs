@@ -11,7 +11,6 @@ public class GridElement : VisualElement
     protected Image[,] images = null;
 
     protected int imageSize = 30;
-    protected int spacing = 3;
 
     public List<CellElement> siblings = new List<CellElement>();
 
@@ -27,7 +26,7 @@ public class GridElement : VisualElement
         style.justifyContent = Justify.SpaceAround;
 
         //Set sprite
-        cellBackground = Resources.Load<Sprite>("Square");
+        cellBackground = Resources.Load<Sprite>("GridElementSprite");
 
         // Add event handlers for mouse down and up events
         RegisterCallback<MouseDownEvent>(OnMouseDown);
@@ -42,8 +41,8 @@ public class GridElement : VisualElement
 
         images = new Image[gridData.gridSize.x, gridData.gridSize.y];
 
-        style.width = gridData.gridSize.x * imageSize + gridData.gridSize.x * spacing; // cellWidth is the width of each cell
-        style.height = gridData.gridSize.y * imageSize + gridData.gridSize.y * spacing; // cellHeight is the height of each cell
+        style.width = gridData.gridSize.x * imageSize + gridData.gridSize.x; // cellWidth is the width of each cell
+        style.height = gridData.gridSize.y * imageSize + gridData.gridSize.y; // cellHeight is the height of each cell
 
         for (int y = 0; y < gridData.gridSize.y; y++)
         {

@@ -413,11 +413,11 @@ PrefabInstance:
       objectReference: {fileID: 1522621926}
     - target: {fileID: 65025732663852158, guid: ece83fda2ae00364da4f4bd42689e64a, type: 3}
       propertyPath: loadTestlevel
-      value: 1
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 65025732663852158, guid: ece83fda2ae00364da4f4bd42689e64a, type: 3}
       propertyPath: levels.Array.size
-      value: 2
+      value: 3
       objectReference: {fileID: 0}
     - target: {fileID: 65025732663852158, guid: ece83fda2ae00364da4f4bd42689e64a, type: 3}
       propertyPath: completedGoalColor.a
@@ -441,6 +441,10 @@ PrefabInstance:
       objectReference: {fileID: 11400000, guid: adc369002334d104ab38463b49a6709e, type: 2}
     - target: {fileID: 65025732663852158, guid: ece83fda2ae00364da4f4bd42689e64a, type: 3}
       propertyPath: levels.Array.data[1]
+      value: 
+      objectReference: {fileID: 11400000, guid: 7ea5f124ce9821f43952939243bece79, type: 2}
+    - target: {fileID: 65025732663852158, guid: ece83fda2ae00364da4f4bd42689e64a, type: 3}
+      propertyPath: levels.Array.data[2]
       value: 
       objectReference: {fileID: 11400000, guid: ff587eb3b66f5164597b1bc2aa9c7e31, type: 2}
     - target: {fileID: 65025732663852158, guid: ece83fda2ae00364da4f4bd42689e64a, type: 3}

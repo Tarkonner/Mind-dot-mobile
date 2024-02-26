@@ -40,7 +40,7 @@ public class CellElement : Image
 
         // Create an Image to hold the sprite
         this.scaleMode = ScaleMode.ScaleToFit;
-        this.sprite = Resources.Load<Sprite>("Square");
+        this.sprite = Resources.Load<Sprite>("GridElementSprite");
 
         // Add event handlers for mouse down and up events
         RegisterCallback<MouseDownEvent>(OnMouseDown);
