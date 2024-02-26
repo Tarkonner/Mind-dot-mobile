@@ -17,6 +17,7 @@ public class LevelManager : MonoBehaviour
     [SerializeField] private Color uncompleteGoalColor;
     [SerializeField] private Color completedGoalColor;
     [SerializeField] private LevelSO[] levels;
+    private List<IGoal> allGoals = new List<IGoal>();
 
     [Header("Testing")]
     [SerializeField] bool loadTestlevel = false;
@@ -50,22 +51,29 @@ public class LevelManager : MonoBehaviour
     public void LoadLevel(LevelSO targetLevel)
     {
         board.LoadLevel(targetLevel); //Uses info from both board & pieces, so piece dots don't get loadet in
-        goalMaker.MakeGoals(targetLevel.levelShapeGoals);
+        goalMaker.MakeGoals(targetLevel);
         pieceHolder.MakePieces(targetLevel.levelPieces);
+
+        for (int i = 0; i < goalMaker.holder.childCount; i++)
+        {
+            IGoal check = goalMaker.holder.GetChild(i).GetComponent<CountPlacementGoals>();
+
+            if (check != null)
+                allGoals.Add(check);
+        }
     }
 
     public void GoalProgression()
     {
         int completedGoals = 0;
-        ShapeGoal[] shapeGoals = goalHolder.GetComponentsInChildren<ShapeGoal>();
-        foreach (var child in shapeGoals)
+        foreach (var child in allGoals)
         {
             if (child.CheckFulfilment(board))
             {
                 completedGoals++;
             }
         }
-        if (completedGoals >= shapeGoals.Length)
+        if (completedGoals >= allGoals.Count)
         {
             //Tell test levels
 #if (UNITY_EDITOR)

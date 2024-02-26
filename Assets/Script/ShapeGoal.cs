@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 
-public class ShapeGoal : MonoBehaviour
+public class ShapeGoal : MonoBehaviour, IGoal
 {
     [SerializeField] GameObject dotPrefab;
     [SerializeField] float spaceingBetweenDots = 100;
@@ -84,18 +84,17 @@ public class ShapeGoal : MonoBehaviour
         {
             for (int y = 0; y < board.grid.GetLength(1); y++)
             {
-                if (board.grid[x, y] == null) { continue; }
+                if (board.grid[x, y] == null) 
+                    continue;
 
-                if (board.grid[x, y].occupying is Dot currentDot)
+                if (board.grid[x, y].occupying is Dot currentDot && 
+                    currentDot.dotType == goalsDots[0].dotType)
                 {
-                    if (currentDot.dotType == goalsDots[0].dotType)
+                    if (CheckForPatternAtPosition(board, new Vector2(x, y)))
                     {
-                        if (CheckForPatternAtPosition(board, new Vector2(x, y)))
-                        {
-                            completed = true;
-                            background.color = completedColor;
-                            return true;
-                        }
+                        completed = true;
+                        background.color = completedColor;
+                        return true;
                     }
                 }
             }

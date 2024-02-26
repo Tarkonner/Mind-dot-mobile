@@ -6,16 +6,21 @@ using UnityEngine.UIElements;
 
 public class PlaceGoalElement : VisualElement
 {
-    public PlaceGoalData placeGoalData;
+    public PlaceGoalData placeGoalData = new PlaceGoalData();
 
+    //Editor
     public CellElement cellRef { get; private set; }
     private Image sprite;
 
     public PlaceGoalElement(DotType goalType, CellElement cell)
     {
+        //Data
         placeGoalData.goalType = goalType;
+        placeGoalData.cellData = cell.cellData;
+
         cellRef = cell;
 
+        //Setup
         sprite = new Image();
         sprite.sprite = Resources.Load<Sprite>("Triangle");
         style.width = 15;
@@ -72,7 +77,8 @@ public class PlaceGoalElement : VisualElement
     {
         if (cellRef.cellData.holding != null)
         {
-            if (placeGoalData.goalType == DotType.Null || placeGoalData.cellData.holding.dotType == placeGoalData.goalType)
+            if (placeGoalData.goalType == DotType.Null || 
+                placeGoalData.cellData.holding.dotType == placeGoalData.goalType)
             {
                 return true;
             }

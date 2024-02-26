@@ -439,7 +439,7 @@ public class LevelEditor : EditorWindow
         if (!placeGoalCells.Contains(cellElement))
         {
             placeGoalCells.Add(cellElement);
-            cellElement.AddPlacementGoal(0);
+            cellElement.AddPlacementGoal(DotType.Null);
         }
         else
         {

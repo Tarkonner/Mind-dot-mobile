@@ -1,6 +1,3 @@
-using System.Collections;
-using System.Collections.Generic;
-using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -8,7 +5,6 @@ public class PlaceGoal : MonoBehaviour
 {
     public DotType goalType;
     public Cell cell;
-    private static GameObject prefab;
 
     public PlaceGoal(DotType goalType, Cell cell)
     {
@@ -20,7 +16,7 @@ public class PlaceGoal : MonoBehaviour
     {
         if (cell.occupying is Dot dot)
         {
-            if (goalType==DotType.Null || dot.dotType==goalType)
+            if (goalType == DotType.Null || dot.dotType == goalType)
             {
                 cell.gameObject.GetComponent<Image>().color = Color.green;
                 return true;
@@ -29,14 +25,13 @@ public class PlaceGoal : MonoBehaviour
         cell.gameObject.GetComponent<Image>().color = Color.white;
         return false;
     }
-    public static void MakeGoal(LevelPlaceGoal levelPlaceGoal, Cell[,] grid, GameObject placeGoalPrefab)
+
+    public void MakeGoal(LevelPlaceGoal levelPlaceGoal, Cell[,] grid)
     {
-        prefab = placeGoalPrefab;
         Cell cell = grid[(int)levelPlaceGoal.goalPosition.x, (int)levelPlaceGoal.goalPosition.y];
 
-        GameObject newObject = Instantiate(prefab, cell.transform, false);
-        Image image = newObject.GetComponent<Image>();
-        PlaceGoal pG = newObject.GetComponent<PlaceGoal>();
+        Image image = GetComponent<Image>();
+        PlaceGoal pG = GetComponent<PlaceGoal>();
         image.rectTransform.localPosition = new Vector3(-image.rectTransform.sizeDelta.x, image.rectTransform.sizeDelta.y, 0);
         pG.cell = cell;
         pG.goalType = levelPlaceGoal.type;
@@ -45,13 +40,13 @@ public class PlaceGoal : MonoBehaviour
             case DotType.Null:
                 image.color = Color.gray;
                 break;
-            case DotType.Blue: 
+            case DotType.Blue:
                 image.color = Color.blue;
                 break;
-            case DotType.Red: 
+            case DotType.Red:
                 image.color = Color.red;
                 break;
-            case DotType.Yellow: 
+            case DotType.Yellow:
                 image.color = Color.yellow;
                 break;
         }

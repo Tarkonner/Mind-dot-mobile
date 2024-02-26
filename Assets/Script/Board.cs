@@ -6,6 +6,8 @@ using System.Collections;
 
 public class Board : MonoBehaviour
 {
+    public static Board Instance;
+
     [Header("Refrences")]
     [SerializeField] protected LevelManager levelManager;
 
@@ -14,8 +16,6 @@ public class Board : MonoBehaviour
     [SerializeField] protected GameObject cellPrefab;
     [SerializeField] protected float gridSize;
     [SerializeField] protected float spaceingBetweenCells = .2f;
-
-    [SerializeField] protected GameObject placeGoalPrefab;
 
     public Action onChange;
 
@@ -26,6 +26,11 @@ public class Board : MonoBehaviour
     [SerializeField] private float dotAnimationTime = .2f;
     private List<Transform> dotsTransform = new List<Transform>();
 
+
+    private void Awake()
+    {
+        Instance = this;
+    }
 
     public void LoadLevel(LevelSO level)
     {
@@ -108,9 +113,6 @@ public class Board : MonoBehaviour
                 dotsTransform.Add(spawn.transform);
             }
         }
-
-        foreach (var item in level.levelPlaceGoals)
-            PlaceGoal.MakeGoal(item, grid, placeGoalPrefab);
 
         StartCoroutine(DotAnimation());
     }
