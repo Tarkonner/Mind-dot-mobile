@@ -4,7 +4,7 @@ using UnityEngine;
 using DG.Tweening;
 using System.Collections;
 
-public class Board : MonoBehaviour
+public class Board : ScaleAnimations
 {
     public static Board Instance;
 
@@ -22,9 +22,11 @@ public class Board : MonoBehaviour
     [SerializeField] protected GameObject dotPrefab;
 
     [Header("Animation")]
-    [SerializeField] private float cellAnimationTime = .2f;
-    [SerializeField] private float dotAnimationTime = .2f;
-    private List<Transform> dotsTransform = new List<Transform>();
+    [SerializeField] private float cellAnimationTime = .5f;
+    [SerializeField] private float dotAnimationTime = .5f;
+    [SerializeField] private float animateOutTime = .5f;
+    private List<GameObject> allDots = new List<GameObject>();
+    private List<GameObject> allCells = new List<GameObject>();
 
 
     private void Awake()
@@ -34,10 +36,26 @@ public class Board : MonoBehaviour
 
     public void LoadLevel(LevelSO level)
     {
+        if (transform.childCount > 0)
+        {
+            ScaleOutLiniar(allDots, animateOutTime);
+            StartCoroutine(MakeBoard(animateOutTime, level));
+        }
+        else
+            StartCoroutine(MakeBoard(0, level));
+    }
+
+    IEnumerator MakeBoard(float waitTime, LevelSO level)
+    {
+        yield return new WaitForSeconds(waitTime + .05f);
+
         //Remove load level
         for (int i = transform.childCount - 1; i >= 0; i--)
         {
             Destroy(transform.GetChild(i).gameObject);
+
+            allDots.Clear();
+            allCells.Clear();
         }
 
         //Calculations
@@ -56,8 +74,6 @@ public class Board : MonoBehaviour
                 piecePositions.Add(level.levelPieces[i].dotPositions[k] + level.levelPieces[i].gridPosRef);
         }
 
-        Sequence sequence = DOTween.Sequence();
-
         //Dots
         for (int x = 0; x < grid.GetLength(0); x++)
         {
@@ -72,8 +88,7 @@ public class Board : MonoBehaviour
                 cellSpawn.name = $"Cell: {x}, {y}";
 
                 //Animate cell
-                cellSpawn.transform.localScale = Vector3.zero;
-                cellSpawn.transform.DOScale(1, .2f);
+                allCells.Add(cellSpawn);
 
                 //Placement
                 Vector2 spawnPoint = new Vector2(
@@ -110,9 +125,11 @@ public class Board : MonoBehaviour
 
                 //Ready to animate
                 spawn.transform.localScale = Vector2.zero;
-                dotsTransform.Add(spawn.transform);
+                allDots.Add(spawn);
             }
         }
+
+        ScaleInLiniar(allCells, cellAnimationTime);
 
         StartCoroutine(DotAnimation());
     }
@@ -121,10 +138,7 @@ public class Board : MonoBehaviour
     IEnumerator DotAnimation()
     {
         yield return new WaitForSeconds(cellAnimationTime);
-        for (int i = 0; i < dotsTransform.Count; i++)
-        {
-            dotsTransform[i].DOScale(1, dotAnimationTime);
-        }
+        ScaleInLiniar(allDots, dotAnimationTime);
     }
     #endregion
 

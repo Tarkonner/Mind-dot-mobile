@@ -269,8 +269,12 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: da3ce20a0f15c524d933e87fe4c2c897, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  placeGoalCounter: {fileID: 7556732912248538427, guid: 88d40a2c5c8164343b218b1f9f95fc90, type: 3}
+  placeGoalPrefab: {fileID: 5813344588998344683, guid: bc22aae70f784e24ba6a89ca95c441fe, type: 3}
   shapeGoalPrefab: {fileID: 6877320353712221094, guid: 9ef2906d5d53e144d8029e17e3e8f875, type: 3}
   holder: {fileID: 161695131}
+  animateInTime: 0.5
+  animateOutTime: 0.5
 --- !u!224 &1255056447 stripped
 RectTransform:
   m_CorrespondingSourceObject: {fileID: 8226356501158729128, guid: 8cbdc0a76d6bc7148968a7757584fc92, type: 3}
@@ -297,6 +301,8 @@ MonoBehaviour:
   piecePrefab: {fileID: 8531125797756845785, guid: 9d51e8cd845c8f34cae447f656c3388d, type: 3}
   pieceBackground: {fileID: 4256182676062539381, guid: 8bf3342578719b6409d706552447c814, type: 3}
   holder: {fileID: 1255056447}
+  animateInTime: 0.5
+  animateOutTime: 0.5
 --- !u!1 &1536273094
 GameObject:
   m_ObjectHideFlags: 0
@@ -398,7 +404,7 @@ PrefabInstance:
     - target: {fileID: 65025732663852158, guid: ece83fda2ae00364da4f4bd42689e64a, type: 3}
       propertyPath: testLevel
       value: 
-      objectReference: {fileID: 11400000, guid: adc369002334d104ab38463b49a6709e, type: 2}
+      objectReference: {fileID: 11400000, guid: 2baa8439d516dd548bc7e53872d3b13f, type: 2}
     - target: {fileID: 65025732663852158, guid: ece83fda2ae00364da4f4bd42689e64a, type: 3}
       propertyPath: goalHolder
       value: 
@@ -442,11 +448,11 @@ PrefabInstance:
     - target: {fileID: 65025732663852158, guid: ece83fda2ae00364da4f4bd42689e64a, type: 3}
       propertyPath: levels.Array.data[1]
       value: 
-      objectReference: {fileID: 11400000, guid: 7ea5f124ce9821f43952939243bece79, type: 2}
+      objectReference: {fileID: 11400000, guid: ff587eb3b66f5164597b1bc2aa9c7e31, type: 2}
     - target: {fileID: 65025732663852158, guid: ece83fda2ae00364da4f4bd42689e64a, type: 3}
       propertyPath: levels.Array.data[2]
       value: 
-      objectReference: {fileID: 11400000, guid: ff587eb3b66f5164597b1bc2aa9c7e31, type: 2}
+      objectReference: {fileID: 11400000, guid: 7ea5f124ce9821f43952939243bece79, type: 2}
     - target: {fileID: 65025732663852158, guid: ece83fda2ae00364da4f4bd42689e64a, type: 3}
       propertyPath: uncompleteGoalColor.a
       value: 1
