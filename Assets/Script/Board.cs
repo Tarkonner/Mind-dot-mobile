@@ -152,6 +152,10 @@ public class Board : ScaleAnimations
 
             targetDot.transform.position = targetCell.transform.position;
             targetDot.cell = targetCell.GetComponent<Cell>();
+
+            //Animation
+            allDots.Add(targetDot.gameObject);
+
             return true;
         }
         else

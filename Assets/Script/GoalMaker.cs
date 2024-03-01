@@ -38,6 +38,8 @@ public class GoalMaker : ScaleAnimations
         {
             for (int i = holder.transform.childCount - 1; i >= 0; i--)
                 Destroy(holder.transform.GetChild(i).gameObject);
+
+            goalsToAnimate.Clear();
         }
 
         //Placement goal

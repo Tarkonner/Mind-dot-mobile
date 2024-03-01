@@ -50,16 +50,29 @@ public class LevelManager : MonoBehaviour
 
     public void LoadLevel(LevelSO targetLevel)
     {
+        //Clear old
+        allGoals.Clear();
+
         board.LoadLevel(targetLevel); //Uses info from both board & pieces, so piece dots don't get loadet in
         goalMaker.MakeGoals(targetLevel);
         pieceHolder.MakePieces(targetLevel.levelPieces);
 
+        StartCoroutine(FixUIDelay());
+    }
+
+    IEnumerator FixUIDelay()
+    {
+        yield return new WaitForSeconds(0.1f);
+
         for (int i = 0; i < goalMaker.holder.childCount; i++)
         {
-            IGoal check = goalMaker.holder.GetChild(i).GetComponent<CountPlacementGoals>();
+            IGoal check = goalMaker.holder.GetChild(i).GetComponent<IGoal>();
 
             if (check != null)
+            {
+                Debug.Log(check);
                 allGoals.Add(check);
+            }
         }
     }
 
@@ -73,13 +86,14 @@ public class LevelManager : MonoBehaviour
                 completedGoals++;
             }
         }
-        if (completedGoals >= allGoals.Count)
+        if (completedGoals == allGoals.Count)
         {
             //Tell test levels
 #if (UNITY_EDITOR)
-            if(testLevel)
+            if(loadTestlevel)
             {
                 Debug.Log("Complete level");
+                return;
             }
 #endif
             targetLevel++;

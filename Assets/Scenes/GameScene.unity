@@ -418,6 +418,10 @@ PrefabInstance:
       value: 
       objectReference: {fileID: 1522621926}
     - target: {fileID: 65025732663852158, guid: ece83fda2ae00364da4f4bd42689e64a, type: 3}
+      propertyPath: targetLevel
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 65025732663852158, guid: ece83fda2ae00364da4f4bd42689e64a, type: 3}
       propertyPath: loadTestlevel
       value: 0
       objectReference: {fileID: 0}

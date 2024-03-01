@@ -15,6 +15,7 @@ public class PieceMaker : ScaleAnimations
     [Header("Animations")]
     [SerializeField] private float animateInTime = .5f;
     [SerializeField] private float animateOutTime = .5f;
+    private List<GameObject> backgroundToAnimate = new List<GameObject>();   
     private List<GameObject> piecesToAnimate = new List<GameObject>();
 
     public void MakePieces(LevelPiece[] levelsPieces)
@@ -22,6 +23,7 @@ public class PieceMaker : ScaleAnimations
         //Remove old level
         if (holder.transform.childCount > 0)
         {
+            ScaleOutLiniar(backgroundToAnimate, animateOutTime);
             ScaleOutLiniar(piecesToAnimate, animateOutTime);
             StartCoroutine(MakePieces(animateOutTime, levelsPieces));
         }
@@ -37,6 +39,8 @@ public class PieceMaker : ScaleAnimations
         for (int i = holder.transform.childCount - 1; i >= 0; i--)
         {
             Destroy(holder.transform.GetChild(i).gameObject);
+            backgroundToAnimate.Clear();
+            piecesToAnimate.Clear();
         }
 
         //Calculation
@@ -69,10 +73,11 @@ public class PieceMaker : ScaleAnimations
             piece.ChangeState(Piece.pieceStats.small);
 
             //Animate
-            piecesToAnimate.Add(spawnedBackground);
+            piecesToAnimate.Add(spawnedPiece);
+            backgroundToAnimate.Add(spawnedBackground);
         }
 
         //Animation
-        ScaleInLiniar(piecesToAnimate, animateInTime);
+        ScaleInLiniar(backgroundToAnimate, animateInTime);
     }
 }
