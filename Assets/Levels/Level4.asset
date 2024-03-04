@@ -14,32 +14,39 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   levelTitle: Level4
   levelGrid:
-    dots: 030000000200000001000000030000000000000001000000030000000200000001000000
+    dots: 030000000200000001000000030000000200000001000000030000000200000001000000
     activeCells: 010101010101010101
     boardSize: {x: 3, y: 3}
   levelPieces:
   - dotPositions:
-    - {x: 1, y: 0}
     - {x: 0, y: 1}
-    - {x: 1, y: 2}
-    - {x: 2, y: 1}
-    dotTypes: 02000000030000000200000001000000
-    rotatable: 0
+    - {x: 1, y: 0}
+    dotTypes: 0300000002000000
+    rotatable: 1
     gridPosRef: {x: 0, y: 0}
-    pieceSize: {x: 3, y: 3}
+    pieceSize: {x: 2, y: 2}
     startRotation: 2
+  - dotPositions:
+    - {x: 0, y: 1}
+    - {x: 1, y: 0}
+    dotTypes: 0200000001000000
+    rotatable: 1
+    gridPosRef: {x: 1, y: 1}
+    pieceSize: {x: 2, y: 2}
+    startRotation: 0
   levelShapeGoals:
   - goalSpecifications:
     - {x: 0, y: 0}
-    - {x: 0, y: 1}
     - {x: 0, y: 2}
+    - {x: 0, y: 1}
+    - {x: 1, y: 0}
+    - {x: 1, y: 1}
     - {x: 1, y: 2}
     - {x: 2, y: 2}
     - {x: 2, y: 1}
     - {x: 2, y: 0}
-    - {x: 1, y: 0}
-    goalDots: 0300000003000000030000000200000001000000010000000100000002000000
+    goalDots: 030000000300000003000000020000000200000002000000010000000100000001000000
     gridPosRef: {x: 0, y: 0}
     goalSize: {x: 3, y: 3}
   levelPlaceGoals: []
-  pieceStartRotation: 02000000
+  pieceStartRotation: 0200000000000000
