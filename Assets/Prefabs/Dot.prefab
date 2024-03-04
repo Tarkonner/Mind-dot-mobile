@@ -88,5 +88,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e71be0d28f80a4b48a693543a03148fb, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  redColor: {r: 0.9960785, g: 0.3019608, b: 0.29411766, a: 1}
+  yellowColor: {r: 0.9960785, g: 0.86274517, b: 0.4666667, a: 1}
+  blueColor: {r: 0, g: 0.9607844, b: 0.9960785, a: 1}
   dotType: 0
   parentPiece: {fileID: 0}
+  relativePosition: {x: 0, y: 0}
+  cell: {fileID: 0}

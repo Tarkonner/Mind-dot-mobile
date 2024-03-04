@@ -5,6 +5,11 @@ using UnityEngine.UI;
 
 public class Dot : MonoBehaviour, IOccupying
 {
+    [Header("Colors")]
+    public Color redColor;
+    public Color yellowColor;
+    public Color blueColor;
+
     public DotType dotType;
 
     private bool isConnected;
@@ -31,13 +36,13 @@ public class Dot : MonoBehaviour, IOccupying
         switch (dotType)
         {
             case DotType.Red:
-                renderer.color = Color.red;
+                renderer.color = redColor;
                 break;
             case DotType.Blue:
-                renderer.color = Color.blue;
+                renderer.color = blueColor;
                 break;
             case DotType.Yellow:
-                renderer.color = Color.yellow;
+                renderer.color = yellowColor;
                 break;
         }
     }
