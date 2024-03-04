@@ -56,28 +56,25 @@ public class LevelManager : MonoBehaviour
         board.LoadLevel(targetLevel); //Uses info from both board & pieces, so piece dots don't get loadet in
         goalMaker.MakeGoals(targetLevel);
         pieceHolder.MakePieces(targetLevel.levelPieces);
-
-        StartCoroutine(FixUIDelay());
-    }
-
-    IEnumerator FixUIDelay()
-    {
-        yield return new WaitForSeconds(0.1f);
-
-        for (int i = 0; i < goalMaker.holder.childCount; i++)
-        {
-            IGoal check = goalMaker.holder.GetChild(i).GetComponent<IGoal>();
-
-            if (check != null)
-            {
-                Debug.Log(check);
-                allGoals.Add(check);
-            }
-        }
     }
 
     public void GoalProgression()
     {
+        //See how many goals
+        if(allGoals.Count == 0)
+        {
+            for (int i = 0; i < goalMaker.holder.childCount; i++)
+            {
+                IGoal check = goalMaker.holder.GetChild(i).GetComponent<IGoal>();
+
+                if (check != null)
+                {
+                    Debug.Log(check);
+                    allGoals.Add(check);
+                }
+            }
+        }
+
         int completedGoals = 0;
         foreach (var child in allGoals)
         {

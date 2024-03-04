@@ -66,6 +66,9 @@ public class LevelSO : ScriptableObject
     {
         //Rotation
         for (int i = 0; i < pieceStartRotation.Length; i++)
-            levelPieces[i].startRotation = pieceStartRotation[i];
+        {
+            if (levelPieces[i].rotatable)
+                levelPieces[i].startRotation = pieceStartRotation[i];
+        }
     }
 }

@@ -11,12 +11,16 @@ public class UILine : Graphic
     public float lineWidth;
 
     private VertexHelper vh;
-    public void Initialzie(RectTransform startPoint, RectTransform endPoint, float lineWidth)
+    public void Initialzie(RectTransform startPoint, RectTransform endPoint, float lineWidth, bool rotatebul = true)
     {
         this.startPoint = startPoint;
         this.endPoint = endPoint;
         this.lineWidth = lineWidth;
-        color = Color.black;
+
+        if(rotatebul)
+            color = Color.black;
+        else 
+            color = Color.white;
     }
 
     protected override void OnPopulateMesh(VertexHelper vh)

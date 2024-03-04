@@ -427,7 +427,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 65025732663852158, guid: ece83fda2ae00364da4f4bd42689e64a, type: 3}
       propertyPath: levels.Array.size
-      value: 3
+      value: 6
       objectReference: {fileID: 0}
     - target: {fileID: 65025732663852158, guid: ece83fda2ae00364da4f4bd42689e64a, type: 3}
       propertyPath: completedGoalColor.a
@@ -455,6 +455,18 @@ PrefabInstance:
       objectReference: {fileID: 11400000, guid: ff587eb3b66f5164597b1bc2aa9c7e31, type: 2}
     - target: {fileID: 65025732663852158, guid: ece83fda2ae00364da4f4bd42689e64a, type: 3}
       propertyPath: levels.Array.data[2]
+      value: 
+      objectReference: {fileID: 11400000, guid: 2b840989fbe154541a3c946e45eb5e9b, type: 2}
+    - target: {fileID: 65025732663852158, guid: ece83fda2ae00364da4f4bd42689e64a, type: 3}
+      propertyPath: levels.Array.data[3]
+      value: 
+      objectReference: {fileID: 11400000, guid: 1964587d6bb24044ea986acd0ca70fe1, type: 2}
+    - target: {fileID: 65025732663852158, guid: ece83fda2ae00364da4f4bd42689e64a, type: 3}
+      propertyPath: levels.Array.data[4]
+      value: 
+      objectReference: {fileID: 11400000, guid: 21ec8894f4be4e94c99872e6959a1e9f, type: 2}
+    - target: {fileID: 65025732663852158, guid: ece83fda2ae00364da4f4bd42689e64a, type: 3}
+      propertyPath: levels.Array.data[5]
       value: 
       objectReference: {fileID: 11400000, guid: 7ea5f124ce9821f43952939243bece79, type: 2}
     - target: {fileID: 65025732663852158, guid: ece83fda2ae00364da4f4bd42689e64a, type: 3}

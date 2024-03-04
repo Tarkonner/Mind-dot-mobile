@@ -73,6 +73,8 @@ public class Piece : MonoBehaviour, IDragHandler
 
     public void LoadPiece(LevelPiece targetPiece)
     {
+        rotatable = targetPiece.rotatable;
+
         //Lines
         lineHolder = new GameObject();
         lineHolder.transform.SetParent(transform, false);
@@ -210,7 +212,7 @@ public class Piece : MonoBehaviour, IDragHandler
         //Line
         UILine uiLine = newObject.AddComponent<UILine>();
         connections.Add(uiLine);
-        uiLine.Initialzie(dot1Rect, dot2Rect, lineWidth);
+        uiLine.Initialzie(dot1Rect, dot2Rect, lineWidth, rotatable);
         dot1.IsConnected = true;
         dot2.IsConnected = true;
     }
