@@ -6,7 +6,7 @@ namespace SharedData
 {
     public class PieceData : GridData
     {
-        public bool canRotate = false;
+        public bool canRotate = true;
     }
 
 }
