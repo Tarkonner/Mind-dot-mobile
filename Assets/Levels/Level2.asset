@@ -26,7 +26,20 @@ MonoBehaviour:
     rotatable: 1
     gridPosRef: {x: 0, y: 0}
     pieceSize: {x: 3, y: 3}
-    startRotation: 3
-  levelShapeGoals: []
+    startRotation: 2
+  levelShapeGoals:
+  - goalSpecifications:
+    - {x: 0, y: 0}
+    - {x: 0, y: 1}
+    - {x: 0, y: 2}
+    - {x: 1, y: 2}
+    - {x: 1, y: 1}
+    - {x: 1, y: 0}
+    - {x: 2, y: 0}
+    - {x: 2, y: 1}
+    - {x: 2, y: 2}
+    goalDots: 030000000300000003000000020000000200000002000000010000000100000001000000
+    gridPosRef: {x: 0, y: 0}
+    goalSize: {x: 3, y: 3}
   levelPlaceGoals: []
-  pieceStartRotation: 03000000
+  pieceStartRotation: 02000000

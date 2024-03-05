@@ -17,24 +17,17 @@ public class ShapeGoal : MonoBehaviour, IGoal
     public bool completed { get; private set; } = false;
 
     private List<Dot> goalsDots = new List<Dot>();
-    private List<Vector2> dotCoordinats = new List<Vector2>();  
+    private List<Vector2> dotCoordinats = new List<Vector2>();
 
+    [Header("Color")]
     private Image background;
-    private Color uncompletedColor;
-    private Color completedColor;
+    [SerializeField] private Color uncompletedColor;
+    [SerializeField] private Color completedColor;
 
     public void LoadGoal(LevelShapeGoal targetGoal)
     {
         for (int i = 0; i < targetGoal.goalSpecifications.Length; i++)
         {
-            //Set position
-            Vector2 offset = new Vector2((targetGoal.goalSize.x - 1) * 0.5f, (targetGoal.goalSize.y - 1) * 0.5f);
-            GameObject spawnedDot = Instantiate(dotPrefab, transform);
-            RectTransform dotRec = spawnedDot.GetComponent<RectTransform>();
-            dotRec.anchoredPosition = new Vector2(
-                targetGoal.goalSpecifications[i].x * spaceingBetweenDots - offset.x * spaceingBetweenDots,
-                targetGoal.goalSpecifications[i].y * spaceingBetweenDots - offset.y * spaceingBetweenDots);
-
             //Find highets & lowest
             if (targetGoal.goalSpecifications[i].x > goalMaxX)
                 goalMaxX = (int)targetGoal.goalSpecifications[i].x;
@@ -42,39 +35,40 @@ public class ShapeGoal : MonoBehaviour, IGoal
                 goalMaxY = (int)targetGoal.goalSpecifications[i].y;
 
             //Setup dot
+            GameObject spawnedDot = Instantiate(dotPrefab, transform);
             Dot d = spawnedDot.GetComponent<Dot>();
             d.Setup(targetGoal.goalDots[i]);
             goalsDots.Add(d);
             dotCoordinats.Add(new Vector2(targetGoal.goalSpecifications[i].x, targetGoal.goalSpecifications[i].y));
+
+            //Transform
+            //position
+            Vector2 offset = new Vector2((targetGoal.goalSize.x - 1) * 0.5f, (targetGoal.goalSize.y - 1) * 0.5f);
+            RectTransform dotRec = spawnedDot.GetComponent<RectTransform>();
+            dotRec.anchoredPosition = new Vector2(
+                targetGoal.goalSpecifications[i].x * spaceingBetweenDots - offset.x * spaceingBetweenDots,
+                targetGoal.goalSpecifications[i].y * spaceingBetweenDots - offset.y * spaceingBetweenDots);
+            //Scale
+            goalsizeX = goalMaxX + 1;
+            goalsizeY = goalMaxY + 1;
+            RectTransform goalRect = gameObject.GetComponent<RectTransform>();
+            //The dots need to be scaled according to how many can fit within the square
+            //The +1 is to account for the 0-indexed grid position.
+            int detSize = Mathf.Max(new int[] { goalsizeX, goalsizeY });
+            for (int h = 0; h < goalsDots.Count; h++)
+            {
+                RectTransform dotRect = goalsDots[h].GetComponent<RectTransform>();
+                dotRect.sizeDelta = goalRect.sizeDelta / detSize;
+                dotRect.anchoredPosition = goalRect.anchoredPosition + (dotCoordinats[h] -
+                    new Vector2(goalsizeX / 2 - 0.5f * ((goalsizeX + 1) % 2), goalsizeY / 2 - 0.5f * ((goalsizeY + 1) % 2))) * dotRect.sizeDelta;
+            }
         }
     }
 
-    void Start()
+    private void Awake()
     {
-        goalsizeX = goalMaxX + 1;
-        goalsizeY = goalMaxY + 1;
-
-        RectTransform goalRect = gameObject.GetComponent<RectTransform>();
-        //The dots need to be scaled according to how many can fit within the square
-        //The +1 is to account for the 0-indexed grid position.
-        int detSize = Mathf.Max(new int[] { goalsizeX, goalsizeY });
-        for (int i = 0; i < goalsDots.Count; i++)
-        {
-            RectTransform dotRect = goalsDots[i].GetComponent<RectTransform>();
-            dotRect.sizeDelta = goalRect.sizeDelta / detSize;
-            dotRect.anchoredPosition = goalRect.anchoredPosition + (dotCoordinats[i] -
-                new Vector2(goalsizeX / 2 - 0.5f * ((goalsizeX + 1) % 2), goalsizeY / 2 - 0.5f * ((goalsizeY + 1) % 2))) * dotRect.sizeDelta;
-        }
-
+        //Background
         background = GetComponent<Image>();
-        if (uncompletedColor == Color.clear)
-        {
-            uncompletedColor = new Color(0.75f, 0.75f, 0.75f, 1);
-        }
-        if (completedColor == Color.clear)
-        {
-            completedColor = new Color(0.1f, 0.9f, 0.2f, 1);
-        }
         background.color = uncompletedColor;
     }
 
