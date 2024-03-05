@@ -8,6 +8,8 @@ using UnityEngine.UIElements;
 
 public class LevelEditor : EditorWindow
 {
+    public VisualTreeAsset styleSheet;
+
     //Editor
     VisualElement rightPanel;
     VisualElement grid;
@@ -61,138 +63,153 @@ public class LevelEditor : EditorWindow
     }
 
 
+    public void OnEnable()
+    {
+        rootVisualElement.Add(styleSheet.Instantiate());
+
+        //Setup
+        Button test = rootVisualElement.Q<Button>();
+        test.clickable.clicked += () => { Debug.Log("Test"); }; 
+
+    }
+
     public void CreateGUI()
     {
-        //Create buttons
-        //Cells
-        cellButton = new Button(() => { editTypeIndex = 0; ChangeButtonColor(cellButton); }) { text = "Turn cells on & off" };
-        //Dots
-        redDotButton = new Button(() => { editTypeIndex = 1; dotIndex = 0; ChangeButtonColor(redDotButton); }) { text = "Red Dot" };
-        blueDotButton = new Button(() => { editTypeIndex = 1; dotIndex = 1; ChangeButtonColor(blueDotButton); }) { text = "Blue Dot" };
-        yellowDotButton = new Button(() => { editTypeIndex = 1; dotIndex = 2; ChangeButtonColor(yellowDotButton); }) { text = "Yellow Dot" };
-        //Pieces
-        choosePieceButton = new Button(() => { editTypeIndex = 5; ChangeButtonColor(choosePieceButton); }) { text = "Mark piece dots" };
-        changeRotationStateButton = new Button(() => { editTypeIndex = 9; ChangeButtonColor(changeRotationStateButton); }) { text = "Change rotation setting" };
-        removePieceButton = new Button(() => { editTypeIndex = 7; ChangeButtonColor(removePieceButton); }) { text = "Remove piece" };
-        //Goal
-        chooseGoalButton = new Button(() => { editTypeIndex = 6; ChangeButtonColor(chooseGoalButton); }) { text = "Mark shape goal dots" };
-        removeGoalButton = new Button(() => { editTypeIndex = 8; ChangeButtonColor(removeGoalButton); }) { text = "Remove Shape Goal" };
+        //VisualElement root = new VisualElement();
+        //VisualElement sheet = new VisualElement();
+        //sheet = styleSheet.Instantiate();
+        //root.Add(sheet);
+
+        ////Create buttons
+        ////Cells
+        //cellButton = new Button(() => { editTypeIndex = 0; ChangeButtonColor(cellButton); }) { text = "Turn cells on & off" };
+        ////Dots
+        //redDotButton = new Button(() => { editTypeIndex = 1; dotIndex = 0; ChangeButtonColor(redDotButton); }) { text = "Red Dot" };
+        //blueDotButton = new Button(() => { editTypeIndex = 1; dotIndex = 1; ChangeButtonColor(blueDotButton); }) { text = "Blue Dot" };
+        //yellowDotButton = new Button(() => { editTypeIndex = 1; dotIndex = 2; ChangeButtonColor(yellowDotButton); }) { text = "Yellow Dot" };
+        ////Pieces
+        //choosePieceButton = new Button(() => { editTypeIndex = 5; ChangeButtonColor(choosePieceButton); }) { text = "Mark piece dots" };
+        //changeRotationStateButton = new Button(() => { editTypeIndex = 9; ChangeButtonColor(changeRotationStateButton); }) { text = "Change rotation setting" };
+        //removePieceButton = new Button(() => { editTypeIndex = 7; ChangeButtonColor(removePieceButton); }) { text = "Remove piece" };
+        ////Goal
+        //chooseGoalButton = new Button(() => { editTypeIndex = 6; ChangeButtonColor(chooseGoalButton); }) { text = "Mark shape goal dots" };
+        //removeGoalButton = new Button(() => { editTypeIndex = 8; ChangeButtonColor(removeGoalButton); }) { text = "Remove Shape Goal" };
 
 
-        // Create a two-pane view with the left pane being fixed with
-        var splitView = new TwoPaneSplitView(0, 250, TwoPaneSplitViewOrientation.Horizontal);
-        // Add the panel to the visual tree by adding it as a child to the root element
-        rootVisualElement.Add(splitView);
+        //// Create a two-pane view with the left pane being fixed with
+        //var splitView = new TwoPaneSplitView(0, 250, TwoPaneSplitViewOrientation.Horizontal);
+        //// Add the panel to the visual tree by adding it as a child to the root element
+        //rootVisualElement.Add(splitView);
 
-        // Create a ScrollView for the left panel
-        var scrollView = new ScrollView(ScrollViewMode.Horizontal);
-        scrollView.name = "Left Scroll View";
-             
-        // A TwoPaneSplitView always needs exactly two child elements
-        var leftPanel = new ListViewContainer();
-        leftPanel.style.width = 250;
+        //// Create a ScrollView for the left panel
+        //var scrollView = new ScrollView(ScrollViewMode.Horizontal);
+        //scrollView.name = "Left Scroll View";
 
-        // Add the left panel to the ScrollView
-        scrollView.Add(leftPanel);
+        //// A TwoPaneSplitView always needs exactly two child elements
+        //var leftPanel = new ListViewContainer();
+        //leftPanel.style.width = 250;
 
-        // Add the ScrollView to the split view
-        splitView.Add(scrollView);
+        //// Add the left panel to the ScrollView
+        //scrollView.Add(leftPanel);
 
-        //Right panel
-        rightPanel = new ListViewContainer();
-        splitView.Add(rightPanel);
+        //// Add the ScrollView to the split view
+        //splitView.Add(scrollView);
 
-
-        //Left planel
-        //Grid
-        leftPanel.Add(new Label("Grid size"));
-        leftPanel.Add(cellButton);
-        horizontal = new IntegerField("Horizontal", 7);
-        leftPanel.Add(horizontal);
-        vertical = new IntegerField("Vertical", 7);
-        leftPanel.Add(vertical);
-        leftPanel.Add(new Button(() => { ResizeGrid(); }) { text = "Resize grid" });
-        //Dots
-        leftPanel.Add(new Label("Dots"));
-        leftPanel.Add(redDotButton);
-        leftPanel.Add(blueDotButton);
-        leftPanel.Add(yellowDotButton);
-        //Pieces
-        leftPanel.Add(new Label("Pieces"));
-        leftPanel.Add(choosePieceButton);
-        leftPanel.Add(new Button(() => { MakePiece(); }) { text = "Make piece" });
-        leftPanel.Add(changeRotationStateButton) ;
-        leftPanel.Add(removePieceButton);
-        //Goals
-        leftPanel.Add(new Label("Goals"));
-        leftPanel.Add(chooseGoalButton);
-        leftPanel.Add(new Button(() => { MakeShapeGoal(); }) { text = "Make Shape Goal" });
-        leftPanel.Add(removeGoalButton);
-        leftPanel.Add(new Button(() => { editTypeIndex = 8; }) { text = "Remove Shape Goal" });
-        leftPanel.Add(new Button(() => { editTypeIndex = 10; }) { text = "Mark Placement Goal" });
-        //Board
-        leftPanel.Add(new Label("Board"));
-        leftPanel.Add(new Button(() => { ClearAll(); }) { text = "Reset board" });
-
-        //Save and Load
-        leftPanel.Add(new Label("Save & Load"));
-        savedFieldName = new TextField();
-        savedFieldName.label = "Save file name";
-        leftPanel.Add(savedFieldName);
-        leftPanel.Add(new Button(() => { TrySave(); }) { text = "Save Level" });
-        leftPanel.Add(new Button(() => { LoadLevel(); }) { text = "Load level" });
-        levelField = new ObjectField();
-        levelField.objectType = typeof(LevelSO);
-        leftPanel.Add(levelField);
-
-        //Right panel
-        // Create a grid layout
-        grid = new VisualElement();
-        grid.style.flexDirection = FlexDirection.Row;
-        grid.style.flexWrap = Wrap.Wrap;
-        grid.style.justifyContent = Justify.SpaceAround; // Optional: Add space around the items
-
-        CellElement blueprint = new CellElement(Vector2Int.zero, this);
-        int gridSize = 7;
+        ////Right panel
+        //rightPanel = new ListViewContainer();
+        //splitView.Add(rightPanel);
 
 
-        // Set the width and height of the grid
-        grid.style.width = gridSize * blueprint.style.width.value.value + gridSize; // cellWidth is the width of each cell
-        grid.style.height = gridSize * blueprint.style.height.value.value + gridSize; // cellHeight is the height of each cell
+        ////Left planel
+        ////Grid
+        //leftPanel.Add(new Label("Grid size"));
+        //leftPanel.Add(cellButton);
+        //horizontal = new IntegerField("Horizontal", 7);
+        //leftPanel.Add(horizontal);
+        //vertical = new IntegerField("Vertical", 7);
+        //leftPanel.Add(vertical);
+        //leftPanel.Add(new Button(() => { ResizeGrid(); }) { text = "Resize grid" });
+        ////Dots
+        //leftPanel.Add(new Label("Dots"));
+        //leftPanel.Add(redDotButton);
+        //leftPanel.Add(blueDotButton);
+        //leftPanel.Add(yellowDotButton);
+        ////Pieces
+        //leftPanel.Add(new Label("Pieces"));
+        //leftPanel.Add(choosePieceButton);
+        //leftPanel.Add(new Button(() => { MakePiece(); }) { text = "Make piece" });
+        //leftPanel.Add(changeRotationStateButton);
+        //leftPanel.Add(removePieceButton);
+        ////Goals
+        //leftPanel.Add(new Label("Goals"));
+        //leftPanel.Add(chooseGoalButton);
+        //leftPanel.Add(new Button(() => { MakeShapeGoal(); }) { text = "Make Shape Goal" });
+        //leftPanel.Add(removeGoalButton);
+        //leftPanel.Add(new Button(() => { editTypeIndex = 8; }) { text = "Remove Shape Goal" });
+        //leftPanel.Add(new Button(() => { editTypeIndex = 10; }) { text = "Mark Placement Goal" });
+        ////Board
+        //leftPanel.Add(new Label("Board"));
+        //leftPanel.Add(new Button(() => { ClearAll(); }) { text = "Reset board" });
 
-        // Add cells to the grid
-        for (int i = 0; i < 7; i++)
-        {
-            for (int j = 0; j < 7; j++)
-            {
-                var cellElement = new CellElement( new Vector2Int(j, i), this);
+        ////Save and Load
+        //leftPanel.Add(new Label("Save & Load"));
+        //savedFieldName = new TextField();
+        //savedFieldName.label = "Save file name";
+        //leftPanel.Add(savedFieldName);
+        //leftPanel.Add(new Button(() => { TrySave(); }) { text = "Save Level" });
+        //leftPanel.Add(new Button(() => { LoadLevel(); }) { text = "Load level" });
+        //levelField = new ObjectField();
+        //levelField.objectType = typeof(LevelSO);
+        //leftPanel.Add(levelField);
 
-                grid.Add(cellElement);
+        ////Right panel
+        //// Create a grid layout
+        //grid = new VisualElement();
+        //grid.style.flexDirection = FlexDirection.Row;
+        //grid.style.flexWrap = Wrap.Wrap;
+        //grid.style.justifyContent = Justify.SpaceAround; // Optional: Add space around the items
 
-                cells.Add(cellElement);
-            }
-        }
+        //CellElement blueprint = new CellElement(Vector2Int.zero, this);
+        //int gridSize = 7;
 
-        // Add the grid to the right panel
-        rightPanel.Add(grid);
 
-        //Pieces
-        rightPanel.Add(new Label("Pieces"));
-        pieceHolder = new VisualElement();
-        rightPanel.Add(pieceHolder);
-        //Flexbox
-        pieceHolder.style.flexDirection = FlexDirection.Row;
-        pieceHolder.style.flexWrap = Wrap.Wrap;
-        pieceHolder.style.justifyContent = Justify.SpaceAround;
+        //// Set the width and height of the grid
+        //grid.style.width = gridSize * blueprint.style.width.value.value + gridSize; // cellWidth is the width of each cell
+        //grid.style.height = gridSize * blueprint.style.height.value.value + gridSize; // cellHeight is the height of each cell
 
-        //Goals
-        rightPanel.Add(new Label("Goals"));
-        goalHolder = new VisualElement();
-        rightPanel.Add(goalHolder);
-        //Flexbox
-        goalHolder.style.flexDirection = FlexDirection.Row;
-        goalHolder.style.flexWrap = Wrap.Wrap;
-        goalHolder.style.justifyContent = Justify.SpaceAround;
+        //// Add cells to the grid
+        //for (int i = 0; i < 7; i++)
+        //{
+        //    for (int j = 0; j < 7; j++)
+        //    {
+        //        var cellElement = new CellElement(new Vector2Int(j, i), this);
+
+        //        grid.Add(cellElement);
+
+        //        cells.Add(cellElement);
+        //    }
+        //}
+
+        //// Add the grid to the right panel
+        //rightPanel.Add(grid);
+
+        ////Pieces
+        //rightPanel.Add(new Label("Pieces"));
+        //pieceHolder = new VisualElement();
+        //rightPanel.Add(pieceHolder);
+        ////Flexbox
+        //pieceHolder.style.flexDirection = FlexDirection.Row;
+        //pieceHolder.style.flexWrap = Wrap.Wrap;
+        //pieceHolder.style.justifyContent = Justify.SpaceAround;
+
+        ////Goals
+        //rightPanel.Add(new Label("Goals"));
+        //goalHolder = new VisualElement();
+        //rightPanel.Add(goalHolder);
+        ////Flexbox
+        //goalHolder.style.flexDirection = FlexDirection.Row;
+        //goalHolder.style.flexWrap = Wrap.Wrap;
+        //goalHolder.style.justifyContent = Justify.SpaceAround;
     }
 
     private void ResizeGrid()

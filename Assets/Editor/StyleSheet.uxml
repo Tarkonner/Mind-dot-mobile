@@ -1,0 +1,29 @@
+<ui:UXML xmlns:ui="UnityEngine.UIElements" xmlns:uie="UnityEditor.UIElements" editor-extension-mode="True">
+    <Style src="project://database/Assets/Editor/EditorStyleSheet.uss?fileID=7433441132597879392&amp;guid=7a8d94c2611480a48aea564eb11ae236&amp;type=3#EditorStyleSheet" />
+    <ui:VisualElement name="Root" style="flex-grow: 1; height: 38px; width: 100%; flex-direction: row; align-self: stretch;">
+        <ui:VisualElement name="Options" style="flex-grow: 1; align-self: stretch; width: -566px; height: auto; justify-content: flex-start; align-items: stretch; flex-direction: column; max-width: 400px;">
+            <ui:GroupBox name="Grid">
+                <ui:Label tabindex="-1" text="Cells" parse-escape-sequences="true" display-tooltip-when-elided="true" />
+                <ui:Vector2Field label="Aktive cells" style="width: 304px;" />
+                <ui:Button text="Set active cells" parse-escape-sequences="true" display-tooltip-when-elided="true" name="Button" binding-path="ResizeGrid" />
+            </ui:GroupBox>
+            <ui:GroupBox name="Dots">
+                <ui:Label tabindex="-1" text="Dots" parse-escape-sequences="true" display-tooltip-when-elided="true" name="Label" />
+                <ui:Button text="Red dot" parse-escape-sequences="true" display-tooltip-when-elided="true" name="Button" />
+                <ui:Button text="Blue dot" parse-escape-sequences="true" display-tooltip-when-elided="true" />
+                <ui:Button text="Yellow dot" parse-escape-sequences="true" display-tooltip-when-elided="true" />
+            </ui:GroupBox>
+        </ui:VisualElement>
+        <ui:VisualElement name="Grid" style="flex-grow: 1; width: 75px;">
+            <ui:VisualElement name="Board" style="flex-grow: 1;">
+                <ui:Label tabindex="-1" text="Grid&#10;" parse-escape-sequences="true" display-tooltip-when-elided="true" name="Label" style="height: 20px;" />
+            </ui:VisualElement>
+            <ui:VisualElement name="Pieces" style="flex-grow: 1;">
+                <ui:Label tabindex="-1" text="Pieces" parse-escape-sequences="true" display-tooltip-when-elided="true" />
+            </ui:VisualElement>
+            <ui:VisualElement name="Goals" style="flex-grow: 1;">
+                <ui:Label tabindex="-1" text="Goals" parse-escape-sequences="true" display-tooltip-when-elided="true" />
+            </ui:VisualElement>
+        </ui:VisualElement>
+    </ui:VisualElement>
+</ui:UXML>
