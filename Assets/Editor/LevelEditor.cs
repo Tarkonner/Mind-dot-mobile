@@ -16,11 +16,13 @@ public class LevelEditor : EditorWindow
     List<CellElement> cells = new List<CellElement>();
 
     int editTypeIndex = 0;
-    int dotIndex = 0;
 
-    //Resize grid
-    IntegerField horizontal;
-    IntegerField vertical;
+    public int dotIndex { get; private set; } = 0;
+    public VisualElement clickedOnElement { get; private set; }
+
+    //Cell
+    SliderInt horizontalSlider;
+    SliderInt verticalSlider;
 
     //Pieces
     List<CellElement> piecesSavedCells = new List<CellElement>();
@@ -67,11 +69,25 @@ public class LevelEditor : EditorWindow
     {
         rootVisualElement.Add(styleSheet.Instantiate());
 
-        //Setup
-        Button test = rootVisualElement.Q<Button>();
-        test.clickable.clicked += () => { Debug.Log("Test"); }; 
+        EditorStateMachine stateMachine = new EditorStateMachine(this);
 
+
+        //Setup
+        //Cells
+        horizontalSlider = rootVisualElement.Q("HorizontalValue") as SliderInt;
+        verticalSlider = rootVisualElement.Q("VerticalValue") as SliderInt;
+        ButtonAction("ResizeGrid").clicked += () => ResizeGrid(new Vector2(horizontalSlider.value, verticalSlider.value));
+        //Dots
+        ButtonAction("RedDot").clicked += () => Debug.Log("Red");
+        ButtonAction("BlueDot").clicked += () => Debug.Log("Blue");
+        ButtonAction("YellowDot").clicked += () => Debug.Log("Yellow");
     }
+
+    private Clickable ButtonAction(string name)
+    {
+        return rootVisualElement.Q<Button>(name).clickable;
+    }
+
 
     public void CreateGUI()
     {
@@ -212,12 +228,11 @@ public class LevelEditor : EditorWindow
         //goalHolder.style.justifyContent = Justify.SpaceAround;
     }
 
-    private void ResizeGrid()
+
+    private void ResizeGrid(Vector2 targetSize)
     {
-        if (horizontal.value > 7)
-            horizontal.value = 7;
-        if (vertical.value > 7)
-            vertical.value = 7;
+        //Clamp
+        targetSize = new Vector2(Math.Clamp(horizontalSlider.value, 1, 7), Math.Clamp(verticalSlider.value, 1, 7));
 
         for (int x = 0; x < 7; x++)
         {
@@ -225,10 +240,9 @@ public class LevelEditor : EditorWindow
             {
                 CellElement target = cells[y * 7 + x];
 
-                if (horizontal.value <= x || vertical.value <= y)
+                if (targetSize.x <= x || targetSize.y <= y)
                 {
                     target.SetActiveState(false);
-
                     target.RemoveDot();
                 }
                 else
@@ -237,8 +251,8 @@ public class LevelEditor : EditorWindow
         }
 
         //Reset
-        horizontal.value = 0;
-        vertical.value = 0;
+        horizontalSlider.value = 3;
+        verticalSlider.value = 3;
     }
 
     #region Switch machine
