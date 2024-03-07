@@ -69,8 +69,6 @@ public class LevelEditor : EditorWindow
     {
         rootVisualElement.Add(styleSheet.Instantiate());
 
-        EditorStateMachine stateMachine = new EditorStateMachine(this);
-
 
         //Setup
         //Cells
