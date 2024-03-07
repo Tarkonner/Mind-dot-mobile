@@ -19,12 +19,15 @@ public class LevelEditor : EditorWindow
 
     int editTypeIndex = 0;
 
-    public int dotIndex { get; private set; } = 0;
+    public DotType placeDotType;
     public VisualElement clickedOnElement { get; private set; }
 
     //Cell
     SliderInt horizontalSlider;
     SliderInt verticalSlider;
+
+    //State machine
+    private EditorState currentState = new CellEditState();
 
     //Pieces
     List<CellElement> piecesSavedCells = new List<CellElement>();
@@ -67,6 +70,16 @@ public class LevelEditor : EditorWindow
     }
 
 
+    private void ChangeState(EditorState targetState)
+    {
+        if(currentState != targetState)
+        {
+            currentState.Exit();
+            currentState = targetState;
+            currentState.Enter();
+        }
+    }
+
     public void OnEnable()
     {
         rootVisualElement.Add(styleSheet.Instantiate());
@@ -77,15 +90,19 @@ public class LevelEditor : EditorWindow
         horizontalSlider = rootVisualElement.Q("HorizontalValue") as SliderInt;
         verticalSlider = rootVisualElement.Q("VerticalValue") as SliderInt;
         ButtonAction("ResizeGrid").clicked += () => ResizeGrid(new Vector2(horizontalSlider.value, verticalSlider.value));
+        ButtonAction("CellActivation").clicked += () => ChangeState(new CellEditState());
         //Dots
-        ButtonAction("RedDot").clicked += () => Debug.Log("Red");
-        ButtonAction("BlueDot").clicked += () => Debug.Log("Blue");
-        ButtonAction("YellowDot").clicked += () => Debug.Log("Yellow");
+        ButtonAction("RedDot").clicked      += () => { ChangeState(new PlaceDotState()); placeDotType = DotType.Red; };
+        ButtonAction("BlueDot").clicked     += () => { ChangeState(new PlaceDotState()); placeDotType = DotType.Blue; };
+        ButtonAction("YellowDot").clicked   += () => { ChangeState(new PlaceDotState()); placeDotType = DotType.Yellow; };
+        //Pieces
+        ButtonAction("ChoosePieceCells").clicked += () => ChangeState(new MakePieceState());
+        ButtonAction("MakePiece").clicked += () => rootVisualElement.Q("Pieces").Add(eo_PieceHolder.Instantiate());
+        //Goal
+        ButtonAction("ChooseShapeGoalCells").clicked += () => ChangeState(new MakeShapeGoalState());
+        ButtonAction("MakePlaceGoal").clicked += () => ChangeState(new MakePlaceGoalState());
 
-        ButtonAction("MakePiece").clicked += () =>
-        {
-            rootVisualElement.Q("Pieces").Add(eo_PieceHolder.Instantiate());
-        };
+
     }
 
     private Clickable ButtonAction(string name)
@@ -263,22 +280,32 @@ public class LevelEditor : EditorWindow
     #region Switch machine
     public void OnCellClicked(CellElement cellElement, int buttonIndex)
     {
+        switch(currentState)
+        {
+            case CellEditState:
+                ((CellEditState)currentState).Execute(cellElement);
+                break;
+            case PlaceDotState:
+                ((PlaceDotState)currentState).Execute(placeDotType, buttonIndex, cellElement);
+                break;
+        }
+
         switch (editTypeIndex)
         {
-            //Cells
-            case 0:
-                cellElement.TurnOffCell();
-                break;
+            ////Cells
+            //case 0:
+            //    cellElement.TurnOffCell();
+            //    break;
 
-            //Dots
-            case 1:
-                PlaceDot(cellElement, buttonIndex);
-                break;
+            //////Dots
+            ////case 1:
+            ////    PlaceDot(cellElement, buttonIndex);
+            ////    break;
                 
-            //Remove
-            case 4:
-                cellElement.RemoveDot();
-                break;
+            ////Remove
+            //case 4:
+            //    cellElement.RemoveDot();
+            //    break;
 
             //Pieces
             case 5:
@@ -328,77 +355,77 @@ public class LevelEditor : EditorWindow
     }
     
 
-    public void ContentManagement(GridElement targetGrid)
-    {
-        if (editTypeIndex <= 6)
-            return;
+    //public void ContentManagement(GridElement targetGrid)
+    //{
+    //    if (editTypeIndex <= 6)
+    //        return;
 
-        switch (editTypeIndex)
-        {
-            //Remove piece
-            case 7:
-                if (targetGrid is PieceElement)
-                    RemovePiece((PieceElement)targetGrid);
-                break;
+    //    switch (editTypeIndex)
+    //    {
+    //        //Remove piece
+    //        case 7:
+    //            if (targetGrid is PieceElement)
+    //                RemovePiece((PieceElement)targetGrid);
+    //            break;
 
 
-            //Remove goal
-            case 8:
-                if(targetGrid is ShapeGoalElement)
-                    RemoveGoal((ShapeGoalElement)targetGrid);
-                break;
+    //        //Remove goal
+    //        case 8:
+    //            if(targetGrid is ShapeGoalElement)
+    //                RemoveGoal((ShapeGoalElement)targetGrid);
+    //            break;
 
-            //No rotation piece
-            case 9:
-                if (targetGrid is PieceElement)
-                {
-                    PieceElement t = targetGrid as PieceElement;
-                    t.ChangeRotationStatus();
-                }
-                break;
-        }
-    }
+    //        //No rotation piece
+    //        case 9:
+    //            if (targetGrid is PieceElement)
+    //            {
+    //                PieceElement t = targetGrid as PieceElement;
+    //                t.ChangeRotationStatus();
+    //            }
+    //            break;
+    //    }
+    //}
     #endregion
 
-    private void PlaceDot(CellElement targetCell, int buttonIndex)
-    {
-        if (targetCell.cellData.turnedOff)
-            return;
+    //private void PlaceDot(CellElement targetCell, int buttonIndex)
+    //{
+    //    if (targetCell.cellData.turnedOff)
+    //        return;
 
-        if (buttonIndex == 1) //Right click
-        {
-            targetCell.RemoveDot();
-            return;
-        }
+    //    if (buttonIndex == 1) //Right click
+    //    {
+    //        targetCell.RemoveDot();
+    //        return;
+    //    }
 
-        if (targetCell.cellData.partOfPiece || targetCell.partOfShapeGoals.Count > 0)
-            return;
+    //    if (targetCell.cellData.partOfPiece || targetCell.partOfShapeGoals.Count > 0)
+    //        return;
              
 
-        if (buttonIndex == 0) //Left click
-        {
-            if (targetCell.cellData.holding != null)
-                targetCell.ChangeDotColor();
-            else
-            {
-                DotElement targetDot = null;
-                switch (dotIndex)
-                {
-                    case 0:
-                        targetDot = new DotElement(DotType.Red);
-                        break;
-                    case 1:
-                        targetDot = new DotElement(DotType.Blue);
-                        break;
-                    case 2:
-                        targetDot = new DotElement(DotType.Yellow);
-                        break;
-                }
+    //    if (buttonIndex == 0) //Left click
+    //    {
+    //        if (targetCell.cellData.holding != null)
+    //            targetCell.ChangeDotColor();
+    //        else
+    //        {
+    //            DotElement targetDot = null;
+    //            switch (dotIndex)
+    //            {
+    //                case 0:
+    //                    targetDot = new DotElement(DotType.Red);
+    //                    break;
+    //                case 1:
+    //                    targetDot = new DotElement(DotType.Blue);
+    //                    break;
+    //                case 2:
+    //                    targetDot = new DotElement(DotType.Yellow);
+    //                    break;
+    //            }
 
-                targetCell.SetDot(targetDot);
-            }
-        }
-    }
+    //            targetCell.SetDot(targetDot);
+    //        }
+    //    }
+    //}
 
     private void PlaceDot(Vector2Int coordinats, DotType type)
     {

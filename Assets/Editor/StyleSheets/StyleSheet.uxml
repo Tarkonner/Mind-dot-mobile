@@ -1,12 +1,12 @@
 <ui:UXML xmlns:ui="UnityEngine.UIElements" xmlns:uie="UnityEditor.UIElements" editor-extension-mode="True">
-    <ui:Template name="PieceHolder" src="project://database/Assets/Editor/PieceHolder.uxml?fileID=9197481963319205126&amp;guid=26e1fe33770f34e42bac06c850a1a825&amp;type=3#PieceHolder" />
     <ui:VisualElement name="Root" style="flex-grow: 1; height: 38px; width: 100%; flex-direction: row; align-self: stretch;">
-        <ui:VisualElement name="Options" style="flex-grow: 1; align-self: stretch; width: -566px; height: auto; justify-content: flex-start; align-items: stretch; flex-direction: column; max-width: 400px;">
+        <ui:VisualElement name="Options" style="flex-grow: 1; align-self: flex-start; width: -566px; height: auto; justify-content: flex-start; align-items: stretch; flex-direction: column; max-width: 400px;">
             <ui:GroupBox name="Grid">
                 <ui:Label tabindex="-1" text="Cells" parse-escape-sequences="true" display-tooltip-when-elided="true" />
                 <ui:SliderInt picking-mode="Ignore" label="Horizontal Value" value="42" high-value="7" name="HorizontalValue" low-value="1" show-input-field="true" />
                 <ui:SliderInt picking-mode="Ignore" label="Vertical Value" value="42" high-value="7" name="VerticalValue" low-value="1" show-input-field="true" inverted="false" />
                 <ui:Button text="Set active cells" parse-escape-sequences="true" display-tooltip-when-elided="true" name="ResizeGrid" binding-path="ResizeGrid" />
+                <ui:Button text="Manual turn cells on &amp; off" parse-escape-sequences="true" display-tooltip-when-elided="true" name="CellActivation" />
             </ui:GroupBox>
             <ui:GroupBox name="Dots">
                 <ui:Label tabindex="-1" text="Dots" parse-escape-sequences="true" display-tooltip-when-elided="true" name="Label" />
@@ -16,20 +16,22 @@
                     <ui:Button text="Yellow dot" parse-escape-sequences="true" display-tooltip-when-elided="true" name="YellowDot" style="width: 100px; height: 40px; background-color: rgb(190, 189, 121);" />
                 </ui:VisualElement>
             </ui:GroupBox>
-            <ui:GroupBox name="Choose">
-                <ui:Label tabindex="-1" text="Choose" parse-escape-sequences="true" display-tooltip-when-elided="true" />
-                <ui:Button text="Choose cells" parse-escape-sequences="true" display-tooltip-when-elided="true" name="ChooseCells" style="height: 40px;" />
-                <ui:Label tabindex="-1" text="Piece or goal elemet" parse-escape-sequences="true" display-tooltip-when-elided="true" style="align-self: center;" />
-                <ui:VisualElement style="flex-grow: 1; flex-direction: row; justify-content: center; align-self: center; width: 350px; align-items: center;">
-                    <ui:Button text="Piece" parse-escape-sequences="true" display-tooltip-when-elided="true" name="MakePiece" style="height: 30px; width: 150px;" />
-                    <ui:Button text="Goal" parse-escape-sequences="true" display-tooltip-when-elided="true" name="MakeGoal" style="width: 150px; height: 30px;" />
-                </ui:VisualElement>
+            <ui:GroupBox name="Pieces">
+                <ui:Label tabindex="-1" text="Pieces" parse-escape-sequences="true" display-tooltip-when-elided="true" />
+                <ui:Button text="Choose cells" parse-escape-sequences="true" display-tooltip-when-elided="true" name="ChoosePieceCells" style="height: 40px;" />
+                <ui:Button text="Make piece" parse-escape-sequences="true" display-tooltip-when-elided="true" name="MakePiece" style="height: 40px;" />
+            </ui:GroupBox>
+            <ui:GroupBox name="Goals">
+                <ui:Label tabindex="-1" text="Goals" parse-escape-sequences="true" display-tooltip-when-elided="true" name="Label" />
+                <ui:Button text="Choose cells" parse-escape-sequences="true" display-tooltip-when-elided="true" name="ChooseShapeGoalCells" style="height: 40px;" />
+                <ui:Button text="Make Shape goal" parse-escape-sequences="true" display-tooltip-when-elided="true" name="MakeShapeGoal" style="height: 40px;" />
+                <ui:Button text="Make Place Goal" parse-escape-sequences="true" display-tooltip-when-elided="true" name="MakePlaceGoal" style="height: 40px;" />
             </ui:GroupBox>
             <ui:GroupBox name="GroupBox">
                 <ui:Label tabindex="-1" text="Save &amp; load levels" parse-escape-sequences="true" display-tooltip-when-elided="true" />
                 <ui:TextField picking-mode="Ignore" label="Levels name" name="LevelsName" />
                 <ui:Button text="Save Level" parse-escape-sequences="true" display-tooltip-when-elided="true" name="SaveLevel" />
-                <uie:ObjectField label="Existion level" type="LevelSO, Assembly-CSharp" />
+                <uie:ObjectField label="Existion level" type="LevelSO, Assembly-CSharp" style="height: 62px;" />
                 <ui:Button text="Load level" parse-escape-sequences="true" display-tooltip-when-elided="true" name="LoadLevel" />
             </ui:GroupBox>
         </ui:VisualElement>
@@ -37,9 +39,8 @@
             <ui:VisualElement name="Board" style="flex-grow: 1;">
                 <ui:Label tabindex="-1" text="Grid&#10;" parse-escape-sequences="true" display-tooltip-when-elided="true" name="Label" style="height: 20px;" />
             </ui:VisualElement>
-            <ui:VisualElement name="Pieces" style="flex-grow: 1; align-self: auto; flex-direction: column; align-items: auto; height: auto;">
+            <ui:VisualElement name="Pieces" style="flex-grow: 1; align-self: auto; flex-direction: row; align-items: flex-start; height: auto;">
                 <ui:Label tabindex="-1" text="Pieces" parse-escape-sequences="true" display-tooltip-when-elided="true" />
-                <ui:Instance template="PieceHolder" name="PieceHolder" />
             </ui:VisualElement>
             <ui:VisualElement name="Goals" style="flex-grow: 1;">
                 <ui:Label tabindex="-1" text="Goals" parse-escape-sequences="true" display-tooltip-when-elided="true" />

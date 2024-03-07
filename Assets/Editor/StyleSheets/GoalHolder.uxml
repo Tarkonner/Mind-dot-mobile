@@ -1,0 +1,6 @@
+<ui:UXML xmlns:ui="UnityEngine.UIElements" xmlns:uie="UnityEditor.UIElements" editor-extension-mode="False">
+    <ui:VisualElement name="GoalHolder" style="flex-grow: 1; width: 298px; height: 0; max-width: 300px; max-height: 350px; min-width: 300px; min-height: 350px; align-self: stretch; justify-content: center; align-items: flex-end; -unity-background-image-tint-color: rgb(255, 255, 255); background-color: rgb(190, 190, 190);">
+        <ui:VisualElement name="Holder" style="flex-grow: 1;" />
+        <ui:Button text="Delete" parse-escape-sequences="true" display-tooltip-when-elided="true" name="Delete" style="height: 34px; width: 97px; -unity-background-image-tint-color: rgb(255, 136, 136); background-color: rgb(255, 95, 95);" />
+    </ui:VisualElement>
+</ui:UXML>

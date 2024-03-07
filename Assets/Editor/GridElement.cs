@@ -111,7 +111,6 @@ public class GridElement : VisualElement
 
     private void OnMouseDown(MouseDownEvent evt)
     {
-        // Call the OnCellClicked method of the LevelEditor window
-        editor.ContentManagement(this);
+
     }
 }
