@@ -1,5 +1,5 @@
 <ui:UXML xmlns:ui="UnityEngine.UIElements" xmlns:uie="UnityEditor.UIElements" editor-extension-mode="True">
-    <Style src="project://database/Assets/Editor/EditorStyleSheet.uss?fileID=7433441132597879392&amp;guid=7a8d94c2611480a48aea564eb11ae236&amp;type=3#EditorStyleSheet" />
+    <ui:Template name="PieceHolder" src="project://database/Assets/Editor/PieceHolder.uxml?fileID=9197481963319205126&amp;guid=26e1fe33770f34e42bac06c850a1a825&amp;type=3#PieceHolder" />
     <ui:VisualElement name="Root" style="flex-grow: 1; height: 38px; width: 100%; flex-direction: row; align-self: stretch;">
         <ui:VisualElement name="Options" style="flex-grow: 1; align-self: stretch; width: -566px; height: auto; justify-content: flex-start; align-items: stretch; flex-direction: column; max-width: 400px;">
             <ui:GroupBox name="Grid">
@@ -37,8 +37,9 @@
             <ui:VisualElement name="Board" style="flex-grow: 1;">
                 <ui:Label tabindex="-1" text="Grid&#10;" parse-escape-sequences="true" display-tooltip-when-elided="true" name="Label" style="height: 20px;" />
             </ui:VisualElement>
-            <ui:VisualElement name="Pieces" style="flex-grow: 1;">
+            <ui:VisualElement name="Pieces" style="flex-grow: 1; align-self: auto; flex-direction: column; align-items: auto; height: auto;">
                 <ui:Label tabindex="-1" text="Pieces" parse-escape-sequences="true" display-tooltip-when-elided="true" />
+                <ui:Instance template="PieceHolder" name="PieceHolder" />
             </ui:VisualElement>
             <ui:VisualElement name="Goals" style="flex-grow: 1;">
                 <ui:Label tabindex="-1" text="Goals" parse-escape-sequences="true" display-tooltip-when-elided="true" />

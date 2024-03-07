@@ -8,7 +8,9 @@ using UnityEngine.UIElements;
 
 public class LevelEditor : EditorWindow
 {
+    //Style
     public VisualTreeAsset styleSheet;
+    public VisualTreeAsset eo_PieceHolder;
 
     //Editor
     VisualElement rightPanel;
@@ -79,6 +81,11 @@ public class LevelEditor : EditorWindow
         ButtonAction("RedDot").clicked += () => Debug.Log("Red");
         ButtonAction("BlueDot").clicked += () => Debug.Log("Blue");
         ButtonAction("YellowDot").clicked += () => Debug.Log("Yellow");
+
+        ButtonAction("MakePiece").clicked += () =>
+        {
+            rootVisualElement.Q("Pieces").Add(eo_PieceHolder.Instantiate());
+        };
     }
 
     private Clickable ButtonAction(string name)
