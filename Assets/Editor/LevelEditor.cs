@@ -11,6 +11,7 @@ public class LevelEditor : EditorWindow
     //Style
     public VisualTreeAsset styleSheet;
     public VisualTreeAsset eo_PieceHolder;
+    public VisualTreeAsset eo_GoalHolder;
 
     //Editor
     VisualElement rightPanel;
@@ -20,11 +21,13 @@ public class LevelEditor : EditorWindow
     int editTypeIndex = 0;
 
     public DotType placeDotType;
-    public VisualElement clickedOnElement { get; private set; }
 
     //Cell
     SliderInt horizontalSlider;
     SliderInt verticalSlider;
+    //Save and load
+    TextField namingField;
+    ObjectField inputtedLevelField;
 
     //State machine
     private EditorState currentState = new CellEditState();
@@ -84,8 +87,8 @@ public class LevelEditor : EditorWindow
     {
         rootVisualElement.Add(styleSheet.Instantiate());
 
-
-        //Setup
+        //Options
+        ButtonAction("ResetEditor").clicked += ClearAll;
         //Cells
         horizontalSlider = rootVisualElement.Q("HorizontalValue") as SliderInt;
         verticalSlider = rootVisualElement.Q("VerticalValue") as SliderInt;
@@ -100,9 +103,46 @@ public class LevelEditor : EditorWindow
         ButtonAction("MakePiece").clicked += () => rootVisualElement.Q("Pieces").Add(eo_PieceHolder.Instantiate());
         //Goal
         ButtonAction("ChooseShapeGoalCells").clicked += () => ChangeState(new MakeShapeGoalState());
+        ButtonAction("ChooseShapeGoalCells").clicked += () => ChangeState(new MakeShapeGoalState());
         ButtonAction("MakePlaceGoal").clicked += () => ChangeState(new MakePlaceGoalState());
+        //Save and load
+        namingField = rootVisualElement.Q("LevelsName") as TextField;
+        inputtedLevelField = rootVisualElement.Q("LoadLevelField") as ObjectField;
+        ButtonAction("SaveLevel").clicked += SaveChanges;
+        ButtonAction("LoadLevel").clicked += LoadLevel;
 
+        //Grid
+        grid = rootVisualElement.Q("GridHolder");
+        grid.style.flexDirection = FlexDirection.Column;
 
+        CellElement blueprint = new CellElement(Vector2Int.zero, this);
+        int gridSize = 7;
+
+        // Add cells to the grid
+        // Create a new row element and add it to the grid
+        VisualElement row = new VisualElement();
+        row.style.flexDirection = FlexDirection.Row; // Set the row to align horizontally
+        grid.Add(row);
+        for (int i = 0; i < 7; i++)
+        {
+            for (int j = 0; j < 7; j++)
+            {
+                var cellElement = new CellElement(new Vector2Int(j, i), this);
+
+                // Add the cell to the current row
+                row.Add(cellElement);
+
+                // If the row is full, add it to the grid and start a new row
+                if ((j + 1) % gridSize == 0)
+                {
+                    grid.Add(row); // Add the full row to the grid
+                    row = new VisualElement(); // Create a new row
+                    row.style.flexDirection = FlexDirection.Row; // Set the row to align horizontally
+                }
+
+                cells.Add(cellElement);
+            }
+        }
     }
 
     private Clickable ButtonAction(string name)

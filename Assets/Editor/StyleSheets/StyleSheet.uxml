@@ -1,6 +1,7 @@
 <ui:UXML xmlns:ui="UnityEngine.UIElements" xmlns:uie="UnityEditor.UIElements" editor-extension-mode="True">
     <ui:VisualElement name="Root" style="flex-grow: 1; height: 38px; width: 100%; flex-direction: row; align-self: stretch;">
         <ui:VisualElement name="Options" style="flex-grow: 1; align-self: flex-start; width: -566px; height: auto; justify-content: flex-start; align-items: stretch; flex-direction: column; max-width: 400px;">
+            <ui:Button text="Reset editor" parse-escape-sequences="true" display-tooltip-when-elided="true" name="ResetEditor" style="background-color: rgb(221, 134, 134);" />
             <ui:GroupBox name="Grid">
                 <ui:Label tabindex="-1" text="Cells" parse-escape-sequences="true" display-tooltip-when-elided="true" />
                 <ui:SliderInt picking-mode="Ignore" label="Horizontal Value" value="42" high-value="7" name="HorizontalValue" low-value="1" show-input-field="true" />
@@ -31,13 +32,14 @@
                 <ui:Label tabindex="-1" text="Save &amp; load levels" parse-escape-sequences="true" display-tooltip-when-elided="true" />
                 <ui:TextField picking-mode="Ignore" label="Levels name" name="LevelsName" />
                 <ui:Button text="Save Level" parse-escape-sequences="true" display-tooltip-when-elided="true" name="SaveLevel" />
-                <uie:ObjectField label="Existion level" type="LevelSO, Assembly-CSharp" style="height: 62px;" />
+                <uie:ObjectField label="Existion level" type="LevelSO, Assembly-CSharp" name="LoadLevelField" style="height: 33px; flex-direction: column;" />
                 <ui:Button text="Load level" parse-escape-sequences="true" display-tooltip-when-elided="true" name="LoadLevel" />
             </ui:GroupBox>
         </ui:VisualElement>
         <ui:VisualElement name="Grid" style="flex-grow: 1; width: 75px;">
             <ui:VisualElement name="Board" style="flex-grow: 1;">
                 <ui:Label tabindex="-1" text="Grid&#10;" parse-escape-sequences="true" display-tooltip-when-elided="true" name="Label" style="height: 20px;" />
+                <ui:VisualElement name="GridHolder" style="flex-grow: 1; min-width: 700px; min-height: 700px; max-width: 700px; max-height: 700px;" />
             </ui:VisualElement>
             <ui:VisualElement name="Pieces" style="flex-grow: 1; align-self: auto; flex-direction: row; align-items: flex-start; height: auto;">
                 <ui:Label tabindex="-1" text="Pieces" parse-escape-sequences="true" display-tooltip-when-elided="true" />
