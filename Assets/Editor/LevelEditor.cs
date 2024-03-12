@@ -100,7 +100,7 @@ public class LevelEditor : EditorWindow
         ButtonAction("BlueDot").clicked     += () => { ChangeState(new PlaceDotState()); placeDotType = DotType.Blue; };
         ButtonAction("YellowDot").clicked   += () => { ChangeState(new PlaceDotState()); placeDotType = DotType.Yellow; };
         //Pieces
-        pieceHolder = rootVisualElement.Q("HolderOfPieces");
+        pieceHolder = rootVisualElement.Q("PieceScroller");
         ButtonAction("ChoosePieceCells").clicked += () => ChangeState(new MakePieceState());
         ButtonAction("MakePiece").clicked += () => { if (currentState is MakePieceState) ((MakePieceState)currentState).Execute(pieceHolder, eo_PieceHolder); };
         //Goal
