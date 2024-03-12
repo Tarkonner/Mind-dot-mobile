@@ -41,6 +41,7 @@ public class LevelEditor : EditorWindow
     VisualElement goalHolder;
     List<ShapeGoalElement> shapeGoals = new List<ShapeGoalElement>();
 
+
     #region Buttons    
     private Button choosenButton;
     //Cells
@@ -92,15 +93,16 @@ public class LevelEditor : EditorWindow
         //Cells
         horizontalSlider = rootVisualElement.Q("HorizontalValue") as SliderInt;
         verticalSlider = rootVisualElement.Q("VerticalValue") as SliderInt;
-        ButtonAction("ResizeGrid").clicked += () => ResizeGrid(new Vector2(horizontalSlider.value, verticalSlider.value));
-        ButtonAction("CellActivation").clicked += () => ChangeState(new CellEditState());
+        ButtonAction("ResizeGrid").clicked      += () => ResizeGrid(new Vector2(horizontalSlider.value, verticalSlider.value));
+        ButtonAction("CellActivation").clicked  += () => ChangeState(new CellEditState());
         //Dots
         ButtonAction("RedDot").clicked      += () => { ChangeState(new PlaceDotState()); placeDotType = DotType.Red; };
         ButtonAction("BlueDot").clicked     += () => { ChangeState(new PlaceDotState()); placeDotType = DotType.Blue; };
         ButtonAction("YellowDot").clicked   += () => { ChangeState(new PlaceDotState()); placeDotType = DotType.Yellow; };
         //Pieces
+        pieceHolder = rootVisualElement.Q("HolderOfPieces");
         ButtonAction("ChoosePieceCells").clicked += () => ChangeState(new MakePieceState());
-        ButtonAction("MakePiece").clicked += () => rootVisualElement.Q("Pieces").Add(eo_PieceHolder.Instantiate());
+        ButtonAction("MakePiece").clicked += () => { if (currentState is MakePieceState) ((MakePieceState)currentState).Execute(pieceHolder, eo_PieceHolder); };
         //Goal
         ButtonAction("ChooseShapeGoalCells").clicked += () => ChangeState(new MakeShapeGoalState());
         ButtonAction("ChooseShapeGoalCells").clicked += () => ChangeState(new MakeShapeGoalState());
@@ -149,7 +151,6 @@ public class LevelEditor : EditorWindow
     {
         return rootVisualElement.Q<Button>(name).clickable;
     }
-
 
     public void CreateGUI()
     {
@@ -327,6 +328,9 @@ public class LevelEditor : EditorWindow
                 break;
             case PlaceDotState:
                 ((PlaceDotState)currentState).Execute(placeDotType, buttonIndex, cellElement);
+                break;
+            case MakePieceState: 
+                ((CollectCells)currentState).AddCell(cellElement); 
                 break;
         }
 

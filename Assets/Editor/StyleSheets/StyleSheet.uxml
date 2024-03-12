@@ -12,7 +12,7 @@
             <ui:GroupBox name="Dots">
                 <ui:Label tabindex="-1" text="Dots" parse-escape-sequences="true" display-tooltip-when-elided="true" name="Label" />
                 <ui:VisualElement style="flex-grow: 1; flex-direction: row; align-self: stretch; align-items: auto; justify-content: space-between;">
-                    <ui:Button text="Red dot" parse-escape-sequences="true" display-tooltip-when-elided="true" name="RedDot" style="justify-content: space-around; align-self: flex-start; width: 100px; height: 40px; background-color: rgb(192, 108, 108);" />
+                    <ui:Button text="Red dot" parse-escape-sequences="true" display-tooltip-when-elided="true" name="RedDot" style="justify-content: space-around; align-self: flex-start; width: 100px; height: 40px; background-color: rgb(192, 108, 108); -unity-background-image-tint-color: rgb(0, 0, 0);" />
                     <ui:Button text="Blue dot" parse-escape-sequences="true" display-tooltip-when-elided="true" name="BlueDot" style="height: 40px; width: 100px; background-color: rgb(73, 147, 212);" />
                     <ui:Button text="Yellow dot" parse-escape-sequences="true" display-tooltip-when-elided="true" name="YellowDot" style="width: 100px; height: 40px; background-color: rgb(190, 189, 121);" />
                 </ui:VisualElement>
@@ -37,14 +37,14 @@
             </ui:GroupBox>
         </ui:VisualElement>
         <ui:VisualElement name="Grid" style="flex-grow: 1; width: 75px;">
-            <ui:VisualElement name="Board" style="flex-grow: 1;">
+            <ui:VisualElement name="Board" style="flex-grow: 1; max-height: 400px; max-width: 400px; min-width: 400px; min-height: 400px;">
                 <ui:Label tabindex="-1" text="Grid&#10;" parse-escape-sequences="true" display-tooltip-when-elided="true" name="Label" style="height: 20px;" />
                 <ui:VisualElement name="GridHolder" style="flex-grow: 1; min-width: 700px; min-height: 700px; max-width: 700px; max-height: 700px;" />
             </ui:VisualElement>
-            <ui:VisualElement name="Pieces" style="flex-grow: 1; align-self: auto; flex-direction: row; align-items: flex-start; height: auto;">
+            <ui:VisualElement name="Pieces" style="flex-grow: 1; align-self: auto; flex-direction: row; align-items: flex-start; height: auto; max-height: 250px; min-height: 250px;">
                 <ui:Label tabindex="-1" text="Pieces" parse-escape-sequences="true" display-tooltip-when-elided="true" />
             </ui:VisualElement>
-            <ui:VisualElement name="Goals" style="flex-grow: 1;">
+            <ui:VisualElement name="Goals" style="flex-grow: 1; max-height: 100px;">
                 <ui:Label tabindex="-1" text="Goals" parse-escape-sequences="true" display-tooltip-when-elided="true" />
             </ui:VisualElement>
         </ui:VisualElement>
