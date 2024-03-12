@@ -13,16 +13,31 @@ public class MakePieceState : CollectCells
         base.AddCell(targetCell, targetState);
     }
 
-    public void Execute(VisualElement holder, VisualTreeAsset spawnHolder)
-    {
+    public void Execute(VisualElement holder, VisualTreeAsset spawnHolder, LevelEditor levelEditor)
+    {    
+        //Clean data
+        RemoveEmptyCells();
         if (cells.Count == 0)
         {
             Debug.Log("No cells selected");
             return;
         }
 
-        holder.Add(spawnHolder.Instantiate());
-        
+        //Set Color for cells
+        for (int i = 0; i < cells.Count; i++)
+            cells[i].ChangeCellColor(CellColorState.partPiece);
+
+        //Data
+        PieceElement pieceElement = new PieceElement(levelEditor);
+
+        levelEditor.piecesData.Add(pieceElement);
+
+        //Editor
+        VisualElement pieceHolder = spawnHolder.Instantiate();
+        pieceHolder.Q<Button>("Delete").clickable.clicked += () => holder.Remove(pieceHolder);
+
+        holder.Add(pieceHolder);
+
         cells.Clear();
     }
 }

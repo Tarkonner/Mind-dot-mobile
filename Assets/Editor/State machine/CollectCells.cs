@@ -34,7 +34,10 @@ public class CollectCells : EditorState
         for (int i = cells.Count - 1; i >= 0; i--)
         {
             if (cells[i].cellData.holding == null)
+            {
                 cells.RemoveAt(i);
+                cells[i].SetDefultColor();
+            }
         }
     }
 }

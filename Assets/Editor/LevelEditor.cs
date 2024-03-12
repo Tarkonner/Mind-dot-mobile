@@ -35,7 +35,7 @@ public class LevelEditor : EditorWindow
     //Pieces
     List<CellElement> piecesSavedCells = new List<CellElement>();
     VisualElement pieceHolder;
-    List<PieceElement> pieces = new List<PieceElement>();
+    public List<PieceElement> piecesData = new List<PieceElement>();
     //Goals
     List<CellElement> goalSavedCells = new List<CellElement>();
     VisualElement goalHolder;
@@ -102,7 +102,7 @@ public class LevelEditor : EditorWindow
         //Pieces
         pieceHolder = rootVisualElement.Q("PieceScroller");
         ButtonAction("ChoosePieceCells").clicked += () => ChangeState(new MakePieceState());
-        ButtonAction("MakePiece").clicked += () => { if (currentState is MakePieceState) ((MakePieceState)currentState).Execute(pieceHolder, eo_PieceHolder); };
+        ButtonAction("MakePiece").clicked += () => { if (currentState is MakePieceState) ((MakePieceState)currentState).Execute(pieceHolder, eo_PieceHolder, this); };
         //Goal
         ButtonAction("ChooseShapeGoalCells").clicked += () => ChangeState(new MakeShapeGoalState());
         ButtonAction("ChooseShapeGoalCells").clicked += () => ChangeState(new MakeShapeGoalState());
@@ -351,22 +351,22 @@ public class LevelEditor : EditorWindow
             //    cellElement.RemoveDot();
             //    break;
 
-            //Pieces
-            case 5:
-                if (cellElement.cellData.turnedOff || cellElement.cellData.partOfPiece)
-                    break;
+            ////Pieces
+            //case 5:
+            //    if (cellElement.cellData.turnedOff || cellElement.cellData.partOfPiece)
+            //        break;
 
-                if (!piecesSavedCells.Contains(cellElement))
-                {
-                    piecesSavedCells.Add(cellElement);
-                    cellElement.ChangeCellColor(CellColorState.choosenPiece);
-                }
-                else
-                {
-                    piecesSavedCells.Remove(cellElement);
-                    cellElement.SetDefultColor();
-                }
-                break;
+            //    if (!piecesSavedCells.Contains(cellElement))
+            //    {
+            //        piecesSavedCells.Add(cellElement);
+            //        cellElement.ChangeCellColor(CellColorState.choosenPiece);
+            //    }
+            //    else
+            //    {
+            //        piecesSavedCells.Remove(cellElement);
+            //        cellElement.SetDefultColor();
+            //    }
+            //    break;
 
             //Goals
             case 6:
@@ -578,7 +578,7 @@ public class LevelEditor : EditorWindow
             if (gridType == typeof(PieceElement))
             {
                 spawnedGrid = new PieceElement(this);
-                pieces.Add((PieceElement)spawnedGrid);
+                piecesData.Add((PieceElement)spawnedGrid);
             }
             else if (gridType == typeof(ShapeGoalElement))
             {
@@ -665,7 +665,7 @@ public class LevelEditor : EditorWindow
             target.siblings.RemoveAt(i);
         }
 
-        pieces.Remove(target);
+        piecesData.Remove(target);
         pieceHolder.Remove(target);
     }
     public void RemoveGoal(ShapeGoalElement target)
@@ -726,10 +726,10 @@ public class LevelEditor : EditorWindow
         piecesSavedCells.Clear();
 
         //Pieces
-        if (pieces.Count > 0)
+        if (piecesData.Count > 0)
         {
-            for (int i = pieces.Count - 1; i >= 0; i--)
-                pieceHolder.Remove(pieces[i]);
+            for (int i = piecesData.Count - 1; i >= 0; i--)
+                pieceHolder.Remove(piecesData[i]);
         }
 
         //Goals
@@ -804,7 +804,7 @@ public class LevelEditor : EditorWindow
         //Converter
         //Piece
         List<PieceData> pieceDatas = new List<PieceData>();
-        foreach (PieceElement data in pieces)
+        foreach (PieceElement data in piecesData)
             pieceDatas.Add(data.gridData as PieceData);
         //Cell
         List<CellData> cellDatas = new List<CellData>();
