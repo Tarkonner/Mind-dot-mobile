@@ -330,7 +330,7 @@ public class LevelEditor : EditorWindow
                 ((PlaceDotState)currentState).Execute(placeDotType, buttonIndex, cellElement);
                 break;
             case MakePieceState: 
-                ((CollectCells)currentState).AddCell(cellElement); 
+                ((CollectCells)currentState).AddCell(cellElement, CellColorState.partPiece); 
                 break;
         }
 

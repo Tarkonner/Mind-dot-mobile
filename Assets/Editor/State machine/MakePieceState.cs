@@ -5,6 +5,14 @@ using UnityEngine.UIElements;
 
 public class MakePieceState : CollectCells
 {
+    public override void AddCell(CellElement targetCell, CellColorState targetState)
+    {
+        if (targetCell.cellData.partOfPiece)
+            return;
+
+        base.AddCell(targetCell, targetState);
+    }
+
     public void Execute(VisualElement holder, VisualTreeAsset spawnHolder)
     {
         if (cells.Count == 0)

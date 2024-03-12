@@ -12,11 +12,29 @@ public class CollectCells : EditorState
         cells = new List<CellElement>();
     }
 
-    public void AddCell(CellElement targetCell)
+    public virtual void AddCell(CellElement targetCell, CellColorState targetState)
     {
-        if(cells.Contains(targetCell))
-            cells.Remove(targetCell);
-        else
+        if (targetCell.cellData.turnedOff)
+            return;
+
+        if (!cells.Contains(targetCell))
+        {
             cells.Add(targetCell);
+            targetCell.ChangeCellColor(targetState);
+        }
+        else
+        {
+            cells.Remove(targetCell);
+            targetCell.SetDefultColor();
+        }
+    }
+
+    protected void RemoveEmptyCells()
+    {
+        for (int i = cells.Count - 1; i >= 0; i--)
+        {
+            if (cells[i].cellData.holding == null)
+                cells.RemoveAt(i);
+        }
     }
 }
