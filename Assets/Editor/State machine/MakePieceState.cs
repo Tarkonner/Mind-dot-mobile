@@ -1,3 +1,4 @@
+using SharedData;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -33,7 +34,7 @@ public class MakePieceState : CollectCells
         }
 
         //Data
-        PieceElement pieceElement = new PieceElement(levelEditor);
+        PieceElement pieceElement = new PieceElement();
 
         levelEditor.piecesData.Add(pieceElement);
 
@@ -42,10 +43,18 @@ public class MakePieceState : CollectCells
         pieceHolder.Q<Button>("Delete").clickable.clicked += () => { holder.Remove(pieceHolder); levelEditor.piecesData.Remove(pieceElement); };
 
         //Grid
-        pieceHolder.Q<VisualElement>("Grid").Add(GridMaker.MakeGridElement(cells));
+        pieceHolder.Q<VisualElement>("Grid").Add(GridMaker.MakeGridElement(cells, pieceElement));
+        SliderInt rotationSlider = pieceHolder.Q<SliderInt>("RotateValue");
+        rotationSlider.RegisterValueChangedCallback(value => ((PieceData)pieceElement.gridData).startRotationIndex = value.newValue);
+        pieceHolder.Q<Toggle>("RotatebulToggle").RegisterValueChangedCallback(value => ((PieceData)pieceElement.gridData).canRotate = value.newValue);
 
         holder.Add(pieceHolder);
 
         cells.Clear();
+    }
+
+    public void SaveData()
+    {
+        
     }
 }

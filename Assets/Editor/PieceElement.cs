@@ -7,34 +7,6 @@ using UnityEngine.UIElements;
 
 public class PieceElement : GridElement
 {
-    
-
-    public PieceElement(LevelEditor editor) : base()
-    {
-    }
-
-    public void ChangeRotationStatus()
-    {        
-        if (gridData is not PieceData)
-            Debug.LogError("Not a piece to rotate");
-        
-
-        PieceData pd = (PieceData)gridData;
-
-        pd.canRotate = !pd.canRotate;
-
-        if(pd.canRotate)
-        {
-            foreach (Image i in images)
-                i.tintColor = Color.white;
-        }
-        else
-        {
-            foreach(Image i in images)
-                i.tintColor = Color.cyan;
-        }    
-    }
-
     public override void Construct(Vector2Int targetSize)
     {
         PieceData temp = new PieceData();

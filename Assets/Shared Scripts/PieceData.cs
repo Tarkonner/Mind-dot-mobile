@@ -6,6 +6,7 @@ namespace SharedData
 {
     public class PieceData : GridData
     {
+        public int startRotationIndex = 0;
         public bool canRotate = true;
     }
 
