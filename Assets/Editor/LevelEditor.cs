@@ -76,7 +76,7 @@ public class LevelEditor : EditorWindow
 
     private void ChangeState(EditorState targetState)
     {
-        if(currentState != targetState)
+        if(currentState.GetType() != targetState.GetType())
         {
             currentState.Exit();
             currentState = targetState;
@@ -330,7 +330,7 @@ public class LevelEditor : EditorWindow
                 ((PlaceDotState)currentState).Execute(placeDotType, buttonIndex, cellElement);
                 break;
             case MakePieceState: 
-                ((CollectCells)currentState).AddCell(cellElement, CellColorState.partPiece); 
+                ((CollectCells)currentState).AddCell(cellElement, CellColorState.choosenPiece); 
                 break;
         }
 
@@ -574,22 +574,22 @@ public class LevelEditor : EditorWindow
                 return null;            
 
             //Goal or piece
-            GridElement spawnedGrid;
-            if (gridType == typeof(PieceElement))
-            {
-                spawnedGrid = new PieceElement(this);
-                piecesData.Add((PieceElement)spawnedGrid);
-            }
-            else if (gridType == typeof(ShapeGoalElement))
-            {
-                spawnedGrid = new ShapeGoalElement(this);
-                shapeGoals.Add((ShapeGoalElement)spawnedGrid);
-            }
-            else
-            {
-                Debug.LogError($"Not implementet gridtype: {gridType}");
-                return null;
-            }
+            GridElement spawnedGrid = new GridElement();
+            //if (gridType == typeof(PieceElement))
+            //{
+            //    spawnedGrid = new PieceElement(this);
+            //    piecesData.Add((PieceElement)spawnedGrid);
+            //}
+            //else if (gridType == typeof(ShapeGoalElement))
+            //{
+            //    spawnedGrid = new ShapeGoalElement(this);
+            //    shapeGoals.Add((ShapeGoalElement)spawnedGrid);
+            //}
+            //else
+            //{
+            //    Debug.LogError($"Not implementet gridtype: {gridType}");
+            //    return null;
+            //}
 
             //Save siblings
             for (int i = 0; i < targetElements.Count; i++)

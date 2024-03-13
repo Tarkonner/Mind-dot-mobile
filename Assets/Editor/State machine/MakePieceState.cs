@@ -5,6 +5,8 @@ using UnityEngine.UIElements;
 
 public class MakePieceState : CollectCells
 {
+    
+
     public override void AddCell(CellElement targetCell, CellColorState targetState)
     {
         if (targetCell.cellData.partOfPiece)
@@ -14,7 +16,7 @@ public class MakePieceState : CollectCells
     }
 
     public void Execute(VisualElement holder, VisualTreeAsset spawnHolder, LevelEditor levelEditor)
-    {    
+    {
         //Clean data
         RemoveEmptyCells();
         if (cells.Count == 0)
@@ -25,7 +27,10 @@ public class MakePieceState : CollectCells
 
         //Set Color for cells
         for (int i = 0; i < cells.Count; i++)
+        {
             cells[i].ChangeCellColor(CellColorState.partPiece);
+            cells[i].cellData.partOfPiece = true;
+        }
 
         //Data
         PieceElement pieceElement = new PieceElement(levelEditor);
@@ -34,7 +39,10 @@ public class MakePieceState : CollectCells
 
         //Editor
         VisualElement pieceHolder = spawnHolder.Instantiate();
-        pieceHolder.Q<Button>("Delete").clickable.clicked += () => holder.Remove(pieceHolder);
+        pieceHolder.Q<Button>("Delete").clickable.clicked += () => { holder.Remove(pieceHolder); levelEditor.piecesData.Remove(pieceElement); };
+
+        //Grid
+        pieceHolder.Q<VisualElement>("Grid").Add(GridMaker.MakeGridElement(cells));
 
         holder.Add(pieceHolder);
 

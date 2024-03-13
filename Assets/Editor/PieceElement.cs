@@ -9,7 +9,7 @@ public class PieceElement : GridElement
 {
     
 
-    public PieceElement(LevelEditor editor) : base(editor)
+    public PieceElement(LevelEditor editor) : base()
     {
     }
 

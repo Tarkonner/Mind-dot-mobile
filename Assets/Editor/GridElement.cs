@@ -16,10 +16,8 @@ public class GridElement : VisualElement
 
     protected Sprite cellBackground;
 
-    protected LevelEditor editor;
 
-
-    public GridElement(LevelEditor editor)
+    public GridElement()
     {
         style.flexDirection = FlexDirection.Row;
         style.flexWrap = Wrap.Wrap;
@@ -30,8 +28,6 @@ public class GridElement : VisualElement
 
         // Add event handlers for mouse down and up events
         RegisterCallback<MouseDownEvent>(OnMouseDown);
-
-        this.editor = editor;
     }
 
     public virtual void Construct(Vector2Int targetSize)
@@ -63,7 +59,7 @@ public class GridElement : VisualElement
                 //Add cell
                 var cell = new VisualElement();
                 cell.Add(targetImage);
-                this.Add(targetImage);
+                this.Add(cell);
 
                 //Place dot
                 if (gridData.dotDictionary.ContainsKey(new Vector2Int(x, y)))

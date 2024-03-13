@@ -24,8 +24,8 @@ public class CollectCells : EditorState
         }
         else
         {
-            cells.Remove(targetCell);
             targetCell.SetDefultColor();
+            cells.Remove(targetCell);
         }
     }
 
@@ -35,9 +35,18 @@ public class CollectCells : EditorState
         {
             if (cells[i].cellData.holding == null)
             {
-                cells.RemoveAt(i);
                 cells[i].SetDefultColor();
+                cells.RemoveAt(i);
             }
         }
+    }
+
+    public override void Exit()
+    {
+        for (int i = cells.Count - 1; i >= 0; i--)
+        {
+            cells[i].SetDefultColor();
+        }
+
     }
 }

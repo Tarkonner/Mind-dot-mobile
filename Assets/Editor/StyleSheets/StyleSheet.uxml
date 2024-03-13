@@ -37,14 +37,14 @@
             </ui:GroupBox>
         </ui:VisualElement>
         <ui:VisualElement name="Grid" style="flex-grow: 1; width: 75px; height: 100%; max-height: 100%; min-height: 100%;">
-            <ui:ScrollView scroll-deceleration-rate="0,135" elasticity="0,1" name="ScrollView" horizontal-scroller-visibility="Hidden" vertical-scroller-visibility="AlwaysVisible" style="width: 800px; height: 100%; max-height: 100%; min-height: 100%; max-width: 800px; min-width: 800px; justify-content: center; align-items: flex-start; flex-direction: row; padding-left: 0;">
+            <ui:ScrollView scroll-deceleration-rate="0,135" elasticity="0,1" name="ScrollView" horizontal-scroller-visibility="Hidden" vertical-scroller-visibility="AlwaysVisible" style="width: auto; height: auto; max-height: initial; min-height: initial; max-width: initial; min-width: initial; justify-content: center; align-items: flex-start; flex-direction: row; padding-left: 0;">
                 <ui:VisualElement name="Board" style="flex-grow: 1; max-height: 400px; max-width: 400px; min-width: 400px; min-height: 400px;">
                     <ui:Label tabindex="-1" text="Grid&#10;" parse-escape-sequences="true" display-tooltip-when-elided="true" name="Label" style="height: 20px;" />
                     <ui:VisualElement name="GridHolder" style="flex-grow: 1; min-width: 700px; min-height: 700px; max-width: 700px; max-height: 700px;" />
                 </ui:VisualElement>
                 <ui:VisualElement name="Pieces" style="flex-grow: 1; align-self: auto; flex-direction: column; align-items: flex-start; height: auto; max-height: 250px; min-height: 250px;">
                     <ui:Label tabindex="-1" text="Pieces" parse-escape-sequences="true" display-tooltip-when-elided="true" />
-                    <ui:ScrollView scroll-deceleration-rate="0,135" elasticity="0,1" mode="Horizontal" name="PieceScroller" style="max-width: 1100px; min-width: 500px; max-height: 400px; min-height: 400px;" />
+                    <ui:ScrollView scroll-deceleration-rate="0,135" elasticity="0,1" mode="Horizontal" name="PieceScroller" vertical-scroller-visibility="Hidden" style="max-width: 1100px; min-width: 500px; max-height: 400px; min-height: 400px;" />
                 </ui:VisualElement>
                 <ui:VisualElement name="Goals" style="flex-grow: 1; max-height: 100px;">
                     <ui:Label tabindex="-1" text="Goals" parse-escape-sequences="true" display-tooltip-when-elided="true" />
