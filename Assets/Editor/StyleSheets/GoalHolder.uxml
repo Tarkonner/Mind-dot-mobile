@@ -1,6 +1,6 @@
 <ui:UXML xmlns:ui="UnityEngine.UIElements" xmlns:uie="UnityEditor.UIElements" editor-extension-mode="False">
-    <ui:VisualElement name="GoalHolder" style="flex-grow: 1; width: 298px; height: 0; max-width: 300px; max-height: 350px; min-width: 300px; min-height: 350px; align-self: center; justify-content: center; align-items: stretch; -unity-background-image-tint-color: rgb(255, 255, 255); background-color: rgb(190, 190, 190);">
-        <ui:VisualElement name="Holder" style="flex-grow: 1; align-self: center; justify-content: center; align-items: center;" />
+    <ui:VisualElement name="GoalHolder" style="flex-grow: 1; width: 200px; height: 250px; max-width: 200px; max-height: 250px; min-width: 200px; min-height: 250px; align-self: center; justify-content: center; align-items: stretch; -unity-background-image-tint-color: rgb(255, 255, 255); background-color: rgb(190, 190, 190); margin-right: 10px; margin-left: 10px;">
+        <ui:VisualElement name="Holder" style="flex-grow: 1; align-self: stretch; justify-content: center; align-items: center; width: 200px; height: 200px; max-width: 200px; min-width: 200px; max-height: 200px; min-height: 200px;" />
         <ui:Button text="Delete" parse-escape-sequences="true" display-tooltip-when-elided="true" name="Delete" style="height: 34px; width: 97px; -unity-background-image-tint-color: rgb(255, 136, 136); background-color: rgb(255, 95, 95);" />
     </ui:VisualElement>
 </ui:UXML>
