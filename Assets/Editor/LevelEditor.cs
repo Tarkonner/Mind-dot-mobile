@@ -40,6 +40,7 @@ public class LevelEditor : EditorWindow
     List<CellElement> goalSavedCells = new List<CellElement>();
     VisualElement goalHolder;
     public List<ShapeGoalElement> shapeGoals = new List<ShapeGoalElement>();
+    public List<CellElement> placeGoalCells = new List<CellElement>();
 
 
     #region Buttons    
@@ -63,7 +64,6 @@ public class LevelEditor : EditorWindow
     //Load levels
     ObjectField levelField;
     TextField savedFieldName;
-    List<CellElement> placeGoalCells = new List<CellElement>();
 
     [MenuItem("Tools/Level Editor")]
     public static void ShowMyEditor()
@@ -90,26 +90,33 @@ public class LevelEditor : EditorWindow
 
         //Options
         ButtonAction("ResetEditor").clicked += ClearAll;
+
         //Cells
         horizontalSlider = rootVisualElement.Q("HorizontalValue") as SliderInt;
         verticalSlider = rootVisualElement.Q("VerticalValue") as SliderInt;
         ButtonAction("ResizeGrid").clicked      += () => ResizeGrid(new Vector2(horizontalSlider.value, verticalSlider.value));
         ButtonAction("CellActivation").clicked  += () => ChangeState(new CellEditState());
+
         //Dots
         ButtonAction("RedDot").clicked      += () => { ChangeState(new PlaceDotState()); placeDotType = DotType.Red; };
         ButtonAction("BlueDot").clicked     += () => { ChangeState(new PlaceDotState()); placeDotType = DotType.Blue; };
         ButtonAction("YellowDot").clicked   += () => { ChangeState(new PlaceDotState()); placeDotType = DotType.Yellow; };
+
         //Pieces
         pieceHolder = rootVisualElement.Q("PieceScroller");
         ButtonAction("ChoosePieceCells").clicked += () => ChangeState(new MakePieceState());
         ButtonAction("MakePiece").clicked += () => 
             { if (currentState is MakePieceState) ((MakePieceState)currentState).Execute(pieceHolder, eo_PieceHolder, this); };
+
         //Goal
+        //Shape goals
         goalHolder = rootVisualElement.Q("GoalHolder");
         ButtonAction("ChooseShapeGoalCells").clicked += () => ChangeState(new MakeShapeGoalState());
         ButtonAction("MakeShapeGoal").clicked += () =>
             { if (currentState is MakeShapeGoalState) ((MakeShapeGoalState)currentState).Execute(goalHolder, eo_GoalHolder, this); };
+        //Placement goals
         ButtonAction("MakePlaceGoal").clicked += () => ChangeState(new MakePlaceGoalState());
+
         //Save and load
         namingField = rootVisualElement.Q("LevelsName") as TextField;
         inputtedLevelField = rootVisualElement.Q("LoadLevelField") as ObjectField;
@@ -337,6 +344,9 @@ public class LevelEditor : EditorWindow
                 break;
             case MakeShapeGoalState:
                 ((CollectCells)currentState).AddCell(cellElement, CellColorState.choosenGoal);
+                break;
+            case MakePlaceGoalState:
+                ((MakePlaceGoalState)currentState).Execute(cellElement, buttonIndex, this);
                 break;
         }
 
