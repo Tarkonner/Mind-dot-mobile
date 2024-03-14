@@ -1,10 +1,8 @@
 <ui:UXML xmlns:ui="UnityEngine.UIElements" xmlns:uie="UnityEditor.UIElements" editor-extension-mode="False">
-    <ui:VisualElement name="Holder" style="flex-grow: 1; background-color: rgb(108, 108, 108); width: 300px; height: 0; align-self: center; align-items: stretch; justify-content: space-around; max-height: 400px; max-width: 300px; min-width: 300px; min-height: 400px; padding-right: 0; padding-left: 0; margin-left: 10px; margin-right: 10px;">
-        <ui:VisualElement name="Grid" style="flex-grow: 1; width: 300px; height: 274px; align-items: center; justify-content: space-around; align-self: stretch;" />
-        <ui:VisualElement name="Options" style="flex-grow: 1; height: 100px; width: 300px; flex-direction: row;">
-            <ui:SliderInt picking-mode="Ignore" label="Start rotation" value="0" high-value="3" show-input-field="true" name="RotateValue" style="flex-direction: column; align-items: flex-start; height: 59px; width: 159px;" />
-            <ui:Toggle label="Toggle" text="Rotation" value="true" name="RotatebulToggle" style="width: 105px; align-items: stretch; align-self: stretch; flex-direction: column;" />
-        </ui:VisualElement>
+    <ui:VisualElement name="Holder" style="flex-grow: 1; background-color: rgb(108, 108, 108); width: 200px; height: 250px; align-self: center; align-items: center; justify-content: flex-start; max-height: 250px; max-width: 200px; min-width: 200px; min-height: 250px; padding-right: 0; padding-left: 0; margin-left: 10px; margin-right: 10px;">
+        <ui:VisualElement name="Grid" style="flex-grow: 1; height: 150px; max-height: 150px; min-height: 150px; width: 150px; max-width: 150px; justify-content: center; align-self: center; align-items: center;" />
+        <ui:Toggle text="Rotation" value="true" name="RotatebulToggle" style="width: 100px; align-items: center; align-self: center; flex-direction: row; justify-content: center;" />
+        <ui:SliderInt picking-mode="Ignore" label="Start rotation" value="0" high-value="3" show-input-field="true" name="RotateValue" style="flex-direction: column; align-items: center; height: 35px; width: 159px; justify-content: center; align-self: center; max-height: 35px; min-height: 35px;" />
         <ui:Button text="Delete" parse-escape-sequences="true" display-tooltip-when-elided="true" name="Delete" style="background-color: rgb(255, 85, 85);" />
     </ui:VisualElement>
 </ui:UXML>
