@@ -39,7 +39,7 @@ public class LevelEditor : EditorWindow
     //Goals
     List<CellElement> goalSavedCells = new List<CellElement>();
     VisualElement goalHolder;
-    List<ShapeGoalElement> shapeGoals = new List<ShapeGoalElement>();
+    public List<ShapeGoalElement> shapeGoals = new List<ShapeGoalElement>();
 
 
     #region Buttons    
@@ -102,10 +102,13 @@ public class LevelEditor : EditorWindow
         //Pieces
         pieceHolder = rootVisualElement.Q("PieceScroller");
         ButtonAction("ChoosePieceCells").clicked += () => ChangeState(new MakePieceState());
-        ButtonAction("MakePiece").clicked += () => { if (currentState is MakePieceState) ((MakePieceState)currentState).Execute(pieceHolder, eo_PieceHolder, this); };
+        ButtonAction("MakePiece").clicked += () => 
+            { if (currentState is MakePieceState) ((MakePieceState)currentState).Execute(pieceHolder, eo_PieceHolder, this); };
         //Goal
+        goalHolder = rootVisualElement.Q("GoalHolder");
         ButtonAction("ChooseShapeGoalCells").clicked += () => ChangeState(new MakeShapeGoalState());
-        ButtonAction("ChooseShapeGoalCells").clicked += () => ChangeState(new MakeShapeGoalState());
+        ButtonAction("MakeShapeGoal").clicked += () =>
+            { if (currentState is MakeShapeGoalState) ((MakeShapeGoalState)currentState).Execute(goalHolder, eo_GoalHolder, this); };
         ButtonAction("MakePlaceGoal").clicked += () => ChangeState(new MakePlaceGoalState());
         //Save and load
         namingField = rootVisualElement.Q("LevelsName") as TextField;
@@ -332,6 +335,9 @@ public class LevelEditor : EditorWindow
             case MakePieceState: 
                 ((CollectCells)currentState).AddCell(cellElement, CellColorState.choosenPiece); 
                 break;
+            case MakeShapeGoalState:
+                ((CollectCells)currentState).AddCell(cellElement, CellColorState.choosenGoal);
+                break;
         }
 
         switch (editTypeIndex)
@@ -476,16 +482,16 @@ public class LevelEditor : EditorWindow
         cells[coordinats.y * 7 + coordinats.x].SetDot(new DotElement(type));
     }
 
-    private void MakePiece()
-    {
-        GridElement grid = MakeGridElement(piecesSavedCells, typeof(PieceElement));
+    //private void MakePiece()
+    //{
+    //    GridElement grid = MakeGridElement(piecesSavedCells, typeof(PieceElement));
 
-        if (grid != null)
-        {            
-            pieceHolder.Add(grid);
-            piecesSavedCells.Clear();
-        }
-    }
+    //    if (grid != null)
+    //    {            
+    //        pieceHolder.Add(grid);
+    //        piecesSavedCells.Clear();
+    //    }
+    //}
     private void LoadPiece(LevelPiece targetPiece)
     {
         List<CellElement> result = new List<CellElement>();

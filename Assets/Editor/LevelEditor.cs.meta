@@ -7,6 +7,7 @@ MonoImporter:
   - m_ViewDataDictionary: {instanceID: 0}
   - styleSheet: {fileID: 9197481963319205126, guid: 8906f43ca7522a749aa7ef3024fb54e6, type: 3}
   - eo_PieceHolder: {fileID: 9197481963319205126, guid: 26e1fe33770f34e42bac06c850a1a825, type: 3}
+  - eo_GoalHolder: {fileID: 9197481963319205126, guid: 5bdf6f24137286f45b830227dc960e33, type: 3}
   executionOrder: 0
   icon: {instanceID: 0}
   userData: 

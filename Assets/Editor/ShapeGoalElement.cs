@@ -4,7 +4,7 @@ using UnityEngine;
 
 public class ShapeGoalElement : GridElement
 {
-    public ShapeGoalElement(LevelEditor editor) : base()
+    public ShapeGoalElement() : base()
     {
     }
 }

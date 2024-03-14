@@ -29,8 +29,12 @@ public class MakePieceState : CollectCells
         //Set Color for cells
         for (int i = 0; i < cells.Count; i++)
         {
-            cells[i].ChangeCellColor(CellColorState.partPiece);
             cells[i].cellData.partOfPiece = true;
+
+            if (cells[i].myColorState == CellColorState.partGoal)
+                cells[i].ChangeCellColor(CellColorState.partGoalAndPiece);
+            else
+                cells[i].ChangeCellColor(CellColorState.partPiece);
         }
 
         //Data
@@ -38,10 +42,10 @@ public class MakePieceState : CollectCells
 
         levelEditor.piecesData.Add(pieceElement);
 
+        //Connect behavior
         //Editor
         VisualElement pieceHolder = spawnHolder.Instantiate();
         pieceHolder.Q<Button>("Delete").clickable.clicked += () => { holder.Remove(pieceHolder); levelEditor.piecesData.Remove(pieceElement); };
-
         //Grid
         pieceHolder.Q<VisualElement>("Grid").Add(GridMaker.MakeGridElement(cells, pieceElement));
         SliderInt rotationSlider = pieceHolder.Q<SliderInt>("RotateValue");

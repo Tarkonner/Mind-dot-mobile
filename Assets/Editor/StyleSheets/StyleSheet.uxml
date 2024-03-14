@@ -46,8 +46,9 @@
                     <ui:Label tabindex="-1" text="Pieces" parse-escape-sequences="true" display-tooltip-when-elided="true" />
                     <ui:ScrollView scroll-deceleration-rate="0,135" elasticity="0,1" mode="Horizontal" name="PieceScroller" vertical-scroller-visibility="Hidden" style="max-width: 1100px; min-width: 500px; max-height: 400px; min-height: 400px;" />
                 </ui:VisualElement>
-                <ui:VisualElement name="Goals" style="flex-grow: 1; max-height: 100px;">
-                    <ui:Label tabindex="-1" text="Goals" parse-escape-sequences="true" display-tooltip-when-elided="true" />
+                <ui:VisualElement name="Pieces" style="flex-grow: 1; align-self: auto; flex-direction: column; align-items: flex-start; height: auto; max-height: 250px; min-height: 250px;">
+                    <ui:Label tabindex="-1" text="Pieces" parse-escape-sequences="true" display-tooltip-when-elided="true" />
+                    <ui:ScrollView scroll-deceleration-rate="0,135" elasticity="0,1" mode="Horizontal" name="GoalHolder" vertical-scroller-visibility="Hidden" style="max-width: 1100px; min-width: 500px; max-height: 400px; min-height: 400px;" />
                 </ui:VisualElement>
             </ui:ScrollView>
         </ui:VisualElement>
