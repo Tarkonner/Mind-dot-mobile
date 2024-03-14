@@ -56,4 +56,23 @@ public class DotElement : VisualElement
                 break;
         }
     }
+
+    public void UpdateColor()
+    {
+        switch(DotData.dotType)
+        {
+            case DotType.Blue:
+                image.tintColor = Color.blue;
+                break;
+            case DotType.Red:
+                image.tintColor = Color.red;
+                break;
+            case DotType.Yellow:
+                image.tintColor = Color.yellow;
+                break;
+            case DotType.Null:
+                image.tintColor = Color.gray;
+                break;
+        }
+    }
 }

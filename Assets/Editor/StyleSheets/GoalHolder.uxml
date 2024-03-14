@@ -3,4 +3,5 @@
         <ui:VisualElement name="Holder" style="flex-grow: 1; align-self: stretch; justify-content: center; align-items: center; width: 200px; height: 200px; max-width: 200px; min-width: 200px; max-height: 200px; min-height: 200px;" />
         <ui:Button text="Delete" parse-escape-sequences="true" display-tooltip-when-elided="true" name="Delete" style="height: 34px; width: 97px; -unity-background-image-tint-color: rgb(255, 136, 136); background-color: rgb(255, 95, 95);" />
     </ui:VisualElement>
+    <ui:Button text="Colorless Dots" parse-escape-sequences="true" display-tooltip-when-elided="true" name="ColorlessDots" />
 </ui:UXML>

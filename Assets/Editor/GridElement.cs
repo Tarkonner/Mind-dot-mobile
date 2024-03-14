@@ -25,9 +25,6 @@ public class GridElement : VisualElement
 
         //Set sprite
         cellBackground = Resources.Load<Sprite>("GridElementSprite");
-
-        // Add event handlers for mouse down and up events
-        RegisterCallback<MouseDownEvent>(OnMouseDown);
     }
 
     public virtual void Construct(Vector2Int targetSize)
@@ -60,6 +57,7 @@ public class GridElement : VisualElement
                 var cell = new VisualElement();
                 cell.Add(targetImage);
                 this.Add(cell);
+
 
                 //Place dot
                 if (gridData.dotDictionary.ContainsKey(new Vector2Int(x, y)))
@@ -103,10 +101,5 @@ public class GridElement : VisualElement
     public virtual void SetGridSize(Vector2Int size)
     {
         gridData.gridSize = size;
-    }
-
-    private void OnMouseDown(MouseDownEvent evt)
-    {
-
     }
 }

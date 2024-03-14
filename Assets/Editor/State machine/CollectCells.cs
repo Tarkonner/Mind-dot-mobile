@@ -45,7 +45,8 @@ public class CollectCells : EditorState
     {
         for (int i = cells.Count - 1; i >= 0; i--)
         {
-            cells[i].SetDefultColor();
+            if (cells[i].myColorState != CellColorState.partPiece)
+                cells[i].SetDefultColor();
         }
 
     }
