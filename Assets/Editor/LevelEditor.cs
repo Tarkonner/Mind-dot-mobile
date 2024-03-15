@@ -14,13 +14,10 @@ public class LevelEditor : EditorWindow
     public VisualTreeAsset eo_GoalHolder;
 
     //Editor
-    VisualElement rightPanel;
     VisualElement grid;
     List<CellElement> cells = new List<CellElement>();
 
-    int editTypeIndex = 0;
-
-    public DotType placeDotType;
+    private DotType placeDotType;
 
     //Cell
     SliderInt horizontalSlider;
@@ -43,10 +40,6 @@ public class LevelEditor : EditorWindow
     public List<CellElement> placeGoalCells = new List<CellElement>();
 
     private Button choosenButton;
-
-    //Load levels
-    ObjectField levelField;
-    TextField savedFieldName;
 
     [MenuItem("Tools/Level Editor")]
     public static void ShowMyEditor()
@@ -140,6 +133,28 @@ public class LevelEditor : EditorWindow
         }
     }
 
+    public void OnCellClicked(CellElement cellElement, int buttonIndex)
+    {
+        switch (currentState)
+        {
+            case CellEditState:
+                ((CellEditState)currentState).Execute(cellElement);
+                break;
+            case PlaceDotState:
+                ((PlaceDotState)currentState).Execute(placeDotType, buttonIndex, cellElement);
+                break;
+            case MakePieceState:
+                ((CollectCells)currentState).AddCell(cellElement, CellColorState.choosenPiece);
+                break;
+            case MakeShapeGoalState:
+                ((CollectCells)currentState).AddCell(cellElement, CellColorState.choosenGoal);
+                break;
+            case MakePlaceGoalState:
+                ((MakePlaceGoalState)currentState).Execute(cellElement, buttonIndex, this);
+                break;
+        }
+    }
+
     private Clickable ButtonAction(string name)
     {
         return rootVisualElement.Q<Button>(name).clickable;
@@ -173,133 +188,7 @@ public class LevelEditor : EditorWindow
         verticalSlider.value = 3;
     }
 
-    #region Switch machine
-    public void OnCellClicked(CellElement cellElement, int buttonIndex)
-    {
-        switch(currentState)
-        {
-            case CellEditState:
-                ((CellEditState)currentState).Execute(cellElement);
-                break;
-            case PlaceDotState:
-                ((PlaceDotState)currentState).Execute(placeDotType, buttonIndex, cellElement);
-                break;
-            case MakePieceState: 
-                ((CollectCells)currentState).AddCell(cellElement, CellColorState.choosenPiece); 
-                break;
-            case MakeShapeGoalState:
-                ((CollectCells)currentState).AddCell(cellElement, CellColorState.choosenGoal);
-                break;
-            case MakePlaceGoalState:
-                ((MakePlaceGoalState)currentState).Execute(cellElement, buttonIndex, this);
-                break;
-        }
-
-        switch (editTypeIndex)
-        {
-            //Goals
-            case 6:
-                if (cellElement.cellData.turnedOff)
-                    break;
-
-                if (!goalSavedCells.Contains(cellElement))
-                {
-                    goalSavedCells.Add(cellElement);
-                    cellElement.ChangeCellColor(CellColorState.choosenGoal);
-                }
-                else
-                {
-                    goalSavedCells.Remove(cellElement);
-                    cellElement.SetDefultColor();
-                }
-                break;
-            //case 10:
-            //    if (cellElement.cellData.turnedOff)
-            //        break;
-            //    if (buttonIndex == 1)
-            //    {
-            //        cellElement.RemovePlacementGoal();
-            //        placeGoalCells.Remove(cellElement);
-            //        break;
-            //    }
-            //    MakePlaceGoal(cellElement);
-            //    break;
-        }
-    }
     
-
-    //public void ContentManagement(GridElement targetGrid)
-    //{
-    //    if (editTypeIndex <= 6)
-    //        return;
-
-    //    switch (editTypeIndex)
-    //    {
-    //        //Remove piece
-    //        case 7:
-    //            if (targetGrid is PieceElement)
-    //                RemovePiece((PieceElement)targetGrid);
-    //            break;
-
-
-    //        //Remove goal
-    //        case 8:
-    //            if(targetGrid is ShapeGoalElement)
-    //                RemoveGoal((ShapeGoalElement)targetGrid);
-    //            break;
-
-    //        //No rotation piece
-    //        case 9:
-    //            if (targetGrid is PieceElement)
-    //            {
-    //                PieceElement t = targetGrid as PieceElement;
-    //                t.ChangeRotationStatus();
-    //            }
-    //            break;
-    //    }
-    //}
-    #endregion
-
-    //private void PlaceDot(CellElement targetCell, int buttonIndex)
-    //{
-    //    if (targetCell.cellData.turnedOff)
-    //        return;
-
-    //    if (buttonIndex == 1) //Right click
-    //    {
-    //        targetCell.RemoveDot();
-    //        return;
-    //    }
-
-    //    if (targetCell.cellData.partOfPiece || targetCell.partOfShapeGoals.Count > 0)
-    //        return;
-             
-
-    //    if (buttonIndex == 0) //Left click
-    //    {
-    //        if (targetCell.cellData.holding != null)
-    //            targetCell.ChangeDotColor();
-    //        else
-    //        {
-    //            DotElement targetDot = null;
-    //            switch (dotIndex)
-    //            {
-    //                case 0:
-    //                    targetDot = new DotElement(DotType.Red);
-    //                    break;
-    //                case 1:
-    //                    targetDot = new DotElement(DotType.Blue);
-    //                    break;
-    //                case 2:
-    //                    targetDot = new DotElement(DotType.Yellow);
-    //                    break;
-    //            }
-
-    //            targetCell.SetDot(targetDot);
-    //        }
-    //    }
-    //}
-
     private void PlaceDot(Vector2Int coordinats, DotType type)
     {
         cells[coordinats.y * 7 + coordinats.x].SetDot(new DotElement(type));
@@ -308,154 +197,38 @@ public class LevelEditor : EditorWindow
     private void LoadPiece(LevelPiece targetPiece)
     {
         List<CellElement> result = new List<CellElement>();
-        //Set Cells to be part of piece
         for (int i = 0; i < targetPiece.dotPositions.Length; i++)
         {
-            Vector2Int cal = targetPiece.gridPosRef + new Vector2Int(
-                (int)(targetPiece.dotPositions[i].x - targetPiece.dotPositions[0].x), 
-                (int)(targetPiece.dotPositions[i].y - targetPiece.dotPositions[0].y));
-            result.Add(cells[cal.y * 7 + cal.x]);
+            CellElement spawnCell = new CellElement(new Vector2Int((int)targetPiece.dotPositions[i].x, (int)targetPiece.dotPositions[i].y), this);
+            DotElement spawnDot = new DotElement(targetPiece.dotTypes[i]);
+            spawnCell.SetDot(spawnDot);
+            result.Add(spawnCell);
         }
 
-        //Make grid
-        GridElement grid = MakeGridElement(result, typeof(PieceElement));
-
-        //Add to holder
-        if (grid != null)
-        {
-            pieceHolder.Add(grid);
-            piecesSavedCells.Clear();
-        }
+        //State machine
+        ChangeState(new MakePieceState());
+        ((MakePieceState)currentState).PremakeCells(result);
+        ((MakePieceState)currentState).Execute(pieceHolder, eo_PieceHolder, this);
     }
 
     private void LoadShapeGoal(LevelShapeGoal targetShapeGoal)
     {
+        //Load elements
         List<CellElement> result = new List<CellElement>();
-        //Make grid
-
-        //Set Cells to be part of goal
-        for (int i = 0; i < targetShapeGoal.goalSpecifications.Length; i++)
+        for (int i = 0; i < targetShapeGoal.goalDots.Length; i++)
         {
-            Vector2Int cal = targetShapeGoal.gridPosRef + new Vector2Int(
-                (int)(targetShapeGoal.goalSpecifications[i].x - targetShapeGoal.goalSpecifications[0].x), 
-                (int)(targetShapeGoal.goalSpecifications[i].y - targetShapeGoal.goalSpecifications[0].y));
-            result.Add(cells[cal.y * 7 + cal.x]);
+            CellElement spawnCell = new CellElement(new Vector2Int((int)targetShapeGoal.goalSpecifications[i].x, (int)targetShapeGoal.goalSpecifications[i].y), this);
+            DotElement spawnDot = new DotElement(targetShapeGoal.goalDots[i]);
+            spawnCell.SetDot(spawnDot);
+            result.Add(spawnCell);
         }
 
-        GridElement grid = MakeGridElement(result, typeof(ShapeGoalElement));
-
-        //Add to holder
-        if (grid != null)
-        {
-            goalHolder.Add(grid);
-            goalSavedCells.Clear();
-        }
+        //State machine
+        ChangeState(new MakeShapeGoalState());
+        ((MakeShapeGoalState)currentState).PremakeCells(result);
+        ((MakeShapeGoalState)currentState).Execute(goalHolder, eo_GoalHolder, this);
     }
 
-    private GridElement MakeGridElement(List<CellElement> targetElements, Type gridType)
-    {
-        if (targetElements.Count > 0)
-        {
-            //Change back color
-            for (int i = 0; i < targetElements.Count; i++)
-                targetElements[i].SetDefultColor();
-
-
-            //Remove cells without dots
-            for (int i = targetElements.Count - 1; i >= 0; i--)
-            {
-                if (targetElements[i].cellData.holding == null)
-                    targetElements.RemoveAt(i);
-            }
-
-            if (targetElements.Count == 0)
-                return null;            
-
-            //Goal or piece
-            GridElement spawnedGrid = new GridElement();
-            //if (gridType == typeof(PieceElement))
-            //{
-            //    spawnedGrid = new PieceElement(this);
-            //    piecesData.Add((PieceElement)spawnedGrid);
-            //}
-            //else if (gridType == typeof(ShapeGoalElement))
-            //{
-            //    spawnedGrid = new ShapeGoalElement(this);
-            //    shapeGoals.Add((ShapeGoalElement)spawnedGrid);
-            //}
-            //else
-            //{
-            //    Debug.LogError($"Not implementet gridtype: {gridType}");
-            //    return null;
-            //}
-
-            //Save siblings
-            for (int i = 0; i < targetElements.Count; i++)
-            {
-                spawnedGrid.siblings.Add(targetElements[i]);
-            }
-
-            //Calculate position
-            Vector2Int lowPoint = new Vector2Int(10, 10);
-            Vector2Int highPoint = new Vector2Int(0, 0);
-            for (int i = 0; i < targetElements.Count; i++)
-            {
-                //Low
-                if (lowPoint.x > targetElements[i].cellData.gridCoordinates.x)
-                    lowPoint.x = targetElements[i].cellData.gridCoordinates.x;
-                if (lowPoint.y > targetElements[i].cellData.gridCoordinates.y)
-                    lowPoint.y = targetElements[i].cellData.gridCoordinates.y;
-
-                //High
-                if (highPoint.x < targetElements[i].cellData.gridCoordinates.x)
-                    highPoint.x = targetElements[i].cellData.gridCoordinates.x;
-                if (highPoint.y < targetElements[i].cellData.gridCoordinates.y)
-                    highPoint.y = targetElements[i].cellData.gridCoordinates.y;
-            }
-            spawnedGrid.gridData.gridPosRef = lowPoint;
-            
-            for (int i = 0; i < targetElements.Count; i++)
-            {
-                //Set refence point
-                Vector2Int targetCoor = targetElements[i].cellData.gridCoordinates - new Vector2Int(lowPoint.x, lowPoint.y);
-
-                spawnedGrid.AddDot(targetCoor, targetElements[i].dotRef);
-
-                //Change background color
-                if (gridType == typeof(PieceElement))
-                    targetElements[i].SetPiece((PieceElement)spawnedGrid);
-                else if (gridType == typeof(ShapeGoalElement))
-                    targetElements[i].SetGoal((ShapeGoalElement)spawnedGrid);
-            }
-
-            spawnedGrid.Construct(new Vector2Int(spawnedGrid.gridData.gridSize.x, spawnedGrid.gridData.gridSize.y));
-            spawnedGrid.style.marginRight = new StyleLength(10); // Add right margin
-            spawnedGrid.style.marginBottom = new StyleLength(10); // Add bottom margin
-
-            //Set color
-            for (int i = 0; i < targetElements.Count; i++)
-            {
-                if (targetElements[i].cellData.partOfPiece && gridType == typeof(ShapeGoalElement)
-                    || targetElements[i].partOfShapeGoals.Count > 0 && gridType == typeof(PieceElement))
-                {
-                    targetElements[i].ChangeCellColor(CellColorState.partGoalAndPiece);
-                }
-                else if (gridType == typeof(ShapeGoalElement))
-                    targetElements[i].ChangeCellColor(CellColorState.partGoal);
-                else if (gridType == typeof(PieceElement))
-                    targetElements[i].ChangeCellColor(CellColorState.partPiece);
-            }
-
-            return spawnedGrid;
-        }
-        else
-        {
-            Debug.Log("No cells chosen");
-            return null;
-        }
-    }
-
-    #region Removal
     public void RemovePiece(PieceElement target)
     {
         for (int i = target.siblings.Count - 1; i >= 0; i--)
@@ -538,7 +311,6 @@ public class LevelEditor : EditorWindow
         }
         shapeGoals.Clear();
     }
-    #endregion
 
     private void ChangeButtonColor(Button targetButton)
     {
@@ -557,7 +329,6 @@ public class LevelEditor : EditorWindow
             choosenButton.style.backgroundColor = new Color(0.5f, 0.5f, 0.5f);
         }
     }
-    #region save and load
     //Saving the level
     private bool TrySave()
     {
@@ -596,8 +367,8 @@ public class LevelEditor : EditorWindow
 
         //Set typed name
         string levelName = "";
-        if(savedFieldName.value != null)
-            levelName = savedFieldName.value.ToString();
+        if(namingField.value != null)
+            levelName = namingField.value.ToString();
 
         //Converter
         //Piece
@@ -625,12 +396,12 @@ public class LevelEditor : EditorWindow
             Debug.Log("Error saving level");
         }
 
-        savedFieldName.value = null;
+        namingField.value = null;
     }
 
     private void LoadLevel()
     {
-        if(levelField.value == null)
+        if(inputtedLevelField.value == null)
         {
             Debug.Log("No level selected");
             return;
@@ -638,7 +409,7 @@ public class LevelEditor : EditorWindow
 
         ClearAll();
 
-        LevelSO targetLevel = (LevelSO)levelField.value;
+        LevelSO targetLevel = (LevelSO)inputtedLevelField.value;
 
         //Grid
         LevelBoard targetGrid = targetLevel.levelGrid;
@@ -682,8 +453,7 @@ public class LevelEditor : EditorWindow
         }
 
         //Cleanup
-        levelField.value = null;
+        inputtedLevelField.value = null;
     }
-    #endregion
 
 }

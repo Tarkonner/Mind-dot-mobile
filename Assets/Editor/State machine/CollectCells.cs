@@ -12,6 +12,11 @@ public class CollectCells : EditorState
         cells = new List<CellElement>();
     }
 
+    public void PremakeCells(List<CellElement> inputCells)
+    {
+        cells = inputCells;
+    }
+
     public virtual void AddCell(CellElement targetCell, CellColorState targetState)
     {
         if (targetCell.cellData.turnedOff)
