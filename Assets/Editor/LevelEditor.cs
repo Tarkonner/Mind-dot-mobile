@@ -182,10 +182,6 @@ public class LevelEditor : EditorWindow
                     target.SetActiveState(true);
             }
         }
-
-        //Reset
-        horizontalSlider.value = 3;
-        verticalSlider.value = 3;
     }
 
     
