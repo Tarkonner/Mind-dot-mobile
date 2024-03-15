@@ -96,7 +96,7 @@ public class LevelEditor : EditorWindow
         //Save and load
         namingField = rootVisualElement.Q("LevelsName") as TextField;
         inputtedLevelField = rootVisualElement.Q("LoadLevelField") as ObjectField;
-        ButtonAction("SaveLevel").clicked += SaveChanges;
+        ButtonAction("SaveLevel").clicked += SaveLevelToSO;
         ButtonAction("LoadLevel").clicked += LoadLevel;
 
         //Grid
@@ -208,7 +208,7 @@ public class LevelEditor : EditorWindow
         //State machine
         ChangeState(new MakePieceState());
         ((MakePieceState)currentState).PremakeCells(result);
-        ((MakePieceState)currentState).Execute(pieceHolder, eo_PieceHolder, this);
+        ((MakePieceState)currentState).Execute(pieceHolder, eo_PieceHolder, targetPiece, this);
     }
 
     private void LoadShapeGoal(LevelShapeGoal targetShapeGoal)
@@ -329,41 +329,38 @@ public class LevelEditor : EditorWindow
             choosenButton.style.backgroundColor = new Color(0.5f, 0.5f, 0.5f);
         }
     }
-    //Saving the level
-    private bool TrySave()
-    {
-        bool elligible = true;
-        
-        foreach (var pG in placeGoalCells)
-        {
-            if (!pG.placeGoal.GoalCompletionStatus())
-            {
-                elligible = false;
-                Debug.LogError($"Placement goal in {pG.cellData.gridCoordinates} not fulfilled!");
-                return elligible;
-            }
-        }
-        SaveLevelToSO();
-        return elligible;
-    }
+
     public void SaveLevelToSO()
     {
+        //Legal level
+        if(piecesData.Count == 0)
+        {
+            Debug.Log("No Pieces in level");
+            return;
+        }
+        if(shapeGoals.Count == 0 && placeGoalCells.Count == 0)
+        {
+            Debug.Log("No Goals");
+            return;
+        }
+
         int boardSizeX = cells[0].cellData.gridCoordinates.x;
         int boardSizeY = cells[0].cellData.gridCoordinates.y;
         foreach (CellElement cell in cells)
         {
             if (cell.cellData.turnedOff) continue;
-            if (cell.cellData.gridCoordinates.x > boardSizeX) { boardSizeX = cell.cellData.gridCoordinates.x; }
-            if (cell.cellData.gridCoordinates.y > boardSizeY) { boardSizeY = cell.cellData.gridCoordinates.y; }
+            if (cell.cellData.gridCoordinates.x > boardSizeX)
+                boardSizeX = cell.cellData.gridCoordinates.x;
+            if (cell.cellData.gridCoordinates.y > boardSizeY)
+                boardSizeY = cell.cellData.gridCoordinates.y;
         }
         boardSizeX += 1;
         boardSizeY += 1;
+
         List<PlaceGoalElement> placeGoals = new List<PlaceGoalElement>();
         foreach (var cell in placeGoalCells)
-        {
             placeGoals.Add(cell.placeGoal);
-        }
-        
+
 
         //Set typed name
         string levelName = "";
@@ -371,14 +368,14 @@ public class LevelEditor : EditorWindow
             levelName = namingField.value.ToString();
 
         //Converter
-        //Piece
-        List<PieceData> pieceDatas = new List<PieceData>();
-        foreach (PieceElement data in piecesData)
-            pieceDatas.Add(data.gridData as PieceData);
         //Cell
         List<CellData> cellDatas = new List<CellData>();
         foreach (CellElement item in cells)
             cellDatas.Add(item.cellData);
+        //Piece
+        List<PieceData> pieceDatas = new List<PieceData>();
+        foreach (PieceElement data in piecesData)
+            pieceDatas.Add(data.gridData as PieceData);
         //Shape goals
         List<GridData> gridDatas = new List<GridData>();
         foreach (GridElement item in shapeGoals)
@@ -388,14 +385,13 @@ public class LevelEditor : EditorWindow
         foreach (PlaceGoalElement item in placeGoals)
             placeGoalDatas.Add(item.placeGoalData);
 
-        if (LevelConverter.SaveLevel(levelName, pieceDatas, cellDatas, new Vector2(boardSizeX, boardSizeY), gridDatas, placeGoalDatas)){
+        //Message statues
+        if (LevelConverter.SaveLevel(levelName, pieceDatas, cellDatas, new Vector2(boardSizeX, boardSizeY), gridDatas, placeGoalDatas)) 
             Debug.Log("Level Saved!");
-        }
         else
-        {
             Debug.Log("Error saving level");
-        }
 
+        //Cleanup
         namingField.value = null;
     }
 
@@ -448,9 +444,7 @@ public class LevelEditor : EditorWindow
 
         //Load Placement goals
         foreach(LevelPlaceGoal item in targetLevel.levelPlaceGoals)
-        {
             cells[(int)(item.goalPosition.y * 7 + item.goalPosition.x)].AddPlacementGoal(item.type);
-        }
 
         //Cleanup
         inputtedLevelField.value = null;

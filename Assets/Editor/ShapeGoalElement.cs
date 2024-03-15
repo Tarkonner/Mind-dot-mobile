@@ -11,8 +11,6 @@ public class ShapeGoalElement : GridElement
 
     }
 
-    ClickElement[,] clickElements;
-
     public override void Construct(Vector2Int targetSize)
     {
         //Setup data

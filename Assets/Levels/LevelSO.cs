@@ -16,8 +16,6 @@ public class LevelSO : ScriptableObject
 
     [SerializeField] public LevelPlaceGoal[] levelPlaceGoals;
 
-    [SerializeField, Range(0, 3)] public int[] pieceStartRotation;
-
     public LevelSO() { }
 #nullable enable
     public LevelSO(string? version, string? levelTitle, LevelBoard levelGrid, 
@@ -41,15 +39,6 @@ public class LevelSO : ScriptableObject
         this.levelPieces = levelPieces;
         this.levelShapeGoals = levelGoals;
         this.levelPlaceGoals = levelPlaceGoals;
-
-        // Placeholder for ramdom rotation
-        pieceStartRotation = new int[levelPieces.Length];
-        for (int i = 0; i < pieceStartRotation.Length; i++)
-        {
-            int rnd = Random.Range(0, 4);
-            levelPieces[i].startRotation = rnd;
-            pieceStartRotation[i] = rnd;
-        }
     }
     public static LevelSO CreateLevelSO(string? version, string? levelTitle, LevelBoard levelGrid,
         LevelPiece[] levelPieces, LevelShapeGoal[] levelGoals, LevelPlaceGoal[] levelPlaceGoals)
@@ -61,14 +50,4 @@ public class LevelSO : ScriptableObject
         return levelSO;
     }
 #nullable disable
-
-    private void OnValidate()
-    {
-        //Rotation
-        for (int i = 0; i < pieceStartRotation.Length; i++)
-        {
-            if (levelPieces[i].rotatable)
-                levelPieces[i].startRotation = pieceStartRotation[i];
-        }
-    }
 }
