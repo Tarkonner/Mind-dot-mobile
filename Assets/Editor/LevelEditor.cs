@@ -2,6 +2,7 @@ using SharedData;
 using System;
 using System.Collections.Generic;
 using UnityEditor;
+using UnityEditor.PackageManager;
 using UnityEditor.UIElements;
 using UnityEngine;
 using UnityEngine.UIElements;
@@ -96,7 +97,7 @@ public class LevelEditor : EditorWindow
         //Save and load
         namingField = rootVisualElement.Q("LevelsName") as TextField;
         inputtedLevelField = rootVisualElement.Q("LoadLevelField") as ObjectField;
-        ButtonAction("SaveLevel").clicked += SaveLevelToSO;
+        ButtonAction("SaveLevel").clicked += SaveOrOverride;
         ButtonAction("LoadLevel").clicked += LoadLevel;
 
         //Grid
@@ -326,7 +327,55 @@ public class LevelEditor : EditorWindow
         }
     }
 
-    public void SaveLevelToSO()
+
+    private void SaveOrOverride()
+    {
+        if (inputtedLevelField.value == null)
+            SaveLevelToSO();
+        else
+        {
+            LevelSO level = (LevelSO)inputtedLevelField.value;
+
+            int boardSizeX = cells[0].cellData.gridCoordinates.x;
+            int boardSizeY = cells[0].cellData.gridCoordinates.y;
+            foreach (CellElement cell in cells)
+            {
+                if (cell.cellData.turnedOff) continue;
+                if (cell.cellData.gridCoordinates.x > boardSizeX)
+                    boardSizeX = cell.cellData.gridCoordinates.x;
+                if (cell.cellData.gridCoordinates.y > boardSizeY)
+                    boardSizeY = cell.cellData.gridCoordinates.y;
+            }
+            boardSizeX += 1;
+            boardSizeY += 1;
+
+            //Cell
+            List<CellData> cellDatas = new List<CellData>();
+            foreach (CellElement item in cells)
+                cellDatas.Add(item.cellData);
+            //Piece
+            LevelPiece[] pieces = new LevelPiece[piecesData.Count];
+            for (int i = 0; i < piecesData.Count; i++)
+            {
+                pieces[i] = new LevelPiece(piecesData[i].gridData as PieceData);
+            }
+            //Shape goals
+            LevelShapeGoal[] shape = new LevelShapeGoal[shapeGoals.Count];
+            for (int i = 0; i < shapeGoals.Count; i++)
+            {
+                shape[i] = new LevelShapeGoal(shapeGoals[i].gridData);
+            }
+            //Placement goals
+            LevelPlaceGoal[] place = new LevelPlaceGoal[placeGoalCells.Count];
+            for (int i = 0; i < placeGoalCells.Count; i++)
+            {
+                place[i] = new LevelPlaceGoal(placeGoalCells[i].cellData.gridCoordinates, placeGoalCells[i].cellData.holding.dotType);
+            }
+
+            level.OverrideLevel(new LevelBoard(cellDatas, new Vector2(boardSizeX, boardSizeY)), pieces, shape, place);
+        }
+    }
+    private void SaveLevelToSO()
     {
         //Legal level
         if(piecesData.Count == 0)
@@ -353,9 +402,7 @@ public class LevelEditor : EditorWindow
         boardSizeX += 1;
         boardSizeY += 1;
 
-        List<PlaceGoalElement> placeGoals = new List<PlaceGoalElement>();
-        foreach (var cell in placeGoalCells)
-            placeGoals.Add(cell.placeGoal);
+
 
 
         //Set typed name
@@ -377,18 +424,29 @@ public class LevelEditor : EditorWindow
         foreach (GridElement item in shapeGoals)
             gridDatas.Add(item.gridData);
         //Placement goals
+        List<PlaceGoalElement> placeGoals = new List<PlaceGoalElement>();
+        foreach (var cell in placeGoalCells)
+            placeGoals.Add(cell.placeGoal);
         List<PlaceGoalData> placeGoalDatas = new List<PlaceGoalData>();
         foreach (PlaceGoalElement item in placeGoals)
             placeGoalDatas.Add(item.placeGoalData);
 
-        //Message statues
-        if (LevelConverter.SaveLevel(levelName, pieceDatas, cellDatas, new Vector2(boardSizeX, boardSizeY), gridDatas, placeGoalDatas)) 
-            Debug.Log("Level Saved!");
-        else
-            Debug.Log("Error saving level");
+        //Make SO
+        (bool workingLevel, LevelSO SO_Level) = LevelConverter.SaveLevel(levelName, pieceDatas, cellDatas, new Vector2(boardSizeX, boardSizeY), gridDatas, placeGoalDatas);
 
-        //Cleanup
-        namingField.value = null;
+        //Message statues
+        if (workingLevel)
+        {
+            Debug.Log("Level Saved!");
+
+            //Override
+            inputtedLevelField.value = SO_Level;
+        }
+        else
+        {
+            Debug.Log("Error saving level");
+            namingField.value = null;
+        }
     }
 
     private void LoadLevel()
@@ -444,6 +502,9 @@ public class LevelEditor : EditorWindow
 
         //Cleanup
         inputtedLevelField.value = null;
+
+        //Ready to override
+        inputtedLevelField.value = targetLevel;
     }
 
 }

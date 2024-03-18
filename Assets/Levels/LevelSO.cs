@@ -32,14 +32,25 @@ public class LevelSO : ScriptableObject
     private void Init(string? version, string? levelTitle, LevelBoard levelGrid,
         LevelPiece[] levelPieces, LevelShapeGoal[] levelGoals, LevelPlaceGoal[] levelPlaceGoals)
     {
-        if (version != null) { this.version = version; }
+        if (version != null)
+            this.version = version;
         this.levelTitle = levelTitle;
-        if (levelTitle != null) { this.name = levelTitle; }
+        if (levelTitle != null) 
+            this.name = levelTitle;
         this.levelGrid = levelGrid;
         this.levelPieces = levelPieces;
         this.levelShapeGoals = levelGoals;
         this.levelPlaceGoals = levelPlaceGoals;
     }
+
+    public void OverrideLevel(LevelBoard levelGrid, LevelPiece[] levelPieces, LevelShapeGoal[] levelGoals, LevelPlaceGoal[] levelPlaceGoals)
+    {
+        this.levelGrid = levelGrid;
+        this.levelPieces = levelPieces;
+        this.levelShapeGoals = levelGoals;
+        this.levelPlaceGoals = levelPlaceGoals;
+    }
+
     public static LevelSO CreateLevelSO(string? version, string? levelTitle, LevelBoard levelGrid,
         LevelPiece[] levelPieces, LevelShapeGoal[] levelGoals, LevelPlaceGoal[] levelPlaceGoals)
     {

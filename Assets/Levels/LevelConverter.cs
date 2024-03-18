@@ -10,10 +10,11 @@ public static class LevelConverter
 {
 # if(UNITY_EDITOR)
     private static string version = "0.1";
-    public static bool SaveLevel(string title, List<PieceData> pEs, 
+    public static (bool, LevelSO) SaveLevel(string title, List<PieceData> pEs, 
         List<CellData> board, Vector2 boardSize, List<GridData> sGEs, List<PlaceGoalData> pGEs)
     {
         bool success = true;
+
         LevelPiece[] pieces = new LevelPiece[pEs.Count];
         for (int i = 0; i < pEs.Count; i++)
         {
@@ -31,6 +32,7 @@ public static class LevelConverter
         {
             lPGs[i] = new LevelPlaceGoal(pGEs[i].cellData.gridCoordinates, pGEs[i].goalType);
         }
+                
         string name;
         if (title == null || title == "")
         {
@@ -50,12 +52,7 @@ public static class LevelConverter
         AssetDatabase.SaveAssets();
         AssetDatabase.Refresh();
 
-        return success;
-    }
-
-    public static void LoadLevel(LevelSO levelObject)
-    {
-
+        return (success, levelObject);
     }
 #endif
 }
