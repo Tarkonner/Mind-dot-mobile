@@ -7,6 +7,8 @@ using UnityEngine.UIElements;
 
 public class PieceElement : GridElement
 {
+    public bool legalPiece;
+
     public override void Construct(Vector2Int targetSize)
     {
         PieceData temp = new PieceData();
@@ -16,7 +18,7 @@ public class PieceElement : GridElement
         gridData = temp;
 
         //Piece legality test
-        bool legalPiece = true;
+        legalPiece = true;
 
         //Setup data
         List<Vector2Int> dotPos = new List<Vector2Int>();

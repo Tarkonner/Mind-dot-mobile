@@ -42,12 +42,16 @@ public class MakePieceState : CollectCells
 
         levelEditor.piecesData.Add(pieceElement);
 
-        //Connect behavior
-        //Editor
-        VisualElement pieceHolder = spawnHolder.Instantiate();
-        pieceHolder.Q<Button>("Delete").clickable.clicked += () => { holder.Remove(pieceHolder); levelEditor.piecesData.Remove(pieceElement); };
         //Grid
+        VisualElement pieceHolder = spawnHolder.Instantiate();
         pieceHolder.Q<VisualElement>("Grid").Add(GridMaker.MakeGridElement(cells, pieceElement));
+        
+        //Gate
+        if(!pieceElement.legalPiece)
+            return;
+
+        //Editor
+        pieceHolder.Q<Button>("Delete").clickable.clicked += () => { holder.Remove(pieceHolder); levelEditor.piecesData.Remove(pieceElement); };
         //Slider
         SliderInt rotationSlider = pieceHolder.Q<SliderInt>("RotateValue");
         rotationSlider.RegisterValueChangedCallback(value => ((PieceData)pieceElement.gridData).startRotationIndex = value.newValue);
