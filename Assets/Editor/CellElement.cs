@@ -17,18 +17,40 @@ public class CellElement : Image
 
     public PlaceGoalElement placeGoal { get; private set; }
 
-    //Color control
+    #region Color
     public CellColorState myColorState { get; private set; } = CellColorState.normal;
-    Color[] cellColorState = new Color[]
+
+    private Dictionary<CellColorState, Color> cellColorState = new Dictionary<CellColorState, Color>
+    {
+        { CellColorState.normal, Color.white },
+        { CellColorState.turnedOff, new Color(.2f, .2f, .2f) },
+        { CellColorState.choosenPiece, Color.cyan },
+        { CellColorState.choosenGoal, new Color(1f, 0.85f, 0.43f) },
+        { CellColorState.partGoal, new Color(0, .7f, .7f) },
+        { CellColorState.partPiece, new Color(0.01f, .6f, .5f) },
+        { CellColorState.partGoalAndPiece, new Color(1, 0, 0.666f) },
+    };
+
+    public void SetDefaultColor()
+    {
+        ChangeCellColor(CellColorState.normal);
+    }
+
+    public void ChangeCellColor(CellColorState targetColor)
+    {
+        if(myColorState == CellColorState.partGoal && targetColor == CellColorState.partPiece
+            || myColorState == CellColorState.partPiece && targetColor == CellColorState.partGoal)
         {
-            new Color(.2f, 1, 0.333f),
-            new Color(0, .7f, .7f),
-            new Color(0.01f, .6f, .5f),
-            new Color(1, 0, 0.666f),
-            new Color(1, .2f, 1),
-            new Color(.2f, .2f, .2f),
-            Color.white
-        };
+            myColorState = CellColorState.partGoalAndPiece;
+        }
+        else
+            myColorState = targetColor;
+        
+        //Set color
+        this.tintColor = cellColorState[myColorState];
+    }
+
+    #endregion
 
     public CellElement(Vector2Int coordinats, LevelEditor editor)
     {
@@ -49,30 +71,6 @@ public class CellElement : Image
         style.flexDirection = FlexDirection.Row;
         style.justifyContent = Justify.Center;
         style.alignItems = Align.Center;
-    }
-
-    public void SetDefultColor()
-    {
-        if (myColorState == CellColorState.partGoalAndPiece)
-        {
-            if(!cellData.partOfPiece)
-                myColorState = CellColorState.partGoal;
-            if (partOfShapeGoals.Count == 0)
-                myColorState = CellColorState.partPiece;
-        }
-        else if(partOfShapeGoals.Count > 1)
-            myColorState |= CellColorState.partGoal;
-        else if(cellData.turnedOff)
-            myColorState = CellColorState.turnedOff;
-        else
-            myColorState = CellColorState.normal;
-
-        this.tintColor = cellColorState[(int)myColorState];
-    }
-    public void ChangeCellColor(CellColorState targetColor)
-    {
-        myColorState = targetColor;
-        this.tintColor = cellColorState[(int)targetColor];
     }
 
     public void SetDot(DotElement dot)
@@ -107,8 +105,7 @@ public class CellElement : Image
         cellData.holding = null;
 
         //Change color
-        myColorState = CellColorState.normal;
-        this.tintColor = cellColorState[(int)myColorState];
+        SetDefaultColor();
     }
 
     public void SetPiece(PieceElement pieceElement)
@@ -117,11 +114,7 @@ public class CellElement : Image
         piece = pieceElement;
 
         //Change color
-        if (myColorState == CellColorState.partGoal)
-            myColorState = CellColorState.partGoalAndPiece;
-        else
-            myColorState = CellColorState.partPiece;
-        this.tintColor = cellColorState[(int)myColorState];
+        ChangeCellColor(CellColorState.partPiece);
     }
 
     public void RemovePiece()
@@ -129,7 +122,7 @@ public class CellElement : Image
         cellData.partOfPiece = false;
         piece = null;
 
-        SetDefultColor();
+        SetDefaultColor();
     }
 
     public void SetGoal(ShapeGoalElement shapeGoalElement)
@@ -141,14 +134,14 @@ public class CellElement : Image
         else
             myColorState = CellColorState.partGoal;
 
-        this.tintColor = cellColorState[(int)myColorState];
+        ChangeCellColor(CellColorState.partGoal);
     }
 
     public void RemoveGoal()
     {
         partOfShapeGoals.Clear();
 
-        SetDefultColor();
+        SetDefaultColor();
     }
 
     public void RemoveGoal(ShapeGoalElement shapeGoalElement)
@@ -156,7 +149,7 @@ public class CellElement : Image
         if (partOfShapeGoals.Contains(shapeGoalElement))
             partOfShapeGoals.Remove(shapeGoalElement);
 
-        SetDefultColor();
+        SetDefaultColor();
     }
 
 
@@ -173,17 +166,15 @@ public class CellElement : Image
         if (targetState)
         {
             cellData.turnedOff = false;
-            SetDefultColor();
+            SetDefaultColor();
         }
         else
         {
             cellData.turnedOff = true;
 
-            myColorState = CellColorState.turnedOff;
-            this.tintColor = cellColorState[(int)myColorState];
+            ChangeCellColor(CellColorState.turnedOff);
 
             RemoveDot();
-            SetDefultColor();
         }
     }
 
