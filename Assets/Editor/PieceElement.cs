@@ -15,53 +15,56 @@ public class PieceElement : GridElement
         temp.gridPosRef = gridData.gridPosRef;
         gridData = temp;
 
+        //Piece legality test
         bool legalPiece = true;
 
-        foreach (Vector2Int dotPos in gridData.dotDictionary.Keys)
+        //Setup data
+        List<Vector2Int> dotPos = new List<Vector2Int>();
+        foreach (Vector2Int key in gridData.dotDictionary.Keys)
+            dotPos.Add(key);
+
+        //Gate
+        if (dotPos.Count == 0)
+            legalPiece = false;
+
+        int connectionMade = 0;
+        Stack<Vector2Int> neighbors = new Stack<Vector2Int>();
+        Vector2Int calculationPoint = dotPos[0];
+        dotPos.RemoveAt(0);
+        while (legalPiece)
         {
-            if (!gridData.dotDictionary[dotPos].isConnected)
+            //Look for nieghbors
+            for (int i = dotPos.Count - 1; i >= 0; i--)
             {
-                List<Vector2Int> diagonalList = new List<Vector2Int>();
-                bool foundAdjacent = false;
+                //Do we have the point
+                if (neighbors.Contains(dotPos[i]))
+                    continue;
 
-                foreach (Vector2Int otherDot in gridData.dotDictionary.Keys)
+                if(Vector2.Distance(calculationPoint, dotPos[i]) < 1.5f)
                 {
-                    if(dotPos == otherDot) { continue; }
-
-                    float val = Vector2Int.Distance(dotPos, otherDot);
-                    if (val > 1.5f) continue;
-
-                    else if (val > 1.2f && !foundAdjacent)
-                    {
-                        diagonalList.Add(otherDot);
-                    }
-                    else if (val == 1)
-                    {
-                        foundAdjacent = true;
-                        //Create Connection
-                        gridData.dotDictionary[dotPos].isConnected = true;
-                        gridData.dotDictionary[otherDot].isConnected = true;
-                    }
-                }
-                if (!foundAdjacent)
-                {
-                    foreach (var diagonal in diagonalList)
-                    {
-                        gridData.dotDictionary[dotPos].isConnected = true;
-                        gridData.dotDictionary[diagonal].isConnected = true;
-                    }
+                    neighbors.Push(dotPos[i]);
+                    dotPos.RemoveAt(i);
+                    connectionMade++;
                 }
             }
-        }
-        foreach (DotData dot in gridData.dotDictionary.Values)
-        {
-            if (!dot.isConnected)
-                legalPiece = false;
+
+            if(neighbors.Count == 0)
+            {
+                if(connectionMade < gridData.dotDictionary.Keys.Count - 1)
+                {
+                    legalPiece = false;
+                    Debug.Log("Error in making piece. Illegal dot placement.");
+                }
+
+                break;
+            }
+            else
+            {
+                calculationPoint = neighbors.Pop();
+            }
         }
 
         if (legalPiece)
             base.Construct(targetSize);
-        else
-            Debug.Log("Error in making piece. Illegal dot placement.");
     }
 }
