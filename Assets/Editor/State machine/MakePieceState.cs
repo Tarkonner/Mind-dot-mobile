@@ -31,10 +31,7 @@ public class MakePieceState : CollectCells
         {
             cells[i].cellData.partOfPiece = true;
 
-            if (cells[i].myColorState == CellColorState.partGoal)
-                cells[i].ChangeCellColor(CellColorState.partGoalAndPiece);
-            else
-                cells[i].ChangeCellColor(CellColorState.partPiece);
+            cells[i].ChangeCellColor(CellColorState.partPiece);
         }
 
         //Data
@@ -83,15 +80,8 @@ public class MakePieceState : CollectCells
         }
 
         //Set Color for cells
-        for (int i = 0; i < cells.Count; i++)
-        {
-            cells[i].cellData.partOfPiece = true;
-
-            if (cells[i].myColorState == CellColorState.partGoal)
-                cells[i].ChangeCellColor(CellColorState.partGoalAndPiece);
-            else
-                cells[i].ChangeCellColor(CellColorState.partPiece);
-        }
+        for (int i = 0; i < savedPiece.dotPositions.Length; i++)
+            levelEditor.cells[(int)(savedPiece.dotPositions[i].x + savedPiece.dotPositions[i].y * 7)].ChangeCellColor(CellColorState.partPiece);
 
         //Data
         PieceElement pieceElement = new PieceElement();

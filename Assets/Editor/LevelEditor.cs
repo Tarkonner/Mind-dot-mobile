@@ -16,8 +16,7 @@ public class LevelEditor : EditorWindow
 
     //Editor
     VisualElement grid;
-    List<CellElement> cells = new List<CellElement>();
-
+    public List<CellElement> cells { get; private set; } = new List<CellElement>();
     private DotType placeDotType;
 
     //Cell
@@ -191,40 +190,7 @@ public class LevelEditor : EditorWindow
         cells[coordinats.y * 7 + coordinats.x].SetDot(new DotElement(type));
     }
 
-    private void LoadPiece(LevelPiece targetPiece)
-    {
-        List<CellElement> result = new List<CellElement>();
-        for (int i = 0; i < targetPiece.dotPositions.Length; i++)
-        {
-            CellElement spawnCell = new CellElement(new Vector2Int((int)targetPiece.dotPositions[i].x, (int)targetPiece.dotPositions[i].y), this);
-            DotElement spawnDot = new DotElement(targetPiece.dotTypes[i]);
-            spawnCell.SetDot(spawnDot);
-            result.Add(spawnCell);
-        }
 
-        //State machine
-        ChangeState(new MakePieceState());
-        ((MakePieceState)currentState).PremakeCells(result);
-        ((MakePieceState)currentState).Execute(pieceHolder, eo_PieceHolder, targetPiece, this);
-    }
-
-    private void LoadShapeGoal(LevelShapeGoal targetShapeGoal)
-    {
-        //Load elements
-        List<CellElement> result = new List<CellElement>();
-        for (int i = 0; i < targetShapeGoal.goalDots.Length; i++)
-        {
-            CellElement spawnCell = new CellElement(new Vector2Int((int)targetShapeGoal.goalSpecifications[i].x, (int)targetShapeGoal.goalSpecifications[i].y), this);
-            DotElement spawnDot = new DotElement(targetShapeGoal.goalDots[i]);
-            spawnCell.SetDot(spawnDot);
-            result.Add(spawnCell);
-        }
-
-        //State machine
-        ChangeState(new MakeShapeGoalState());
-        ((MakeShapeGoalState)currentState).PremakeCells(result);
-        ((MakeShapeGoalState)currentState).Execute(goalHolder, eo_GoalHolder, this);
-    }
 
     public void RemovePiece(PieceElement target)
     {
@@ -448,7 +414,7 @@ public class LevelEditor : EditorWindow
             namingField.value = null;
         }
     }
-
+    #region Load
     private void LoadLevel()
     {
         if(inputtedLevelField.value == null)
@@ -507,4 +473,39 @@ public class LevelEditor : EditorWindow
         inputtedLevelField.value = targetLevel;
     }
 
+    private void LoadPiece(LevelPiece targetPiece)
+    {
+        List<CellElement> result = new List<CellElement>();
+        for (int i = 0; i < targetPiece.dotPositions.Length; i++)
+        {
+            CellElement spawnCell = new CellElement(new Vector2Int((int)targetPiece.dotPositions[i].x, (int)targetPiece.dotPositions[i].y), this);
+            DotElement spawnDot = new DotElement(targetPiece.dotTypes[i]);
+            spawnCell.SetDot(spawnDot);
+            result.Add(spawnCell);
+        }
+
+        //State machine
+        ChangeState(new MakePieceState());
+        ((MakePieceState)currentState).PremakeCells(result);
+        ((MakePieceState)currentState).Execute(pieceHolder, eo_PieceHolder, targetPiece, this);
+    }
+
+    private void LoadShapeGoal(LevelShapeGoal targetShapeGoal)
+    {
+        //Load elements
+        List<CellElement> result = new List<CellElement>();
+        for (int i = 0; i < targetShapeGoal.goalDots.Length; i++)
+        {
+            CellElement spawnCell = new CellElement(new Vector2Int((int)targetShapeGoal.goalSpecifications[i].x, (int)targetShapeGoal.goalSpecifications[i].y), this);
+            DotElement spawnDot = new DotElement(targetShapeGoal.goalDots[i]);
+            spawnCell.SetDot(spawnDot);
+            result.Add(spawnCell);
+        }
+
+        //State machine
+        ChangeState(new MakeShapeGoalState());
+        ((MakeShapeGoalState)currentState).PremakeCells(result);
+        ((MakeShapeGoalState)currentState).Execute(goalHolder, eo_GoalHolder, targetShapeGoal, this);
+    }
+    #endregion
 }
