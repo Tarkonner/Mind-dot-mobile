@@ -18,6 +18,8 @@ public class CellElement : Image
     public PlaceGoalElement placeGoal { get; private set; }
 
     #region Color
+    private int colorGoalCount = 0;
+    private bool colorPartPiece = false;
     public CellColorState myColorState { get; private set; } = CellColorState.normal;
 
     private Dictionary<CellColorState, Color> cellColorState = new Dictionary<CellColorState, Color>
@@ -34,6 +36,23 @@ public class CellElement : Image
     public void SetDefaultColor()
     {
         ChangeCellColor(CellColorState.normal);
+        colorGoalCount = 0;
+        colorPartPiece = false;
+    }
+
+    public void UnsubColor(CellColorState color = CellColorState.normal)
+    {
+        if (color == CellColorState.partGoal)
+            colorGoalCount--;
+
+        if (colorGoalCount > 0 && colorPartPiece)
+            ChangeCellColor(CellColorState.partGoalAndPiece);
+        else if (colorGoalCount > 0 && !colorPartPiece)
+            ChangeCellColor(CellColorState.partGoal);
+        else if (colorPartPiece)
+            ChangeCellColor(CellColorState.partPiece);
+        else
+            ChangeCellColor(CellColorState.normal);
     }
 
     public void ChangeCellColor(CellColorState targetColor)
@@ -45,7 +64,13 @@ public class CellElement : Image
         }
         else
             myColorState = targetColor;
-        
+
+        //Save color
+        if (targetColor == CellColorState.partGoal)
+            colorGoalCount++;
+        if(targetColor == CellColorState.partPiece)
+            colorPartPiece = true;
+
         //Set color
         this.tintColor = cellColorState[myColorState];
     }
@@ -122,17 +147,12 @@ public class CellElement : Image
         cellData.partOfPiece = false;
         piece = null;
 
-        SetDefaultColor();
+        UnsubColor(CellColorState.partPiece);
     }
 
     public void SetGoal(ShapeGoalElement shapeGoalElement)
     {
         partOfShapeGoals.Add(shapeGoalElement);
-
-        if (myColorState == CellColorState.partPiece)
-            myColorState = CellColorState.partGoalAndPiece;
-        else
-            myColorState = CellColorState.partGoal;
 
         ChangeCellColor(CellColorState.partGoal);
     }
@@ -141,7 +161,7 @@ public class CellElement : Image
     {
         partOfShapeGoals.Clear();
 
-        SetDefaultColor();
+        UnsubColor(CellColorState.partGoal);
     }
 
     public void RemoveGoal(ShapeGoalElement shapeGoalElement)

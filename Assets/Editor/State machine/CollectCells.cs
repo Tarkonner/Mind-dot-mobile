@@ -29,7 +29,7 @@ public class CollectCells : EditorState
         }
         else
         {
-            targetCell.SetDefaultColor();
+            targetCell.UnsubColor(targetState);
             cells.Remove(targetCell);
         }
     }
@@ -40,7 +40,7 @@ public class CollectCells : EditorState
         {
             if (cells[i].cellData.holding == null)
             {
-                cells[i].SetDefaultColor();
+                cells[i].UnsubColor();
                 cells.RemoveAt(i);
             }
         }
@@ -51,7 +51,7 @@ public class CollectCells : EditorState
         for (int i = cells.Count - 1; i >= 0; i--)
         {
             if (cells[i].myColorState != CellColorState.partPiece)
-                cells[i].SetDefaultColor();
+                cells[i].UnsubColor();
         }
 
     }
