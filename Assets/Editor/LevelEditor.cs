@@ -6,6 +6,7 @@ using UnityEditor.PackageManager;
 using UnityEditor.UIElements;
 using UnityEngine;
 using UnityEngine.UIElements;
+using static Codice.Client.BaseCommands.Import.Commit;
 
 public class LevelEditor : EditorWindow
 {
@@ -39,7 +40,9 @@ public class LevelEditor : EditorWindow
     public List<ShapeGoalElement> shapeGoals = new List<ShapeGoalElement>();
     public List<CellElement> placeGoalCells = new List<CellElement>();
 
+    //Change Button color
     private Button choosenButton;
+    private StyleColor savedButtonColor;
 
     [MenuItem("Tools/Level Editor")]
     public static void ShowMyEditor()
@@ -74,9 +77,9 @@ public class LevelEditor : EditorWindow
         ButtonAction("CellActivation").clicked  += () => ChangeState(new CellEditState());
 
         //Dots
-        ButtonAction("RedDot").clicked      += () => { ChangeState(new PlaceDotState()); placeDotType = DotType.Red; };
-        ButtonAction("BlueDot").clicked     += () => { ChangeState(new PlaceDotState()); placeDotType = DotType.Blue; };
-        ButtonAction("YellowDot").clicked   += () => { ChangeState(new PlaceDotState()); placeDotType = DotType.Yellow; };
+        ButtonAction("RedDot").clicked      += () => { ChangeState(new PlaceDotState()); placeDotType = DotType.Red;};
+        ButtonAction("BlueDot").clicked     += () => { ChangeState(new PlaceDotState()); placeDotType = DotType.Blue;};
+        ButtonAction("YellowDot").clicked   += () => { ChangeState(new PlaceDotState()); placeDotType = DotType.Yellow;};
 
         //Pieces
         pieceHolder = rootVisualElement.Q("PieceScroller");
@@ -96,6 +99,13 @@ public class LevelEditor : EditorWindow
         //Save and load
         namingField = rootVisualElement.Q("LevelsName") as TextField;
         inputtedLevelField = rootVisualElement.Q("LoadLevelField") as ObjectField;
+        inputtedLevelField.RegisterValueChangedCallback((evt) =>
+        {
+            if(inputtedLevelField.value != null)
+                rootVisualElement.Q<Button>("SaveLevel").text = "Override level";
+            else
+                rootVisualElement.Q<Button>("SaveLevel").text = "Save";
+        });
         ButtonAction("SaveLevel").clicked += SaveOrOverride;
         ButtonAction("LoadLevel").clicked += LoadLevel;
 
@@ -132,6 +142,7 @@ public class LevelEditor : EditorWindow
             }
         }
     }
+
 
     public void OnCellClicked(CellElement cellElement, int buttonIndex)
     {
@@ -273,24 +284,6 @@ public class LevelEditor : EditorWindow
                 goalHolder.Remove(shapeGoals[i]);
         }
         shapeGoals.Clear();
-    }
-
-    private void ChangeButtonColor(Button targetButton)
-    {
-        if (targetButton == choosenButton)
-            return;
-
-        if(choosenButton == null)
-        {
-            choosenButton = targetButton;
-            choosenButton.style.backgroundColor = new Color(0.5f, 0.5f, 0.5f);
-        }
-        else
-        {
-            choosenButton.style.backgroundColor = new Color(0.345f, 0.345f, 0.345f);
-            choosenButton = targetButton;
-            choosenButton.style.backgroundColor = new Color(0.5f, 0.5f, 0.5f);
-        }
     }
 
 
