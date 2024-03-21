@@ -12,9 +12,9 @@
             <ui:GroupBox name="Dots">
                 <ui:Label tabindex="-1" text="Dots" parse-escape-sequences="true" display-tooltip-when-elided="true" name="Label" />
                 <ui:VisualElement style="flex-grow: 1; flex-direction: row; align-self: stretch; align-items: auto; justify-content: space-between;">
-                    <ui:Button text="Red dot" parse-escape-sequences="true" display-tooltip-when-elided="true" name="RedDot" style="justify-content: space-around; align-self: flex-start; width: 100px; height: 40px; background-color: rgb(192, 108, 108); -unity-background-image-tint-color: rgb(0, 0, 0);" />
-                    <ui:Button text="Blue dot" parse-escape-sequences="true" display-tooltip-when-elided="true" name="BlueDot" style="height: 40px; width: 100px; background-color: rgb(73, 147, 212);" />
-                    <ui:Button text="Yellow dot" parse-escape-sequences="true" display-tooltip-when-elided="true" name="YellowDot" style="width: 100px; height: 40px; background-color: rgb(190, 189, 121);" />
+                    <ui:Button parse-escape-sequences="true" display-tooltip-when-elided="true" name="RedDot" style="width: 90px; height: 60px;" />
+                    <ui:Button parse-escape-sequences="true" display-tooltip-when-elided="true" name="BlueDot" style="width: 90px; height: 60px;" />
+                    <ui:Button parse-escape-sequences="true" display-tooltip-when-elided="true" name="YellowDot" style="width: 90px; height: 60px;" />
                 </ui:VisualElement>
             </ui:GroupBox>
             <ui:GroupBox name="Pieces">
@@ -26,7 +26,7 @@
                 <ui:Label tabindex="-1" text="Goals" parse-escape-sequences="true" display-tooltip-when-elided="true" name="Label" />
                 <ui:Button text="Choose cells" parse-escape-sequences="true" display-tooltip-when-elided="true" name="ChooseShapeGoalCells" style="height: 40px;" />
                 <ui:Button text="Make Shape goal" parse-escape-sequences="true" display-tooltip-when-elided="true" name="MakeShapeGoal" style="height: 40px;" />
-                <ui:Button text="Make Place Goal" parse-escape-sequences="true" display-tooltip-when-elided="true" name="MakePlaceGoal" style="height: 40px;" />
+                <ui:Button text="Make Place Goal" parse-escape-sequences="true" display-tooltip-when-elided="true" name="MakePlaceGoal" style="height: 40px; -unity-text-align: middle-center;" />
             </ui:GroupBox>
             <ui:GroupBox name="GroupBox">
                 <ui:Label tabindex="-1" text="Save &amp; load levels" parse-escape-sequences="true" display-tooltip-when-elided="true" />

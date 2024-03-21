@@ -42,7 +42,6 @@ public class LevelEditor : EditorWindow
 
     //Change Button color
     private Button choosenButton;
-    private StyleColor savedButtonColor;
 
     [MenuItem("Tools/Level Editor")]
     public static void ShowMyEditor()
@@ -73,24 +72,31 @@ public class LevelEditor : EditorWindow
         //Cells
         horizontalSlider = rootVisualElement.Q("HorizontalValue") as SliderInt;
         verticalSlider = rootVisualElement.Q("VerticalValue") as SliderInt;
-        ButtonAction("ResizeGrid").clicked      += () => ResizeGrid(new Vector2(horizontalSlider.value, verticalSlider.value));
+        SelectetAction("ResizeGrid").clicked      += () => ResizeGrid(new Vector2(horizontalSlider.value, verticalSlider.value));
+        //Set start marked
         ButtonAction("CellActivation").clicked  += () => ChangeState(new CellEditState());
 
         //Dots
-        ButtonAction("RedDot").clicked      += () => { ChangeState(new PlaceDotState()); placeDotType = DotType.Red;};
-        ButtonAction("BlueDot").clicked     += () => { ChangeState(new PlaceDotState()); placeDotType = DotType.Blue;};
-        ButtonAction("YellowDot").clicked   += () => { ChangeState(new PlaceDotState()); placeDotType = DotType.Yellow;};
+        Button redButton = rootVisualElement.Q<Button>("RedDot");
+        redButton.clickable.clicked     += () => { ChangeState(new PlaceDotState()); placeDotType = DotType.Red; ChangeButtonColor(redButton); };
+        redButton.Add(DotImage(Color.red));
+        Button bluButton = rootVisualElement.Q<Button>("BlueDot");
+        bluButton.clickable.clicked     += () => { ChangeState(new PlaceDotState()); placeDotType = DotType.Blue; ChangeButtonColor(bluButton); };
+        bluButton.Add(DotImage(Color.blue));
+        Button yellowButton = rootVisualElement.Q<Button>("YellowDot");
+        yellowButton.clickable.clicked  += () => { ChangeState(new PlaceDotState()); placeDotType = DotType.Yellow; ChangeButtonColor(yellowButton); };
+        yellowButton.Add(DotImage(new Color(247, 255, 0)));
 
         //Pieces
         pieceHolder = rootVisualElement.Q("PieceScroller");
-        ButtonAction("ChoosePieceCells").clicked += () => ChangeState(new MakePieceState());
+        SelectetAction("ChoosePieceCells").clicked += () => ChangeState(new MakePieceState());
         ButtonAction("MakePiece").clicked += () => 
             { if (currentState is MakePieceState) ((MakePieceState)currentState).Execute(pieceHolder, eo_PieceHolder, this); };
 
         //Goal
         //Shape goals
         goalHolder = rootVisualElement.Q("GoalHolder");
-        ButtonAction("ChooseShapeGoalCells").clicked += () => ChangeState(new MakeShapeGoalState());
+        SelectetAction("ChooseShapeGoalCells").clicked += () => ChangeState(new MakeShapeGoalState());
         ButtonAction("MakeShapeGoal").clicked += () =>
             { if (currentState is MakeShapeGoalState) ((MakeShapeGoalState)currentState).Execute(goalHolder, eo_GoalHolder, this); };
         //Placement goals
@@ -143,6 +149,43 @@ public class LevelEditor : EditorWindow
         }
     }
 
+    Image DotImage(Color targetColor)
+    {
+        Image dotImage = new Image();
+        dotImage.sprite = Resources.Load<Sprite>("Circle");
+        dotImage.tintColor = targetColor;      
+        return dotImage;
+    }
+
+    void ChangeButtonColor(Button targetButton)
+    {
+        if (targetButton == choosenButton)
+            return;
+
+        if (choosenButton == null)
+        {
+            choosenButton = targetButton;
+            choosenButton.style.backgroundColor = new Color(0.5f, 0.5f, 0.5f);
+        }
+        else
+        {
+            choosenButton.style.backgroundColor = new Color(0.345f, 0.345f, 0.345f);
+            choosenButton = targetButton;
+            choosenButton.style.backgroundColor = new Color(0.5f, 0.5f, 0.5f);
+        }
+    }
+
+    private Clickable SelectetAction(string name)
+    {
+        Button targetButton = rootVisualElement.Q<Button>(name);
+        targetButton.clickable.clicked += () => ChangeButtonColor(targetButton);
+        return targetButton.clickable;
+    }
+
+    private Clickable ButtonAction(string name)
+    {
+        return rootVisualElement.Q<Button>(name).clickable;
+    }
 
     public void OnCellClicked(CellElement cellElement, int buttonIndex)
     {
@@ -165,13 +208,6 @@ public class LevelEditor : EditorWindow
                 break;
         }
     }
-
-    private Clickable ButtonAction(string name)
-    {
-        return rootVisualElement.Q<Button>(name).clickable;
-    }
-
-    
 
     private void ResizeGrid(Vector2 targetSize)
     {
