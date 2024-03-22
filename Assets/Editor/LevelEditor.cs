@@ -35,7 +35,6 @@ public class LevelEditor : EditorWindow
     VisualElement pieceHolder;
     public List<PieceElement> piecesData = new List<PieceElement>();
     //Goals
-    List<CellElement> goalSavedCells = new List<CellElement>();
     VisualElement goalHolder;
     public List<ShapeGoalElement> shapeGoals = new List<ShapeGoalElement>();
     public List<CellElement> placeGoalCells = new List<CellElement>();
@@ -77,15 +76,9 @@ public class LevelEditor : EditorWindow
         ButtonAction("CellActivation").clicked  += () => ChangeState(new CellEditState());
 
         //Dots
-        Button redButton = rootVisualElement.Q<Button>("RedDot");
-        redButton.clickable.clicked     += () => { ChangeState(new PlaceDotState()); placeDotType = DotType.Red; ChangeButtonColor(redButton); };
-        redButton.Add(DotImage(Color.red));
-        Button bluButton = rootVisualElement.Q<Button>("BlueDot");
-        bluButton.clickable.clicked     += () => { ChangeState(new PlaceDotState()); placeDotType = DotType.Blue; ChangeButtonColor(bluButton); };
-        bluButton.Add(DotImage(Color.blue));
-        Button yellowButton = rootVisualElement.Q<Button>("YellowDot");
-        yellowButton.clickable.clicked  += () => { ChangeState(new PlaceDotState()); placeDotType = DotType.Yellow; ChangeButtonColor(yellowButton); };
-        yellowButton.Add(DotImage(new Color(247, 255, 0)));
+        DotButton(rootVisualElement.Q<Button>("RedDot"), DotType.Red, Color.red);
+        DotButton(rootVisualElement.Q<Button>("BlueDot"), DotType.Blue, Color.blue);
+        DotButton(rootVisualElement.Q<Button>("YellowDot"), DotType.Yellow, new Color(247, 255, 0));
 
         //Pieces
         pieceHolder = rootVisualElement.Q("PieceScroller");
@@ -149,12 +142,13 @@ public class LevelEditor : EditorWindow
         }
     }
 
-    Image DotImage(Color targetColor)
+    void DotButton(Button targetButton, DotType targetDotType, Color targetColor)
     {
+        targetButton.clickable.clicked += () => { ChangeState(new PlaceDotState()); placeDotType = targetDotType; ChangeButtonColor(targetButton); };
         Image dotImage = new Image();
         dotImage.sprite = Resources.Load<Sprite>("Circle");
-        dotImage.tintColor = targetColor;      
-        return dotImage;
+        dotImage.tintColor = targetColor;
+        targetButton.Add(dotImage);
     }
 
     void ChangeButtonColor(Button targetButton)
@@ -249,16 +243,7 @@ public class LevelEditor : EditorWindow
         piecesData.Remove(target);
         pieceHolder.Remove(target);
     }
-    public void RemoveGoal(ShapeGoalElement target)
-    {
-        for (int i = target.siblings.Count - 1; i >= 0; i--)
-        {
-            target.siblings[i].RemoveGoal();
-        }
 
-        shapeGoals.Remove(target);
-        goalHolder.Remove(target);
-    }
     public void RemoveGoal(List<ShapeGoalElement> target, CellElement targetCell)
     {
         HashSet<CellElement> allSiblings = new HashSet<CellElement>();
@@ -331,19 +316,6 @@ public class LevelEditor : EditorWindow
         {
             LevelSO level = (LevelSO)inputtedLevelField.value;
 
-            int boardSizeX = cells[0].cellData.gridCoordinates.x;
-            int boardSizeY = cells[0].cellData.gridCoordinates.y;
-            foreach (CellElement cell in cells)
-            {
-                if (cell.cellData.turnedOff) continue;
-                if (cell.cellData.gridCoordinates.x > boardSizeX)
-                    boardSizeX = cell.cellData.gridCoordinates.x;
-                if (cell.cellData.gridCoordinates.y > boardSizeY)
-                    boardSizeY = cell.cellData.gridCoordinates.y;
-            }
-            boardSizeX += 1;
-            boardSizeY += 1;
-
             //Cell
             List<CellData> cellDatas = new List<CellData>();
             foreach (CellElement item in cells)
@@ -367,7 +339,9 @@ public class LevelEditor : EditorWindow
                 place[i] = new LevelPlaceGoal(placeGoalCells[i].cellData.gridCoordinates, placeGoalCells[i].cellData.holding.dotType);
             }
 
-            level.OverrideLevel(new LevelBoard(cellDatas, new Vector2(boardSizeX, boardSizeY)), pieces, shape, place);
+            level.OverrideLevel(new LevelBoard(cellDatas, GridSize()), pieces, shape, place);
+
+            Debug.Log("Overridede level");
         }
     }
     private void SaveLevelToSO()
@@ -383,22 +357,6 @@ public class LevelEditor : EditorWindow
             Debug.Log("No Goals");
             return;
         }
-
-        int boardSizeX = cells[0].cellData.gridCoordinates.x;
-        int boardSizeY = cells[0].cellData.gridCoordinates.y;
-        foreach (CellElement cell in cells)
-        {
-            if (cell.cellData.turnedOff) continue;
-            if (cell.cellData.gridCoordinates.x > boardSizeX)
-                boardSizeX = cell.cellData.gridCoordinates.x;
-            if (cell.cellData.gridCoordinates.y > boardSizeY)
-                boardSizeY = cell.cellData.gridCoordinates.y;
-        }
-        boardSizeX += 1;
-        boardSizeY += 1;
-
-
-
 
         //Set typed name
         string levelName = "";
@@ -427,13 +385,12 @@ public class LevelEditor : EditorWindow
             placeGoalDatas.Add(item.placeGoalData);
 
         //Make SO
-        (bool workingLevel, LevelSO SO_Level) = LevelConverter.SaveLevel(levelName, pieceDatas, cellDatas, new Vector2(boardSizeX, boardSizeY), gridDatas, placeGoalDatas);
+        (bool workingLevel, LevelSO SO_Level) = LevelConverter.SaveLevel(levelName, pieceDatas, cellDatas, GridSize(), gridDatas, placeGoalDatas);
 
         //Message statues
         if (workingLevel)
         {
             Debug.Log("Level Saved!");
-
             //Override
             inputtedLevelField.value = SO_Level;
         }
@@ -442,6 +399,23 @@ public class LevelEditor : EditorWindow
             Debug.Log("Error saving level");
             namingField.value = null;
         }
+    }
+
+    Vector2 GridSize()
+    {
+        Vector2 boardSize = new Vector2(cells[0].cellData.gridCoordinates.x, cells[0].cellData.gridCoordinates.y);
+        foreach (CellElement cell in cells)
+        {
+            if (cell.cellData.turnedOff) continue;
+            if (cell.cellData.gridCoordinates.x > boardSize.x)
+                boardSize.x = cell.cellData.gridCoordinates.x;
+            if (cell.cellData.gridCoordinates.y > boardSize.y)
+                boardSize.y = cell.cellData.gridCoordinates.y;
+        }
+        boardSize.x += 1;
+        boardSize.y += 1;
+
+        return boardSize;
     }
     #region Load
     private void LoadLevel()

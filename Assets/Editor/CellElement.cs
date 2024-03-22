@@ -97,6 +97,7 @@ public class CellElement : Image
         style.justifyContent = Justify.Center;
         style.alignItems = Align.Center;
     }
+       
 
     public void SetDot(DotElement dot)
     {
