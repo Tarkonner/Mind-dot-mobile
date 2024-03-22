@@ -108,7 +108,7 @@ public class ShapeGoal : MonoBehaviour, IGoal
                 return false;
 
             if (board.grid[(int)assumedPos.x, (int)assumedPos.y].occupying is Dot checkDot &&
-                checkDot.dotType == goalsDots[i].dotType)
+                (goalsDots[i].dotType == DotType.Null || checkDot.dotType == goalsDots[i].dotType))
             {
 
             }

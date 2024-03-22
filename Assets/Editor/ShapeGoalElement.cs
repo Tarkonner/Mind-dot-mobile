@@ -47,6 +47,7 @@ public class ShapeGoalElement : GridElement
                 if (gridData.dotDictionary.ContainsKey(new Vector2Int(x, y)))
                 {
                     DotElement spawendDot = new DotElement(gridData.dotDictionary[new Vector2Int(x, y)].dotType);
+                    gridData.dotDictionary[new Vector2Int(x, y)] = spawendDot.DotData;
                     images[x, y].Add(spawendDot);
                     ((ClickElement)targetImage).holdingDot = spawendDot;
                 }
