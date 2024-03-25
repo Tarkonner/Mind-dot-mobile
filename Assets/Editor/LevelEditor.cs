@@ -244,6 +244,15 @@ public class LevelEditor : EditorWindow
         pieceHolder.Remove(target);
     }
 
+    public void RemoveGoal(ShapeGoalElement target)
+    {
+        for (int i = 0; i < target.siblings.Count; i++)
+        {
+            target.siblings[i].RemoveGoal();
+            Debug.Log("Remove");
+        }
+    }
+
     public void RemoveGoal(List<ShapeGoalElement> target, CellElement targetCell)
     {
         HashSet<CellElement> allSiblings = new HashSet<CellElement>();
@@ -282,8 +291,7 @@ public class LevelEditor : EditorWindow
                 CellElement target = cells[y * 7 + x];
                 target.SetActiveState(true);
 
-                target.RemovePiece();
-                target.RemoveGoal();
+                target.SetDefaultColor();
                 target.RemovePlacementGoal();
                 target.RemoveDot();
             }
@@ -307,7 +315,7 @@ public class LevelEditor : EditorWindow
         shapeGoals.Clear();
     }
 
-
+    #region Save
     private void SaveOrOverride()
     {
         if (inputtedLevelField.value == null)
@@ -400,6 +408,7 @@ public class LevelEditor : EditorWindow
             namingField.value = null;
         }
     }
+    #endregion
 
     Vector2 GridSize()
     {

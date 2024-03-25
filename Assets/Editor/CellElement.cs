@@ -68,7 +68,7 @@ public class CellElement : Image
         //Save color
         if (targetColor == CellColorState.partGoal)
             colorGoalCount++;
-        if(targetColor == CellColorState.partPiece)
+        if (targetColor == CellColorState.partPiece)
             colorPartPiece = true;
 
         //Set color
