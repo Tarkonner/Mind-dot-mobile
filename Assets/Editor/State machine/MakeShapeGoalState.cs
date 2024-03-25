@@ -50,7 +50,7 @@ public class MakeShapeGoalState : CollectCells
         //Set Color for cells
         for (int i = 0; i < tempCells.goalDots.Length; i++)
         {
-            levelEditor.cells[(int)(tempCells.goalSpecifications[i].x + tempCells.goalSpecifications[i].y * 7)].ChangeCellColor(CellColorState.partGoal);
+            levelEditor.cells[(int)((tempCells.goalSpecifications[i].y + 1) * 7 + (tempCells.goalSpecifications[i].x + 1))].ChangeCellColor(CellColorState.partGoal);
         }
 
         //Setup data
