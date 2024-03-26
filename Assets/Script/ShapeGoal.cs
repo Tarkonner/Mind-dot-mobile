@@ -59,9 +59,14 @@ public class ShapeGoal : MonoBehaviour, IGoal
             {
                 RectTransform dotRect = goalsDots[h].GetComponent<RectTransform>();
                 dotRect.sizeDelta = goalRect.sizeDelta / detSize;
-                dotRect.anchoredPosition = goalRect.anchoredPosition + (dotCoordinats[h] -
-                    new Vector2(goalsizeX / 2 - 0.5f * ((goalsizeX + 1) % 2), goalsizeY / 2 - 0.5f * ((goalsizeY + 1) % 2))) * dotRect.sizeDelta;
+                dotRect.anchoredPosition = goalRect.anchoredPosition + 
+                    (dotCoordinats[h] - new Vector2(
+                        goalsizeX / 2 - 0.5f * ((goalsizeX + 1) % 2), 
+                        goalsizeY / 2 - 0.5f * ((goalsizeY + 1) % 2))) * dotRect.sizeDelta;
             }
+
+            //Placeholder for mirror problem around x-axis
+            transform.localEulerAngles = new Vector3(180, 0, 0);
         }
     }
 
