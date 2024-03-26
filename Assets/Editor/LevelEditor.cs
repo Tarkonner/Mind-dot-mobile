@@ -237,11 +237,8 @@ public class LevelEditor : EditorWindow
     {
         for (int i = target.siblings.Count - 1; i >= 0; i--)
         {            
-            target.siblings.RemoveAt(i);
+            target.siblings[i].RemovePiece();
         }
-
-        piecesData.Remove(target);
-        pieceHolder.Remove(target);
     }
 
     public void RemoveGoal(ShapeGoalElement target)
@@ -249,7 +246,6 @@ public class LevelEditor : EditorWindow
         for (int i = 0; i < target.siblings.Count; i++)
         {
             target.siblings[i].RemoveGoal();
-            Debug.Log("Remove");
         }
     }
 

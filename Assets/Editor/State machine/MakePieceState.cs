@@ -48,7 +48,7 @@ public class MakePieceState : CollectCells
             return;
 
         //Editor
-        pieceHolder.Q<Button>("Delete").clickable.clicked += () => { holder.Remove(pieceHolder); levelEditor.piecesData.Remove(pieceElement); };
+        pieceHolder.Q<Button>("Delete").clickable.clicked += () => { holder.Remove(pieceHolder); levelEditor.RemovePiece(pieceElement); };
         //Slider
         SliderInt rotationSlider = pieceHolder.Q<SliderInt>("RotateValue");
         rotationSlider.RegisterValueChangedCallback(value => ((PieceData)pieceElement.gridData).startRotationIndex = value.newValue);
@@ -71,17 +71,14 @@ public class MakePieceState : CollectCells
 
     public void Execute(VisualElement holder, VisualTreeAsset spawnHolder, LevelPiece savedPiece, LevelEditor levelEditor)
     {
-        //Clean data
-        RemoveEmptyCells();
-        if (cells.Count == 0)
-        {
-            Debug.Log("No cells selected");
-            return;
-        }
-
-        //Set Color for cells
+        List<CellElement> targetCells = new List<CellElement>();
+        //Collect Cells and set color
         for (int i = 0; i < savedPiece.dotPositions.Length; i++)
-            levelEditor.cells[(int)((savedPiece.dotPositions[i].y + 1) * 7 + (savedPiece.dotPositions[i].x + 1))].ChangeCellColor(CellColorState.partPiece);
+        {
+            CellElement cell = levelEditor.cells[(int)((savedPiece.dotPositions[i].y + 1) * 7 + (savedPiece.dotPositions[i].x + 1))];
+            cell.ChangeCellColor(CellColorState.partPiece);
+            targetCells.Add(cell);
+        }
 
         //Data
         PieceElement pieceElement = new PieceElement();
@@ -91,7 +88,13 @@ public class MakePieceState : CollectCells
         //Connect behavior
         //Editor
         VisualElement pieceHolder = spawnHolder.Instantiate();
-        pieceHolder.Q<Button>("Delete").clickable.clicked += () => { holder.Remove(pieceHolder); levelEditor.piecesData.Remove(pieceElement); };
+        pieceHolder.Q<Button>("Delete").clickable.clicked += () => 
+        { 
+            holder.Remove(pieceHolder); 
+            levelEditor.piecesData.Remove(pieceElement);
+            for (int i = 0; i < targetCells.Count; i++)
+                targetCells[i].RemovePiece();
+        };
         //Grid
         pieceHolder.Q<VisualElement>("Grid").Add(GridMaker.MakeGridElement(cells, pieceElement));
         //Slider

@@ -49,8 +49,6 @@ public class CellElement : Image
             ChangeCellColor(CellColorState.partGoalAndPiece);
         else if (colorGoalCount > 0 && !colorPartPiece)
             ChangeCellColor(CellColorState.partGoal);
-        else if (colorPartPiece)
-            ChangeCellColor(CellColorState.partPiece);
         else
             ChangeCellColor(CellColorState.normal);
     }
@@ -161,7 +159,6 @@ public class CellElement : Image
     public void RemoveGoal()
     {
         partOfShapeGoals.Clear();
-        Debug.Log("Unsub goal");
         UnsubColor(CellColorState.partGoal);
     }
 
