@@ -28,7 +28,7 @@ public class CellElement : Image
         { CellColorState.turnedOff, new Color(.2f, .2f, .2f) },
         { CellColorState.choosenPiece, Color.cyan },
         { CellColorState.choosenGoal, new Color(1f, 0.85f, 0.43f) },
-        { CellColorState.partGoal, new Color(0, .7f, .7f) },
+        { CellColorState.partGoal, new Color(.2f, .9f, .4f) },
         { CellColorState.partPiece, new Color(0.01f, .6f, .5f) },
         { CellColorState.partGoalAndPiece, new Color(1, 0, 0.666f) },
     };
@@ -44,30 +44,32 @@ public class CellElement : Image
     {
         if (color == CellColorState.partGoal)
             colorGoalCount--;
+        if (color == CellColorState.partPiece)
+            colorPartPiece = false;
 
         if (colorGoalCount > 0 && colorPartPiece)
             ChangeCellColor(CellColorState.partGoalAndPiece);
         else if (colorGoalCount > 0 && !colorPartPiece)
             ChangeCellColor(CellColorState.partGoal);
+        else if (colorPartPiece)
+            ChangeCellColor(CellColorState.partPiece);
         else
             ChangeCellColor(CellColorState.normal);
     }
 
     public void ChangeCellColor(CellColorState targetColor)
     {
-        if(myColorState == CellColorState.partGoal && targetColor == CellColorState.partPiece
-            || myColorState == CellColorState.partPiece && targetColor == CellColorState.partGoal)
-        {
-            myColorState = CellColorState.partGoalAndPiece;
-        }
-        else
-            myColorState = targetColor;
-
         //Save color
         if (targetColor == CellColorState.partGoal)
             colorGoalCount++;
         if (targetColor == CellColorState.partPiece)
             colorPartPiece = true;
+        
+        //Part of goal & piece
+        if(colorPartPiece && colorGoalCount > 0)
+            myColorState = CellColorState.partGoalAndPiece;
+        else
+            myColorState = targetColor;
 
         //Set color
         this.tintColor = cellColorState[myColorState];
