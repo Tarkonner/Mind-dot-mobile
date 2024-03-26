@@ -476,6 +476,7 @@ public class LevelEditor : EditorWindow
 
         //Cleanup
         inputtedLevelField.value = null;
+        ChangeState(new CellEditState());
 
         //Ready to override
         inputtedLevelField.value = targetLevel;
