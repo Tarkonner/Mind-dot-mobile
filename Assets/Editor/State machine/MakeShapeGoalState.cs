@@ -27,7 +27,7 @@ public class MakeShapeGoalState : CollectCells
         
         //Connect behavior
         VisualElement goalHolder = spawnHolder.Instantiate();
-        goalHolder.Q<Button>("Delete").clickable.clicked += () => { holder.Remove(goalHolder); levelEditor.shapeGoals.Remove(shapeGoalElement); };
+        goalHolder.Q<Button>("Delete").clickable.clicked += () => { holder.Remove(goalHolder); levelEditor.RemoveGoal(shapeGoalElement); };
 
         //Grid
         goalHolder.Q<VisualElement>("Holder").Add(GridMaker.MakeGridElement(cells, shapeGoalElement));
@@ -39,9 +39,15 @@ public class MakeShapeGoalState : CollectCells
     //Then loading
     public void Execute(VisualElement holder, VisualTreeAsset spawnHolder, LevelShapeGoal tempCells, LevelEditor levelEditor)
     {
+        List<CellElement> cells = new List<CellElement>();
+
         //Set Color for cells
         for (int i = 0; i < tempCells.goalSpecifications.Length; i++)
-            levelEditor.cells[(int)((tempCells.goalSpecifications[i].y + 1) * 7 + (tempCells.goalSpecifications[i].x + 1))].ChangeCellColor(CellColorState.partGoal);
+        {
+            CellElement target = levelEditor.cells[(int)((tempCells.goalSpecifications[i].y + 1) * 7 + (tempCells.goalSpecifications[i].x + 1))];
+            target.ChangeCellColor(CellColorState.partGoal);
+            cells.Add(target);
+        }            
 
         //Setup data
         ShapeGoalElement shapeGoalElement = new ShapeGoalElement();
@@ -49,7 +55,13 @@ public class MakeShapeGoalState : CollectCells
 
         //Connect behavior
         VisualElement goalHolder = spawnHolder.Instantiate();
-        goalHolder.Q<Button>("Delete").clickable.clicked += () => { holder.Remove(goalHolder); levelEditor.RemoveGoal(shapeGoalElement); };
+        goalHolder.Q<Button>("Delete").clickable.clicked += () => 
+        { 
+            holder.Remove(goalHolder); 
+            levelEditor.RemoveGoal(shapeGoalElement);
+            for (int i = 0; i < cells.Count; i++)
+                cells[i].RemoveGoal();
+        };
 
         //Grid
         goalHolder.Q<VisualElement>("Holder").Add(GridMaker.MakeGridElement(cells, shapeGoalElement));

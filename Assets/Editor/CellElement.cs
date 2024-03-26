@@ -161,7 +161,7 @@ public class CellElement : Image
     public void RemoveGoal()
     {
         partOfShapeGoals.Clear();
-
+        Debug.Log("Unsub goal");
         UnsubColor(CellColorState.partGoal);
     }
 
