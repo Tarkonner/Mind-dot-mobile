@@ -26,18 +26,20 @@ public class MakePieceState : CollectCells
             return;
         }
 
+
+
+        //Data
+        PieceElement pieceElement = new PieceElement();
+        levelEditor.piecesData.Add(pieceElement);
+
         //Set Color for cells
         for (int i = 0; i < cells.Count; i++)
         {
             cells[i].cellData.partOfPiece = true;
 
-            cells[i].ChangeCellColor(CellColorState.partPiece);
+            cells[i].SetPiece(pieceElement);
         }
 
-        //Data
-        PieceElement pieceElement = new PieceElement();
-
-        levelEditor.piecesData.Add(pieceElement);
 
         //Grid
         VisualElement pieceHolder = spawnHolder.Instantiate();

@@ -2,11 +2,9 @@ using SharedData;
 using System;
 using System.Collections.Generic;
 using UnityEditor;
-using UnityEditor.PackageManager;
 using UnityEditor.UIElements;
 using UnityEngine;
 using UnityEngine.UIElements;
-using static Codice.Client.BaseCommands.Import.Commit;
 
 public class LevelEditor : EditorWindow
 {
@@ -31,7 +29,6 @@ public class LevelEditor : EditorWindow
     private EditorState currentState = new CellEditState();
 
     //Pieces
-    List<CellElement> piecesSavedCells = new List<CellElement>();
     VisualElement pieceHolder;
     public List<PieceElement> piecesData = new List<PieceElement>();
     //Goals
@@ -279,6 +276,22 @@ public class LevelEditor : EditorWindow
 
     private void ClearAll()
     {
+        //Pieces
+        for (int i = pieceHolder.childCount - 1; i >= 0; i--)
+        {
+            VisualElement child = pieceHolder[i];
+            pieceHolder.Remove(child);
+        }
+        piecesData.Clear();
+
+        //Goals
+        for (int i = goalHolder.childCount - 1; i >= 0; i--)
+        {
+            VisualElement child = goalHolder[i];
+            goalHolder.Remove(child);
+        }
+        shapeGoals.Clear();
+
         //Dots
         for (int x = 0; x < 7; x++)
         {
@@ -287,28 +300,11 @@ public class LevelEditor : EditorWindow
                 CellElement target = cells[y * 7 + x];
                 target.SetActiveState(true);
 
+                target.RemoveDot();
                 target.SetDefaultColor();
                 target.RemovePlacementGoal();
-                target.RemoveDot();
             }
         }
-
-        piecesSavedCells.Clear();
-
-        //Pieces
-        if (piecesData.Count > 0)
-        {
-            for (int i = piecesData.Count - 1; i >= 0; i--)
-                pieceHolder.Remove(piecesData[i]);
-        }
-
-        //Goals
-        if (shapeGoals.Count > 0)
-        {
-            for (int i = shapeGoals.Count - 1; i >= 0; i--)
-                goalHolder.Remove(shapeGoals[i]);
-        }
-        shapeGoals.Clear();
     }
 
     #region Save
