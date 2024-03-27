@@ -88,8 +88,6 @@ public class Piece : MonoBehaviour, IDragHandler
         dotsArray = new Dot[targetPiece.dotPositions.Length];
         for (int i = 0; i < targetPiece.dotPositions.Length; i++)
         {
-            Debug.Log(targetPiece.dotPositions[i]);
-
             //Make object
             GameObject spawn = Instantiate(dotPrefab, transform);
             Dot targetDot = spawn.GetComponent<Dot>();
@@ -162,8 +160,6 @@ public class Piece : MonoBehaviour, IDragHandler
         CenterCalculation();
 
         //Rotation
-        Debug.Log(targetPiece.startRotation);
-
         for (int i = 0; i < targetPiece.startRotation; i++)
             Rotate();
     }
@@ -184,8 +180,6 @@ public class Piece : MonoBehaviour, IDragHandler
     {
         if (!rotatable)
             return;
-
-        Debug.Log("Rotate");
 
         for (int i = 0; i < gridPosArray.Length; i++)
         {
@@ -262,16 +256,16 @@ public class Piece : MonoBehaviour, IDragHandler
         switch (rotationInt)
         {
             case 0:
-                pieceCenter = new Vector2Int(-savedCenterCoordinats.x, savedCenterCoordinats.y);
+                pieceCenter = new Vector2Int(-savedCenterCoordinats.x, -savedCenterCoordinats.y);
                 break;
             case 1:
-                pieceCenter = new Vector2Int(-savedCenterCoordinats.y, -savedCenterCoordinats.x);
+                pieceCenter = new Vector2Int(-savedCenterCoordinats.y, savedCenterCoordinats.x);
                 break;
             case 2:
-                pieceCenter = new Vector2Int(savedCenterCoordinats.x, -savedCenterCoordinats.y);
+                pieceCenter = new Vector2Int(savedCenterCoordinats.x, savedCenterCoordinats.y);
                 break;
             case 3:
-                pieceCenter = new Vector2Int(savedCenterCoordinats.y, savedCenterCoordinats.x);
+                pieceCenter = new Vector2Int(savedCenterCoordinats.y, -savedCenterCoordinats.x);
                 break;
         }
     }

@@ -106,16 +106,11 @@ public class ShapeGoal : MonoBehaviour, IGoal
     {
         for (int i = 0; i < goalsDots.Count; i++)
         {
-            Debug.Log("Callede");
-
             Vector2 assumedPos = new Vector2(currentPos.x, currentPos.y) + (dotCoordinats[i]);
             if ((int)assumedPos.x > board.grid.GetLength(0) - 1 || (int)assumedPos.y > board.grid.GetLength(1) - 1) 
                 return false;
             if (board.grid[(int)assumedPos.x, (int)assumedPos.y] == null) 
                 return false;
-
-            Debug.Log("Within grid and not null");
-            Debug.Log(assumedPos);
 
 
             if (board.grid[(int)assumedPos.x, (int)assumedPos.y].occupying is Dot checkDot &&

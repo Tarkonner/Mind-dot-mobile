@@ -168,13 +168,11 @@ public class Board : ScaleAnimations
 
         //Calculate target positions
         List<Vector2Int> coordinatesResult = new List<Vector2Int>();
-
         for (int i = 0; i < piece.dotsArray.Length; i++)
         {
-            //Don't know why y-axis need to be negetiv to work
             coordinatesResult.Add(new Vector2Int(
                 inputCoordinates.x + piece.pieceCenter.x + (int)piece.gridPosArray[i].x, 
-                inputCoordinates.y + piece.pieceCenter.y - (int)piece.gridPosArray[i].y)); 
+                inputCoordinates.y + piece.pieceCenter.y + (int)piece.gridPosArray[i].y)); 
         }
 
         //Does place exits
