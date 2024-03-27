@@ -69,7 +69,6 @@ public class LevelManager : MonoBehaviour
 
                 if (check != null)
                 {
-                    Debug.Log(check);
                     allGoals.Add(check);
                 }
             }

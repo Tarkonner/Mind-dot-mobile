@@ -88,6 +88,8 @@ public class Piece : MonoBehaviour, IDragHandler
         dotsArray = new Dot[targetPiece.dotPositions.Length];
         for (int i = 0; i < targetPiece.dotPositions.Length; i++)
         {
+            Debug.Log(targetPiece.dotPositions[i]);
+
             //Make object
             GameObject spawn = Instantiate(dotPrefab, transform);
             Dot targetDot = spawn.GetComponent<Dot>();
@@ -95,7 +97,7 @@ public class Piece : MonoBehaviour, IDragHandler
 
             Vector2 offset = new Vector2((targetPiece.pieceSize.x - 1) * 0.5f, (targetPiece.pieceSize.y - 1) * 0.5f);
 
-            Vector2 calPosition = new Vector2(gridPosArray[i].x * dotSpacing - offset.x * dotSpacing, gridPosArray[i].y * dotSpacing - offset.y * dotSpacing);
+            Vector2 calPosition = new Vector2(gridPosArray[i].x * dotSpacing - offset.x * dotSpacing, (gridPosArray[i].y * dotSpacing - offset.y * dotSpacing) * -1);
             rect.anchoredPosition = calPosition;
             dotsPosition.Add(spawn, calPosition);
 
@@ -160,6 +162,8 @@ public class Piece : MonoBehaviour, IDragHandler
         CenterCalculation();
 
         //Rotation
+        Debug.Log(targetPiece.startRotation);
+
         for (int i = 0; i < targetPiece.startRotation; i++)
             Rotate();
     }
@@ -180,6 +184,8 @@ public class Piece : MonoBehaviour, IDragHandler
     {
         if (!rotatable)
             return;
+
+        Debug.Log("Rotate");
 
         for (int i = 0; i < gridPosArray.Length; i++)
         {

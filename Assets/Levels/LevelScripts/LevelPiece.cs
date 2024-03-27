@@ -20,6 +20,7 @@ public class LevelPiece
         dotTypes = new DotType[pE.dotDictionary.Count];
         dotPositions = new Vector2[pE.dotDictionary.Count];
         rotatable = pE.canRotate;
+        startRotation = pE.startRotationIndex;
         foreach (KeyValuePair<Vector2Int, DotData> kVPair in pE.dotDictionary)
         {
             dotTypes[i] = kVPair.Value.dotType;
