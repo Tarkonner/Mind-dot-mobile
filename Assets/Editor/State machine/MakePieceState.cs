@@ -77,7 +77,7 @@ public class MakePieceState : CollectCells
         //Collect Cells and set color
         for (int i = 0; i < savedPiece.dotPositions.Length; i++)
         {
-            CellElement cell = levelEditor.cells[(int)((savedPiece.dotPositions[i].y + 1) * 7 + (savedPiece.dotPositions[i].x + 1))];
+            CellElement cell = levelEditor.cells[(int)((savedPiece.dotPositions[i].y + savedPiece.gridPosRef.y) * 7 + (savedPiece.dotPositions[i].x + savedPiece.gridPosRef.x))];
             cell.ChangeCellColor(CellColorState.partPiece);
             targetCells.Add(cell);
         }

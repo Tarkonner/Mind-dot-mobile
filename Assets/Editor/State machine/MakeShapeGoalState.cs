@@ -37,14 +37,15 @@ public class MakeShapeGoalState : CollectCells
     }
 
     //Then loading
-    public void Execute(VisualElement holder, VisualTreeAsset spawnHolder, LevelShapeGoal tempCells, LevelEditor levelEditor)
+    public void Execute(VisualElement holder, VisualTreeAsset spawnHolder, LevelShapeGoal shapeGoal, LevelEditor levelEditor)
     {
         List<CellElement> cells = new List<CellElement>();
 
         //Set Color for cells
-        for (int i = 0; i < tempCells.goalSpecifications.Length; i++)
+        for (int i = 0; i < shapeGoal.goalSpecifications.Length; i++)
         {
-            CellElement target = levelEditor.cells[(int)((tempCells.goalSpecifications[i].y + 1) * 7 + (tempCells.goalSpecifications[i].x + 1))];
+            CellElement target = levelEditor.cells[(int)((shapeGoal.goalSpecifications[i].y + shapeGoal.gridPosRef.y) * 7 + (shapeGoal.goalSpecifications[i].x + shapeGoal.gridPosRef.x))];
+
             target.ChangeCellColor(CellColorState.partGoal);
             cells.Add(target);
         }            
