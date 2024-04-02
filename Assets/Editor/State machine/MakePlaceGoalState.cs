@@ -6,6 +6,9 @@ public class MakePlaceGoalState : EditorState
 {
     public void Execute(CellElement targetCell, int buttonIndex, LevelEditor levelEditor)
     {
+        if (targetCell.cellData.turnedOff)
+            return;
+
         if(buttonIndex == 1) //Right click
         {
             if (!levelEditor.placeGoalCells.Contains(targetCell))
