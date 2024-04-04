@@ -15,19 +15,21 @@ public class MakeShapeGoalState : CollectCells
             return;
         }
 
-        //Set Color for cells
-        for (int i = 0; i < cells.Count; i++)
-        {
-            cells[i].ChangeCellColor(CellColorState.partGoal);
-        }
 
         //Setup data
         ShapeGoalElement shapeGoalElement = new ShapeGoalElement();
         levelEditor.shapeGoals.Add(shapeGoalElement);
         
+        //Set Color for cells
+        for (int i = 0; i < cells.Count; i++)
+        {
+            cells[i].SetGoal(shapeGoalElement);
+        }
+
         //Connect behavior
         VisualElement goalHolder = spawnHolder.Instantiate();
         goalHolder.Q<Button>("Delete").clickable.clicked += () => { holder.Remove(goalHolder); levelEditor.RemoveGoal(shapeGoalElement); };
+        shapeGoalElement.holder = goalHolder;
 
         //Grid
         goalHolder.Q<VisualElement>("Holder").Add(GridMaker.MakeGridElement(cells, shapeGoalElement));

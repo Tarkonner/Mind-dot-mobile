@@ -26,11 +26,10 @@ public class MakePieceState : CollectCells
             return;
         }
 
-
-
         //Data
-        PieceElement pieceElement = new PieceElement();
+        PieceElement pieceElement = new PieceElement();        
         levelEditor.piecesData.Add(pieceElement);
+
 
         //Set Color for cells
         for (int i = 0; i < cells.Count; i++)
@@ -44,13 +43,16 @@ public class MakePieceState : CollectCells
         //Grid
         VisualElement pieceHolder = spawnHolder.Instantiate();
         pieceHolder.Q<VisualElement>("Grid").Add(GridMaker.MakeGridElement(cells, pieceElement));
-        
+
+        //To remove piece
+        pieceElement.holder = pieceHolder;
+
         //Gate
-        if(!pieceElement.legalPiece)
+        if (!pieceElement.legalPiece)
             return;
 
         //Editor
-        pieceHolder.Q<Button>("Delete").clickable.clicked += () => { holder.Remove(pieceHolder); levelEditor.RemovePiece(pieceElement); };
+        pieceHolder.Q<Button>("Delete").clickable.clicked += () => { levelEditor.RemovePiecesDots(pieceElement); };
         //Slider
         SliderInt rotationSlider = pieceHolder.Q<SliderInt>("RotateValue");
         rotationSlider.RegisterValueChangedCallback(value => ((PieceData)pieceElement.gridData).startRotationIndex = value.newValue);

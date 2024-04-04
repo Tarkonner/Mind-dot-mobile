@@ -6,6 +6,8 @@ using UnityEngine.UIElements;
 
 public class ShapeGoalElement : GridElement
 {
+    public VisualElement holder;
+
     public ShapeGoalElement() : base()
     {
 

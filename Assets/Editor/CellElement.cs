@@ -17,6 +17,7 @@ public class CellElement : Image
 
     public PlaceGoalElement placeGoal { get; private set; }
 
+
     #region Color
     private int colorGoalCount = 0;
     private bool colorPartPiece = false;
@@ -118,8 +119,8 @@ public class CellElement : Image
             return;
 
         //Remove Pieces
-        if (cellData.partOfPiece)
-            levelEditor.RemovePiece(piece);
+        if (piece != null)
+            levelEditor.RemovePiecesDots(piece);
 
         //Remove Shape goals
         levelEditor.RemoveGoal(partOfShapeGoals, this);
@@ -169,7 +170,8 @@ public class CellElement : Image
         if (partOfShapeGoals.Contains(shapeGoalElement))
             partOfShapeGoals.Remove(shapeGoalElement);
 
-        SetDefaultColor();
+        if (partOfShapeGoals.Count == 0)
+            UnsubColor(CellColorState.partGoal);
     }
 
 

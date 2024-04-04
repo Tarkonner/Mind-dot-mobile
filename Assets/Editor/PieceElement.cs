@@ -8,6 +8,7 @@ using UnityEngine.UIElements;
 public class PieceElement : GridElement
 {
     public bool legalPiece;
+    public VisualElement holder;
 
     public override void Construct(Vector2Int targetSize)
     {

@@ -230,12 +230,14 @@ public class LevelEditor : EditorWindow
 
 
 
-    public void RemovePiece(PieceElement target)
+    public void RemovePiecesDots(PieceElement target)
     {
         for (int i = target.siblings.Count - 1; i >= 0; i--)
         {            
             target.siblings[i].RemovePiece();
         }
+
+        pieceHolder.Remove(target.holder);
     }
 
     public void RemoveGoal(ShapeGoalElement target)
@@ -256,22 +258,21 @@ public class LevelEditor : EditorWindow
                 CellElement cell = target[i].siblings[j];
                 if(cell != targetCell)
                     allSiblings.Add(cell);
-            }
-        }
-
-        //Remove from holdeers
-        for (int i = target.Count - 1; i >= 0; i--)
-        {
-            shapeGoals.Remove(target[i]);
-            goalHolder.Remove(target[i]);
+            }           
         }
 
         //Remove same goals from all siblings
-        for (int i = target.Count - 1; i >= 0; i--)
+        for (int i = 0; i < target.Count; i++)
         {
-            foreach(CellElement item in allSiblings)
-                item.RemoveGoal(target[i]);
+            foreach (CellElement cell in allSiblings)
+                cell.RemoveGoal(target[i]);
         }
+
+        ////Remove from holdeers
+        //for (int i = shapeGoals.Count - 1; i >= 0; i--)
+        //{
+        //    shapeGoals.Remove(target[i]);
+        //}
     }
 
     private void ClearAll()
