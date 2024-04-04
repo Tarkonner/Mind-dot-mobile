@@ -268,11 +268,11 @@ public class LevelEditor : EditorWindow
                 cell.RemoveGoal(target[i]);
         }
 
-        ////Remove from holdeers
-        //for (int i = shapeGoals.Count - 1; i >= 0; i--)
-        //{
-        //    shapeGoals.Remove(target[i]);
-        //}
+        //Remove from holdeers
+        for (int i = target.Count - 1; i >= 0; i--)
+        {
+            goalHolder.Remove(target[i].holder);
+        }
     }
 
     private void ClearAll()
