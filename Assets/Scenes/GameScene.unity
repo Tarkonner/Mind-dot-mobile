@@ -404,7 +404,7 @@ PrefabInstance:
     - target: {fileID: 65025732663852158, guid: ece83fda2ae00364da4f4bd42689e64a, type: 3}
       propertyPath: testLevel
       value: 
-      objectReference: {fileID: 11400000, guid: 864fa192d7886714aa04ef0f2a579407, type: 2}
+      objectReference: {fileID: 11400000, guid: a989110ccfdd9b84ea7caec703b98ed8, type: 2}
     - target: {fileID: 65025732663852158, guid: ece83fda2ae00364da4f4bd42689e64a, type: 3}
       propertyPath: goalHolder
       value: 
@@ -448,15 +448,15 @@ PrefabInstance:
     - target: {fileID: 65025732663852158, guid: ece83fda2ae00364da4f4bd42689e64a, type: 3}
       propertyPath: levels.Array.data[0]
       value: 
-      objectReference: {fileID: 11400000, guid: 1964587d6bb24044ea986acd0ca70fe1, type: 2}
+      objectReference: {fileID: 11400000, guid: 25f0238cd406ec541bfece11c9f715df, type: 2}
     - target: {fileID: 65025732663852158, guid: ece83fda2ae00364da4f4bd42689e64a, type: 3}
       propertyPath: levels.Array.data[1]
       value: 
-      objectReference: {fileID: 11400000, guid: 25f0238cd406ec541bfece11c9f715df, type: 2}
+      objectReference: {fileID: 11400000, guid: ff587eb3b66f5164597b1bc2aa9c7e31, type: 2}
     - target: {fileID: 65025732663852158, guid: ece83fda2ae00364da4f4bd42689e64a, type: 3}
       propertyPath: levels.Array.data[2]
       value: 
-      objectReference: {fileID: 11400000, guid: ff587eb3b66f5164597b1bc2aa9c7e31, type: 2}
+      objectReference: {fileID: 11400000, guid: 1964587d6bb24044ea986acd0ca70fe1, type: 2}
     - target: {fileID: 65025732663852158, guid: ece83fda2ae00364da4f4bd42689e64a, type: 3}
       propertyPath: levels.Array.data[3]
       value: 

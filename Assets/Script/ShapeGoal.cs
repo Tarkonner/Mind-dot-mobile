@@ -104,21 +104,45 @@ public class ShapeGoal : MonoBehaviour, IGoal
     }
     private bool CheckForPatternAtPosition(Board board, Vector2 currentPos)
     {
+        Debug.Log("Check");
+
+        Vector2 assumePos = currentPos;
+
         for (int i = 0; i < goalsDots.Count; i++)
         {
-            if ((int)dotCoordinats[i].x > board.grid.GetLength(0) - 1 || (int)dotCoordinats[i].y > board.grid.GetLength(1) - 1) 
-                return false;
-            if (board.grid[(int)dotCoordinats[i].x, (int)dotCoordinats[i].y] == null) 
-                return false;
-
-            if (board.grid[(int)dotCoordinats[i].x, (int)dotCoordinats[i].y].occupying is Dot checkDot &&
-                (checkDot.dotType == DotType.Null || checkDot.dotType == goalsDots[i].dotType))
+            if (i != 0)
             {
+                Vector2 dif = dotCoordinats[i] - dotCoordinats[i - 1];
+                Debug.Log("Dif: " + dif);
+                assumePos = assumePos + new Vector2(dif.x, dif.y);
+            }
+
+            Debug.Log("Regnet: " + assumePos);
+
+            if ((int)assumePos.x > board.grid.GetLength(0) - 1 || (int)assumePos.y > board.grid.GetLength(1) - 1
+                || assumePos.x < 0 || assumePos.y < 0)
+            {
+                Debug.Log("Out off bounds");
+                return false;
+            }
+            if (board.grid[(int)assumePos.x, (int)assumePos.y] == null)
+            {
+                Debug.Log("A");
+                return false;
+            }
+
+            if (board.grid[(int)assumePos.x, (int)assumePos.y].occupying is Dot checkDot)
+            {
+                Debug.Log(checkDot.dotType);
+                if (goalsDots[i].dotType == DotType.Null)
+                {
+                    Debug.Log("Null dot");
+                }
+                else if (checkDot.dotType != goalsDots[i].dotType)
+                    return false;
             }
             else
-            {
                 return false;
-            }
         }
         return true;
     }
