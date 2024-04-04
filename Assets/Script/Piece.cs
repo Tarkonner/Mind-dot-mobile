@@ -249,7 +249,7 @@ public class Piece : MonoBehaviour, IDragHandler
         }
     }
 
-    private void SetRotation() => GetComponent<RectTransform>().rotation = Quaternion.Euler(0, 0, rotationInt * -90);
+    private void SetRotation() => GetComponent<RectTransform>().rotation = Quaternion.Euler(0, 0, rotationInt * 90);
 
     private void CenterCalculation()
     {

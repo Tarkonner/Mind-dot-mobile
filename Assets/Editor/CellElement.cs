@@ -44,20 +44,14 @@ public class CellElement : Image
     public void UnsubColor(CellColorState color = CellColorState.normal)
     {
         if (color == CellColorState.partGoal)
-        {
             colorGoalCount--;
-            Debug.Log("Counted down: " + colorGoalCount);
-        }
         if (color == CellColorState.partPiece)
             colorPartPiece = false;
 
         if (colorGoalCount > 0 && colorPartPiece)
             ChangeCellColor(CellColorState.partGoalAndPiece);
         else if (colorGoalCount > 0 && !colorPartPiece && color == CellColorState.partPiece)
-        {
-            Debug.Log("Change color to goal");
             ChangeCellColor(CellColorState.partGoal);
-        }
         else if(colorGoalCount > 0)
         {
             //To stop it to to in else
@@ -72,10 +66,7 @@ public class CellElement : Image
     {
         //Save color
         if (targetColor == CellColorState.partGoal)
-        {
             colorGoalCount++;
-            Debug.Log("Count up: " + colorGoalCount);
-        }
         if (targetColor == CellColorState.partPiece)
             colorPartPiece = true;
         

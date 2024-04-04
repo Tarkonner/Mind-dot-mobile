@@ -1,0 +1,38 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 7929adc3e2ba8f241ae51a04999eb8fd, type: 3}
+  m_Name: TR2
+  m_EditorClassIdentifier: 
+  levelTitle: TR2
+  levelGrid:
+    dots: 000000000100000001000000000000000200000000000000030000000000000000000000
+    activeCells: 010101010101010101
+    boardSize: {x: 3, y: 3}
+  levelPieces:
+  - dotPositions:
+    - {x: 0, y: 2}
+    - {x: 1, y: 1}
+    - {x: 2, y: 0}
+    dotTypes: 030000000200000001000000
+    rotatable: 1
+    gridPosRef: {x: 0, y: 0}
+    pieceSize: {x: 3, y: 3}
+    startRotation: 2
+  levelShapeGoals:
+  - goalSpecifications:
+    - {x: 0, y: 2}
+    - {x: 1, y: 1}
+    - {x: 2, y: 0}
+    goalDots: 030000000200000001000000
+    gridPosRef: {x: 0, y: 0}
+    goalSize: {x: 3, y: 3}
+  levelPlaceGoals: []
