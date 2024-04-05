@@ -95,7 +95,11 @@ public class Piece : MonoBehaviour, IDragHandler
             Dot targetDot = spawn.GetComponent<Dot>();
             RectTransform rect = spawn.GetComponent<RectTransform>();
 
-            Vector2 offset = new Vector2((targetPiece.pieceSize.x - 1) * 0.5f, (targetPiece.pieceSize.y - 1) * 0.5f);
+            Vector2 offset;
+            if (targetPiece.pieceSize.x <= 2 && targetPiece.pieceSize.y <= 2) //Special case for less 2x2 pieces
+                offset = Vector2.zero;
+            else
+                offset = new Vector2((targetPiece.pieceSize.x - 1) * 0.5f, (targetPiece.pieceSize.y - 1) * 0.5f);
 
             Vector2 calPosition = new Vector2(gridPosArray[i].x * dotSpacing - offset.x * dotSpacing, (gridPosArray[i].y * dotSpacing - offset.y * dotSpacing) * -1);
             rect.anchoredPosition = calPosition;
@@ -107,9 +111,6 @@ public class Piece : MonoBehaviour, IDragHandler
             if (i == 0)
                 firstDot = spawn;
         }
-
-
-
 
         //Goes through each dot and measures grid distance to each other dot.
         // Distance is used to differentiate adjacent and diagonal dot connections. 
