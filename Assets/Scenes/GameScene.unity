@@ -404,7 +404,7 @@ PrefabInstance:
     - target: {fileID: 65025732663852158, guid: ece83fda2ae00364da4f4bd42689e64a, type: 3}
       propertyPath: testLevel
       value: 
-      objectReference: {fileID: 11400000, guid: a989110ccfdd9b84ea7caec703b98ed8, type: 2}
+      objectReference: {fileID: 11400000, guid: 41cf56a0a67e12a4b914eb900170d457, type: 2}
     - target: {fileID: 65025732663852158, guid: ece83fda2ae00364da4f4bd42689e64a, type: 3}
       propertyPath: goalHolder
       value: 

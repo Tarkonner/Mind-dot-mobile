@@ -87,10 +87,11 @@ public class ShapeGoal : MonoBehaviour, IGoal
                     continue;
 
                 if (board.grid[x, y].occupying is Dot currentDot && 
-                    currentDot.dotType == goalsDots[0].dotType)
+                    (currentDot.dotType == goalsDots[0].dotType || goalsDots[0].dotType == DotType.Null))
                 {
                     if (CheckForPatternAtPosition(board, new Vector2(x, y)))
                     {
+                        //Show goal is complete
                         completed = true;
                         background.color = completedColor;
                         return true;
@@ -104,39 +105,32 @@ public class ShapeGoal : MonoBehaviour, IGoal
     }
     private bool CheckForPatternAtPosition(Board board, Vector2 currentPos)
     {
-        Debug.Log("Check");
-
-        Vector2 assumePos = currentPos;
-
+        Vector2 assumePos = currentPos; //Get input to calculate from
         for (int i = 0; i < goalsDots.Count; i++)
         {
-            if (i != 0)
+            //Get diffent after first varibul
+            if (i != 0) 
             {
                 Vector2 dif = dotCoordinats[i] - dotCoordinats[i - 1];
-                Debug.Log("Dif: " + dif);
                 assumePos = assumePos + new Vector2(dif.x, dif.y);
             }
 
-            Debug.Log("Regnet: " + assumePos);
-
+            //Checks
+            //Out of bounds
             if ((int)assumePos.x > board.grid.GetLength(0) - 1 || (int)assumePos.y > board.grid.GetLength(1) - 1
                 || assumePos.x < 0 || assumePos.y < 0)
             {
-                Debug.Log("Out off bounds");
                 return false;
             }
+            //Null
             if (board.grid[(int)assumePos.x, (int)assumePos.y] == null)
-            {
-                Debug.Log("A");
                 return false;
-            }
 
+            //Check for right type of dot
             if (board.grid[(int)assumePos.x, (int)assumePos.y].occupying is Dot checkDot)
             {
-                Debug.Log(checkDot.dotType);
                 if (goalsDots[i].dotType == DotType.Null)
                 {
-                    Debug.Log("Null dot");
                 }
                 else if (checkDot.dotType != goalsDots[i].dotType)
                     return false;
