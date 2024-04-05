@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
 using UnityEngine.EventSystems;
 using UnityEngine.UI;
@@ -25,12 +26,13 @@ public class Piece : MonoBehaviour, IDragHandler
     private GameObject lineHolder;
     public float lineWidth = 10;
 
-    public bool testRotate;
-
     private Vector2Int savedCenterCoordinats;
     public Vector2Int pieceCenter { get; private set; }
     
     Dictionary<GameObject, Vector2> dotsPosition = new Dictionary<GameObject, Vector2>();
+
+    //Raycast from dot
+    public GameObject firstDot { get; private set; }
 
     //Stats
     public enum pieceStats { small, transparent, normal};
@@ -101,7 +103,13 @@ public class Piece : MonoBehaviour, IDragHandler
 
             dotsArray[i] = targetDot;
             targetDot.Setup(targetPiece.dotTypes[i], this);
+
+            if (i == 0)
+                firstDot = spawn;
         }
+
+
+
 
         //Goes through each dot and measures grid distance to each other dot.
         // Distance is used to differentiate adjacent and diagonal dot connections. 

@@ -168,11 +168,15 @@ public class Board : ScaleAnimations
 
         //Calculate target positions
         List<Vector2Int> coordinatesResult = new List<Vector2Int>();
+        Vector2Int posCalculation = inputCoordinates;
         for (int i = 0; i < piece.dotsArray.Length; i++)
         {
-            coordinatesResult.Add(new Vector2Int(
-                inputCoordinates.x + piece.pieceCenter.x + (int)piece.gridPosArray[i].x, 
-                inputCoordinates.y + piece.pieceCenter.y + (int)piece.gridPosArray[i].y)); 
+            if(i != 0)
+            {
+                Vector2 dif = piece.gridPosArray[i] - piece.gridPosArray[i - 1];
+                posCalculation = posCalculation + new Vector2Int((int)dif.x, (int)dif.y);
+            }
+            coordinatesResult.Add(posCalculation); 
         }
 
         //Does place exits

@@ -135,13 +135,12 @@ public class InputSystem : MonoBehaviour
             }
         }
 
-        //Board detection
+        
         List<RaycastResult> boardDection = HitDetection(touchPosition, boardRaycast);
         foreach (RaycastResult result in boardDection)
         {
             if (result.gameObject.TryGetComponent(out Cell targetCell))
             {
-                //Dot targetDot = null;
                 if (targetCell.occupying is Dot targetDot)
                 {
                     if (targetDot.parentPiece != null)
@@ -178,12 +177,14 @@ public class InputSystem : MonoBehaviour
             bool canPlacePiece = false;
 
             //Raycast
-            List<RaycastResult> deteced = HitDetection(holdingPiece.GetComponent<RectTransform>().position, boardRaycast);
+            List<RaycastResult> deteced = HitDetection(holdingPiece.firstDot.GetComponent<RectTransform>().position, boardRaycast);
             foreach (RaycastResult result in deteced)
             {
                 //See if we hit a cell
                 if (result.gameObject.TryGetComponent(out Cell cell))
                 {
+                    Debug.Log(cell.gridPos);
+
                     holdingPiece.transform.SetParent(board.transform);
                     bool placeResult = board.PlacePiece(cell.gridPos, holdingPiece);
 
