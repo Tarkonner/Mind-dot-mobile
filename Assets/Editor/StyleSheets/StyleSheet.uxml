@@ -6,8 +6,8 @@
                 <ui:Label tabindex="-1" text="Cells" parse-escape-sequences="true" display-tooltip-when-elided="true" />
                 <ui:SliderInt picking-mode="Ignore" label="Horizontal Value" value="42" high-value="7" name="HorizontalValue" low-value="1" show-input-field="true" />
                 <ui:SliderInt picking-mode="Ignore" label="Vertical Value" value="42" high-value="7" name="VerticalValue" low-value="1" show-input-field="true" inverted="false" />
-                <ui:Button text="Set active cells" parse-escape-sequences="true" display-tooltip-when-elided="true" name="ResizeGrid" binding-path="ResizeGrid" />
-                <ui:Button text="Manual turn cells on &amp; off" parse-escape-sequences="true" display-tooltip-when-elided="true" name="CellActivation" />
+                <ui:Button text="Input Cell toggle" parse-escape-sequences="true" display-tooltip-when-elided="true" name="ResizeGrid" binding-path="ResizeGrid" />
+                <ui:Button text="Cell toggle" parse-escape-sequences="true" display-tooltip-when-elided="true" name="CellActivation" />
             </ui:GroupBox>
             <ui:GroupBox name="Dots">
                 <ui:Label tabindex="-1" text="Dots" parse-escape-sequences="true" display-tooltip-when-elided="true" name="Label" />

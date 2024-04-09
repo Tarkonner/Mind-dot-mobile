@@ -68,9 +68,9 @@ public class LevelEditor : EditorWindow
         //Cells
         horizontalSlider = rootVisualElement.Q("HorizontalValue") as SliderInt;
         verticalSlider = rootVisualElement.Q("VerticalValue") as SliderInt;
-        SelectetAction("ResizeGrid").clicked      += () => ResizeGrid(new Vector2(horizontalSlider.value, verticalSlider.value));
+        ButtonAction("ResizeGrid").clicked      += () => ResizeGrid(new Vector2(horizontalSlider.value, verticalSlider.value));
         //Set start marked
-        ButtonAction("CellActivation").clicked  += () => ChangeState(new CellEditState());
+        SelectetAction("CellActivation").clicked  += () => ChangeState(new CellEditState());
 
         //Dots
         DotButton(rootVisualElement.Q<Button>("RedDot"), DotType.Red, Color.red);
@@ -90,7 +90,7 @@ public class LevelEditor : EditorWindow
         ButtonAction("MakeShapeGoal").clicked += () =>
             { if (currentState is MakeShapeGoalState) ((MakeShapeGoalState)currentState).Execute(goalHolder, eo_GoalHolder, this); };
         //Placement goals
-        ButtonAction("MakePlaceGoal").clicked += () => ChangeState(new MakePlaceGoalState());
+        SelectetAction("MakePlaceGoal").clicked += () => ChangeState(new MakePlaceGoalState());
 
         //Save and load
         namingField = rootVisualElement.Q("LevelsName") as TextField;
