@@ -45,7 +45,10 @@ public class InputSystem : MonoBehaviour
     public delegate void OnDotsChange();
     public static event OnDotsChange onDotChange;
 
-
+    ////Cancel event bug Bug
+    //private float cancelBugTimer = .3f;
+    //private float cancelBugClock = 0;
+    //private bool wasInput = false;
 
     private void Awake()
     {
@@ -67,7 +70,6 @@ public class InputSystem : MonoBehaviour
         pressScreen.started += BeginDrag;
         pressScreen.canceled += Release;
     }
-
     private void OnDisable()
     {
         pressScreen.started -= BeginDrag;
@@ -78,22 +80,33 @@ public class InputSystem : MonoBehaviour
     {
         //Drag
         if (positionAction.WasPerformedThisFrame())
-        {
             touchPosition = Touchscreen.current.primaryTouch.position.ReadValue();
-        }
+
         if (holdingPiece != null)
         {
             holdingPiece.OnDrag(pointerEventData); //Not doing anything right now
-            
+
             //Move
             if(holdingPieceRect == null)
                 holdingPieceRect = holdingPiece.gameObject.GetComponent<RectTransform>();
+
             Vector2 targetPosition = touchPosition + new Vector2(0, 
                 touchOffsetY + Mathf.RoundToInt(Mathf.Abs(holdingPiece.pieceCenter.y) / 2) * holdingPiece.DotSpacing);
             holdingPieceRect.position = targetPosition;
+
+            ////Cancel event bug fix
+            //if (!wasInput)
+            //{
+            //    cancelBugClock += Time.deltaTime;
+            //    if (cancelBugClock > cancelBugTimer)
+            //    {
+            //        cancelBugClock = 0;
+            //        holdingPiece.ReturnToHolder();
+            //        holdingPiece = null;
+            //        Debug.Log("Cancel bug");
+            //    }
+            //}
         }
-        else
-            holdingPieceRect = null;
     }
 
     List<RaycastResult> HitDetection(Vector2 inputPosition, GraphicRaycaster raycaster)
@@ -183,8 +196,6 @@ public class InputSystem : MonoBehaviour
                 //See if we hit a cell
                 if (result.gameObject.TryGetComponent(out Cell cell))
                 {
-                    Debug.Log(cell.gridPos);
-
                     holdingPiece.transform.SetParent(board.transform);
                     bool placeResult = board.PlacePiece(cell.gridPos, holdingPiece);
 

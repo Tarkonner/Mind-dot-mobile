@@ -11,6 +11,7 @@ public class LevelManager : MonoBehaviour
     [SerializeField] Board board;
     [SerializeField] PieceMaker pieceHolder;
     [SerializeField] GoalMaker goalMaker;
+    [SerializeField] LevelText levelText;
 
     [Header("Goals")]
     [SerializeField] private GameObject goalHolder;
@@ -23,7 +24,7 @@ public class LevelManager : MonoBehaviour
     [SerializeField] bool loadTestlevel = false;
     [SerializeField] private LevelSO testLevel;
 
-    public int targetLevel = 0;
+    public int targetLevel { get; private set; } = 0;
 
     private void Start()
     {
@@ -37,6 +38,9 @@ public class LevelManager : MonoBehaviour
 #endif
         //Load first level
         LoadLevel(levels[targetLevel]);
+
+        //Level index
+        levelText.LevelIndex(targetLevel);
     }
 
     private void OnEnable()
@@ -100,6 +104,7 @@ public class LevelManager : MonoBehaviour
             {
                 Debug.Log("Level Complete");
                 LoadLevel(levels[targetLevel]);
+                levelText.LevelIndex(targetLevel);
             }
         }
     }
