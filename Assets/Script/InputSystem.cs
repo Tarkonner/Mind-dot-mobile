@@ -15,7 +15,6 @@ public class InputSystem : MonoBehaviour
 
     private InputAction tapAction;
     private InputAction positionAction;
-    private InputAction pressScreen;
 
     public Vector2 touchPosition { get; private set; }
 
@@ -45,11 +44,6 @@ public class InputSystem : MonoBehaviour
     public delegate void OnDotsChange();
     public static event OnDotsChange onDotChange;
 
-    ////Cancel event bug Bug
-    //private float cancelBugTimer = .3f;
-    //private float cancelBugClock = 0;
-    //private bool wasInput = false;
-
     private void Awake()
     {
         instance = this;
@@ -62,18 +56,17 @@ public class InputSystem : MonoBehaviour
         playerInput = GetComponent<PlayerInput>();
         positionAction = playerInput.actions["TouchPosition"];
         tapAction = playerInput.actions["Tap"];
-        pressScreen = playerInput.actions["PrimaryContact"];
     }
 
     private void OnEnable()
     {
-        pressScreen.started += BeginDrag;
-        pressScreen.canceled += Release;
+        tapAction.started += BeginDrag;
+        tapAction.canceled += Release;
     }
     private void OnDisable()
     {
-        pressScreen.started -= BeginDrag;
-        pressScreen.canceled -= Release;
+        tapAction.started -= BeginDrag;
+        tapAction.canceled -= Release;
     }
 
     private void Update()
@@ -93,19 +86,6 @@ public class InputSystem : MonoBehaviour
             Vector2 targetPosition = touchPosition + new Vector2(0, 
                 touchOffsetY + Mathf.RoundToInt(Mathf.Abs(holdingPiece.pieceCenter.y) / 2) * holdingPiece.DotSpacing);
             holdingPieceRect.position = targetPosition;
-
-            ////Cancel event bug fix
-            //if (!wasInput)
-            //{
-            //    cancelBugClock += Time.deltaTime;
-            //    if (cancelBugClock > cancelBugTimer)
-            //    {
-            //        cancelBugClock = 0;
-            //        holdingPiece.ReturnToHolder();
-            //        holdingPiece = null;
-            //        Debug.Log("Cancel bug");
-            //    }
-            //}
         }
     }
 
