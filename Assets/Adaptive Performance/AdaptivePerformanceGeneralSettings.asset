@@ -42,11 +42,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: cb0ece14d1f711a4fb9325ca819dee95, type: 3}
   m_Name: AdaptivePerformanceGeneralSettings
   m_EditorClassIdentifier: 
-  Keys: 07000000010000000d000000
+  Keys: 0700000001000000
   Values:
   - {fileID: 1928388843525740169}
   - {fileID: 6154396326297420267}
-  - {fileID: -3444878972687548138}
 --- !u!114 &1078469714091107043
 MonoBehaviour:
   m_ObjectHideFlags: 2

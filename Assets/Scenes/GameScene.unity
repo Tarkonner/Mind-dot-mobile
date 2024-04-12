@@ -765,6 +765,18 @@ PrefabInstance:
       propertyPath: touchOffsetY
       value: 200
       objectReference: {fileID: 0}
+    - target: {fileID: 5746726367402340195, guid: 8cbdc0a76d6bc7148968a7757584fc92, type: 3}
+      propertyPath: momentumOffset
+      value: 50
+      objectReference: {fileID: 0}
+    - target: {fileID: 5746726367402340195, guid: 8cbdc0a76d6bc7148968a7757584fc92, type: 3}
+      propertyPath: momentumDamping
+      value: 0.9
+      objectReference: {fileID: 0}
+    - target: {fileID: 5746726367402340195, guid: 8cbdc0a76d6bc7148968a7757584fc92, type: 3}
+      propertyPath: pieceMovementSpeed
+      value: 1500
+      objectReference: {fileID: 0}
     - target: {fileID: 7601826184292640168, guid: 8cbdc0a76d6bc7148968a7757584fc92, type: 3}
       propertyPath: m_Name
       value: Level Text
