@@ -40,6 +40,10 @@ public class InputSystem : MonoBehaviour
     private Vector2 contactPosition;
     [SerializeField] float touchOffsetY = 50;
 
+    [Header("Animations")]
+    [SerializeField] float pieceSnapPositionSpeed = 50;
+    private float pieceSnapCalculation;
+
     //Event
     public delegate void OnDotsChange();
     public static event OnDotsChange onDotChange;
@@ -87,10 +91,19 @@ public class InputSystem : MonoBehaviour
             if(holdingPieceRect == null)
                 holdingPieceRect = holdingPiece.gameObject.GetComponent<RectTransform>();
 
-            Vector2 targetPosition = touchPosition + new Vector2(0, 
-                touchOffsetY + Mathf.RoundToInt(Mathf.Abs(holdingPiece.pieceCenter.y) / 2) * holdingPiece.DotSpacing);
+            //Calculate position
+            if(pieceSnapCalculation < 1)
+            {
+                pieceSnapCalculation += Time.deltaTime * pieceSnapPositionSpeed;
+                if(pieceSnapCalculation > 1)
+                    pieceSnapCalculation = 1;
+            }
+            Vector2 targetPosition = touchPosition + 
+                new Vector2(0, touchOffsetY + Mathf.RoundToInt(Mathf.Abs(holdingPiece.pieceCenter.y) / 2) * holdingPiece.DotSpacing);
+            Vector2 calPosition = Vector2.Lerp(touchPosition, targetPosition, pieceSnapCalculation);
 
-            holdingPieceRect.position = targetPosition;
+            //Set posotion
+            holdingPieceRect.position = calPosition;
         }
 
         
@@ -202,6 +215,9 @@ public class InputSystem : MonoBehaviour
             if (!canPlacePiece)
                 ReturnPiece();
         }
+
+        //Reset snap
+        pieceSnapCalculation = 0;
     }
 
     private void ReturnPiece()
