@@ -15,6 +15,7 @@ public class InputSystem : MonoBehaviour
 
     private InputAction tapAction;
     private InputAction positionAction;
+    private InputAction secoundTap;
 
     public Vector2 touchPosition { get; private set; }
 
@@ -60,17 +61,22 @@ public class InputSystem : MonoBehaviour
         playerInput = GetComponent<PlayerInput>();
         positionAction = playerInput.actions["TouchPosition"];
         tapAction = playerInput.actions["Tap"];
+        secoundTap = playerInput.actions["SecendFinger"];
     }
 
     private void OnEnable()
     {
         tapAction.started += BeginDrag;
         tapAction.canceled += Release;
+
+        secoundTap.started += Tap;
     }
     private void OnDisable()
     {
         tapAction.started -= BeginDrag;
         tapAction.canceled -= Release;
+
+        secoundTap.started -= Tap;
     }
 
     private void Update()
@@ -104,9 +110,7 @@ public class InputSystem : MonoBehaviour
 
             //Set posotion
             holdingPieceRect.position = calPosition;
-        }
-
-        
+        }        
     }
 
     List<RaycastResult> HitDetection(Vector2 inputPosition, GraphicRaycaster raycaster)
@@ -229,11 +233,14 @@ public class InputSystem : MonoBehaviour
 
     private void Tap()
     {
-        if(holdingPiece != null && touchPosition.y < rotateLine.position.y)
-        {
-            holdingPiece.Rotate();
-        }
+        if(holdingPiece != null)
+            holdingPiece.RotateWithAnimation();
     }
+    private void Tap(InputAction.CallbackContext context)
+    {
+        Tap();
+    }
+
     private void CheckGoals()
     {
         onDotChange?.Invoke();

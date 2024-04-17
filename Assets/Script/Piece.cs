@@ -1,6 +1,6 @@
-using System;
+using DG.Tweening;
+using System.Collections;
 using System.Collections.Generic;
-using System.Linq;
 using UnityEngine;
 using UnityEngine.EventSystems;
 using UnityEngine.UI;
@@ -28,15 +28,20 @@ public class Piece : MonoBehaviour, IDragHandler
 
     private Vector2Int savedCenterCoordinats;
     public Vector2Int pieceCenter { get; private set; }
-    
+
     Dictionary<GameObject, Vector2> dotsPosition = new Dictionary<GameObject, Vector2>();
 
     //Raycast from dot
     public GameObject firstDot { get; private set; }
 
     //Stats
-    public enum pieceStats { small, transparent, normal};
+    public enum pieceStats { small, transparent, normal };
     private pieceStats currentState;
+
+    [Header("Animation")]
+    [SerializeField] float rotationTime = .2f;
+    public bool currentlyRotation = false;
+
 
     private void Awake()
     {
@@ -50,7 +55,7 @@ public class Piece : MonoBehaviour, IDragHandler
         ChangeState(pieceStats.small);
     }
 
-    public void ChangeState(pieceStats targetState) 
+    public void ChangeState(pieceStats targetState)
     {
         currentState = targetState;
 
@@ -175,7 +180,7 @@ public class Piece : MonoBehaviour, IDragHandler
 
     public void EnforceDotPositions()
     {
-        for (int i = 0;i < dotsArray.Length; i++)
+        for (int i = 0; i < dotsArray.Length; i++)
         {
             RectTransform rect = dotsArray[i].GetComponent<RectTransform>();
             //Set position
@@ -185,7 +190,8 @@ public class Piece : MonoBehaviour, IDragHandler
         }
     }
 
-    public void Rotate()
+    #region Rotation
+    void RotationCalculation()
     {
         if (!rotatable)
             return;
@@ -196,15 +202,40 @@ public class Piece : MonoBehaviour, IDragHandler
             //(x,y) is the point that is to be rotated. (a,b) is the pivot point of the rotation.
             //Since we want a 90 degree rotation, the formula effectively becomes: (x,y)?(??(y??),?+(x??))
             gridPosArray[i] = new Vector2((pivotPoint.x + (gridPosArray[i].y - pivotPoint.y)),
-               (pivotPoint.y - (gridPosArray[i].x - pivotPoint.y)));           
+               (pivotPoint.y - (gridPosArray[i].x - pivotPoint.y)));
         }
 
         rotationInt = (rotationInt + 1) % 4;
         CenterCalculation();
+    }
+    public void Rotate()
+    {
+        if (!rotatable)
+            return;
+
+        RotationCalculation();
 
         //Set rotation
         SetRotation();
     }
+    public void RotateWithAnimation()
+    {
+        if (currentlyRotation || !rotatable)
+            return;
+
+        RotationCalculation();
+
+        //Rotation Animation
+        rectTransform.DORotate(new Vector3(0, 0, rotationInt * 90), rotationTime);
+        StartCoroutine(RotateTimer());
+    }
+    IEnumerator RotateTimer()
+    {
+        currentlyRotation = true;
+        yield return new WaitForSeconds(rotationTime);
+        currentlyRotation = false;
+    }
+    #endregion
 
     public void CreateLine(Dot dot1, Dot dot2)
     {
@@ -237,7 +268,7 @@ public class Piece : MonoBehaviour, IDragHandler
         ChangeState(pieceStats.small);
         rectTransform.anchoredPosition = Vector2.zero;
     }
-    
+
     private void SetAplha(float alphaValue)
     {
         //Lines

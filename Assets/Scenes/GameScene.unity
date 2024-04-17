@@ -779,7 +779,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 5746726367402340195, guid: 8cbdc0a76d6bc7148968a7757584fc92, type: 3}
       propertyPath: pieceSnapPositionSpeed
-      value: 25
+      value: 15
       objectReference: {fileID: 0}
     - target: {fileID: 7601826184292640168, guid: 8cbdc0a76d6bc7148968a7757584fc92, type: 3}
       propertyPath: m_Name
