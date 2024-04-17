@@ -121,33 +121,30 @@ public class Piece : MonoBehaviour, IDragHandler
         // Distance is used to differentiate adjacent and diagonal dot connections. 
         for (int i = 0; i < gridPosArray.Length; i++)
         {
-            if (!dotsArray[i].IsConnected)
+            List<int> diagonalList = new List<int>();
+            bool foundAdjacent = false;
+            for (int j = 0; j < gridPosArray.Length; j++)
             {
-                List<int> diagonalList = new List<int>();
-                bool foundAdjacent = false;
-                for (int j = 0; j < gridPosArray.Length; j++)
+                if (i == j) continue;
+
+                float val = Vector2.Distance(gridPosArray[i], gridPosArray[j]);
+                if (val > 1.5f)
+                    continue;
+                else if (val > 1.2f && !foundAdjacent)
                 {
-                    if (i == j) continue;
-
-                    float val = Vector2.Distance(gridPosArray[i], gridPosArray[j]);
-                    if (val > 1.5f) continue;
-
-                    else if (val > 1.2f && !foundAdjacent)
-                    {
-                        diagonalList.Add(j);
-                    }
-                    else if (val == 1)
-                    {
-                        foundAdjacent = true;
-                        CreateLine(dotsArray[i], dotsArray[j]);
-                    }
+                    diagonalList.Add(j);
                 }
-                if (!foundAdjacent)
+                else if (val == 1)
                 {
-                    foreach (int j in diagonalList)
-                    {
-                        CreateLine(dotsArray[i], dotsArray[j]);
-                    }
+                    foundAdjacent = true;
+                    CreateLine(dotsArray[i], dotsArray[j]);
+                }
+            }
+            if (!foundAdjacent)
+            {
+                foreach (int j in diagonalList)
+                {
+                    CreateLine(dotsArray[i], dotsArray[j]);
                 }
             }
         }
@@ -239,6 +236,8 @@ public class Piece : MonoBehaviour, IDragHandler
 
     public void CreateLine(Dot dot1, Dot dot2)
     {
+        Debug.Log("Line");
+
         //Setup
         GameObject newObject = new GameObject();
         newObject.AddComponent<CanvasRenderer>();
