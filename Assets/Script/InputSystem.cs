@@ -39,11 +39,6 @@ public class InputSystem : MonoBehaviour
     [SerializeField] RectTransform rotateLine;
     private Vector2 contactPosition;
     [SerializeField] float touchOffsetY = 50;
-    private Vector2 lastInput;
-    [SerializeField] float momentumOffset = 50;
-    Vector2 momentum = Vector2.zero;
-    [SerializeField] float momentumDamping = .7f;
-    [SerializeField] float pieceMovementSpeed = 50;
 
     //Event
     public delegate void OnDotsChange();
@@ -82,14 +77,6 @@ public class InputSystem : MonoBehaviour
         if (primeTouchPosition != Vector2.zero)
         {
             touchPosition = primeTouchPosition;
-            //Momentum Calculation
-            momentum = (primeTouchPosition - lastInput).normalized * momentumOffset;
-            lastInput = primeTouchPosition;
-        }
-        else
-        {
-            //Damping
-            momentum *= momentumDamping;
         }
 
         if (holdingPiece != null)
@@ -101,10 +88,8 @@ public class InputSystem : MonoBehaviour
                 holdingPieceRect = holdingPiece.gameObject.GetComponent<RectTransform>();
 
             Vector2 targetPosition = touchPosition + new Vector2(0, 
-                touchOffsetY + Mathf.RoundToInt(Mathf.Abs(holdingPiece.pieceCenter.y) / 2) * holdingPiece.DotSpacing)
-                + momentum;
+                touchOffsetY + Mathf.RoundToInt(Mathf.Abs(holdingPiece.pieceCenter.y) / 2) * holdingPiece.DotSpacing);
 
-            float maxDistance = Time.deltaTime * pieceMovementSpeed;
             holdingPieceRect.position = targetPosition;
         }
 
@@ -184,8 +169,7 @@ public class InputSystem : MonoBehaviour
         if (Vector2.Distance(contactPosition, touchPosition) < distanceBeforeSwipe)
         {
             Tap();
-            holdingPiece.ReturnToHolder();
-            holdingPiece = null;
+            ReturnPiece();
         }
         else
         {
@@ -213,14 +197,18 @@ public class InputSystem : MonoBehaviour
                         break;
                     }
                 }
-            }            
+            }
 
             if (!canPlacePiece)
-            {
-                holdingPiece.ReturnToHolder();
-                holdingPiece = null;
-            }
+                ReturnPiece();
         }
+    }
+
+    private void ReturnPiece()
+    {
+        holdingPiece.ReturnToHolder();
+        holdingPiece = null;
+        holdingPieceRect = null;
     }
 
     private void Tap()
