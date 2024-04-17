@@ -40,6 +40,7 @@ public class InputSystem : MonoBehaviour
     [SerializeField] RectTransform rotateLine;
     private Vector2 contactPosition;
     [SerializeField] float touchOffsetY = 50;
+    private bool fromBoard = false; 
 
     [Header("Animations")]
     [SerializeField] float pieceSnapPositionSpeed = 50;
@@ -104,8 +105,9 @@ public class InputSystem : MonoBehaviour
                 if(pieceSnapCalculation > 1)
                     pieceSnapCalculation = 1;
             }
-            Vector2 targetPosition = touchPosition + 
-                new Vector2(0, touchOffsetY + Mathf.RoundToInt(Mathf.Abs(holdingPiece.pieceCenter.y) / 2) * holdingPiece.DotSpacing);
+            Vector2 targetPosition = touchPosition;
+            if(!fromBoard)
+                targetPosition += new Vector2(0, touchOffsetY + Mathf.RoundToInt(Mathf.Abs(holdingPiece.pieceCenter.y) / 2) * holdingPiece.DotSpacing);
             Vector2 calPosition = Vector2.Lerp(touchPosition, targetPosition, pieceSnapCalculation);
 
             //Set posotion
@@ -152,7 +154,7 @@ public class InputSystem : MonoBehaviour
             }
         }
 
-        
+        //Raycast Board
         List<RaycastResult> boardDection = HitDetection(touchPosition, boardRaycast);
         foreach (RaycastResult result in boardDection)
         {
@@ -169,6 +171,7 @@ public class InputSystem : MonoBehaviour
                         CheckGoals();
 
                         targetDot.parentPiece.ChangeState(Piece.pieceStats.transparent);
+                        fromBoard = true;
                     }
                 }
             }
@@ -222,6 +225,9 @@ public class InputSystem : MonoBehaviour
 
         //Reset snap
         pieceSnapCalculation = 0;
+
+        //Offset turn on and off
+        fromBoard = false;
     }
 
     private void ReturnPiece()
