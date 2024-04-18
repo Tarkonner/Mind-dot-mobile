@@ -18,6 +18,7 @@ public class InputSystem : MonoBehaviour
     private InputAction secoundTap;
 
     public Vector2 touchPosition { get; private set; }
+    private bool hasRotated = false;
 
     [Header("Refences")]
     [SerializeField] private Board board;
@@ -39,7 +40,8 @@ public class InputSystem : MonoBehaviour
     [SerializeField] RectTransform rotateLine;
     private Vector2 contactPosition;
     [SerializeField] float touchOffsetY = 50;
-    private bool fromBoard = false; 
+    private bool fromBoard = false;
+    [SerializeField] float secoundTouchTimeBetweenTouch = .2f;
 
     [Header("Animations")]
     [SerializeField] float pieceSnapPositionSpeed = 50;
@@ -70,6 +72,7 @@ public class InputSystem : MonoBehaviour
         tapAction.canceled += Release;
 
         secoundTap.started += Tap;
+        secoundTap.canceled += Tap;
     }
     private void OnDisable()
     {
@@ -77,6 +80,7 @@ public class InputSystem : MonoBehaviour
         tapAction.canceled -= Release;
 
         secoundTap.started -= Tap;
+        secoundTap.canceled -= Tap;
     }
 
     private void Update()
@@ -96,6 +100,9 @@ public class InputSystem : MonoBehaviour
             //Move
             if(holdingPieceRect == null)
                 holdingPieceRect = holdingPiece.gameObject.GetComponent<RectTransform>();
+
+            if (secoundTap.WasPressedThisFrame())
+                Tap();
 
             //Calculate position
             if(pieceSnapCalculation < 1)
@@ -224,6 +231,8 @@ public class InputSystem : MonoBehaviour
 
         //Offset turn on and off
         fromBoard = false;
+
+        hasRotated = false;
     }
 
     private void ReturnPiece()
@@ -241,15 +250,26 @@ public class InputSystem : MonoBehaviour
     private void Tap()
     {
         if(holdingPiece != null)
+        {
             holdingPiece.RotateWithAnimation();
+            hasRotated = true;
+        }
     }
     private void Tap(InputAction.CallbackContext context)
     {
         Tap();
     }
 
+
     private void CheckGoals()
     {
         onDotChange?.Invoke();
+    }
+
+
+    void Lift(InputAction.CallbackContext context)
+    {
+        if (!hasRotated)
+            Tap();
     }
 }
