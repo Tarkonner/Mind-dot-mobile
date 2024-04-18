@@ -27,7 +27,6 @@ public class InputSystem : MonoBehaviour
     [SerializeField] Transform piecesHolder;
     private Piece holdingPiece;
     private RectTransform holdingPieceRect;
-    private Transform takenFrom;
 
     [Header("Raycasting")]
     [SerializeField] GraphicRaycaster boardRaycast;
@@ -146,7 +145,6 @@ public class InputSystem : MonoBehaviour
             if(result.gameObject.TryGetComponent(out Piece targetPiece))
             {
                 //Set piece to moving
-                takenFrom = targetPiece.transform;
                 holdingPiece = targetPiece;
                 holdingPiece.transform.SetParent(movingPiecesHolder.transform);
                 targetPiece.ChangeState(Piece.pieceStats.transparent);
@@ -183,8 +181,6 @@ public class InputSystem : MonoBehaviour
         if (holdingPiece == null)
             return;
 
-        touchPosition = Touchscreen.current.primaryTouch.position.ReadValue();
-
         //Tap or swipe
         if (Vector2.Distance(contactPosition, touchPosition) < distanceBeforeSwipe)
         {
@@ -210,7 +206,7 @@ public class InputSystem : MonoBehaviour
                         //Place piece on board
                         holdingPiece.ChangeState(Piece.pieceStats.normal);
                         holdingPiece.GetComponent<Image>().raycastTarget = false;
-                        holdingPiece = null;
+                        RemoveHoldingPiece();
                         canPlacePiece = true;
 
                         CheckGoals();
@@ -233,6 +229,11 @@ public class InputSystem : MonoBehaviour
     private void ReturnPiece()
     {
         holdingPiece.ReturnToHolder();
+        RemoveHoldingPiece();
+    }
+
+    private void RemoveHoldingPiece()
+    {
         holdingPiece = null;
         holdingPieceRect = null;
     }

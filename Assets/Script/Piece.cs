@@ -236,8 +236,6 @@ public class Piece : MonoBehaviour, IDragHandler
 
     public void CreateLine(Dot dot1, Dot dot2)
     {
-        Debug.Log("Line");
-
         //Setup
         GameObject newObject = new GameObject();
         newObject.AddComponent<CanvasRenderer>();
