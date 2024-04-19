@@ -37,11 +37,11 @@ public class InputSystem : MonoBehaviour
 
     [Header("Input")]
     [SerializeField] float distanceBeforeSwipe = 50;
+    [SerializeField] float secoundTouchTimeBetweenTouch = .2f;
+    [SerializeField] float touchOffsetY = 50;
     [SerializeField] RectTransform rotateLine;
     private Vector2 contactPosition;
-    [SerializeField] float touchOffsetY = 50;
     private bool fromBoard = false;
-    [SerializeField] float secoundTouchTimeBetweenTouch = .2f;
 
     [Header("Animations")]
     [SerializeField] float pieceSnapPositionSpeed = 50;

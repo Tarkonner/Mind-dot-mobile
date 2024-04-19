@@ -40,7 +40,9 @@ public class Piece : MonoBehaviour, IDragHandler
 
     [Header("Animation")]
     [SerializeField] float rotationTime = .2f;
-    public bool currentlyRotation = false;
+    [SerializeField] float scaleAnimation = .2f;
+    [HideInInspector] public bool currentlyRotation = false;
+
 
 
     private void Awake()
@@ -66,7 +68,7 @@ public class Piece : MonoBehaviour, IDragHandler
                 SetAplha(1);
                 break;
             case pieceStats.transparent:
-                transform.localScale = Vector3.one;
+                transform.DOScale(Vector3.one, scaleAnimation);
                 SetAplha(.5f);
                 break;
             case pieceStats.normal:

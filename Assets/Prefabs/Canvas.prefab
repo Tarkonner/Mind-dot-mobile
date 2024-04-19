@@ -419,8 +419,10 @@ MonoBehaviour:
   boardRaycast: {fileID: 2713508286138516549}
   piecesRaycast: {fileID: 8273515195829943817}
   distanceBeforeSwipe: 25
+  secoundTouchTimeBetweenTouch: 0.2
+  touchOffsetY: 500
   rotateLine: {fileID: 4778898788420237374}
-  touchOffsetY: 75
+  pieceSnapPositionSpeed: 15
 --- !u!1 &5546372238623492095
 GameObject:
   m_ObjectHideFlags: 0
@@ -625,8 +627,9 @@ GameObject:
   - component: {fileID: 5029703073954011241}
   - component: {fileID: 663020738604845746}
   - component: {fileID: 9142368739545776907}
+  - component: {fileID: 7140424623274038805}
   m_Layer: 5
-  m_Name: Level
+  m_Name: Level Text
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -648,7 +651,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 1}
   m_AnchorMax: {x: 0.5, y: 1}
-  m_AnchoredPosition: {x: 0, y: 0}
+  m_AnchoredPosition: {x: 0, y: -50}
   m_SizeDelta: {x: 400, y: 100}
   m_Pivot: {x: 0.5, y: 1}
 --- !u!222 &663020738604845746
@@ -724,15 +727,17 @@ MonoBehaviour:
   m_lineSpacingMax: 0
   m_paragraphSpacing: 0
   m_charWidthMaxAdj: 0
-  m_enableWordWrapping: 1
+  m_TextWrappingMode: 1
   m_wordWrappingRatios: 0.4
   m_overflowMode: 0
   m_linkedTextComponent: {fileID: 0}
   parentLinkedComponent: {fileID: 0}
   m_enableKerning: 1
+  m_ActiveFontFeatures: 6e72656b
   m_enableExtraPadding: 0
   checkPaddingRequired: 0
   m_isRichText: 1
+  m_EmojiFallbackSupport: 1
   m_parseCtrlCharacters: 1
   m_isOrthographic: 1
   m_isCullingEnabled: 0
@@ -750,6 +755,18 @@ MonoBehaviour:
   m_hasFontAssetChanged: 0
   m_baseMaterial: {fileID: 0}
   m_maskOffset: {x: 0, y: 0, z: 0, w: 0}
+--- !u!114 &7140424623274038805
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7601826184292640168}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: fcd5822ae23734941b491c337050ef8e, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &8485062217576329147
 GameObject:
   m_ObjectHideFlags: 0
