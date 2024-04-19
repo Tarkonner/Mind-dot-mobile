@@ -1,3 +1,4 @@
+using DG.Tweening;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -72,7 +73,7 @@ public class InputSystem : MonoBehaviour
         tapAction.canceled += Release;
 
         secoundTap.started += Tap;
-        secoundTap.canceled += Tap;
+        secoundTap.canceled += LiftTap;
     }
     private void OnDisable()
     {
@@ -80,7 +81,7 @@ public class InputSystem : MonoBehaviour
         tapAction.canceled -= Release;
 
         secoundTap.started -= Tap;
-        secoundTap.canceled -= Tap;
+        secoundTap.canceled -= LiftTap;
     }
 
     private void Update()
@@ -191,7 +192,7 @@ public class InputSystem : MonoBehaviour
         //Tap or swipe
         if (Vector2.Distance(contactPosition, touchPosition) < distanceBeforeSwipe)
         {
-            Tap();
+            //Tap();
             ReturnPiece();
         }
         else
@@ -232,6 +233,7 @@ public class InputSystem : MonoBehaviour
         //Offset turn on and off
         fromBoard = false;
 
+        //Rotation
         hasRotated = false;
     }
 
@@ -257,19 +259,23 @@ public class InputSystem : MonoBehaviour
     }
     private void Tap(InputAction.CallbackContext context)
     {
-        Tap();
+        if(!hasRotated) 
+        {
+            hasRotated = true;
+            Tap();
+        }
     }
-
+    private void LiftTap(InputAction.CallbackContext context)
+    {
+        if(!hasRotated)
+        {
+            Tap();
+        }
+        hasRotated = false;
+    }
 
     private void CheckGoals()
     {
         onDotChange?.Invoke();
-    }
-
-
-    void Lift(InputAction.CallbackContext context)
-    {
-        if (!hasRotated)
-            Tap();
     }
 }

@@ -71,7 +71,7 @@ MonoBehaviour:
   dotSpacing: 125
   lineWidth: 10
   rotationTime: 0.2
-  scaleAnimation: 0.35
+  scaleAnimation: 0.2
   currentlyRotation: 0
 --- !u!114 &7252276453392386464
 MonoBehaviour:
