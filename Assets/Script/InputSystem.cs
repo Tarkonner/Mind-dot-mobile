@@ -1,6 +1,7 @@
 using DG.Tweening;
 using System.Collections;
 using System.Collections.Generic;
+using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.EventSystems;
 using UnityEngine.InputSystem;
@@ -150,7 +151,10 @@ public class InputSystem : MonoBehaviour
         List<RaycastResult> piecesDeteced = HitDetection(touchPosition, piecesRaycast);
         foreach (RaycastResult result in piecesDeteced)
         {
-            if(result.gameObject.TryGetComponent(out Piece targetPiece))
+            //Find Piece
+            Piece targetPiece = result.gameObject.GetComponentInChildren<Piece>();
+
+            if (targetPiece != null)
             {
                 //Set piece to moving
                 holdingPiece = targetPiece;
