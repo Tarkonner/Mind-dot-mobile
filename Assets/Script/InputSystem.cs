@@ -1,11 +1,7 @@
-using DG.Tweening;
-using System.Collections;
 using System.Collections.Generic;
-using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.EventSystems;
 using UnityEngine.InputSystem;
-using UnityEngine.InputSystem.Controls;
 using UnityEngine.UI;
 
 public class InputSystem : MonoBehaviour
@@ -29,7 +25,6 @@ public class InputSystem : MonoBehaviour
     [SerializeField] Transform piecesHolder;
     private Piece holdingPiece;
     private RectTransform holdingPieceRect;
-    private bool pieceSetToMove = false;
 
     [Header("Raycasting")]
     [SerializeField] GraphicRaycaster boardRaycast;
@@ -43,7 +38,6 @@ public class InputSystem : MonoBehaviour
     [SerializeField] float touchOffsetY = 50;
     [SerializeField] float distanceBeforeMoveing = 100;
     [SerializeField] RectTransform rotateLine;
-    private Vector2 contactPosition;
     private bool fromBoard = false;
 
     [Header("Animations")]
@@ -101,7 +95,7 @@ public class InputSystem : MonoBehaviour
             holdingPiece.OnDrag(pointerEventData); //Not doing anything right now
 
             //Move
-            if(holdingPieceRect == null)
+            if (holdingPieceRect == null)
                 holdingPieceRect = holdingPiece.gameObject.GetComponent<RectTransform>();
 
             //Second touch
@@ -109,32 +103,21 @@ public class InputSystem : MonoBehaviour
                 Tap();
 
             //Calculate position
-            if (Vector2.Distance(contactPosition, touchPosition) > distanceBeforeMoveing
-                && !pieceSetToMove)
+            if (pieceSnapCalculation < 1)
             {
-                pieceSetToMove = true;
-                holdingPiece.transform.SetParent(movingPiecesHolder.transform);
-                holdingPiece.ChangeState(Piece.pieceStats.transparent);
-            }
-
-            if (pieceSetToMove)
-            {
-                if (pieceSnapCalculation < 1)
-                {
-                    pieceSnapCalculation += Time.deltaTime * pieceSnapPositionSpeed;
-                    if (pieceSnapCalculation > 1)
-                        pieceSnapCalculation = 1;
-                }
+                pieceSnapCalculation += Time.deltaTime * pieceSnapPositionSpeed;
+                if (pieceSnapCalculation > 1)
+                    pieceSnapCalculation = 1;
             }
 
             Vector2 targetPosition = touchPosition;
-            if(!fromBoard || pieceSetToMove)
+            if (!fromBoard)
                 targetPosition += new Vector2(0, touchOffsetY + Mathf.RoundToInt(Mathf.Abs(holdingPiece.pieceCenter.y) / 2) * holdingPiece.DotSpacing);
             Vector2 calPosition = Vector2.Lerp(touchPosition, targetPosition, pieceSnapCalculation);
 
             //Set posotion
             holdingPieceRect.position = calPosition;
-        }        
+        }
     }
 
     List<RaycastResult> HitDetection(Vector2 inputPosition, GraphicRaycaster raycaster)
@@ -156,8 +139,10 @@ public class InputSystem : MonoBehaviour
         if (holdingPiece != null)
             return;
 
-        //Save where first touching
-        contactPosition = touchPosition;
+        //Rotation
+        hasRotated = true;
+
+        touchPosition = positionAction.ReadValue<Vector2>();
 
         //Raycast Pieceholder
         List<RaycastResult> piecesDeteced = HitDetection(touchPosition, piecesRaycast);
@@ -170,7 +155,8 @@ public class InputSystem : MonoBehaviour
             {
                 //Set piece to moving
                 holdingPiece = targetPiece;
-
+                holdingPiece.transform.SetParent(movingPiecesHolder.transform);
+                holdingPiece.ChangeState(Piece.pieceStats.transparent);                
                 break;
             }
         }
@@ -204,58 +190,46 @@ public class InputSystem : MonoBehaviour
         if (holdingPiece == null)
             return;
 
+        //Rotation
+        hasRotated = false;
+
         //Tap or swipe
-        if (Vector2.Distance(contactPosition, touchPosition) < distanceBeforeSwipe)
-        {
-            Tap();
-            ReturnPiece();
-            Debug.Log("A");
-        }
-        else
-        {
-            bool canPlacePiece = false;
+        bool canPlacePiece = false;
 
-            //Raycast
-            List<RaycastResult> deteced = HitDetection(holdingPiece.firstDot.GetComponent<RectTransform>().position, boardRaycast);
-            foreach (RaycastResult result in deteced)
+        //Raycast
+        List<RaycastResult> deteced = HitDetection(holdingPiece.firstDot.GetComponent<RectTransform>().position, boardRaycast);
+        foreach (RaycastResult result in deteced)
+        {
+            //See if we hit a cell
+            if (result.gameObject.TryGetComponent(out Cell cell))
             {
-                //See if we hit a cell
-                if (result.gameObject.TryGetComponent(out Cell cell))
+                holdingPiece.transform.SetParent(board.transform);
+                bool placeResult = board.PlacePiece(cell.gridPos, holdingPiece);
+
+                if (placeResult)
                 {
-                    holdingPiece.transform.SetParent(board.transform);
-                    bool placeResult = board.PlacePiece(cell.gridPos, holdingPiece);
+                    //Place piece on board
+                    holdingPiece.ChangeState(Piece.pieceStats.normal);
+                    holdingPiece.GetComponent<Image>().raycastTarget = false;
+                    RemoveHoldingPiece();
+                    canPlacePiece = true;
 
-                    if (placeResult)
-                    {
-                        //Place piece on board
-                        holdingPiece.ChangeState(Piece.pieceStats.normal);
-                        holdingPiece.GetComponent<Image>().raycastTarget = false;
-                        RemoveHoldingPiece();
-                        canPlacePiece = true;
-
-                        CheckGoals();
-                        break;
-                    }
+                    CheckGoals();
+                    break;
                 }
             }
-
-            if (!canPlacePiece)
-                ReturnPiece();
         }
+
+        if (!canPlacePiece)
+            ReturnPiece();
+        else
+            RemoveHoldingPiece();
 
         //Reset snap
         pieceSnapCalculation = 0;
 
         //Offset turn on and off
         fromBoard = false;
-
-        //Rotation
-        hasRotated = false;
-
-        //Not moveing before swipe rest
-        //if (!pieceSetToMove)
-        //    Tap();
-        pieceSetToMove = false;
     }
 
     private void ReturnPiece()
@@ -272,7 +246,7 @@ public class InputSystem : MonoBehaviour
 
     private void Tap()
     {
-        if(holdingPiece != null)
+        if (holdingPiece != null)
         {
             holdingPiece.RotateWithAnimation();
             hasRotated = true;
@@ -280,7 +254,7 @@ public class InputSystem : MonoBehaviour
     }
     private void Tap(InputAction.CallbackContext context)
     {
-        if(!hasRotated) 
+        if (!hasRotated)
         {
             hasRotated = true;
             Tap();
@@ -288,7 +262,7 @@ public class InputSystem : MonoBehaviour
     }
     private void LiftTap(InputAction.CallbackContext context)
     {
-        if(!hasRotated)
+        if (!hasRotated)
         {
             Tap();
         }
