@@ -12,16 +12,12 @@ public class Dot : MonoBehaviour, IOccupying
 
     public DotType dotType;
 
-    private bool isConnected;
 
     public Piece parentPiece;
     public Vector2 relativePosition;
 
     public Cell cell;
 
-    //Consider moving Grid Position storage into here.
-
-    public bool IsConnected { get => isConnected; set => isConnected = value; }
 
     public void Setup(DotType targetType, Piece parentPiece = null)
     {

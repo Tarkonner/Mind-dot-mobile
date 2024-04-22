@@ -119,6 +119,8 @@ public class Piece : MonoBehaviour, IDragHandler
                 firstDot = spawn;
         }
 
+        TwoKeyDictionary keyDictionary = new TwoKeyDictionary();
+
         //Goes through each dot and measures grid distance to each other dot.
         // Distance is used to differentiate adjacent and diagonal dot connections. 
         for (int i = 0; i < gridPosArray.Length; i++)
@@ -139,14 +141,14 @@ public class Piece : MonoBehaviour, IDragHandler
                 else if (val == 1)
                 {
                     foundAdjacent = true;
-                    CreateLine(dotsArray[i], dotsArray[j]);
+                    MakeLine(keyDictionary, dotsArray[i], dotsArray[j]);
                 }
             }
             if (!foundAdjacent)
             {
                 foreach (int j in diagonalList)
                 {
-                    CreateLine(dotsArray[i], dotsArray[j]);
+                    MakeLine(keyDictionary, dotsArray[i], dotsArray[j]);
                 }
             }
         }
@@ -236,6 +238,19 @@ public class Piece : MonoBehaviour, IDragHandler
     }
     #endregion
 
+    void MakeLine(TwoKeyDictionary dictionary, Dot dot1, Dot dot2)
+    {
+        Vector2 posOne = dot1.GetComponent<RectTransform>().localPosition;
+        Vector2 posTwo = dot2.GetComponent<RectTransform>().localPosition;
+        bool result = dictionary.HaveElement(posOne, posTwo);
+
+        if(!result) 
+        {
+            dictionary.AddElement(posOne, posTwo);
+            CreateLine(dot1, dot2);
+        }
+    }
+
     public void CreateLine(Dot dot1, Dot dot2)
     {
         //Setup
@@ -252,8 +267,6 @@ public class Piece : MonoBehaviour, IDragHandler
         UILine uiLine = newObject.AddComponent<UILine>();
         connections.Add(uiLine);
         uiLine.Initialzie(dot1Rect, dot2Rect, lineWidth, rotatable);
-        dot1.IsConnected = true;
-        dot2.IsConnected = true;
     }
 
     public void OnDrag(PointerEventData eventData)
