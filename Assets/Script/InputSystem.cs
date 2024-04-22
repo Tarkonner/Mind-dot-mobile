@@ -14,7 +14,6 @@ public class InputSystem : MonoBehaviour
 
     //Input
     private PlayerInput playerInput;
-
     private InputAction tapAction;
     private InputAction positionAction;
     private InputAction secoundTap;
@@ -30,6 +29,7 @@ public class InputSystem : MonoBehaviour
     [SerializeField] Transform piecesHolder;
     private Piece holdingPiece;
     private RectTransform holdingPieceRect;
+    private bool pieceSetToMove = false;
 
     [Header("Raycasting")]
     [SerializeField] GraphicRaycaster boardRaycast;
@@ -41,6 +41,7 @@ public class InputSystem : MonoBehaviour
     [SerializeField] float distanceBeforeSwipe = 50;
     [SerializeField] float secoundTouchTimeBetweenTouch = .2f;
     [SerializeField] float touchOffsetY = 50;
+    [SerializeField] float distanceBeforeMoveing = 100;
     [SerializeField] RectTransform rotateLine;
     private Vector2 contactPosition;
     private bool fromBoard = false;
@@ -103,18 +104,31 @@ public class InputSystem : MonoBehaviour
             if(holdingPieceRect == null)
                 holdingPieceRect = holdingPiece.gameObject.GetComponent<RectTransform>();
 
+            //Second touch
             if (secoundTap.WasPressedThisFrame())
                 Tap();
 
             //Calculate position
-            if(pieceSnapCalculation < 1)
+            if (Vector2.Distance(contactPosition, touchPosition) > distanceBeforeMoveing
+                && !pieceSetToMove)
             {
-                pieceSnapCalculation += Time.deltaTime * pieceSnapPositionSpeed;
-                if(pieceSnapCalculation > 1)
-                    pieceSnapCalculation = 1;
+                pieceSetToMove = true;
+                holdingPiece.transform.SetParent(movingPiecesHolder.transform);
+                holdingPiece.ChangeState(Piece.pieceStats.transparent);
             }
+
+            if (pieceSetToMove)
+            {
+                if (pieceSnapCalculation < 1)
+                {
+                    pieceSnapCalculation += Time.deltaTime * pieceSnapPositionSpeed;
+                    if (pieceSnapCalculation > 1)
+                        pieceSnapCalculation = 1;
+                }
+            }
+
             Vector2 targetPosition = touchPosition;
-            if(!fromBoard)
+            if(!fromBoard || pieceSetToMove)
                 targetPosition += new Vector2(0, touchOffsetY + Mathf.RoundToInt(Mathf.Abs(holdingPiece.pieceCenter.y) / 2) * holdingPiece.DotSpacing);
             Vector2 calPosition = Vector2.Lerp(touchPosition, targetPosition, pieceSnapCalculation);
 
@@ -142,8 +156,6 @@ public class InputSystem : MonoBehaviour
         if (holdingPiece != null)
             return;
 
-        touchPosition = Touchscreen.current.primaryTouch.position.ReadValue();
-
         //Save where first touching
         contactPosition = touchPosition;
 
@@ -158,8 +170,7 @@ public class InputSystem : MonoBehaviour
             {
                 //Set piece to moving
                 holdingPiece = targetPiece;
-                holdingPiece.transform.SetParent(movingPiecesHolder.transform);
-                targetPiece.ChangeState(Piece.pieceStats.transparent);
+
                 break;
             }
         }
@@ -196,8 +207,9 @@ public class InputSystem : MonoBehaviour
         //Tap or swipe
         if (Vector2.Distance(contactPosition, touchPosition) < distanceBeforeSwipe)
         {
-            //Tap();
+            Tap();
             ReturnPiece();
+            Debug.Log("A");
         }
         else
         {
@@ -239,6 +251,11 @@ public class InputSystem : MonoBehaviour
 
         //Rotation
         hasRotated = false;
+
+        //Not moveing before swipe rest
+        //if (!pieceSetToMove)
+        //    Tap();
+        pieceSetToMove = false;
     }
 
     private void ReturnPiece()
