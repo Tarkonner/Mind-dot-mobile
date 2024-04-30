@@ -19,10 +19,9 @@ public class ShapeGoal : MonoBehaviour, IGoal
     private List<Dot> goalsDots = new List<Dot>();
     private List<Vector2> dotCoordinats = new List<Vector2>();
 
-    [Header("Color")]
-    private Image background;
-    [SerializeField] private Color uncompletedColor;
-    [SerializeField] private Color completedColor;
+    [Header("Show complete status")]
+    [SerializeField] private GameObject cross;
+    [SerializeField] private GameObject checkmark;
 
     public void LoadGoal(LevelShapeGoal targetGoal)
     {
@@ -72,9 +71,8 @@ public class ShapeGoal : MonoBehaviour, IGoal
 
     private void Awake()
     {
-        //Background
-        background = GetComponent<Image>();
-        background.color = uncompletedColor;
+        cross.SetActive(true);
+        checkmark.SetActive(false);
     }
 
     public bool CheckFulfilment(Board board)
@@ -93,14 +91,16 @@ public class ShapeGoal : MonoBehaviour, IGoal
                     {
                         //Show goal is complete
                         completed = true;
-                        background.color = completedColor;
+                        cross.SetActive(false);
+                        checkmark.SetActive(true);
                         return true;
                     }
                 }
             }
         }
         completed = false;
-        background.color = uncompletedColor;
+        cross.SetActive(true);
+        checkmark.SetActive(false);
         return false;
     }
     private bool CheckForPatternAtPosition(Board board, Vector2 currentPos)

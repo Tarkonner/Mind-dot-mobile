@@ -73,6 +73,8 @@ MonoBehaviour:
   rotationTime: 0.2
   scaleAnimation: 0.2
   currentlyRotation: 0
+  pulseAnimationTime: 3
+  pulseAnimationScale: 0.1
 --- !u!114 &7252276453392386464
 MonoBehaviour:
   m_ObjectHideFlags: 0

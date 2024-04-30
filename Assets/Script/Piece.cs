@@ -38,12 +38,15 @@ public class Piece : MonoBehaviour, IDragHandler
     public enum pieceStats { small, transparent, normal };
     private pieceStats currentState;
 
+    private float smallPieceSize = .5f;
+
     [Header("Animation")]
     [SerializeField] float rotationTime = .2f;
     [SerializeField] float scaleAnimation = .2f;
     [HideInInspector] public bool currentlyRotation = false;
-
-
+    [SerializeField] float pulseAnimationTime = 1;
+    [SerializeField] float pulseAnimationScale = .2f;
+    private Sequence pulseSequence;
 
     private void Awake()
     {
@@ -52,6 +55,12 @@ public class Piece : MonoBehaviour, IDragHandler
 
     public void Start()
     {
+        //Pulse animation
+        pulseSequence = DOTween.Sequence();
+        pulseSequence.Append(transform.DOScale(smallPieceSize + pulseAnimationScale, pulseAnimationTime / 2));
+        pulseSequence.Append(transform.DOScale(smallPieceSize, pulseAnimationTime / 2));
+        pulseSequence.SetLoops(-1, LoopType.Restart);
+
         pieceHolder = transform.parent;
 
         ChangeState(pieceStats.small);
@@ -59,13 +68,18 @@ public class Piece : MonoBehaviour, IDragHandler
 
     public void ChangeState(pieceStats targetState)
     {
+        //Stop animation
+        if(currentState == pieceStats.small)
+            pulseSequence.Pause();
+
         currentState = targetState;
 
         switch (currentState)
         {
             case pieceStats.small:
-                transform.localScale = new Vector3(.5f, .5f, .5f);
-                SetAplha(1);
+                transform.localScale = new Vector3(smallPieceSize, smallPieceSize, smallPieceSize);
+                SetAplha(1);                
+                pulseSequence.Play();
                 break;
             case pieceStats.transparent:
                 transform.DOScale(Vector3.one, scaleAnimation);
