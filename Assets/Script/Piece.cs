@@ -38,7 +38,7 @@ public class Piece : MonoBehaviour, IDragHandler
     public enum pieceStats { small, transparent, normal };
     private pieceStats currentState;
 
-    private float smallPieceSize = .5f;
+    [HideInInspector] public float smallPieceSize = .35f;
 
     [Header("Animation")]
     [SerializeField] float rotationTime = .2f;

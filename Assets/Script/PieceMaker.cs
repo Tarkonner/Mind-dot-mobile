@@ -20,6 +20,9 @@ public class PieceMaker : ScaleAnimations
     private List<GameObject> backgroundToAnimate = new List<GameObject>();   
     private List<GameObject> piecesToAnimate = new List<GameObject>();
 
+    [Header("Scaling")]
+    [SerializeField] float scalePerDot = .15f;
+
     public void MakePieces(LevelPiece[] levelsPieces)
     {
         //Remove old level
@@ -65,13 +68,22 @@ public class PieceMaker : ScaleAnimations
             GameObject spawnedBackground = Instantiate(pieceBackground, holder);
             RectTransform backgrundRec = spawnedBackground.GetComponent<RectTransform>();
             backgrundRec.localPosition = calPosition;
-            int pieceBiggetsSize = Mathf.Max(levelsPieces[i].pieceSize.x, levelsPieces[i].pieceSize.y);
+
             backgrundRec.sizeDelta = new Vector2(pieceSize, pieceSize);
 
             //Make piece
             GameObject spawnedPiece = Instantiate(piecePrefab, spawnedBackground.transform, false);
             Piece piece = spawnedPiece.GetComponent<Piece>();
             piece.LoadPiece(levelsPieces[i]);
+
+            //Scale
+            int pieceBiggetsSize = Mathf.Max(levelsPieces[i].pieceSize.x, levelsPieces[i].pieceSize.y);
+            if (pieceBiggetsSize != 3)
+            {
+                int diff = 3 - pieceBiggetsSize;
+                float calScale = piece.smallPieceSize + diff * scalePerDot;
+                piece.smallPieceSize = calScale;
+            }
             piece.ChangeState(Piece.pieceStats.small);
 
             //Animate
