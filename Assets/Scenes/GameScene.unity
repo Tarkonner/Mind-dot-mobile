@@ -376,7 +376,7 @@ PrefabInstance:
     - target: {fileID: 65025732663852158, guid: ece83fda2ae00364da4f4bd42689e64a, type: 3}
       propertyPath: testLevel
       value: 
-      objectReference: {fileID: 11400000, guid: 477883661088c1b47b0e6c3bf511f77f, type: 2}
+      objectReference: {fileID: 11400000, guid: 20d5c449993570c4ab5e03bd08b5c2c0, type: 2}
     - target: {fileID: 65025732663852158, guid: ece83fda2ae00364da4f4bd42689e64a, type: 3}
       propertyPath: goalHolder
       value: 
@@ -399,7 +399,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 65025732663852158, guid: ece83fda2ae00364da4f4bd42689e64a, type: 3}
       propertyPath: levels.Array.size
-      value: 19
+      value: 28
       objectReference: {fileID: 0}
     - target: {fileID: 65025732663852158, guid: ece83fda2ae00364da4f4bd42689e64a, type: 3}
       propertyPath: completedGoalColor.a
@@ -493,6 +493,42 @@ PrefabInstance:
       propertyPath: 'levels.Array.data[18]'
       value: 
       objectReference: {fileID: 11400000, guid: a66cb316d8ddde441a136d0b8f219730, type: 2}
+    - target: {fileID: 65025732663852158, guid: ece83fda2ae00364da4f4bd42689e64a, type: 3}
+      propertyPath: 'levels.Array.data[19]'
+      value: 
+      objectReference: {fileID: 11400000, guid: 70ac5b46294f27446b4956564deeac11, type: 2}
+    - target: {fileID: 65025732663852158, guid: ece83fda2ae00364da4f4bd42689e64a, type: 3}
+      propertyPath: 'levels.Array.data[20]'
+      value: 
+      objectReference: {fileID: 11400000, guid: c700128202ace0c47ac99340839882ce, type: 2}
+    - target: {fileID: 65025732663852158, guid: ece83fda2ae00364da4f4bd42689e64a, type: 3}
+      propertyPath: 'levels.Array.data[21]'
+      value: 
+      objectReference: {fileID: 11400000, guid: f1542a886a74d264cb307f5aa2b5a74b, type: 2}
+    - target: {fileID: 65025732663852158, guid: ece83fda2ae00364da4f4bd42689e64a, type: 3}
+      propertyPath: 'levels.Array.data[22]'
+      value: 
+      objectReference: {fileID: 11400000, guid: 713244ad10f2fe84fb47b18f09a4e829, type: 2}
+    - target: {fileID: 65025732663852158, guid: ece83fda2ae00364da4f4bd42689e64a, type: 3}
+      propertyPath: 'levels.Array.data[23]'
+      value: 
+      objectReference: {fileID: 11400000, guid: e991b28f06567a14aa0470075e22ddb1, type: 2}
+    - target: {fileID: 65025732663852158, guid: ece83fda2ae00364da4f4bd42689e64a, type: 3}
+      propertyPath: 'levels.Array.data[24]'
+      value: 
+      objectReference: {fileID: 11400000, guid: 4286695e44c3f2b4391b087755928fac, type: 2}
+    - target: {fileID: 65025732663852158, guid: ece83fda2ae00364da4f4bd42689e64a, type: 3}
+      propertyPath: 'levels.Array.data[25]'
+      value: 
+      objectReference: {fileID: 11400000, guid: 870f6aa48a28c8d4ab32176e34da1475, type: 2}
+    - target: {fileID: 65025732663852158, guid: ece83fda2ae00364da4f4bd42689e64a, type: 3}
+      propertyPath: 'levels.Array.data[26]'
+      value: 
+      objectReference: {fileID: 11400000, guid: ad391a97150a01843abd17a987f72437, type: 2}
+    - target: {fileID: 65025732663852158, guid: ece83fda2ae00364da4f4bd42689e64a, type: 3}
+      propertyPath: 'levels.Array.data[27]'
+      value: 
+      objectReference: {fileID: 11400000, guid: 93bb29c609c45ca428b4f97428b5daa2, type: 2}
     - target: {fileID: 65025732663852158, guid: ece83fda2ae00364da4f4bd42689e64a, type: 3}
       propertyPath: uncompleteGoalColor.a
       value: 1

@@ -17,10 +17,10 @@ public class UILine : Graphic
         this.endPoint = endPoint;
         this.lineWidth = lineWidth;
 
-        if(rotatebul)
+        if (rotatebul)
             color = Color.black;
-        else 
-            color = Color.white;
+        else
+            color = new Color(.8f, .62f, .96f);
     }
 
     protected override void OnPopulateMesh(VertexHelper vh)

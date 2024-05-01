@@ -15,8 +15,6 @@ public class LevelManager : MonoBehaviour
 
     [Header("Goals")]
     [SerializeField] private GameObject goalHolder;
-    [SerializeField] private Color uncompleteGoalColor;
-    [SerializeField] private Color completedGoalColor;
     [SerializeField] private LevelSO[] levels;
     private List<IGoal> allGoals = new List<IGoal>();
 
