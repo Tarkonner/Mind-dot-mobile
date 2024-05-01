@@ -5,7 +5,9 @@ using UnityEngine;
 
 public class PieceMaker : ScaleAnimations
 {
+    [Header("Setup")]
     [SerializeField] float spaceBetweenPieces = 300;
+    [SerializeField] float pieceSize = 270;
 
     [SerializeField] GameObject piecePrefab;
     [SerializeField] GameObject pieceBackground;
@@ -64,7 +66,7 @@ public class PieceMaker : ScaleAnimations
             RectTransform backgrundRec = spawnedBackground.GetComponent<RectTransform>();
             backgrundRec.localPosition = calPosition;
             int pieceBiggetsSize = Mathf.Max(levelsPieces[i].pieceSize.x, levelsPieces[i].pieceSize.y);
-            backgrundRec.sizeDelta = new Vector2(90 * pieceBiggetsSize, 90 * pieceBiggetsSize);
+            backgrundRec.sizeDelta = new Vector2(pieceSize, pieceSize);
 
             //Make piece
             GameObject spawnedPiece = Instantiate(piecePrefab, spawnedBackground.transform, false);
