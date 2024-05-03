@@ -5,10 +5,10 @@ using UnityEngine.UI;
 
 public class Dot : MonoBehaviour, IOccupying
 {
-    [Header("Colors")]
-    public Color redColor;
-    public Color yellowColor;
-    public Color blueColor;
+    [Header("Colors & images")]
+    [SerializeField] ColorBank colorBank;
+    [SerializeField] Sprite dotSprite;
+    [SerializeField] Sprite triColorDot;
 
     public DotType dotType;
 
@@ -32,13 +32,20 @@ public class Dot : MonoBehaviour, IOccupying
         switch (dotType)
         {
             case DotType.Red:
-                renderer.color = redColor;
+                renderer.sprite = dotSprite;
+                renderer.color = colorBank.redColor;
                 break;
             case DotType.Blue:
-                renderer.color = blueColor;
+                renderer.sprite = dotSprite;
+                renderer.color = colorBank.blueColor;
                 break;
             case DotType.Yellow:
-                renderer.color = yellowColor;
+                renderer.sprite = dotSprite;
+                renderer.color = colorBank.yellowColor;
+                break;
+            case DotType.Null:
+                renderer.sprite = triColorDot;
+                renderer.color = Color.white;
                 break;
         }
     }
