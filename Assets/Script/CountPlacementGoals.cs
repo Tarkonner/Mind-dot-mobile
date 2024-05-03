@@ -2,13 +2,20 @@ using System.Collections;
 using System.Collections.Generic;
 using TMPro;
 using UnityEngine;
+using UnityEngine.UI;
 
 public class CountPlacementGoals : MonoBehaviour, IGoal
 {
+    [SerializeField] ColorBank colorBank;
     [SerializeField] TextMeshProUGUI textBox;
-    private List<PlaceGoal> subGoals = new List<PlaceGoal>(); 
+    private List<PlaceGoal> subGoals = new List<PlaceGoal>();
+    private Image image;
 
-
+    private void Awake()
+    {
+        image = GetComponent<Image>();
+        image.color = colorBank.uncompleteGoal;
+    }
 
     public void AddToGoalsToCheck(PlaceGoal goal)
     {
@@ -28,8 +35,14 @@ public class CountPlacementGoals : MonoBehaviour, IGoal
         textBox.text = $"{dotPlaced} / {subGoals.Count}";
 
         if (dotPlaced == subGoals.Count)
+        {
+            image.color = colorBank.completeGoal;
             return true;
+        }
         else
+        {
+            image.color = colorBank.uncompleteGoal;
             return false;
+        }
     }
 }

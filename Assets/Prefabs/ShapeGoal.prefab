@@ -137,8 +137,7 @@ MonoBehaviour:
   dotPrefab: {fileID: 1995507298133785622, guid: 0f48472b57c3942478e34342026ce7ae, type: 3}
   spaceingBetweenDots: 100
   outlineBackground: {fileID: 7305209464915861658}
-  uncompleteColor: {r: 0.5686275, g: 0.1764706, b: 0.16862746, a: 1}
-  completeColor: {r: 0.23921569, g: 0.79607844, b: 0.41568628, a: 1}
+  colorBank: {fileID: 11400000, guid: 77ae380b47c06ba4cb0e3d5680874265, type: 2}
 --- !u!1 &7566287766036783842
 GameObject:
   m_ObjectHideFlags: 0

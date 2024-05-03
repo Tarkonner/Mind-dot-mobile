@@ -15,4 +15,8 @@ public class ColorBank : ScriptableObject
     public Color backgroundRedColor;
     public Color backgroundYellowColor;
     public Color backgroundBlueColor;
+
+    [Header("Goal color")]
+    public Color completeGoal;
+    public Color uncompleteGoal;
 }

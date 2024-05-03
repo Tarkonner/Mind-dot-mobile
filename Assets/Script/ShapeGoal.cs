@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using UnityEditor;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -19,10 +20,9 @@ public class ShapeGoal : MonoBehaviour, IGoal
     private List<Dot> goalsDots = new List<Dot>();
     private List<Vector2> dotCoordinats = new List<Vector2>();
 
-    [Header("Completens color")]
+    [Header("Color")]
     [SerializeField] private Image outlineBackground;
-    [SerializeField] private Color uncompleteColor;
-    [SerializeField] private Color completeColor;
+    [SerializeField] private ColorBank colorBank;
 
     public void LoadGoal(LevelShapeGoal targetGoal)
     {
@@ -72,7 +72,7 @@ public class ShapeGoal : MonoBehaviour, IGoal
 
     private void Awake()
     {
-        outlineBackground.color = uncompleteColor;
+        outlineBackground.color = colorBank.uncompleteGoal;
     }
 
     public bool CheckFulfilment(Board board)
@@ -91,14 +91,14 @@ public class ShapeGoal : MonoBehaviour, IGoal
                     {
                         //Show goal is complete
                         completed = true;
-                        outlineBackground.color = completeColor;
+                        outlineBackground.color = colorBank.completeGoal;
                         return true;
                     }
                 }
             }
         }
         completed = false;
-        outlineBackground.color = uncompleteColor;
+        outlineBackground.color = colorBank.uncompleteGoal;
         return false;
     }
     private bool CheckForPatternAtPosition(Board board, Vector2 currentPos)

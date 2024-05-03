@@ -3,14 +3,9 @@ using UnityEngine.UI;
 
 public class PlaceGoal : MonoBehaviour
 {
+    [SerializeField] ColorBank colorBank;
     public DotType goalType;
     public Cell cell;
-
-    public PlaceGoal(DotType goalType, Cell cell)
-    {
-        this.goalType = goalType;
-        this.cell = cell;
-    }
 
     public bool CheckFulfilment()
     {
@@ -18,11 +13,9 @@ public class PlaceGoal : MonoBehaviour
         {
             if (goalType == DotType.Null || dot.dotType == goalType)
             {
-                cell.gameObject.GetComponent<Image>().color = Color.green;
                 return true;
             }
         }
-        cell.gameObject.GetComponent<Image>().color = Color.white;
         return false;
     }
 
@@ -32,22 +25,26 @@ public class PlaceGoal : MonoBehaviour
 
         Image image = GetComponent<Image>();
         PlaceGoal pG = GetComponent<PlaceGoal>();
-        image.rectTransform.localPosition = new Vector3(-image.rectTransform.sizeDelta.x, image.rectTransform.sizeDelta.y, 0);
+        image.rectTransform.localPosition = new Vector3(0, 0, 0);
         pG.cell = cell;
         pG.goalType = levelPlaceGoal.type;
         switch (levelPlaceGoal.type)
         {
             case DotType.Null:
-                image.color = Color.gray;
+                image.color = Color.white;
+                Board.Instance.grid[cell.gridPos.x, cell.gridPos.y].GetComponent<Image>().color = colorBank.backgroundNull;
                 break;
             case DotType.Blue:
-                image.color = Color.blue;
+                image.color = colorBank.blueColor;
+                Board.Instance.grid[cell.gridPos.x, cell.gridPos.y].GetComponent<Image>().color = colorBank.backgroundBlueColor;
                 break;
             case DotType.Red:
-                image.color = Color.red;
+                image.color = colorBank.redColor;
+                Board.Instance.grid[cell.gridPos.x, cell.gridPos.y].GetComponent<Image>().color = colorBank.backgroundRedColor;
                 break;
             case DotType.Yellow:
-                image.color = Color.yellow;
+                image.color = colorBank.yellowColor;
+                Board.Instance.grid[cell.gridPos.x, cell.gridPos.y].GetComponent<Image>().color = colorBank.backgroundYellowColor;
                 break;
         }
     }
