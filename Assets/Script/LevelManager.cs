@@ -1,6 +1,7 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using Unity.Android.Gradle.Manifest;
 using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.SceneManagement;
@@ -23,6 +24,10 @@ public class LevelManager : MonoBehaviour
     [SerializeField] private LevelSO testLevel;
 
     public int targetLevel { get; private set; } = 0;
+
+    //Events
+    public delegate void OnLoadLevel();
+    public static event OnLoadLevel onLoadLevel;
 
     private void Start()
     {
@@ -52,6 +57,8 @@ public class LevelManager : MonoBehaviour
 
     public void LoadLevel(LevelSO targetLevel)
     {
+        onLoadLevel?.Invoke();
+
         //Clear old
         allGoals.Clear();
 

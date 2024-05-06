@@ -4,15 +4,32 @@ using UnityEngine;
 
 public class TutorialManager : MonoBehaviour
 {
-    // Start is called before the first frame update
-    void Start()
+    LevelManager levelManager;
+
+    [SerializeField] int[] tutorialIndex;
+    [SerializeField] GameObject[] tutorialObjects;
+
+    private void Awake()
     {
-        
+        levelManager = GetComponent<LevelManager>();
+
+        LevelManager.onLoadLevel += CheckForTutorial;
     }
 
-    // Update is called once per frame
-    void Update()
+    void CheckForTutorial()
     {
-        
+        for (int i = 0; i < tutorialObjects.Length; i++)
+            tutorialObjects[i].SetActive(false);
+
+        for (int i = 0; i < tutorialIndex.Length; i++)
+        {
+            if (tutorialIndex[i] == levelManager.targetLevel)
+                LoadTutorial(tutorialIndex[i]);
+        }
+    }
+
+    void LoadTutorial(int targetTutorial)
+    {
+        tutorialObjects[targetTutorial].SetActive(true);
     }
 }
