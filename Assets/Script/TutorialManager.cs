@@ -1,9 +1,11 @@
 using System;
+using TMPro;
 using UnityEngine;
 
 public class TutorialManager : MonoBehaviour
 {
     LevelManager levelManager;
+    [SerializeField] TextMeshProUGUI textMesh;
 
     [SerializeField] LevelSO[] levelIndex;
     [SerializeField] InspectorGameobject[] tutorialObjects;
@@ -19,6 +21,7 @@ public class TutorialManager : MonoBehaviour
 
     void RemoveTutorial()
     {
+        textMesh.gameObject.SetActive(false);
         for (int i = currentTutorialObjects.gameObjects.Length - 1; i >= 0; i--)
         {
             currentTutorialObjects.gameObjects[i].SetActive(false);
@@ -38,6 +41,9 @@ public class TutorialManager : MonoBehaviour
 
         if (currentTutorialObjects != null)
         {
+            textMesh.gameObject.SetActive(true);
+            textMesh.text = currentTutorialObjects.levelText;
+
             for (int i = 0; i < currentTutorialObjects.gameObjects.Length; i++)
             {
                 currentTutorialObjects.gameObjects[i].SetActive(true);
@@ -49,5 +55,6 @@ public class TutorialManager : MonoBehaviour
 [Serializable]
 class InspectorGameobject
 {
+    public string levelText;
     public GameObject[] gameObjects;
 }
