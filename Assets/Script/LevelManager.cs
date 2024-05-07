@@ -16,15 +16,19 @@ public class LevelManager : MonoBehaviour
     [SerializeField] private LevelSO[] levels;
     private List<IGoal> allGoals = new List<IGoal>();
 
+
     [Header("Testing")]
     [SerializeField] bool loadTestlevel = false;
     [SerializeField] private LevelSO testLevel;
 
     public int targetLevel { get; private set; } = 0;
+    public LevelSO currentLevel { get; private set; } 
 
     //Events
     public delegate void OnLoadLevel();
     public static event OnLoadLevel onLoadLevel;
+    public delegate void OnDeloadLevel();
+    public static event OnDeloadLevel onDeloadLevel;
 
     private void Start()
     {
@@ -54,6 +58,8 @@ public class LevelManager : MonoBehaviour
 
     public void LoadLevel(LevelSO targetLevel)
     {
+        currentLevel = targetLevel;
+
         onLoadLevel?.Invoke();
 
         //Clear old
@@ -105,6 +111,7 @@ public class LevelManager : MonoBehaviour
             else
             {
                 Debug.Log("Level Complete");
+                onDeloadLevel?.Invoke();
                 LoadLevel(levels[targetLevel]);
                 levelText.LevelIndex(targetLevel);
             }

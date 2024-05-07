@@ -1,35 +1,53 @@
-using System.Collections;
-using System.Collections.Generic;
+using System;
 using UnityEngine;
 
 public class TutorialManager : MonoBehaviour
 {
     LevelManager levelManager;
 
-    [SerializeField] int[] tutorialIndex;
-    [SerializeField] GameObject[] tutorialObjects;
+    [SerializeField] LevelSO[] levelIndex;
+    [SerializeField] InspectorGameobject[] tutorialObjects;
+    private InspectorGameobject currentTutorialObjects;
 
     private void Awake()
     {
         levelManager = GetComponent<LevelManager>();
 
-        LevelManager.onLoadLevel += CheckForTutorial;
+        LevelManager.onLoadLevel += LoadTutorial;
+        LevelManager.onDeloadLevel += RemoveTutorial;
     }
 
-    void CheckForTutorial()
+    void RemoveTutorial()
     {
-        for (int i = 0; i < tutorialObjects.Length; i++)
-            tutorialObjects[i].SetActive(false);
-
-        for (int i = 0; i < tutorialIndex.Length; i++)
+        for (int i = currentTutorialObjects.gameObjects.Length - 1; i >= 0; i--)
         {
-            if (tutorialIndex[i] == levelManager.targetLevel)
-                LoadTutorial(tutorialIndex[i]);
+            currentTutorialObjects.gameObjects[i].SetActive(false);
         }
     }
 
-    void LoadTutorial(int targetTutorial)
+    void LoadTutorial()
     {
-        tutorialObjects[targetTutorial].SetActive(true);
+        for (int i = 0; i < levelIndex.Length; i++)
+        {
+            if (levelIndex[i] == levelManager.currentLevel)
+            {
+                currentTutorialObjects = tutorialObjects[i];
+                break;
+            }
+        }
+
+        if (currentTutorialObjects != null)
+        {
+            for (int i = 0; i < currentTutorialObjects.gameObjects.Length; i++)
+            {
+                currentTutorialObjects.gameObjects[i].SetActive(true);
+            }
+        }
     }
+}
+
+[Serializable]
+class InspectorGameobject
+{
+    public GameObject[] gameObjects;
 }

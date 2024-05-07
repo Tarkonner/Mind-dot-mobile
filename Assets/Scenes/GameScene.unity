@@ -653,9 +653,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 75c5a6d5e0fbeb641863972024a8deb4, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  tutorialIndex: 00000000
+  levelIndex:
+  - {fileID: 11400000, guid: 25f0238cd406ec541bfece11c9f715df, type: 2}
   tutorialObjects:
-  - {fileID: 1999831411}
+  - gameObjects:
+    - {fileID: 1999831411}
 --- !u!224 &1730594965 stripped
 RectTransform:
   m_CorrespondingSourceObject: {fileID: 4207735522410433881, guid: 8cbdc0a76d6bc7148968a7757584fc92, type: 3}
@@ -819,7 +821,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 65025732663852158, guid: ece83fda2ae00364da4f4bd42689e64a, type: 3}
       propertyPath: loadTestlevel
-      value: 0
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 65025732663852158, guid: ece83fda2ae00364da4f4bd42689e64a, type: 3}
       propertyPath: levels.Array.size

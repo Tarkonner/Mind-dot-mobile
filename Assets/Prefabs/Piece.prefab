@@ -70,11 +70,14 @@ MonoBehaviour:
   pivotPoint: {x: 0, y: 0}
   dotSpacing: 125
   lineWidth: 10
+  smallPieceSize: 0.35
   rotationTime: 0.2
   scaleAnimation: 0.2
   currentlyRotation: 0
   pulseAnimationTime: 3
   pulseAnimationScale: 0.1
+  wigleRotation: 25
+  wigleTime: 0.5
 --- !u!114 &7252276453392386464
 MonoBehaviour:
   m_ObjectHideFlags: 0

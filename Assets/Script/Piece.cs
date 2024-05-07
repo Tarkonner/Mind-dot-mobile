@@ -1,6 +1,7 @@
 using DG.Tweening;
 using System.Collections;
 using System.Collections.Generic;
+using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.EventSystems;
 using UnityEngine.UI;
@@ -46,7 +47,10 @@ public class Piece : MonoBehaviour, IDragHandler
     [HideInInspector] public bool currentlyRotation = false;
     [SerializeField] float pulseAnimationTime = 1;
     [SerializeField] float pulseAnimationScale = .2f;
-    private Sequence pulseSequence;
+    private DG.Tweening.Sequence pulseSequence;
+    private DG.Tweening.Sequence wigleSequence;
+    [SerializeField] float wigleRotation = 15;
+    [SerializeField] float wigleTime = 1f;
 
     private void Awake()
     {
@@ -235,14 +239,32 @@ public class Piece : MonoBehaviour, IDragHandler
     }
     public void RotateWithAnimation()
     {
-        if (currentlyRotation || !rotatable)
+        if (currentlyRotation)
             return;
 
-        RotationCalculation();
+        //Woble if not rotadebul
+        if(rotatable)
+        {
+            RotationCalculation();
 
-        //Rotation Animation
-        rectTransform.DORotate(new Vector3(0, 0, rotationInt * 90), rotationTime);
-        StartCoroutine(RotateTimer());
+            //Rotation Animation
+            rectTransform.DORotate(new Vector3(0, 0, rotationInt * 90), rotationTime);
+            StartCoroutine(RotateTimer());
+        }
+        else
+        {
+            //Wigle animation
+            Vector3 startRotation = transform.eulerAngles;
+            Vector3 highRotation = new Vector3(startRotation.x, startRotation.y, startRotation.y + wigleRotation);
+            Vector3 lowRotation = new Vector3(startRotation.x, startRotation.y, startRotation.y - wigleRotation);
+
+            wigleSequence = DOTween.Sequence();
+            wigleSequence.Append(transform.DORotate(highRotation, wigleTime / 4));
+            wigleSequence.Append(transform.DORotate(startRotation, wigleTime / 4));
+            wigleSequence.Append(transform.DORotate(lowRotation, wigleTime / 4));
+            wigleSequence.Append(transform.DORotate(startRotation, wigleTime / 4));
+            wigleSequence.Play();
+        }
     }
     IEnumerator RotateTimer()
     {
