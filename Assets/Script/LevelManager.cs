@@ -1,5 +1,3 @@
-using System;
-using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
@@ -22,7 +20,7 @@ public class LevelManager : MonoBehaviour
     [SerializeField] private LevelSO testLevel;
 
     public int targetLevel { get; private set; } = 0;
-    public LevelSO currentLevel { get; private set; } 
+    public LevelSO currentLevel { get; private set; }
 
     //Events
     public delegate void OnLoadLevel();
@@ -34,7 +32,7 @@ public class LevelManager : MonoBehaviour
     {
         //Load level
 #if (UNITY_EDITOR)
-        if(loadTestlevel && testLevel != null)
+        if (loadTestlevel && testLevel != null)
         {
             LoadLevel(testLevel);
             return;
@@ -73,7 +71,7 @@ public class LevelManager : MonoBehaviour
     public void GoalProgression()
     {
         //See how many goals
-        if(allGoals.Count == 0)
+        if (allGoals.Count == 0)
         {
             for (int i = 0; i < goalMaker.holder.childCount; i++)
             {
@@ -98,7 +96,7 @@ public class LevelManager : MonoBehaviour
         {
             //Tell test levels
 #if (UNITY_EDITOR)
-            if(loadTestlevel)
+            if (loadTestlevel)
             {
                 Debug.Log("Complete level");
                 return;
@@ -107,7 +105,14 @@ public class LevelManager : MonoBehaviour
             targetLevel++;
 
             if (targetLevel == levels.Length)
+            {
                 Debug.Log("All levels complete");
+                targetLevel = 0;
+
+                onDeloadLevel?.Invoke();
+                LoadLevel(levels[targetLevel]);
+                levelText.LevelIndex(targetLevel);
+            }
             else
             {
                 Debug.Log("Level Complete");

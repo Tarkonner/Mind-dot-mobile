@@ -6,30 +6,38 @@ public class TutorialManager : MonoBehaviour
 {
     LevelManager levelManager;
     [SerializeField] TextMeshProUGUI textMesh;
+    private GameObject textParent;
 
     [SerializeField] LevelSO[] levelIndex;
     [SerializeField] InspectorGameobject[] tutorialObjects;
     private InspectorGameobject currentTutorialObjects;
 
-    private void Awake()
+    private void Start()
     {
         levelManager = GetComponent<LevelManager>();
 
         LevelManager.onLoadLevel += LoadTutorial;
         LevelManager.onDeloadLevel += RemoveTutorial;
+
+        textParent = textMesh.transform.parent.gameObject;
     }
 
     void RemoveTutorial()
     {
-        textMesh.gameObject.SetActive(false);
-        for (int i = currentTutorialObjects.gameObjects.Length - 1; i >= 0; i--)
+        textParent.SetActive(false);
+
+        if(currentTutorialObjects != null) 
         {
-            currentTutorialObjects.gameObjects[i].SetActive(false);
+            for (int i = currentTutorialObjects.gameObjects.Length - 1; i >= 0; i--)
+            {
+                currentTutorialObjects.gameObjects[i].SetActive(false);
+            }
         }
     }
 
     void LoadTutorial()
     {
+        //Find specifik toturial asset
         for (int i = 0; i < levelIndex.Length; i++)
         {
             if (levelIndex[i] == levelManager.currentLevel)
@@ -37,11 +45,13 @@ public class TutorialManager : MonoBehaviour
                 currentTutorialObjects = tutorialObjects[i];
                 break;
             }
+            else
+                currentTutorialObjects = null;
         }
 
         if (currentTutorialObjects != null)
         {
-            textMesh.gameObject.SetActive(true);
+            textParent.SetActive(true);
             textMesh.text = currentTutorialObjects.levelText;
 
             for (int i = 0; i < currentTutorialObjects.gameObjects.Length; i++)
