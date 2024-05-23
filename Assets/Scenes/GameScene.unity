@@ -1662,6 +1662,10 @@ PrefabInstance:
       value: 
       objectReference: {fileID: 1522621926}
     - target: {fileID: 65025732663852158, guid: ece83fda2ae00364da4f4bd42689e64a, type: 3}
+      propertyPath: dotsBonusSize
+      value: 0.4
+      objectReference: {fileID: 0}
+    - target: {fileID: 65025732663852158, guid: ece83fda2ae00364da4f4bd42689e64a, type: 3}
       propertyPath: loadTestlevel
       value: 0
       objectReference: {fileID: 0}
@@ -1777,6 +1781,42 @@ PrefabInstance:
       propertyPath: tutorialObjects.Array.data[8].levelText
       value: Some marks need a specifik color
       objectReference: {fileID: 0}
+    - target: {fileID: 2800339047658143124, guid: ece83fda2ae00364da4f4bd42689e64a, type: 3}
+      propertyPath: tutorialObjects.Array.data[0].targetLevel
+      value: 
+      objectReference: {fileID: 11400000, guid: 25f0238cd406ec541bfece11c9f715df, type: 2}
+    - target: {fileID: 2800339047658143124, guid: ece83fda2ae00364da4f4bd42689e64a, type: 3}
+      propertyPath: tutorialObjects.Array.data[1].targetLevel
+      value: 
+      objectReference: {fileID: 11400000, guid: ff587eb3b66f5164597b1bc2aa9c7e31, type: 2}
+    - target: {fileID: 2800339047658143124, guid: ece83fda2ae00364da4f4bd42689e64a, type: 3}
+      propertyPath: tutorialObjects.Array.data[2].targetLevel
+      value: 
+      objectReference: {fileID: 11400000, guid: 4ca9c5f629df0684598ac338f2b04c17, type: 2}
+    - target: {fileID: 2800339047658143124, guid: ece83fda2ae00364da4f4bd42689e64a, type: 3}
+      propertyPath: tutorialObjects.Array.data[3].targetLevel
+      value: 
+      objectReference: {fileID: 11400000, guid: 6a5758218c62c324e953ffc6031e2376, type: 2}
+    - target: {fileID: 2800339047658143124, guid: ece83fda2ae00364da4f4bd42689e64a, type: 3}
+      propertyPath: tutorialObjects.Array.data[4].targetLevel
+      value: 
+      objectReference: {fileID: 11400000, guid: ac3910d1d37f91843bb993e5621ad97d, type: 2}
+    - target: {fileID: 2800339047658143124, guid: ece83fda2ae00364da4f4bd42689e64a, type: 3}
+      propertyPath: tutorialObjects.Array.data[5].targetLevel
+      value: 
+      objectReference: {fileID: 11400000, guid: ae574fc51250c464dbc6ecd9b4b60265, type: 2}
+    - target: {fileID: 2800339047658143124, guid: ece83fda2ae00364da4f4bd42689e64a, type: 3}
+      propertyPath: tutorialObjects.Array.data[6].targetLevel
+      value: 
+      objectReference: {fileID: 11400000, guid: fa3e268bd15ce5a4dae0bb5c2955b900, type: 2}
+    - target: {fileID: 2800339047658143124, guid: ece83fda2ae00364da4f4bd42689e64a, type: 3}
+      propertyPath: tutorialObjects.Array.data[7].targetLevel
+      value: 
+      objectReference: {fileID: 11400000, guid: a66cb316d8ddde441a136d0b8f219730, type: 2}
+    - target: {fileID: 2800339047658143124, guid: ece83fda2ae00364da4f4bd42689e64a, type: 3}
+      propertyPath: tutorialObjects.Array.data[8].targetLevel
+      value: 
+      objectReference: {fileID: 11400000, guid: e991b28f06567a14aa0470075e22ddb1, type: 2}
     - target: {fileID: 2800339047658143124, guid: ece83fda2ae00364da4f4bd42689e64a, type: 3}
       propertyPath: tutorialObjects.Array.data[2].gameObjects.Array.size
       value: 0

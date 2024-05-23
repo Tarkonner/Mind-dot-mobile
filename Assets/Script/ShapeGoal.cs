@@ -24,6 +24,8 @@ public class ShapeGoal : MonoBehaviour, IGoal
     [SerializeField] private Image outlineBackground;
     [SerializeField] private ColorBank colorBank;
 
+    public List<Dot> lastCheckedDots { get; private set; } = new List<Dot>();
+
     public void LoadGoal(LevelShapeGoal targetGoal)
     {
         for (int i = 0; i < targetGoal.goalSpecifications.Length; i++)
@@ -77,6 +79,8 @@ public class ShapeGoal : MonoBehaviour, IGoal
 
     public bool CheckFulfilment(Board board)
     {
+        lastCheckedDots.Clear();
+
         for (int x = 0; x < board.grid.GetLength(0); x++)
         {
             for (int y = 0; y < board.grid.GetLength(1); y++)
@@ -134,8 +138,14 @@ public class ShapeGoal : MonoBehaviour, IGoal
                     return false;
             }
             else
+            {
+
                 return false;
+            }
+
+            lastCheckedDots.Add(checkDot);
         }
+
         return true;
     }
 }

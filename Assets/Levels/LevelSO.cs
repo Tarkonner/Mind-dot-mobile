@@ -30,6 +30,7 @@ public class LevelSO : ScriptableObject
 
     public void CreateVariation(LevelBoard levelGrid, LevelPiece[] levelPieces, LevelShapeGoal[] levelGoals, LevelPlaceGoal[] levelPlaceGoals)
     {
+#if (UNITY_EDITOR)
         version++;
         string targetName = levelTitle + "v" + version;
         LevelSO levelObject = LevelSO.CreateLevelSO(targetName, levelGrid, levelPieces, levelGoals, levelPlaceGoals);
@@ -41,6 +42,7 @@ public class LevelSO : ScriptableObject
         AssetDatabase.CreateAsset(levelObject, uniquePath);
         AssetDatabase.SaveAssets();
         AssetDatabase.Refresh();
+#endif
     }
 
     public static LevelSO CreateLevelSO(string? levelTitle, LevelBoard levelGrid,

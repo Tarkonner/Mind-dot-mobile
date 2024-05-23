@@ -1,3 +1,5 @@
+using DG.Tweening;
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
@@ -8,6 +10,10 @@ public class LevelManager : MonoBehaviour
     [SerializeField] PieceMaker pieceHolder;
     [SerializeField] GoalMaker goalMaker;
     [SerializeField] LevelText levelText;
+
+    [Header("Animations")]
+    [SerializeField] float completedLevelPauseTime = .5f;
+    [SerializeField] float dotsBonusSize = .15f;
 
     [Header("Goals")]
     [SerializeField] private GameObject goalHolder;
@@ -41,7 +47,7 @@ public class LevelManager : MonoBehaviour
         //Load first level
         LoadLevel(levels[targetLevel]);
 
-        //Level index
+        //UI show level index
         levelText.LevelIndex(targetLevel);
     }
 
@@ -102,8 +108,28 @@ public class LevelManager : MonoBehaviour
                 return;
             }
 #endif
-            targetLevel++;
 
+            //Get Dots from completet goals
+            List<Dot> collectetDots = new List<Dot>();
+            for (int i = 0; i < allGoals.Count; i++)
+            {
+                if (allGoals[i] is ShapeGoal)
+                {
+                    ShapeGoal sg = (ShapeGoal)allGoals[i];
+                    for (int j = 0; j < sg.lastCheckedDots.Count; j++)
+                        collectetDots.Add(sg.lastCheckedDots[j]);
+                }
+            }
+            Debug.Log("Dots: " + collectetDots.Count);
+            //Animate
+            for (int i = 0; i < collectetDots.Count; i++)
+            {
+                float targetScale = collectetDots[i].transform.localScale.x + dotsBonusSize;
+                collectetDots[i].transform.DOScale(targetScale, completedLevelPauseTime / 2);
+            }
+
+            //Load level
+            targetLevel++;
             if (targetLevel == levels.Length)
             {
                 Debug.Log("All levels complete");
@@ -116,10 +142,21 @@ public class LevelManager : MonoBehaviour
             else
             {
                 Debug.Log("Level Complete");
-                onDeloadLevel?.Invoke();
-                LoadLevel(levels[targetLevel]);
-                levelText.LevelIndex(targetLevel);
+                StartCoroutine(WinPause());
             }
         }
+    }
+
+    IEnumerator WinPause()
+    {
+        yield return new WaitForSeconds(completedLevelPauseTime);
+        LoadNextLevel();
+    }
+
+    private void LoadNextLevel()
+    {
+        onDeloadLevel?.Invoke();
+        LoadLevel(levels[targetLevel]);
+        levelText.LevelIndex(targetLevel);
     }
 }

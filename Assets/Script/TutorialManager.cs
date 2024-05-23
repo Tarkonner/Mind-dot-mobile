@@ -7,12 +7,10 @@ public class TutorialManager : MonoBehaviour
     LevelManager levelManager;
     [SerializeField] TextMeshProUGUI textMesh;
     private GameObject textParent;
-
-    [SerializeField] LevelSO[] levelIndex;
     [SerializeField] InspectorGameobject[] tutorialObjects;
     private InspectorGameobject currentTutorialObjects;
 
-    private void Start()
+    private void Awake()
     {
         levelManager = GetComponent<LevelManager>();
 
@@ -38,9 +36,9 @@ public class TutorialManager : MonoBehaviour
     void LoadTutorial()
     {
         //Find specifik toturial asset
-        for (int i = 0; i < levelIndex.Length; i++)
+        for (int i = 0; i < tutorialObjects.Length; i++)
         {
-            if (levelIndex[i] == levelManager.currentLevel)
+            if (tutorialObjects[i].targetLevel == levelManager.currentLevel)
             {
                 currentTutorialObjects = tutorialObjects[i];
                 break;
@@ -65,6 +63,7 @@ public class TutorialManager : MonoBehaviour
 [Serializable]
 class InspectorGameobject
 {
+    public LevelSO targetLevel;
     public string levelText;
     public GameObject[] gameObjects;
 }
