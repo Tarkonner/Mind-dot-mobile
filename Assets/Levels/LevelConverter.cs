@@ -46,7 +46,7 @@ public static class LevelConverter
         string uniquePath = AssetDatabase.GenerateUniqueAssetPath($"Assets/Levels/{name}.asset");
         string uniqueName = uniquePath.Replace("Assets/Levels/", "");
         uniqueName = uniqueName.Replace(".asset", "");
-        LevelSO levelObject = LevelSO.CreateLevelSO(version, uniqueName, new LevelBoard(board, boardSize), pieces, levelShapeGoals, lPGs);
+        LevelSO levelObject = LevelSO.CreateLevelSO(uniqueName, new LevelBoard(board, boardSize), pieces, levelShapeGoals, lPGs);
 
         AssetDatabase.CreateAsset(levelObject, uniquePath);
         AssetDatabase.SaveAssets();

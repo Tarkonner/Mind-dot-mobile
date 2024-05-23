@@ -98,11 +98,11 @@ public class LevelEditor : EditorWindow
         inputtedLevelField.RegisterValueChangedCallback((evt) =>
         {
             if(inputtedLevelField.value != null)
-                rootVisualElement.Q<Button>("SaveLevel").text = "Override level";
+                rootVisualElement.Q<Button>("SaveLevel").text = "Create variant level";
             else
                 rootVisualElement.Q<Button>("SaveLevel").text = "Save";
         });
-        ButtonAction("SaveLevel").clicked += SaveOrOverride;
+        ButtonAction("SaveLevel").clicked += Save;
         ButtonAction("LoadLevel").clicked += LoadLevel;
 
         //Grid
@@ -309,7 +309,10 @@ public class LevelEditor : EditorWindow
     }
 
     #region Save
-    private void SaveOrOverride()
+    /// <summary>
+    /// Makes a new SO with the data.
+    /// </summary>
+    private void Save()
     {
         if (inputtedLevelField.value == null)
             SaveLevelToSO();
@@ -340,9 +343,9 @@ public class LevelEditor : EditorWindow
                 place[i] = new LevelPlaceGoal(placeGoalCells[i].cellData.gridCoordinates, placeGoalCells[i].cellData.holding.dotType);
             }
 
-            level.OverrideLevel(new LevelBoard(cellDatas, GridSize()), pieces, shape, place);
+            level.CreateVariation(new LevelBoard(cellDatas, GridSize()), pieces, shape, place);
 
-            Debug.Log("Overridede level");
+            Debug.Log("Createt variant level");
         }
     }
     private void SaveLevelToSO()
