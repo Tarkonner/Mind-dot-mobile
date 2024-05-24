@@ -345,13 +345,14 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 456472550}
+  - component: {fileID: 456472551}
   m_Layer: 5
   m_Name: TextToPlayer
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!224 &456472550
 RectTransform:
   m_ObjectHideFlags: 0
@@ -361,8 +362,8 @@ RectTransform:
   m_GameObject: {fileID: 456472549}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 1, y: 1, z: 1}
-  m_ConstrainProportionsScale: 0
+  m_LocalScale: {x: 0, y: 0, z: 0}
+  m_ConstrainProportionsScale: 1
   m_Children:
   - {fileID: 1834895878}
   - {fileID: 1929353604}
@@ -373,6 +374,18 @@ RectTransform:
   m_AnchoredPosition: {x: 0, y: -100}
   m_SizeDelta: {x: 800, y: 200}
   m_Pivot: {x: 0.5, y: 1}
+--- !u!114 &456472551
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 456472549}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 96e3d6954a668404b97a3948b9bfd485, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1001 &479285832
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -1652,7 +1665,7 @@ PrefabInstance:
     - target: {fileID: 65025732663852158, guid: ece83fda2ae00364da4f4bd42689e64a, type: 3}
       propertyPath: testLevel
       value: 
-      objectReference: {fileID: 11400000, guid: e991b28f06567a14aa0470075e22ddb1, type: 2}
+      objectReference: {fileID: 11400000, guid: 2b840989fbe154541a3c946e45eb5e9b, type: 2}
     - target: {fileID: 65025732663852158, guid: ece83fda2ae00364da4f4bd42689e64a, type: 3}
       propertyPath: goalHolder
       value: 
@@ -1667,7 +1680,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 65025732663852158, guid: ece83fda2ae00364da4f4bd42689e64a, type: 3}
       propertyPath: loadTestlevel
-      value: 1
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 1035492846910417328, guid: ece83fda2ae00364da4f4bd42689e64a, type: 3}
       propertyPath: m_LocalPosition.x
@@ -1717,6 +1730,14 @@ PrefabInstance:
       propertyPath: m_Enabled
       value: 1
       objectReference: {fileID: 0}
+    - target: {fileID: 2800339047658143124, guid: ece83fda2ae00364da4f4bd42689e64a, type: 3}
+      propertyPath: animations
+      value: 
+      objectReference: {fileID: 456472551}
+    - target: {fileID: 2800339047658143124, guid: ece83fda2ae00364da4f4bd42689e64a, type: 3}
+      propertyPath: textHolder
+      value: 
+      objectReference: {fileID: 456472549}
     - target: {fileID: 2800339047658143124, guid: ece83fda2ae00364da4f4bd42689e64a, type: 3}
       propertyPath: levelIndex.Array.size
       value: 9

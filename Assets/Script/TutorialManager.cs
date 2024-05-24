@@ -1,14 +1,21 @@
 using System;
+using System.Collections.Generic;
 using TMPro;
 using UnityEngine;
 
 public class TutorialManager : MonoBehaviour
 {
-    LevelManager levelManager;
+    LevelManager levelManager;    
     [SerializeField] TextMeshProUGUI textMesh;
-    private GameObject textParent;
     [SerializeField] InspectorGameobject[] tutorialObjects;
     private InspectorGameobject currentTutorialObjects;
+
+    [Header("Text animation")]
+    [SerializeField] ScaleAnimations animations;
+    [SerializeField] GameObject textHolder;
+    [SerializeField] float scaleInTime = .3f;
+    private List<GameObject> toAnimate;
+
 
     private void Awake()
     {
@@ -17,12 +24,12 @@ public class TutorialManager : MonoBehaviour
         LevelManager.onLoadLevel += LoadTutorial;
         LevelManager.onDeloadLevel += RemoveTutorial;
 
-        textParent = textMesh.transform.parent.gameObject;
+        toAnimate = new List<GameObject>() { textHolder };
     }
 
     void RemoveTutorial()
     {
-        textParent.SetActive(false);
+        animations.ScaleOutLiniar(toAnimate, scaleInTime);
 
         if(currentTutorialObjects != null) 
         {
@@ -49,7 +56,7 @@ public class TutorialManager : MonoBehaviour
 
         if (currentTutorialObjects != null)
         {
-            textParent.SetActive(true);
+            animations.ScaleInLiniar(toAnimate, scaleInTime);
             textMesh.text = currentTutorialObjects.levelText;
 
             for (int i = 0; i < currentTutorialObjects.gameObjects.Length; i++)
