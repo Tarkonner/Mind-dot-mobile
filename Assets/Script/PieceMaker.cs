@@ -24,10 +24,6 @@ public class PieceMaker : ScaleAnimations
     [Header("Scaling")]
     [SerializeField] float scalePerDot = .15f;
 
-    [Header("Background color")]
-    [SerializeField] Color rotatebulColor = Color.white;
-    [SerializeField] Color notRotatebulColor = Color.white;
-
     public void MakePieces(LevelPiece[] levelsPieces)
     {
         //Remove old level
@@ -73,12 +69,6 @@ public class PieceMaker : ScaleAnimations
             GameObject spawnedBackground = Instantiate(pieceBackground, holder);
             RectTransform backgrundRec = spawnedBackground.GetComponent<RectTransform>();
             backgrundRec.localPosition = calPosition;
-            //Set background Color
-            Image image = backgrundRec.GetComponent<Image>();
-            if (levelsPieces[i].rotatable)
-                image.color = rotatebulColor;
-            else
-                image.color = notRotatebulColor;
 
             backgrundRec.sizeDelta = new Vector2(pieceSize, pieceSize);
 
