@@ -37,7 +37,10 @@ public class AdManager : MonoBehaviour
     void AdController()
     {
         if(timeGone >= TimeBeforeAdd)
+        {
             adShower.ShowAd();
+            timeGone = 0;
+        }
         else
             CountUp();
     }
@@ -46,6 +49,9 @@ public class AdManager : MonoBehaviour
     {
         levelCompleted++;
         if (levelCompleted == levelsBeforeAds)
+        {
             adShower.ShowAd();
+            levelCompleted = 0;
+        }
     }
 }

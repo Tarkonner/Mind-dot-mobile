@@ -2,6 +2,7 @@ using DG.Tweening;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.Analytics;
 
 public class LevelManager : MonoBehaviour
 {
@@ -13,6 +14,7 @@ public class LevelManager : MonoBehaviour
 
     [Header("Animations")]
     [SerializeField] float completedLevelPauseTime = .5f;
+    [SerializeField] float sizeAnimationTime = .5f;
     [SerializeField] float dotsBonusSize = .15f;
 
     [Header("Goals")]
@@ -24,6 +26,9 @@ public class LevelManager : MonoBehaviour
     [Header("Testing")]
     [SerializeField] bool loadTestlevel = false;
     [SerializeField] private LevelSO testLevel;
+
+    //Analytics
+    private float timeForCompletingLevels;
 
     public int targetLevel { get; private set; } = 0;
     public LevelSO currentLevel { get; private set; }
@@ -58,6 +63,11 @@ public class LevelManager : MonoBehaviour
     private void OnDisable()
     {
         InputSystem.onDotChange -= GoalProgression;
+    }
+
+    private void Update()
+    {
+        timeForCompletingLevels += Time.deltaTime;
     }
 
     public void LoadLevel(LevelSO targetLevel)
@@ -120,13 +130,21 @@ public class LevelManager : MonoBehaviour
                         collectetDots.Add(sg.lastCheckedDots[j]);
                 }
             }
-            Debug.Log("Dots: " + collectetDots.Count);
             //Animate
             for (int i = 0; i < collectetDots.Count; i++)
             {
                 float targetScale = collectetDots[i].transform.localScale.x + dotsBonusSize;
-                collectetDots[i].transform.DOScale(targetScale, completedLevelPauseTime / 2);
+                collectetDots[i].transform.DOScale(targetScale, sizeAnimationTime);
             }
+
+            //Analytics
+            Dictionary<string, object> LevelData = new Dictionary<string, object>()
+            {
+                {"0", targetLevel },
+                {"1", timeForCompletingLevels }
+            };
+            Analytics.CustomEvent("LevelComplete", LevelData);
+            timeForCompletingLevels = 0;
 
             //Load level
             targetLevel++;
