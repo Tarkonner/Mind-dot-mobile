@@ -1,0 +1,5 @@
+C:/Unity projects/Mind dot mobile/.utmp/Debug/4m421e1z/arm64-v8a/CMakeFiles/edit_cache.dir
+C:/Unity projects/Mind dot mobile/.utmp/Debug/4m421e1z/arm64-v8a/CMakeFiles/rebuild_cache.dir
+C:/Unity projects/Mind dot mobile/.utmp/Debug/4m421e1z/arm64-v8a/FramePacing/CMakeFiles/swappywrapper.dir
+C:/Unity projects/Mind dot mobile/.utmp/Debug/4m421e1z/arm64-v8a/FramePacing/CMakeFiles/edit_cache.dir
+C:/Unity projects/Mind dot mobile/.utmp/Debug/4m421e1z/arm64-v8a/FramePacing/CMakeFiles/rebuild_cache.dir
