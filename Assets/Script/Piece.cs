@@ -51,6 +51,8 @@ public class Piece : MonoBehaviour, IDragHandler
     private DG.Tweening.Sequence wigleSequence;
     [SerializeField] float wigleRotation = 15;
     [SerializeField] float wigleTime = 1f;
+    [SerializeField] float returnToHolderTime = .5f;
+    [SerializeField] float scaleToSmallTime = .25f;
 
     private void Awake()
     {
@@ -81,9 +83,12 @@ public class Piece : MonoBehaviour, IDragHandler
         switch (currentState)
         {
             case pieceStats.small:
-                transform.localScale = new Vector3(smallPieceSize, smallPieceSize, smallPieceSize);
-                SetAplha(1);                
-                pulseSequence.Play();
+                //transform.localScale = new Vector3(smallPieceSize, smallPieceSize, smallPieceSize);
+                transform.DOScale(new Vector3(smallPieceSize, smallPieceSize, smallPieceSize), scaleToSmallTime).OnComplete(() =>
+                {
+                    SetAplha(1);   
+                    pulseSequence.Play();
+                });                
                 break;
             case pieceStats.transparent:
                 transform.DOScale(Vector3.one, scaleAnimation);
@@ -312,8 +317,8 @@ public class Piece : MonoBehaviour, IDragHandler
         transform.DOKill();
 
         gameObject.transform.SetParent(pieceHolder);
+        transform.DOLocalMove(Vector3.zero, returnToHolderTime);
         ChangeState(pieceStats.small);
-        rectTransform.anchoredPosition = Vector2.zero;
     }
 
     private void SetAplha(float alphaValue)

@@ -34,10 +34,7 @@ public class InputSystem : MonoBehaviour
 
     [Header("Input")]
     [SerializeField] float distanceBeforeSwipe = 50;
-    [SerializeField] float secoundTouchTimeBetweenTouch = .2f;
     [SerializeField] float touchOffsetY = 50;
-    [SerializeField] float distanceBeforeMoveing = 100;
-    [SerializeField] RectTransform rotateLine;
     private bool fromBoard = false;
 
     [Header("Animations")]

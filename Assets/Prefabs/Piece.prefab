@@ -78,6 +78,8 @@ MonoBehaviour:
   pulseAnimationScale: 0.1
   wigleRotation: 25
   wigleTime: 0.5
+  returnToHolderTime: 0.5
+  scaleToSmallTime: 0.5
 --- !u!114 &7252276453392386464
 MonoBehaviour:
   m_ObjectHideFlags: 0
