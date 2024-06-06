@@ -3493,6 +3493,10 @@ PrefabInstance:
       value: 
       objectReference: {fileID: 735402181}
     - target: {fileID: 65025732663852158, guid: ece83fda2ae00364da4f4bd42689e64a, type: 3}
+      propertyPath: levelsBank
+      value: 
+      objectReference: {fileID: 11400000, guid: 0a989510e038e4143b7a1cc9cd9d91ad, type: 2}
+    - target: {fileID: 65025732663852158, guid: ece83fda2ae00364da4f4bd42689e64a, type: 3}
       propertyPath: pieceHolder
       value: 
       objectReference: {fileID: 1522621926}

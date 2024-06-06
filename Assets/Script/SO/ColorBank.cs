@@ -2,7 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-[CreateAssetMenu(fileName = "Colorbank", menuName = "Tools")]
+[CreateAssetMenu(fileName = "Colorbank", menuName = "ColorBank")]
 public class ColorBank : ScriptableObject
 {
     [Header("Dots color")]

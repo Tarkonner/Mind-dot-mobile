@@ -19,7 +19,7 @@ public class LevelManager : MonoBehaviour
 
     [Header("Goals")]
     [SerializeField] private GameObject goalHolder;
-    [SerializeField] private LevelSO[] levels;
+    [SerializeField] private LevelsBank levelsBank;
     private List<IGoal> allGoals = new List<IGoal>();
 
 
@@ -30,7 +30,6 @@ public class LevelManager : MonoBehaviour
     //Analytics
     private float timeForCompletingLevels;
 
-    public int targetLevel { get; private set; } = 0;
     public LevelSO currentLevel { get; private set; }
 
     //Events
@@ -49,11 +48,12 @@ public class LevelManager : MonoBehaviour
             return;
         }
 #endif
+        
         //Load first level
-        LoadLevel(levels[targetLevel]);
+        LoadLevel(levelsBank.levels[DataBetweenLevels.Instance.targetLevel]);
 
         //UI show level index
-        levelText.LevelIndex(targetLevel);
+        levelText.LevelIndex(DataBetweenLevels.Instance.targetLevel);
     }
 
     private void OnEnable()
@@ -110,7 +110,7 @@ public class LevelManager : MonoBehaviour
         }
         if (completedGoals == allGoals.Count)
         {
-            //Tell test levels
+            //Tell test levelsBank
 #if (UNITY_EDITOR)
             if (loadTestlevel)
             {
@@ -140,22 +140,22 @@ public class LevelManager : MonoBehaviour
             //Analytics
             Dictionary<string, object> LevelData = new Dictionary<string, object>()
             {
-                {"0", targetLevel },
+                {"0", DataBetweenLevels.Instance.targetLevel },
                 {"1", timeForCompletingLevels }
             };
             Analytics.CustomEvent("LevelComplete", LevelData);
             timeForCompletingLevels = 0;
 
             //Load level
-            targetLevel++;
-            if (targetLevel == levels.Length)
+            DataBetweenLevels.Instance.targetLevel++;
+            if (DataBetweenLevels.Instance.targetLevel == levelsBank.levels.Length)
             {
                 Debug.Log("All levels complete");
-                targetLevel = 0;
+                DataBetweenLevels.Instance.targetLevel = 0;
 
                 onDeloadLevel?.Invoke();
-                LoadLevel(levels[targetLevel]);
-                levelText.LevelIndex(targetLevel);
+                LoadLevel(levelsBank.levels[DataBetweenLevels.Instance.targetLevel]);
+                levelText.LevelIndex(DataBetweenLevels.Instance.targetLevel);
             }
             else
             {
@@ -174,7 +174,7 @@ public class LevelManager : MonoBehaviour
     private void LoadNextLevel()
     {
         onDeloadLevel?.Invoke();
-        LoadLevel(levels[targetLevel]);
-        levelText.LevelIndex(targetLevel);
+        LoadLevel(levelsBank.levels[DataBetweenLevels.Instance.targetLevel]);
+        levelText.LevelIndex(DataBetweenLevels.Instance.targetLevel);
     }
 }
