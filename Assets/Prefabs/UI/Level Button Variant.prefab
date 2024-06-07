@@ -88,6 +88,14 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 5089530122392584481, guid: cbcc573ac42373d409429e0fa2c49466, type: 3}
+      propertyPath: m_Type
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 5089530122392584481, guid: cbcc573ac42373d409429e0fa2c49466, type: 3}
+      propertyPath: m_Sprite
+      value: 
+      objectReference: {fileID: -2413806693520163455, guid: fa99c549db7fa5e4ca42ec7fe5b84cb3, type: 3}
     - target: {fileID: 6769908047894434220, guid: cbcc573ac42373d409429e0fa2c49466, type: 3}
       propertyPath: m_Name
       value: Level Button Variant
