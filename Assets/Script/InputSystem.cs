@@ -162,7 +162,7 @@ public class InputSystem : MonoBehaviour
             //Find Piece
             Piece targetPiece = result.gameObject.GetComponentInChildren<Piece>();
 
-            if (targetPiece != null)
+            if (targetPiece != null && !targetPiece.animationActice)
             {
                 //Set piece to moving
                 holdingPiece = targetPiece;

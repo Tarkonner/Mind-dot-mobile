@@ -53,6 +53,7 @@ public class Piece : MonoBehaviour, IDragHandler
     [SerializeField] float wigleTime = 1f;
     [SerializeField] float returnToHolderTime = .5f;
     [SerializeField] float scaleToSmallTime = .25f;
+    public bool animationActice { get; private set; } = false;
 
     private void Awake()
     {
@@ -316,8 +317,12 @@ public class Piece : MonoBehaviour, IDragHandler
         //Scale
         transform.DOKill();
 
+        animationActice = true;
         gameObject.transform.SetParent(pieceHolder);
-        transform.DOLocalMove(Vector3.zero, returnToHolderTime);
+        transform.DOLocalMove(Vector3.zero, returnToHolderTime).OnComplete(() =>
+        {
+            animationActice = false;
+        });
         ChangeState(pieceStats.small);
     }
 
