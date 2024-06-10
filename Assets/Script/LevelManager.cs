@@ -47,8 +47,15 @@ public class LevelManager : MonoBehaviour
             LoadLevel(testLevel);
             return;
         }
-#endif
         
+        //If begining in game scene
+        if(DataBetweenLevels.Instance == null)
+        {
+            GameObject data = new GameObject();
+            data.AddComponent<DataBetweenLevels>();    
+        }
+#endif
+
         //Load first level
         LoadLevel(levelsBank.levels[DataBetweenLevels.Instance.targetLevel]);
 
