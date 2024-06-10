@@ -3,6 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Analytics;
+using static LevelManager;
 
 public class LevelManager : MonoBehaviour
 {
@@ -37,6 +38,8 @@ public class LevelManager : MonoBehaviour
     public static event OnLoadLevel onLoadLevel;
     public delegate void OnDeloadLevel();
     public static event OnDeloadLevel onDeloadLevel;
+    public delegate void OnLevelComplete();
+    public static event OnLevelComplete onLevelComplete;
 
     private void Start()
     {
@@ -174,6 +177,7 @@ public class LevelManager : MonoBehaviour
 
     IEnumerator WinPause()
     {
+        onLevelComplete?.Invoke();
         yield return new WaitForSeconds(completedLevelPauseTime);
         LoadNextLevel();
     }

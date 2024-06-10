@@ -25,6 +25,7 @@ public class InputSystem : MonoBehaviour
     [SerializeField] Transform piecesHolder;
     private Piece holdingPiece;
     private RectTransform holdingPieceRect;
+    private bool activeTouch = true;
 
     [Header("Raycasting")]
     [SerializeField] GraphicRaycaster boardRaycast;
@@ -62,23 +63,36 @@ public class InputSystem : MonoBehaviour
 
     private void OnEnable()
     {
+        //Input
         tapAction.started += BeginDrag;
         tapAction.canceled += Release;
-
         secoundTap.started += Tap;
         secoundTap.canceled += LiftTap;
+
+        //Turn touch input on
+        LevelManager.onLoadLevel += () => activeTouch = true;
+        //Turn touch input off
+        LevelManager.onLevelComplete += () => activeTouch = false;
     }
     private void OnDisable()
     {
+        //Input
         tapAction.started -= BeginDrag;
         tapAction.canceled -= Release;
-
         secoundTap.started -= Tap;
         secoundTap.canceled -= LiftTap;
+
+        //Turn touch input on
+        LevelManager.onLoadLevel -= () => activeTouch = true;
+        //Turn touch input off
+        LevelManager.onLevelComplete -= () => activeTouch = false;
     }
 
     private void Update()
     {
+        if (!activeTouch)
+            return;
+
         //Drag
         //Get input
         Vector2 primeTouchPosition = positionAction.ReadValue<Vector2>();
@@ -133,7 +147,7 @@ public class InputSystem : MonoBehaviour
 
     private void BeginDrag(InputAction.CallbackContext context)
     {
-        if (holdingPiece != null)
+        if (holdingPiece != null || !activeTouch)
             return;
 
         //Rotation
