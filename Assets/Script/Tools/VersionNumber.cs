@@ -1,18 +1,17 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
+using TMPro;
 using UnityEngine;
 
 public class VersionNumber : MonoBehaviour
 {
-    // Start is called before the first frame update
-    void Start()
-    {
-        
-    }
+    TextMeshProUGUI textMesh;
 
-    // Update is called once per frame
-    void Update()
+    void Awake()
     {
-        
+        textMesh = GetComponent<TextMeshProUGUI>();
+
+        textMesh.text = Application.version;
     }
 }
