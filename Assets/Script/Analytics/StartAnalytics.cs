@@ -26,19 +26,6 @@ public class StartAnalytics : MonoBehaviour
 
 
         StartCoroutine(ConsentGiven());
-        StartCoroutine(Flsuh());
-
-        InvokeRepeating("TestInitialization", 0, .5f);
-    }
-
-    void TestInitialization()
-    {
-        if (UnityServices.State == ServicesInitializationState.Initialized)
-        {
-            Debug.Log("Unity Services Initialized");
-        }
-        else
-            Debug.Log("Not Ini");
     }
 
     IEnumerator ConsentGiven()
@@ -52,7 +39,6 @@ public class StartAnalytics : MonoBehaviour
     IEnumerator Flsuh()
     {
         yield return new WaitForSeconds(4);
-        AnalyticsResult ar = Analytics.CustomEvent("gameRunning");
-        Debug.Log(ar);
+        //AnalyticsResult ar = AnalyticsService.Instance.RecordEvent();
     }
 }

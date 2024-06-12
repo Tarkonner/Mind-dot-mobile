@@ -129,37 +129,18 @@ public class LevelManager : MonoBehaviour
             }
 #endif
 
-            //Get Dots from completet goals
-            List<Dot> collectetDots = new List<Dot>();
-            for (int i = 0; i < allGoals.Count; i++)
-            {
-                if (allGoals[i] is ShapeGoal)
-                {
-                    ShapeGoal sg = (ShapeGoal)allGoals[i];
-                    for (int j = 0; j < sg.lastCheckedDots.Count; j++)
-                        collectetDots.Add(sg.lastCheckedDots[j]);
-                }
-            }
-            //Animate
-            for (int i = 0; i < collectetDots.Count; i++)
-            {
-                float targetScale = collectetDots[i].transform.localScale.x + dotsBonusSize;
-                collectetDots[i].transform.DOScale(targetScale, sizeAnimationTime);
-            }
+            ////Analytics
+            //Dictionary<string, object> LevelData = new Dictionary<string, object>()
+            //{
+            //    {"0", DataBetweenLevels.Instance.targetLevel },
+            //    {"1", timeForCompletingLevels }
+            //};
+            //timeForCompletingLevels = 0;
 
-            //Analytics
-            Dictionary<string, object> LevelData = new Dictionary<string, object>()
-            {
-                {"0", DataBetweenLevels.Instance.targetLevel },
-                {"1", timeForCompletingLevels }
-            };
-            Analytics.CustomEvent("LevelComplete", LevelData);
-            timeForCompletingLevels = 0;
-
-            //Load level
-            DataBetweenLevels.Instance.targetLevel++;
+            //Load level            
             if (DataBetweenLevels.Instance.targetLevel == levelsBank.levels.Length)
             {
+                //Back to start
                 Debug.Log("All levels complete");
                 DataBetweenLevels.Instance.targetLevel = 0;
 
@@ -170,22 +151,45 @@ public class LevelManager : MonoBehaviour
             else
             {
                 Debug.Log("Level Complete");
-                StartCoroutine(WinPause());
+                StartCoroutine(WinAnimation());
             }
         }
     }
 
-    IEnumerator WinPause()
+
+
+    public void LoadNextLevel()
+    {        
+        //What next level is
+        DataBetweenLevels.Instance.targetLevel++;
+
+        onDeloadLevel?.Invoke(); //Event
+        LoadLevel(levelsBank.levels[DataBetweenLevels.Instance.targetLevel]); //Target level
+        levelText.LevelIndex(DataBetweenLevels.Instance.targetLevel); //Set level text
+    }
+
+    IEnumerator WinAnimation()
     {
+        //Get Dots from completet goals
+        List<Dot> collectetDots = new List<Dot>();
+        for (int i = 0; i < allGoals.Count; i++)
+        {
+            if (allGoals[i] is ShapeGoal)
+            {
+                ShapeGoal sg = (ShapeGoal)allGoals[i];
+                for (int j = 0; j < sg.lastCheckedDots.Count; j++)
+                    collectetDots.Add(sg.lastCheckedDots[j]);
+            }
+        }
+        //Animate
+        for (int i = 0; i < collectetDots.Count; i++)
+        {
+            float targetScale = collectetDots[i].transform.localScale.x + dotsBonusSize;
+            collectetDots[i].transform.DOScale(targetScale, sizeAnimationTime);
+        }
+
         onLevelComplete?.Invoke();
         yield return new WaitForSeconds(completedLevelPauseTime);
         LoadNextLevel();
-    }
-
-    private void LoadNextLevel()
-    {
-        onDeloadLevel?.Invoke();
-        LoadLevel(levelsBank.levels[DataBetweenLevels.Instance.targetLevel]);
-        levelText.LevelIndex(DataBetweenLevels.Instance.targetLevel);
     }
 }
