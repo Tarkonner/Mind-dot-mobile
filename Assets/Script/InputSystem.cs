@@ -13,6 +13,7 @@ public class InputSystem : MonoBehaviour
     private InputAction tapAction;
     private InputAction positionAction;
     private InputAction secoundTap;
+    private InputAction swipeAction;
 
     public Vector2 touchPosition { get; private set; }
     private bool hasRotated = false;
@@ -36,7 +37,7 @@ public class InputSystem : MonoBehaviour
     [Header("Input")]
     [SerializeField] float distanceBeforeSwipe = 50;
     [SerializeField] float touchOffsetY = 50;
-    private bool fromBoard = false;
+    private bool calledSwipe = false;
 
     [Header("Animations")]
     [SerializeField] float pieceSnapPositionSpeed = 50;
@@ -45,6 +46,8 @@ public class InputSystem : MonoBehaviour
     //Event
     public delegate void OnDotsChange();
     public static event OnDotsChange onDotChange;
+    public delegate void OnSwipe();
+    public static event OnSwipe onSwipe;
 
     private void Awake()
     {
@@ -59,6 +62,7 @@ public class InputSystem : MonoBehaviour
         positionAction = playerInput.actions["TouchPosition"];
         tapAction = playerInput.actions["Tap"];
         secoundTap = playerInput.actions["SecendFinger"];
+        swipeAction = playerInput.actions["Swipe"];
     }
 
     private void OnEnable()
@@ -121,13 +125,21 @@ public class InputSystem : MonoBehaviour
                     pieceSnapCalculation = 1;
             }
 
-            Vector2 targetPosition = touchPosition;
-            if (!fromBoard)
-                targetPosition += new Vector2(0, touchOffsetY + Mathf.RoundToInt(Mathf.Abs(holdingPiece.pieceCenter.y) / 2) * holdingPiece.DotSpacing);
+            Vector2 targetPosition = touchPosition + new Vector2(0, touchOffsetY + Mathf.RoundToInt(Mathf.Abs(holdingPiece.pieceCenter.y) / 2) * holdingPiece.DotSpacing);
             Vector2 calPosition = Vector2.Lerp(touchPosition, targetPosition, pieceSnapCalculation);
 
             //Set posotion
             holdingPieceRect.position = calPosition;
+        }
+        else
+        {
+            //Look for swipe
+            Vector2 swipeLenght = swipeAction.ReadValue<Vector2>();
+            if (!calledSwipe && swipeLenght.magnitude >= distanceBeforeSwipe)
+            {
+                onSwipe?.Invoke();
+                calledSwipe = true;
+            }
         }
     }
 
@@ -147,6 +159,8 @@ public class InputSystem : MonoBehaviour
 
     private void BeginDrag(InputAction.CallbackContext context)
     {
+        calledSwipe = false;
+
         if (holdingPiece != null || !activeTouch)
             return;
 
@@ -167,7 +181,8 @@ public class InputSystem : MonoBehaviour
                 //Set piece to moving
                 holdingPiece = targetPiece;
                 holdingPiece.transform.SetParent(movingPiecesHolder.transform);
-                holdingPiece.ChangeState(Piece.pieceStats.transparent);                
+                holdingPiece.ChangeState(Piece.pieceStats.transparent);
+                holdingPiece.onBoard = false;
                 break;
             }
         }
@@ -189,7 +204,8 @@ public class InputSystem : MonoBehaviour
                         CheckGoals();
 
                         targetDot.parentPiece.ChangeState(Piece.pieceStats.transparent);
-                        fromBoard = true;
+
+                        holdingPiece.onBoard = false;
                     }
                 }
             }
@@ -219,6 +235,7 @@ public class InputSystem : MonoBehaviour
 
                 if (placeResult)
                 {
+                    holdingPiece.onBoard = true; //To not rotate then swipe
                     //Place piece on board
                     holdingPiece.ChangeState(Piece.pieceStats.normal);
                     holdingPiece.GetComponent<Image>().raycastTarget = false;
@@ -238,9 +255,6 @@ public class InputSystem : MonoBehaviour
 
         //Reset snap
         pieceSnapCalculation = 0;
-
-        //Offset turn on and off
-        fromBoard = false;
     }
 
     private void ReturnPiece()

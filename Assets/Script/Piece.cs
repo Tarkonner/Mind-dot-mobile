@@ -18,6 +18,7 @@ public class Piece : MonoBehaviour, IDragHandler
     //Rotation
     private bool rotatable = true;
     private int rotationInt = 0;
+    [HideInInspector] public bool onBoard = false;
 
     [Header("Lines")]
     [SerializeField] private float dotSpacing;
@@ -71,6 +72,16 @@ public class Piece : MonoBehaviour, IDragHandler
         pieceHolder = transform.parent;
 
         ChangeState(pieceStats.small);
+    }
+
+    private void OnEnable()
+    {
+        InputSystem.onSwipe += RotatioOnSwipe;
+    }
+
+    private void OnDisable()
+    {
+        InputSystem.onSwipe -= RotatioOnSwipe;
     }
 
     public void ChangeState(pieceStats targetState)
@@ -273,6 +284,14 @@ public class Piece : MonoBehaviour, IDragHandler
         currentlyRotation = true;
         yield return new WaitForSeconds(rotationTime);
         currentlyRotation = false;
+    }
+
+    private void RotatioOnSwipe()
+    {
+        if (!onBoard)
+        {
+            RotateWithAnimation();
+        }
     }
     #endregion
 

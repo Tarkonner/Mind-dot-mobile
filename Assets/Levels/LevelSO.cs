@@ -31,13 +31,13 @@ public class LevelSO : ScriptableObject
     public void LevelOverride(LevelBoard levelGrid, LevelPiece[] levelPieces, LevelShapeGoal[] levelGoals, LevelPlaceGoal[] levelPlaceGoals)
     {
 #if (UNITY_EDITOR)
-        UnityEditor.EditorUtility.SetDirty(this);
 
         this.levelGrid = levelGrid;
         this.levelPieces = levelPieces;
         this.levelShapeGoals = levelGoals;
         this.levelPlaceGoals = levelPlaceGoals;
 
+        UnityEditor.EditorUtility.SetDirty(this);
 
 #endif
     }
