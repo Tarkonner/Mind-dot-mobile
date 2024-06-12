@@ -28,20 +28,17 @@ public class LevelSO : ScriptableObject
         this.levelPlaceGoals = levelPlaceGoals;
     }
 
-    public void CreateVariation(LevelBoard levelGrid, LevelPiece[] levelPieces, LevelShapeGoal[] levelGoals, LevelPlaceGoal[] levelPlaceGoals)
+    public void LevelOverride(LevelBoard levelGrid, LevelPiece[] levelPieces, LevelShapeGoal[] levelGoals, LevelPlaceGoal[] levelPlaceGoals)
     {
 #if (UNITY_EDITOR)
-        version++;
-        string targetName = levelTitle + "v" + version;
-        LevelSO levelObject = LevelSO.CreateLevelSO(targetName, levelGrid, levelPieces, levelGoals, levelPlaceGoals);
+        UnityEditor.EditorUtility.SetDirty(this);
 
-        string uniquePath = AssetDatabase.GenerateUniqueAssetPath($"Assets/Levels/{targetName}.asset");
-        string uniqueName = uniquePath.Replace("Assets/Levels/", "");
-        uniqueName = uniqueName.Replace(".asset", "");
+        this.levelGrid = levelGrid;
+        this.levelPieces = levelPieces;
+        this.levelShapeGoals = levelGoals;
+        this.levelPlaceGoals = levelPlaceGoals;
 
-        AssetDatabase.CreateAsset(levelObject, uniquePath);
-        AssetDatabase.SaveAssets();
-        AssetDatabase.Refresh();
+
 #endif
     }
 
