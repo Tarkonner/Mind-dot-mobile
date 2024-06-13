@@ -15,6 +15,7 @@ public class InputSystem : MonoBehaviour
     private InputAction positionAction;
     private InputAction secoundTap;
     private InputAction swipeAction;
+    private InputAction secondSwipeAction;
 
     public Vector2 touchPosition { get; private set; }
     private bool hasRotated = false;
@@ -40,6 +41,7 @@ public class InputSystem : MonoBehaviour
     [SerializeField] float touchOffsetY = 50;
     private bool calledSwipe = false;
     private Vector2 swipeStartPos = Vector2.zero;
+    private Vector2 secendSwipeStartPos = Vector2.zero;
 
     [Header("Animations")]
     [SerializeField] float pieceSnapPositionSpeed = 50;
@@ -64,6 +66,7 @@ public class InputSystem : MonoBehaviour
         tapAction = playerInput.actions["Tap"];
         secoundTap = playerInput.actions["SecendFinger"];
         swipeAction = playerInput.actions["Swipe"];
+        secondSwipeAction = playerInput.actions["SecendSwipe"];
     }
 
     private void OnEnable()
@@ -114,9 +117,21 @@ public class InputSystem : MonoBehaviour
             if (holdingPieceRect == null)
                 holdingPieceRect = holdingPiece.gameObject.GetComponent<RectTransform>();
 
-            //Second touch
-            if (secoundTap.WasPressedThisFrame())
-                Tap();
+            ////Second touch
+            //if (secoundTap.WasPressedThisFrame())
+            //    Tap();
+
+            //Look for swipe
+            Vector2 swipePosition = secondSwipeAction.ReadValue<Vector2>();
+
+            if (!calledSwipe && swipePosition.magnitude >= distanceBeforeSwipe)
+            {
+                bool rightFromStart = false;
+                if (secendSwipeStartPos.x < swipePosition.x)
+                    rightFromStart = true;
+
+                holdingPiece.RotateWithAnimation(rightFromStart);
+            }
 
             //Calculate position
             if (pieceSnapCalculation < 1)
@@ -140,11 +155,8 @@ public class InputSystem : MonoBehaviour
             if (!calledSwipe && swipePosition.magnitude >= distanceBeforeSwipe)
             {
                 bool rightFromStart = false;
-                Debug.Log($"Start: {swipeStartPos.x}, Now: {swipePosition.x}");
                 if (swipeStartPos.x < swipePosition.x)
                     rightFromStart = true;
-
-                Debug.Log(rightFromStart);
 
                 onSwipe?.Invoke(rightFromStart);
                 calledSwipe = true;
@@ -283,19 +295,22 @@ public class InputSystem : MonoBehaviour
 
     private void Tap()
     {
-        if (holdingPiece != null)
-        {
-            holdingPiece.RotateWithAnimation(false);
-            hasRotated = true;
-        }
+        secendSwipeStartPos = tapAction.ReadValue<Vector2>();
+
+        //if (holdingPiece != null)
+        //{
+        //    holdingPiece.RotateWithAnimation(false);
+        //    hasRotated = true;
+        //}
     }
     private void Tap(InputAction.CallbackContext context)
     {
-        if (!hasRotated)
-        {
-            hasRotated = true;
-            Tap();
-        }
+        secendSwipeStartPos = tapAction.ReadValue<Vector2>();
+        //if (!hasRotated)
+        //{
+        //    hasRotated = true;
+        //    Tap();
+        //}
     }
     private void LiftTap(InputAction.CallbackContext context)
     {
