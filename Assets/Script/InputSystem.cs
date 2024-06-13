@@ -123,14 +123,14 @@ public class InputSystem : MonoBehaviour
 
             //Look for swipe
             Vector2 swipePosition = secondSwipeAction.ReadValue<Vector2>();
-
-            if (!calledSwipe && swipePosition.magnitude >= distanceBeforeSwipe)
+            if (!calledSwipe && ToolMath.Difference(swipePosition.x, secendSwipeStartPos.x) >= distanceBeforeSwipe)
             {
                 bool rightFromStart = false;
                 if (secendSwipeStartPos.x < swipePosition.x)
                     rightFromStart = true;
 
                 holdingPiece.RotateWithAnimation(rightFromStart);
+                calledSwipe = true;
             }
 
             //Calculate position
@@ -152,7 +152,7 @@ public class InputSystem : MonoBehaviour
             //Look for swipe
             Vector2 swipePosition = swipeAction.ReadValue<Vector2>();
 
-            if (!calledSwipe && swipePosition.magnitude >= distanceBeforeSwipe)
+            if (!calledSwipe && ToolMath.Difference(swipePosition.x, swipeStartPos.x) >= distanceBeforeSwipe)
             {
                 bool rightFromStart = false;
                 if (swipeStartPos.x < swipePosition.x)
