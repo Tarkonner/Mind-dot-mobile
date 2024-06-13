@@ -117,10 +117,6 @@ public class InputSystem : MonoBehaviour
             if (holdingPieceRect == null)
                 holdingPieceRect = holdingPiece.gameObject.GetComponent<RectTransform>();
 
-            ////Second touch
-            //if (secoundTap.WasPressedThisFrame())
-            //    Tap();
-
             //Look for swipe
             Vector2 swipePosition = secondSwipeAction.ReadValue<Vector2>();
             if (!calledSwipe && ToolMath.Difference(swipePosition.x, secendSwipeStartPos.x) >= distanceBeforeSwipe)
@@ -296,21 +292,10 @@ public class InputSystem : MonoBehaviour
     private void Tap()
     {
         secendSwipeStartPos = tapAction.ReadValue<Vector2>();
-
-        //if (holdingPiece != null)
-        //{
-        //    holdingPiece.RotateWithAnimation(false);
-        //    hasRotated = true;
-        //}
     }
     private void Tap(InputAction.CallbackContext context)
     {
         secendSwipeStartPos = tapAction.ReadValue<Vector2>();
-        //if (!hasRotated)
-        //{
-        //    hasRotated = true;
-        //    Tap();
-        //}
     }
     private void LiftTap(InputAction.CallbackContext context)
     {

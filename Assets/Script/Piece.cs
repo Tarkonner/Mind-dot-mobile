@@ -287,7 +287,7 @@ public class Piece : MonoBehaviour, IDragHandler
 
             //Rotation Animation
             rectTransform.DORotate(new Vector3(0, 0, rotationInt * 90), rotationTime);
-            StartCoroutine(RotateTimer());
+            StartCoroutine(RotateTimer(rotationTime));
         }
         else
         {
@@ -296,6 +296,10 @@ public class Piece : MonoBehaviour, IDragHandler
             Vector3 highRotation = new Vector3(startRotation.x, startRotation.y, startRotation.y + wigleRotation);
             Vector3 lowRotation = new Vector3(startRotation.x, startRotation.y, startRotation.y - wigleRotation);
 
+            //Don't get called again timer
+            StartCoroutine(RotateTimer(wigleTime));
+
+            //Wiggle animation
             wigleSequence = DOTween.Sequence();
             wigleSequence.Append(transform.DORotate(highRotation, wigleTime / 4));
             wigleSequence.Append(transform.DORotate(startRotation, wigleTime / 4));
@@ -304,10 +308,10 @@ public class Piece : MonoBehaviour, IDragHandler
             wigleSequence.Play();
         }
     }
-    IEnumerator RotateTimer()
+    IEnumerator RotateTimer(float timeBeforeRationStops)
     {
         currentlyRotation = true;
-        yield return new WaitForSeconds(rotationTime);
+        yield return new WaitForSeconds(timeBeforeRationStops);
         currentlyRotation = false;
     }
 
