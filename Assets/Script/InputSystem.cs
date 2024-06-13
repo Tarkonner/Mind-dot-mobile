@@ -291,19 +291,26 @@ public class InputSystem : MonoBehaviour
 
     private void Tap()
     {
-        secendSwipeStartPos = tapAction.ReadValue<Vector2>();
+        TapFunc();
     }
     private void Tap(InputAction.CallbackContext context)
     {
-        secendSwipeStartPos = tapAction.ReadValue<Vector2>();
+        TapFunc();
     }
+
+    private void TapFunc()
+    {
+        calledSwipe = false;
+        secendSwipeStartPos = secondSwipeAction.ReadValue<Vector2>();
+    }
+
     private void LiftTap(InputAction.CallbackContext context)
     {
         if (!hasRotated)
         {
             Tap();
         }
-        hasRotated = false;
+        hasRotated = false;        
     }
 
     private void CheckGoals()
