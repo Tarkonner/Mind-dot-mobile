@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.EventSystems;
@@ -38,6 +39,7 @@ public class InputSystem : MonoBehaviour
     [SerializeField] float distanceBeforeSwipe = 50;
     [SerializeField] float touchOffsetY = 50;
     private bool calledSwipe = false;
+    private Vector2 swipeStartPos = Vector2.zero;
 
     [Header("Animations")]
     [SerializeField] float pieceSnapPositionSpeed = 50;
@@ -46,8 +48,7 @@ public class InputSystem : MonoBehaviour
     //Event
     public delegate void OnDotsChange();
     public static event OnDotsChange onDotChange;
-    public delegate void OnSwipe();
-    public static event OnSwipe onSwipe;
+    public static event Action<bool> onSwipe;
 
     private void Awake()
     {
@@ -134,10 +135,18 @@ public class InputSystem : MonoBehaviour
         else
         {
             //Look for swipe
-            Vector2 swipeLenght = swipeAction.ReadValue<Vector2>();
-            if (!calledSwipe && swipeLenght.magnitude >= distanceBeforeSwipe)
+            Vector2 swipePosition = swipeAction.ReadValue<Vector2>();
+
+            if (!calledSwipe && swipePosition.magnitude >= distanceBeforeSwipe)
             {
-                onSwipe?.Invoke();
+                bool rightFromStart = false;
+                Debug.Log($"Start: {swipeStartPos.x}, Now: {swipePosition.x}");
+                if (swipeStartPos.x < swipePosition.x)
+                    rightFromStart = true;
+
+                Debug.Log(rightFromStart);
+
+                onSwipe?.Invoke(rightFromStart);
                 calledSwipe = true;
             }
         }
@@ -159,7 +168,10 @@ public class InputSystem : MonoBehaviour
 
     private void BeginDrag(InputAction.CallbackContext context)
     {
+        //Swipe
         calledSwipe = false;
+        swipeStartPos = swipeAction.ReadValue<Vector2>();
+
 
         if (holdingPiece != null || !activeTouch)
             return;
@@ -273,7 +285,7 @@ public class InputSystem : MonoBehaviour
     {
         if (holdingPiece != null)
         {
-            holdingPiece.RotateWithAnimation();
+            holdingPiece.RotateWithAnimation(false);
             hasRotated = true;
         }
     }

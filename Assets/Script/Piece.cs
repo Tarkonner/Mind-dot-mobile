@@ -15,7 +15,8 @@ public class Piece : MonoBehaviour, IDragHandler
     [HideInInspector] public Dot[] dotsArray;
     [HideInInspector] public Vector2 pivotPoint;
 
-    //Rotation
+    [Header("Rotation")]
+    [SerializeField] private bool defultRotateDirection = false;
     private bool rotatable = true;
     private int rotationInt = 0;
     [HideInInspector] public bool onBoard = false;
@@ -223,21 +224,45 @@ public class Piece : MonoBehaviour, IDragHandler
     }
 
     #region Rotation
-    void RotationCalculation()
+    void RotationCalculation(bool rightRotation)
     {
         if (!rotatable)
             return;
 
-        for (int i = 0; i < gridPosArray.Length; i++)
+
+        if (rightRotation)
         {
-            //Rotation math for vector rotation around a point. (x,y)->(x',y')=(a+(x-a)cos(t)-(y-?)sin(t),b+(x-a)sin(t)+(y-b)cos(t))
-            //(x,y) is the point that is to be rotated. (a,b) is the pivot point of the rotation.
-            //Since we want a 90 degree rotation, the formula effectively becomes: (x,y)?(??(y??),?+(x??))
-            gridPosArray[i] = new Vector2((pivotPoint.x + (gridPosArray[i].y - pivotPoint.y)),
-               (pivotPoint.y - (gridPosArray[i].x - pivotPoint.y)));
+            //Right rotation
+            for (int i = 0; i < gridPosArray.Length; i++)
+            {
+                //Rotation math for vector rotation around a point. (x,y)->(x',y')=(a+(x-a)cos(t)-(y-?)sin(t),b+(x-a)sin(t)+(y-b)cos(t))
+                //(x,y) is the point that is to be rotated. (a,b) is the pivot point of the rotation.
+                //Since we want a 90 degree rotation, the formula effectively becomes: (x,y)?(??(y??),?+(x??))
+                gridPosArray[i] = new Vector2(
+                    pivotPoint.x - (gridPosArray[i].y - pivotPoint.y),
+                    pivotPoint.y + (gridPosArray[i].x - pivotPoint.y)
+                );
+            }
+            rotationInt = (rotationInt - 1) % 4;
+        }
+        else
+        {
+            //Left rotation
+            for (int i = 0; i < gridPosArray.Length; i++)
+            {
+                //Rotation math for vector rotation around a point. (x,y)->(x',y')=(a+(x-a)cos(t)-(y-?)sin(t),b+(x-a)sin(t)+(y-b)cos(t))
+                //(x,y) is the point that is to be rotated. (a,b) is the pivot point of the rotation.
+                //Since we want a 90 degree rotation, the formula effectively becomes: (x,y)?(??(y??),?+(x??))
+                gridPosArray[i] = new Vector2(
+                    pivotPoint.x + (gridPosArray[i].y - pivotPoint.y),
+                    pivotPoint.y - (gridPosArray[i].x - pivotPoint.y)
+                );
+            }
+            rotationInt = (rotationInt + 1) % 4;
         }
 
-        rotationInt = (rotationInt + 1) % 4;
+
+
         CenterCalculation();
     }
     public void Rotate()
@@ -245,12 +270,12 @@ public class Piece : MonoBehaviour, IDragHandler
         if (!rotatable)
             return;
 
-        RotationCalculation();
+        RotationCalculation(defultRotateDirection);
 
         //Set rotation
         SetRotation();
     }
-    public void RotateWithAnimation()
+    public void RotateWithAnimation(bool rotateRight)
     {
         if (currentlyRotation)
             return;
@@ -258,7 +283,7 @@ public class Piece : MonoBehaviour, IDragHandler
         //Woble if not rotadebul
         if(rotatable)
         {
-            RotationCalculation();
+            RotationCalculation(rotateRight);
 
             //Rotation Animation
             rectTransform.DORotate(new Vector3(0, 0, rotationInt * 90), rotationTime);
@@ -286,11 +311,14 @@ public class Piece : MonoBehaviour, IDragHandler
         currentlyRotation = false;
     }
 
-    private void RotatioOnSwipe()
+    private void RotatioOnSwipe(bool rotaRight)
     {
         if (!onBoard)
         {
-            RotateWithAnimation();
+            if(rotaRight)
+                RotateWithAnimation(true);
+            else
+                RotateWithAnimation(false);
         }
     }
     #endregion

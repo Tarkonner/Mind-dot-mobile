@@ -32,8 +32,6 @@ public class StartAnalytics : MonoBehaviour
     {
         yield return new WaitForSeconds(1); 
         AnalyticsService.Instance.StartDataCollection();
-        Analytics.enabled = true;
-        Debug.Log(Analytics.enabled);
     }
 
     IEnumerator Flsuh()
