@@ -1,6 +1,8 @@
 using DG.Tweening;
 using System.Collections;
 using System.Collections.Generic;
+using Unity.Services.Analytics;
+using Unity.Services.Analytics.Internal;
 using UnityEngine;
 using UnityEngine.Analytics;
 using static LevelManager;
@@ -28,9 +30,13 @@ public class LevelManager : MonoBehaviour
     [SerializeField] bool loadTestlevel = false;
     [SerializeField] private LevelSO testLevel;
 
+    [Header("Questioner")]
+    [SerializeField] GameObject questioner;
+    [SerializeField] bool showQuestioner = false;
+
     //Analytics
     private float timeForCompletingLevels;
-
+    private bool runningLevelClock = false;
     public LevelSO currentLevel { get; private set; }
 
     //Events
@@ -69,15 +75,26 @@ public class LevelManager : MonoBehaviour
     private void OnEnable()
     {
         InputSystem.onDotChange += GoalProgression;
+
+        //Analytics
+        onLoadLevel += () => runningLevelClock = true;
+        //Questioner
+        if (showQuestioner)
+            LevelDeficultyAnalytics.onQuestionerComplet += LoadNextLevel;
     }
     private void OnDisable()
     {
         InputSystem.onDotChange -= GoalProgression;
+
+        //Questioner
+        if (showQuestioner)
+            LevelDeficultyAnalytics.onQuestionerComplet -= LoadNextLevel;
     }
 
     private void Update()
     {
-        timeForCompletingLevels += Time.deltaTime;
+        if(runningLevelClock)
+            timeForCompletingLevels += Time.deltaTime;
     }
 
     public void LoadLevel(LevelSO targetLevel)
@@ -129,13 +146,15 @@ public class LevelManager : MonoBehaviour
             }
 #endif
 
-            ////Analytics
-            //Dictionary<string, object> LevelData = new Dictionary<string, object>()
-            //{
-            //    {"0", DataBetweenLevels.Instance.targetLevel },
-            //    {"1", timeForCompletingLevels }
-            //};
-            //timeForCompletingLevels = 0;
+            //Analytics
+            CustomEvent levelData = new CustomEvent("LevelComplete")
+            {
+                {"0", DataBetweenLevels.Instance.targetLevel },
+                {"1", timeForCompletingLevels }
+            };
+            AnalyticsService.Instance.RecordEvent(levelData);
+            timeForCompletingLevels = 0;
+            runningLevelClock = false;
 
             //Load level            
             if (DataBetweenLevels.Instance.targetLevel == levelsBank.levels.Length)
@@ -190,6 +209,11 @@ public class LevelManager : MonoBehaviour
 
         onLevelComplete?.Invoke();
         yield return new WaitForSeconds(completedLevelPauseTime);
-        LoadNextLevel();
+
+        //Load next level if not showing question
+        if (!showQuestioner)
+            LoadNextLevel();
+        else
+            questioner.SetActive(true);
     }
 }
