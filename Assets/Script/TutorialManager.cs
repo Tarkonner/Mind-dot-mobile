@@ -21,10 +21,19 @@ public class TutorialManager : MonoBehaviour
     {
         levelManager = GetComponent<LevelManager>();
 
+        toAnimate = new List<GameObject>() { textHolder };
+    }
+
+    private void OnEnable()
+    {
         LevelManager.onLoadLevel += LoadTutorial;
         LevelManager.onDeloadLevel += RemoveTutorial;
+    }
 
-        toAnimate = new List<GameObject>() { textHolder };
+    private void OnDisable()
+    {
+        LevelManager.onLoadLevel -= LoadTutorial;
+        LevelManager.onDeloadLevel -= RemoveTutorial;
     }
 
     void RemoveTutorial()

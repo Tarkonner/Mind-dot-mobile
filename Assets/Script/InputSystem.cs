@@ -30,9 +30,8 @@ public class InputSystem : MonoBehaviour
     private RectTransform holdingPieceRect;
     private bool activeTouch = true;
 
-    [Header("Raycasting")]
-    [SerializeField] GraphicRaycaster boardRaycast;
-    [SerializeField] GraphicRaycaster piecesRaycast;
+    [Header("Raycast")]
+    [SerializeField] GraphicRaycaster graphicRaycaster;
     PointerEventData pointerEventData;
     EventSystem eventSystem;
 
@@ -190,7 +189,7 @@ public class InputSystem : MonoBehaviour
         touchPosition = positionAction.ReadValue<Vector2>();
 
         //Raycast Pieceholder
-        List<RaycastResult> piecesDeteced = HitDetection(touchPosition, piecesRaycast);
+        List<RaycastResult> piecesDeteced = HitDetection(touchPosition, graphicRaycaster);
         foreach (RaycastResult result in piecesDeteced)
         {
             //Find Piece
@@ -208,7 +207,7 @@ public class InputSystem : MonoBehaviour
         }
 
         //Raycast Board
-        List<RaycastResult> boardDection = HitDetection(touchPosition, boardRaycast);
+        List<RaycastResult> boardDection = HitDetection(touchPosition, graphicRaycaster);
         foreach (RaycastResult result in boardDection)
         {
             if (result.gameObject.TryGetComponent(out Cell targetCell))
@@ -244,7 +243,7 @@ public class InputSystem : MonoBehaviour
         bool canPlacePiece = false;
 
         //Raycast
-        List<RaycastResult> deteced = HitDetection(holdingPiece.firstDot.GetComponent<RectTransform>().position, boardRaycast);
+        List<RaycastResult> deteced = HitDetection(holdingPiece.firstDot.GetComponent<RectTransform>().position, graphicRaycaster);
         foreach (RaycastResult result in deteced)
         {
             //See if we hit a cell
