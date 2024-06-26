@@ -5,6 +5,8 @@ using UnityEngine;
 
 public class MusikManager : MonoBehaviour
 {
+    public static MusikManager Instance;
+
     private AudioSource musicSource;
 
     [SerializeField] private AudioClip[] musicClips;
@@ -14,7 +16,14 @@ public class MusikManager : MonoBehaviour
 
     private void Awake()
     {
-        DontDestroyOnLoad(gameObject);
+        //Singelton
+        if (Instance == null)
+        {
+            Instance = this;
+            DontDestroyOnLoad(gameObject);
+        }
+        else
+            Destroy(gameObject);
 
         musicSource = GetComponent<AudioSource>();
 
@@ -29,7 +38,6 @@ public class MusikManager : MonoBehaviour
     public void PlayMusic()
     {
         musicSource.clip = musicClips[musicPlayingIndex];
-        musicSource.Play();
 
         musicPlayingIndex++;
 
@@ -40,7 +48,15 @@ public class MusikManager : MonoBehaviour
             ShuffleElements.ReshuffleWithWight(musicClips, 2);
         }            
 
+        musicSource.Play();
         StartCoroutine(NextMusicNumber(musicSource.clip.length));
+    }
+
+    public void StopMusic()
+    {
+        StopAllCoroutines();
+
+        musicSource.Stop();
     }
 
     IEnumerator NextMusicNumber(float musicTime)
