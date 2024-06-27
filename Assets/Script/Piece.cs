@@ -17,7 +17,7 @@ public class Piece : MonoBehaviour, IDragHandler
 
     [Header("Rotation")]
     [SerializeField] private bool defultRotateDirection = false;
-    private bool rotatable = true;
+    public bool rotatable { get; private set; } = true;
     private int rotationInt = 0;
     [HideInInspector] public bool onBoard = false;
 

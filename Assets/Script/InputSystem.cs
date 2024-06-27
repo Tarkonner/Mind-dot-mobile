@@ -46,6 +46,10 @@ public class InputSystem : MonoBehaviour
     [SerializeField] float pieceSnapPositionSpeed = 50;
     private float pieceSnapCalculation;
 
+    [Header("Sounds")]
+    [SerializeField] AudioClip notRotateSound;
+    [SerializeField] AudioClip[] rotateSounds;
+
     //Event
     public delegate void OnDotsChange();
     public static event OnDotsChange onDotChange;
@@ -75,6 +79,8 @@ public class InputSystem : MonoBehaviour
         tapAction.canceled += Release;
         secoundTap.started += Tap;
         secoundTap.canceled += LiftTap;
+        //Sound
+        onSwipe += RotateAllSound;
 
         //Turn touch input on
         LevelManager.onLoadLevel += () => activeTouch = true;
@@ -88,6 +94,8 @@ public class InputSystem : MonoBehaviour
         tapAction.canceled -= Release;
         secoundTap.started -= Tap;
         secoundTap.canceled -= LiftTap;
+        //Sound
+        onSwipe -= RotateAllSound;
 
         //Turn touch input on
         LevelManager.onLoadLevel -= () => activeTouch = true;
@@ -120,12 +128,23 @@ public class InputSystem : MonoBehaviour
             Vector2 swipePosition = secondSwipeAction.ReadValue<Vector2>();
             if (!calledSwipe && ToolMath.Difference(swipePosition.x, secendSwipeStartPos.x) >= distanceBeforeSwipe)
             {
+                //Sound
+                if(!holdingPiece.currentlyRotation)
+                {
+                    if (holdingPiece.rotatable)
+                        AudioManager.Instance.PlayWithEffects(rotateSounds);
+                    else
+                        AudioManager.Instance.PlayWithEffects(notRotateSound);
+                }
+
+
                 bool rightFromStart = false;
                 if (secendSwipeStartPos.x < swipePosition.x)
                     rightFromStart = true;
 
                 holdingPiece.RotateWithAnimation(rightFromStart);
                 calledSwipe = true;
+
             }
 
             //Calculate position
@@ -315,5 +334,19 @@ public class InputSystem : MonoBehaviour
     private void CheckGoals()
     {
         onDotChange?.Invoke();
+    }
+
+    public void TogglePlayerInput()
+    {
+        activeTouch = !activeTouch;
+    }
+
+    private void RotateAllSound(bool trash)
+    {
+        if(holdingPiece == null)
+        {
+            AudioManager.Instance.PlayWithEffects(rotateSounds);
+            Debug.Log("Rotate all");
+        }
     }
 }

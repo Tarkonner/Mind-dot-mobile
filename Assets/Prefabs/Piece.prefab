@@ -68,6 +68,8 @@ MonoBehaviour:
   - {fileID: 8363953510307615422, guid: 0f48472b57c3942478e34342026ce7ae, type: 3}
   - {fileID: 8363953510307615422, guid: 0f48472b57c3942478e34342026ce7ae, type: 3}
   pivotPoint: {x: 0, y: 0}
+  defultRotateDirection: 0
+  onBoard: 0
   dotSpacing: 125
   lineWidth: 10
   smallPieceSize: 0.35
@@ -80,6 +82,11 @@ MonoBehaviour:
   wigleTime: 0.5
   returnToHolderTime: 0.5
   scaleToSmallTime: 0.5
+  notRotateSound: {fileID: 8300000, guid: 7ae13fd33472bac4cbcc0f05f08c5b2c, type: 3}
+  rotateSounds:
+  - {fileID: 8300000, guid: 985768c5b80104f4e8303a50799c9796, type: 3}
+  - {fileID: 8300000, guid: 3e4f18f6285fb5649a53cf5eab2e0983, type: 3}
+  - {fileID: 8300000, guid: 944eb825c9e8e6e409a6e74cf8a48d9f, type: 3}
 --- !u!114 &7252276453392386464
 MonoBehaviour:
   m_ObjectHideFlags: 0

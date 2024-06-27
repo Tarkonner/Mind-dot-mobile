@@ -37,6 +37,10 @@ public class AudioManager : MonoBehaviour
         audioSource.clip = audioClip;
         audioSource.Play();
     }
+    public void PlayAudioclip(AudioClip[] audioClip)
+    {
+        PlayAudioclip(audioClip[Random.Range(0, audioClip.Length)]);
+    }
 
     public void PlayWithEffects(AudioClip audioClip)
     {
@@ -44,6 +48,10 @@ public class AudioManager : MonoBehaviour
         audioSource.volume = Random.Range(minVolume, 1);
         audioSource.pitch = Random.Range(minPitch, 1);
         audioSource.Play();
+    }
+    public void PlayWithEffects(AudioClip[] audioClip)
+    {
+        PlayWithEffects(audioClip[Random.Range(0, audioClip.Length)]);
     }
 
     public void MusicOnOff()

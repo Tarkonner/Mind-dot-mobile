@@ -8,6 +8,9 @@ using UnityEngine.UI;
 public class LevelButtonMaker : MonoBehaviour
 {
     [SerializeField] LevelsBank levelsBank;
+    [Header("Placeing level buttons")]
+    [SerializeField] int horizontalElements = 4;
+    [SerializeField] int verticalElements = 4;
     [Header("Buttons setup")]
     [SerializeField] GameObject levelButtonPrefab;
     [SerializeField] float spaceBetweenButtons = 100;
@@ -32,21 +35,22 @@ public class LevelButtonMaker : MonoBehaviour
         //Level
         int targetLevel = 0;
 
-        Vector2 spawnPoint = new Vector2(-spaceBetweenButtons * 2f, spaceBetweenButtons * 2f);
+        Vector2 spawnPoint = new Vector2(-spaceBetweenButtons * horizontalElements / 2 + spaceBetweenButtons / 2, spaceBetweenButtons * verticalElements / 2);
 
         for (int j = 0; j < 3; j++)
         {
             //Holder
-            GameObject hold = new GameObject($"{targetLevel} - {targetLevel + 30}");
+            int holderCal = horizontalElements * verticalElements * j;
+            GameObject hold = new GameObject($"{holderCal + 1} - {holderCal}");
             hold.transform.SetParent(levelHolder.transform);
             hold.transform.localScale = Vector3.one;
             holders.Add(hold.transform);
             hold.transform.localPosition = new Vector2(j * spaceBetweenPanels, 0);
 
-            //Spawn 30 buttons
-            for (int y = 0; y < 6; y++)
+            //Spawn buttons
+            for (int y = 0; y < verticalElements; y++)
             {
-                for (int x = 0; x < 5; x++)
+                for (int x = 0; x < horizontalElements; x++)
                 {
                     //No level made
                     if (targetLevel > levelsBank.levels.Length)
@@ -72,17 +76,30 @@ public class LevelButtonMaker : MonoBehaviour
                     textElement.text = targetLevel.ToString();
 
                     //Give color
-                    Image image = spawn.GetComponent<Image>();
+                    Image outerImage = spawn.GetComponent<Image>();
                     switch (targetLevel % 3)
                     {
                         case 0:
-                            image.color = colorBank.redColor;
+                            outerImage.color = colorBank.backgroundRedColor;
                             break;
                         case 1:
-                            image.color = colorBank.blueColor; 
+                            outerImage.color = colorBank.backgroundBlueColor; 
                             break;
                         case 2:
-                            image.color = colorBank.yellowColor; 
+                            outerImage.color = colorBank.backgroundYellowColor; 
+                            break;
+                    }
+                    Image innerImage = spawn.transform.GetChild(0).gameObject.GetComponentInChildren<Image>();
+                    switch (targetLevel % 3)
+                    {
+                        case 0:
+                            innerImage.color = colorBank.redColor;
+                            break;
+                        case 1:
+                            innerImage.color = colorBank.blueColor;
+                            break;
+                        case 2:
+                            innerImage.color = colorBank.yellowColor;
                             break;
                     }
                 }
