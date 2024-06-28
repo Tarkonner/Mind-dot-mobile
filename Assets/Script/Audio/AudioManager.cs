@@ -34,11 +34,23 @@ public class AudioManager : MonoBehaviour
 
     public void PlayAudioclip(AudioClip audioClip)
     {
+        if(audioClip == null)
+        {
+            Debug.LogError("No sound in call");
+            return;
+        }
+
         audioSource.clip = audioClip;
         audioSource.Play();
     }
     public void PlayAudioclip(AudioClip[] audioClip)
     {
+        if (audioClip == null)
+        {
+            Debug.LogError("No sound in call");
+            return;
+        }
+
         PlayAudioclip(audioClip[Random.Range(0, audioClip.Length)]);
     }
 
@@ -55,9 +67,7 @@ public class AudioManager : MonoBehaviour
     }
 
     public void MusicOnOff()
-    {
-        
-
+    {       
         if(musicOn)
         {
             audioMixer.SetFloat("MusicVolume", 0);

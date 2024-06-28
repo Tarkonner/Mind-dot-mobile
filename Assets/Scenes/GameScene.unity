@@ -5610,6 +5610,14 @@ PrefabInstance:
       value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 5746726367402340195, guid: 8cbdc0a76d6bc7148968a7757584fc92, type: 3}
+      propertyPath: dropSound
+      value: 
+      objectReference: {fileID: 8300000, guid: 935e8bae4d911df41b94f8dd0573a49b, type: 3}
+    - target: {fileID: 5746726367402340195, guid: 8cbdc0a76d6bc7148968a7757584fc92, type: 3}
+      propertyPath: pickupSound
+      value: 
+      objectReference: {fileID: 8300000, guid: 6f6d964632115d44098f6e75921acec6, type: 3}
+    - target: {fileID: 5746726367402340195, guid: 8cbdc0a76d6bc7148968a7757584fc92, type: 3}
       propertyPath: touchOffsetY
       value: 400
       objectReference: {fileID: 0}

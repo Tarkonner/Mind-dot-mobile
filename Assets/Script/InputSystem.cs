@@ -49,6 +49,8 @@ public class InputSystem : MonoBehaviour
     [Header("Sounds")]
     [SerializeField] AudioClip notRotateSound;
     [SerializeField] AudioClip[] rotateSounds;
+    [SerializeField] AudioClip dropSound;
+    [SerializeField] AudioClip pickupSound;
 
     //Event
     public delegate void OnDotsChange();
@@ -79,8 +81,6 @@ public class InputSystem : MonoBehaviour
         tapAction.canceled += Release;
         secoundTap.started += Tap;
         secoundTap.canceled += LiftTap;
-        //Sound
-        onSwipe += RotateAllSound;
 
         //Turn touch input on
         LevelManager.onLoadLevel += () => activeTouch = true;
@@ -94,8 +94,6 @@ public class InputSystem : MonoBehaviour
         tapAction.canceled -= Release;
         secoundTap.started -= Tap;
         secoundTap.canceled -= LiftTap;
-        //Sound
-        onSwipe -= RotateAllSound;
 
         //Turn touch input on
         LevelManager.onLoadLevel -= () => activeTouch = true;
@@ -174,6 +172,8 @@ public class InputSystem : MonoBehaviour
 
                 onSwipe?.Invoke(rightFromStart);
                 calledSwipe = true;
+
+                AudioManager.Instance.PlayWithEffects(rotateSounds);
             }
         }
     }
@@ -221,6 +221,9 @@ public class InputSystem : MonoBehaviour
                 holdingPiece.transform.SetParent(movingPiecesHolder.transform);
                 holdingPiece.ChangeState(Piece.pieceStats.transparent);
                 holdingPiece.onBoard = false;
+
+                //Sound
+                AudioManager.Instance.PlayWithEffects(pickupSound);
                 break;
             }
         }
@@ -244,6 +247,9 @@ public class InputSystem : MonoBehaviour
                         targetDot.parentPiece.ChangeState(Piece.pieceStats.transparent);
 
                         holdingPiece.onBoard = false;
+
+                        //Sound
+                        AudioManager.Instance.PlayWithEffects(pickupSound);
                     }
                 }
             }
@@ -305,6 +311,9 @@ public class InputSystem : MonoBehaviour
     {
         holdingPiece = null;
         holdingPieceRect = null;
+
+        //Sound
+        AudioManager.Instance.PlayWithEffects(dropSound);
     }
 
     private void Tap()
@@ -341,12 +350,4 @@ public class InputSystem : MonoBehaviour
         activeTouch = !activeTouch;
     }
 
-    private void RotateAllSound(bool trash)
-    {
-        if(holdingPiece == null)
-        {
-            AudioManager.Instance.PlayWithEffects(rotateSounds);
-            Debug.Log("Rotate all");
-        }
-    }
 }
