@@ -54,6 +54,8 @@ public class MusikManager : MonoBehaviour
 
     public void StopMusic()
     {
+        musicPlayingIndex--;
+
         StopAllCoroutines();
 
         musicSource.Stop();
@@ -61,7 +63,6 @@ public class MusikManager : MonoBehaviour
 
     IEnumerator NextMusicNumber(float musicTime)
     {
-        Debug.Log("Next music");
         yield return new WaitForSeconds(musicTime);
         PlayMusic();
     }

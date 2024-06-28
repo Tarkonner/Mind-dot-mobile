@@ -70,13 +70,13 @@ public class AudioManager : MonoBehaviour
     {       
         if(musicOn)
         {
-            audioMixer.SetFloat("MusicVolume", 0);
+            audioMixer.SetFloat("MusicVolume", -80);
             musicOn = false;
             MusikManager.Instance.StopMusic();
         }
         else
         {
-            audioMixer.SetFloat("MusicVolume", 1);
+            audioMixer.SetFloat("MusicVolume", 0);
             musicOn = true;
             MusikManager.Instance.PlayMusic();
         }
@@ -86,12 +86,12 @@ public class AudioManager : MonoBehaviour
     {
         if (soundOn)
         {
-            audioMixer.SetFloat("SoundVolume", 0);
+            audioMixer.SetFloat("SoundVolume", -80);
             soundOn = false;
         }
         else
         {
-            audioMixer.SetFloat("SoundVolume", 1);
+            audioMixer.SetFloat("SoundVolume", 0);
             soundOn= true;
         }
     }
