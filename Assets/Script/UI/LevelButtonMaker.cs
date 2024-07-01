@@ -134,11 +134,7 @@ public class LevelButtonMaker : MonoBehaviour
             panelCount++;
             //Updata level load
             if (panelCount > 0)
-            {                
-                Debug.Log("Target panel: " + targetPanel);        
                 UpdatePanelsButton(targetPanel, true);
-            }
-
 
             //Turn arrow off
             if (panelCount == maxPanels)
