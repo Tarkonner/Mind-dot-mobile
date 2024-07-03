@@ -2,10 +2,8 @@ using DG.Tweening;
 using System.Collections;
 using System.Collections.Generic;
 using Unity.Services.Analytics;
-using Unity.Services.Analytics.Internal;
 using UnityEngine;
-using UnityEngine.Analytics;
-using static LevelManager;
+using ES3Internal;
 
 public class LevelManager : MonoBehaviour
 {
@@ -135,10 +133,12 @@ public class LevelManager : MonoBehaviour
                 completedGoals++;
             }
         }
+
+        //Level completet
         if (completedGoals == allGoals.Count)
         {
-            //Tell test levelsBank
 #if (UNITY_EDITOR)
+            //Tell test levelsBank
             if (loadTestlevel)
             {
                 Debug.Log("Complete level");
@@ -155,6 +155,9 @@ public class LevelManager : MonoBehaviour
             AnalyticsService.Instance.RecordEvent(levelData);
             timeForCompletingLevels = 0;
             runningLevelClock = false;
+
+            //Save
+            SaveGame(DataBetweenLevels.Instance.targetLevel);
 
             //Load level            
             if (DataBetweenLevels.Instance.targetLevel == levelsBank.levels.Length)
@@ -215,5 +218,11 @@ public class LevelManager : MonoBehaviour
             LoadNextLevel();
         else
             questioner.SetActive(true);
+    }
+
+    void SaveGame(int levelCompletet)
+    {
+        string key = SaveSystem.levelKey + levelCompletet.ToString();
+        ES3.Save(key, true);
     }
 }

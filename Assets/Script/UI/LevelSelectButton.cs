@@ -9,6 +9,8 @@ public class LevelSelectButton : MonoBehaviour
 
     private TextMeshProUGUI levelText;
 
+    public DotType dotType;
+
     private void Awake()
     {
         levelText = GetComponentInChildren<TextMeshProUGUI>();
