@@ -108,8 +108,6 @@ public class LevelButtonMaker : MonoBehaviour
                     Vector2 targetTransform = spawnPoint + new Vector2(x * spaceBetweenButtons, y * -spaceBetweenButtons);
                     button.transform.localPosition = targetTransform;
 
-
-
                     //Give color
                     outerImages[j, count] = spawn.GetComponent<Image>();
                     OuterRingLook(levelcompletionState, j, y * verticalElements + x);
@@ -209,6 +207,10 @@ public class LevelButtonMaker : MonoBehaviour
                     movementModefier = 1;
                 int cal = ((panelCount + movementModefier) * horizontalElements * verticalElements) + count;
                 buttonsBank[targetPanel, count].TargetLevel(cal);
+
+                //Outer line
+                string key = SaveSystem.levelKey + cal.ToString();
+                OuterRingLook(ES3.Load<bool>(key), panelCount + movementModefier, count);
             }
         }
     }
