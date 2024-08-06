@@ -50,7 +50,15 @@ public class Board : ScaleAnimations
         //Remove load level
         for (int i = transform.childCount - 1; i >= 0; i--)
         {
-            Destroy(transform.GetChild(i).gameObject);
+            //Remove Dot
+            GameObject targetCell = transform.GetChild(i).gameObject;
+            if(targetCell.GetComponent<Cell>().occupying != null
+                && targetCell.transform.GetChild(0).gameObject.TryGetComponent(out Dot foundDot))
+            {
+                DotPool.instance.Release(foundDot);
+            }
+
+            Destroy(targetCell);
 
             allDots.Clear();
             allCells.Clear();
@@ -112,13 +120,8 @@ public class Board : ScaleAnimations
                 GameObject spawn = DotPool.instance.GetDot(level.levelGrid.dots[targetDotIndex]);
                 spawn.transform.parent = cellSpawn.transform;
 
-                //Tell where to stand
-                Dot newDot = spawn.GetComponent<Dot>();
-                newDot.cell = cell;
-                cell.occupying = newDot;
-
                 //Place on Board
-                PlaceDot(new Vector2Int(x, y), newDot);
+                PlaceDot(new Vector2Int(x, y), spawn.GetComponent<Dot>());
 
                 //Ready to animate
                 spawn.transform.localScale = Vector2.zero;
@@ -146,9 +149,12 @@ public class Board : ScaleAnimations
         {
             grid[coordinate.x, coordinate.y].occupying = targetDot;
             GameObject targetCell = grid[coordinate.x, coordinate.y].gameObject;
-
-            targetDot.transform.position = targetCell.transform.position;
-            targetDot.cell = targetCell.GetComponent<Cell>();
+                                  
+            targetDot.gameObject.transform.localPosition = Vector3.zero;
+            //Cell
+            Cell cell = targetCell.GetComponent<Cell>(); 
+            targetDot.cell = cell;
+            cell.occupying = targetDot;
 
             //Animation
             allDots.Add(targetDot.gameObject);
