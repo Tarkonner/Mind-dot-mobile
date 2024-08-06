@@ -25,8 +25,17 @@ public class DotPool : PoolerBase<Dot>
     }
 
 
-    public GameObject GetDot()
+    public GameObject GetDot(DotType whatKindOfDot, Piece parentPiece = null)
     {
-        return pool.Get().gameObject;
+        Dot target = pool.Get();
+        target.Setup(whatKindOfDot, parentPiece);
+        return target.gameObject;
+    }
+
+    protected override void ReleaseSetup(Dot obj)
+    {
+        base.ReleaseSetup(obj);
+        obj.transform.parent = null;
+        obj.transform.position = Vector3.zero;
     }
 }

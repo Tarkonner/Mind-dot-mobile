@@ -19,8 +19,6 @@ public class Board : ScaleAnimations
 
     public Action onChange;
 
-    [SerializeField] protected GameObject dotPrefab;
-
     [Header("Animation")]
     [SerializeField] private float cellAnimationTime = .5f;
     [SerializeField] private float dotAnimationTime = .5f;
@@ -110,13 +108,12 @@ public class Board : ScaleAnimations
                 if (level.levelGrid.dots[targetDotIndex] == DotType.Null)
                     continue;
 
-                //Make dot & get component
-                GameObject spawn = Instantiate(dotPrefab, cellSpawn.transform);
+                //Make dot with save data
+                GameObject spawn = DotPool.instance.GetDot(level.levelGrid.dots[targetDotIndex]);
+                spawn.transform.parent = cellSpawn.transform;
+
+                //Tell where to stand
                 Dot newDot = spawn.GetComponent<Dot>();
-
-                //Load saved dot
-                newDot.Setup(level.levelGrid.dots[targetDotIndex]);
-
                 newDot.cell = cell;
                 cell.occupying = newDot;
 

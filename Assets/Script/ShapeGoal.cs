@@ -6,7 +6,6 @@ using UnityEngine.UI;
 
 public class ShapeGoal : MonoBehaviour, IGoal
 {
-    [SerializeField] GameObject dotPrefab;
     [SerializeField] float spaceingBetweenDots = 100;
 
     private int goalsizeX;
@@ -37,9 +36,10 @@ public class ShapeGoal : MonoBehaviour, IGoal
                 goalMaxY = (int)targetGoal.goalSpecifications[i].y;
 
             //Setup dot
-            GameObject spawnedDot = Instantiate(dotPrefab, transform);
+            GameObject spawnedDot = DotPool.instance.GetDot(targetGoal.goalDots[i]);
+            spawnedDot.transform.parent = transform;
+            spawnedDot.transform.localScale = Vector3.one;
             Dot d = spawnedDot.GetComponent<Dot>();
-            d.Setup(targetGoal.goalDots[i]);
             goalsDots.Add(d);
             dotCoordinats.Add(new Vector2(targetGoal.goalSpecifications[i].x, targetGoal.goalSpecifications[i].y));
 

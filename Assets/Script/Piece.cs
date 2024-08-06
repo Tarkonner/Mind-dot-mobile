@@ -8,7 +8,6 @@ using UnityEngine.UI;
 
 public class Piece : MonoBehaviour, IDragHandler
 {
-    [SerializeField] private GameObject dotPrefab;
     RectTransform rectTransform;
 
     [HideInInspector] public Vector2[] gridPosArray;
@@ -134,8 +133,9 @@ public class Piece : MonoBehaviour, IDragHandler
         for (int i = 0; i < targetPiece.dotPositions.Length; i++)
         {
             //Make object
-            GameObject spawn = Instantiate(dotPrefab, transform);
-            Dot targetDot = spawn.GetComponent<Dot>();
+            GameObject spawn = DotPool.instance.GetDot(targetPiece.dotTypes[i], this);
+            spawn.transform.parent = transform;
+            spawn.transform.localScale = Vector3.one;
             RectTransform rect = spawn.GetComponent<RectTransform>();
 
             Vector2 offset = new Vector2((targetPiece.pieceSize.x - 1) * 0.5f, (targetPiece.pieceSize.y - 1) * 0.5f);
@@ -144,8 +144,8 @@ public class Piece : MonoBehaviour, IDragHandler
             rect.anchoredPosition = calPosition;
             dotsPosition.Add(spawn, calPosition);
 
-            dotsArray[i] = targetDot;
-            targetDot.Setup(targetPiece.dotTypes[i], this);
+            //Line
+            dotsArray[i] = spawn.GetComponent<Dot>();
 
             if (i == 0)
                 firstDot = spawn;
