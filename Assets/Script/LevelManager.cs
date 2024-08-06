@@ -59,6 +59,7 @@ public class LevelManager : MonoBehaviour
         if(DataBetweenLevels.Instance == null)
         {
             GameObject data = new GameObject();
+            data.name = "Data Between Levels";
             data.AddComponent<DataBetweenLevels>();    
         }
 #endif

@@ -24,5 +24,12 @@ public class ObjectPools : MonoBehaviour
             true,
             defultSpawnedDots,
             maxSpawnedDots);
+
+
+    }
+
+    public void Setup()
+    {
+
     }
 }
