@@ -52,11 +52,9 @@ public class Board : ScaleAnimations
         {
             //Remove Dot
             GameObject targetCell = transform.GetChild(i).gameObject;
-            if(targetCell.GetComponent<Cell>().occupying != null
-                && targetCell.transform.GetChild(0).gameObject.TryGetComponent(out Dot foundDot))
-            {
+            Dot foundDot = targetCell.GetComponentInChildren<Dot>();
+            if(foundDot != null)
                 DotPool.instance.Release(foundDot);
-            }
 
             Destroy(targetCell);
 
@@ -150,7 +148,7 @@ public class Board : ScaleAnimations
             grid[coordinate.x, coordinate.y].occupying = targetDot;
             GameObject targetCell = grid[coordinate.x, coordinate.y].gameObject;
                                   
-            targetDot.gameObject.transform.localPosition = Vector3.zero;
+            targetDot.gameObject.transform.position = targetCell.transform.position;
             //Cell
             Cell cell = targetCell.GetComponent<Cell>(); 
             targetDot.cell = cell;

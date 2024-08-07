@@ -30,6 +30,6 @@ public abstract class PoolerBase<T> : MonoBehaviour where T : MonoBehaviour
 
     #region Getters
     public T Get() => pool.Get();
-    public void Release(T obj) => pool.Release(obj);
+    public virtual void Release(T obj) => pool.Release(obj);
     #endregion
 }
