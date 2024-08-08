@@ -54,9 +54,13 @@ public class Board : ScaleAnimations
 
             //Dot to pool
             GameObject target = transform.GetChild(i).gameObject;
-            Dot foundDot = target.GetComponentInChildren<Dot>();
-            if(foundDot != null)
-                DotPool.instance.Release(foundDot);
+            Dot[] foundDots = target.GetComponentsInChildren<Dot>();
+            if(foundDots.Length > 0)
+            {
+                for (int j = foundDots.Length - 1; j >= 0; j--)
+                    DotPool.instance.Release(foundDots[j]);
+            }
+                
 
             //Cell to pool
             if(target.TryGetComponent(out Cell foundCell))
