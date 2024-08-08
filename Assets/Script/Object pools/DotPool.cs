@@ -18,9 +18,7 @@ public class DotPool : PoolerBase<Dot>
         InitPool(dotPrefab, defultSpawnedDots, maxSpawnedDots); // Initialize the pool
 
         for (int i = 0; i < defultSpawnedDots; i++)
-        {
             CreateSetup();
-        }
     }
 
 

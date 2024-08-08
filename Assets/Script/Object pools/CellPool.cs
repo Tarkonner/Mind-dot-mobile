@@ -17,10 +17,7 @@ public class CellPool : PoolerBase<Cell>
         InitPool(cellPrefab, defultSpawnedDots, maxSpawnedDots); // Initialize the pool
 
         for (int i = 0; i < defultSpawnedDots; i++)
-        {
-            var spawn = CreateSetup();
-            Release(spawn);
-        }
+            CreateSetup();
     }
 
 

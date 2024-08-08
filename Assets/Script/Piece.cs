@@ -342,20 +342,14 @@ public class Piece : MonoBehaviour, IDragHandler
 
     public void CreateLine(Dot dot1, Dot dot2)
     {
-        //Setup
-        GameObject newObject = new GameObject();
-        newObject.AddComponent<CanvasRenderer>();
-        RectTransform newRectTrans = newObject.AddComponent<RectTransform>();
-
         //Get values
-        newRectTrans.SetParent(lineHolder.transform, false);
         RectTransform dot1Rect = dot1.GetComponent<RectTransform>();
         RectTransform dot2Rect = dot2.GetComponent<RectTransform>();
 
         //Line
-        UILine uiLine = newObject.AddComponent<UILine>();
+        UILine uiLine = LinePool.instance.GetLine(dot1Rect, dot2Rect, lineWidth, rotatable);
+        uiLine.GetComponent<RectTransform>().SetParent(lineHolder.transform, false);
         connections.Add(uiLine);
-        uiLine.Initialzie(dot1Rect, dot2Rect, lineWidth, rotatable);
     }
 
     public void OnDrag(PointerEventData eventData)
