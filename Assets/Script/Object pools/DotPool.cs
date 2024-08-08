@@ -19,8 +19,7 @@ public class DotPool : PoolerBase<Dot>
 
         for (int i = 0; i < defultSpawnedDots; i++)
         {
-            var spawn = CreateSetup();
-            Release(spawn);
+            CreateSetup();
         }
     }
 
@@ -34,7 +33,6 @@ public class DotPool : PoolerBase<Dot>
 
     protected override void ReleaseSetup(Dot obj)
     {
-        base.ReleaseSetup(obj);
         obj.transform.parent = null;
         obj.transform.position = Vector3.zero;
     }

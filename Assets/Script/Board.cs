@@ -50,13 +50,17 @@ public class Board : ScaleAnimations
         //Remove load level
         for (int i = transform.childCount - 1; i >= 0; i--)
         {
-            //Remove Dot
-            GameObject targetCell = transform.GetChild(i).gameObject;
-            Dot foundDot = targetCell.GetComponentInChildren<Dot>();
+            //Here is both Cells and Pieces there is placed on board
+
+            //Dot to pool
+            GameObject target = transform.GetChild(i).gameObject;
+            Dot foundDot = target.GetComponentInChildren<Dot>();
             if(foundDot != null)
                 DotPool.instance.Release(foundDot);
 
-            Destroy(targetCell);
+            //Cell to pool
+            if(target.TryGetComponent(out Cell foundCell))
+                CellPool.instance.Release(foundCell);
 
             allDots.Clear();
             allCells.Clear();
@@ -88,11 +92,12 @@ public class Board : ScaleAnimations
                     continue;
 
                 //Make Cell
-                GameObject cellSpawn = Instantiate(cellPrefab, transform);
+                Cell cellSpawn = CellPool.instance.Get();
+                cellSpawn.transform.parent = transform;
                 cellSpawn.name = $"Cell: {x}, {y}";
 
                 //Animate cell
-                allCells.Add(cellSpawn);
+                allCells.Add(cellSpawn.gameObject);
 
                 //Placement
                 Vector2 spawnPoint = new Vector2(
@@ -102,9 +107,8 @@ public class Board : ScaleAnimations
                 cellSpawn.GetComponent<RectTransform>().anchoredPosition = spawnPoint;
 
                 //Setup cell
-                Cell cell = cellSpawn.GetComponent<Cell>();
-                grid[x, y] = cell;
-                cell.gridPos = new Vector2Int(x, y);
+                grid[x, y] = cellSpawn;
+                cellSpawn.gridPos = new Vector2Int(x, y);
 
                 //Part of a piece
                 if (piecePositions.Contains(new Vector2(x, y)))

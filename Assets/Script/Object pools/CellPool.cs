@@ -23,11 +23,12 @@ public class CellPool : PoolerBase<Cell>
         }
     }
 
+
     protected override void ReleaseSetup(Cell obj)
     {
         base.ReleaseSetup(obj);
+        obj.transform.parent = null;
         obj.occupying = null;
         obj.gridPos = Vector2Int.zero;
-        obj.transform.parent = null;
     }
 }
