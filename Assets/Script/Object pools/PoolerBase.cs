@@ -37,9 +37,20 @@ public abstract class PoolerBase<T> : MonoBehaviour where T : MonoBehaviour
     public T Get() => pool.Get();
     public void Release(T obj)
     {
+#if UNITY_EDITOR
         if (obj == null)
+        {
             Debug.LogError("Empty object was trying to put in" + this.name);
-        
+            return;
+        }
+        // Check if the runtime type of obj matches the expected type T
+        if (obj.GetType() != typeof(T))
+        {
+            Debug.LogError("Type mismatch: Expected type does not match the actual type.");
+            return; // Optionally exit the method if the types do not match
+        }
+#endif
+
         pool.Release(obj);
     }
     #endregion
