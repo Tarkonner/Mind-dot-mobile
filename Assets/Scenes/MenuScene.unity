@@ -182,7 +182,7 @@ MonoBehaviour:
   rightArrowButton: {fileID: 1305880442}
   spaceBetweenPanels: 1500
   slideAnimationTime: 0.5
-  textMesh: {fileID: 1231690972}
+  levelCountText: {fileID: 1231690972}
   colorBank: {fileID: 11400000, guid: 77ae380b47c06ba4cb0e3d5680874265, type: 2}
 --- !u!1 &104113976
 GameObject:

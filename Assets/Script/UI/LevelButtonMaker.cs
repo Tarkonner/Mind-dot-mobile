@@ -204,8 +204,7 @@ public class LevelButtonMaker : MonoBehaviour
     }
 
     void TextForCount()
-    {
-        
+    {        
         int numberOfLevels = panelCount * horizontalElements * verticalElements;
         levelCountText.text = $"Level {numberOfLevels + 1} - {numberOfLevels + (horizontalElements * verticalElements)}";
     }
