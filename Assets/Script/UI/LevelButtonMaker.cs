@@ -26,15 +26,15 @@ public class LevelButtonMaker : MonoBehaviour
     private LevelSelectButton[,] buttonsBank;
     private int panelCount = 0;
     private int maxPanels;
+    private bool panelsMoveing = false;
     [Header("Text")]
-    [SerializeField] TextMeshProUGUI textMesh;
+    [SerializeField] TextMeshProUGUI levelCountText;
     [Header("Color")]
     [SerializeField] ColorBank colorBank;
 
 
     void Start()
     {
-
         //Arrow buttons
         leftArrowButton.SetActive(false);
 
@@ -112,7 +112,6 @@ public class LevelButtonMaker : MonoBehaviour
                     outerImages[j, count] = spawn.GetComponent<Image>();
                     OuterRingLook(levelcompletionState, j, y * verticalElements + x);
 
-
                     Image innerImage = spawn.transform.GetChild(0).gameObject.GetComponentInChildren<Image>();
                     switch (lsb.dotType)
                     {
@@ -129,13 +128,21 @@ public class LevelButtonMaker : MonoBehaviour
                 }
             }
         }
+
+        //Update text
+        TextForCount();
     }
 
     public void MovePanels(bool right)
     {
+        if(panelsMoveing) 
+            return;
+        else
+            panelsMoveing = true;
+
         if (right)
         {
-            if (panelCount == maxPanels)
+            if (panelCount + 1 == maxPanels)
                 return;
 
             int targetPanel = (panelCount + 2) % numberOfPanels;
@@ -147,23 +154,24 @@ public class LevelButtonMaker : MonoBehaviour
                 {
                     //Move panel to back
                     holders[targetPanel].transform.localPosition = new Vector2(spaceBetweenPanels, 0);
+                    panelsMoveing = false;
                 });
             }
 
             panelCount++;
             //Updata level load
-            if (panelCount > 0)
+            if (panelCount > 0 && panelCount + 1 < maxPanels)
                 UpdatePanelsButton(targetPanel, true);
 
             //Turn arrow off
-            if (panelCount == maxPanels)
+            if (panelCount == maxPanels - 1)
                 rightArrowButton.SetActive(false);
 
             leftArrowButton.SetActive(true);
         }
         else
         {
-            //Stop moveing beond 0
+            //Stop moveing beyond 0
             if (panelCount == 0)
                 return;
 
@@ -175,12 +183,14 @@ public class LevelButtonMaker : MonoBehaviour
                 {
                     //Move to front
                     holders[targetPanel].transform.localPosition = new Vector2(-spaceBetweenPanels, 0);
+                    panelsMoveing = false;
                 });
             }
             panelCount--;
 
             //Updata level load
-            UpdatePanelsButton(targetPanel, false);
+            if(panelCount != 0)
+                UpdatePanelsButton(targetPanel, false);
 
             //Turn arrow off
             if (panelCount == 0)
@@ -190,8 +200,14 @@ public class LevelButtonMaker : MonoBehaviour
         }
 
         //Update text
+        TextForCount();
+    }
+
+    void TextForCount()
+    {
+        
         int numberOfLevels = panelCount * horizontalElements * verticalElements;
-        textMesh.text = $"Level {numberOfLevels + 1} - {numberOfLevels + numberOfLevels}";
+        levelCountText.text = $"Level {numberOfLevels + 1} - {numberOfLevels + (horizontalElements * verticalElements)}";
     }
 
     void UpdatePanelsButton(int targetPanel, bool right)
@@ -210,7 +226,7 @@ public class LevelButtonMaker : MonoBehaviour
 
                 //Outer line
                 string key = SaveSystem.levelKey + cal.ToString();
-                OuterRingLook(ES3.Load<bool>(key), panelCount + movementModefier, count);
+                OuterRingLook(ES3.Load<bool>(key), (panelCount + movementModefier) % numberOfPanels, count);
             }
         }
     }

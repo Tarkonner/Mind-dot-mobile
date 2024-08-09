@@ -4089,6 +4089,7 @@ GameObject:
   - component: {fileID: 1957719433}
   - component: {fileID: 1957719434}
   - component: {fileID: 1957719435}
+  - component: {fileID: 1957719436}
   m_Layer: 0
   m_Name: Pool
   m_TagString: Untagged
@@ -4140,6 +4141,21 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   cellPrefab: {fileID: 1653560685900784562, guid: b51ac518b1a34124486016406b545702, type: 3}
   defultSpawnedDots: 36
+  maxSpawnedDots: 36
+--- !u!114 &1957719436
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1957719431}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 79a946fc4fc49234798edc957b0a4ca2, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  linePrefab: {fileID: 6982918510450211883, guid: e19f888caf6820049a51a9efd009a629, type: 3}
+  defultSpawnedDots: 10
   maxSpawnedDots: 36
 --- !u!1 &1962773396
 GameObject:
