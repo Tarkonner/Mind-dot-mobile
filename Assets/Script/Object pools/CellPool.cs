@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
 
 public class CellPool : PoolerBase<Cell>
 {
@@ -27,5 +28,14 @@ public class CellPool : PoolerBase<Cell>
         obj.transform.parent = null;
         obj.occupying = null;
         obj.gridPos = Vector2Int.zero;
+
+        //Remove placement Goals
+        PlaceGoal pg = obj.GetComponentInChildren<PlaceGoal>();
+        if(pg != null)
+        {
+
+            Destroy(pg.gameObject);
+            obj.gameObject.GetComponent<Image>().color = Color.white;
+        }
     }
 }
