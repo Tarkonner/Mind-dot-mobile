@@ -57,6 +57,10 @@ public class InputSystem : MonoBehaviour
     public static event OnDotsChange onDotChange;
     public static event Action<bool> onSwipe;
 
+    //Rotation bug
+    [SerializeField] float stopRotate = .1f;
+    private float stopRotateTimer;
+
     private void Awake()
     {
         instance = this;
@@ -103,6 +107,8 @@ public class InputSystem : MonoBehaviour
 
     private void Update()
     {
+        stopRotateTimer += Time.deltaTime;
+
         if (!activeTouch)
             return;
 
@@ -123,6 +129,9 @@ public class InputSystem : MonoBehaviour
                 holdingPieceRect = holdingPiece.gameObject.GetComponent<RectTransform>();
 
             //Look for swipe
+            if (stopRotateTimer < stopRotate) //Rotate bug fix
+                return;
+
             Vector2 swipePosition = secondSwipeAction.ReadValue<Vector2>();
             if (!calledSwipe && ToolMath.Difference(swipePosition.x, secendSwipeStartPos.x) >= distanceBeforeSwipe)
             {
@@ -162,6 +171,9 @@ public class InputSystem : MonoBehaviour
         else
         {
             //Look for swipe
+            if (stopRotateTimer < stopRotate) //Rotate bug fix
+                return;
+
             Vector2 swipePosition = swipeAction.ReadValue<Vector2>();
 
             if (!calledSwipe && ToolMath.Difference(swipePosition.x, swipeStartPos.x) >= distanceBeforeSwipe)
@@ -194,6 +206,8 @@ public class InputSystem : MonoBehaviour
 
     private void BeginDrag(InputAction.CallbackContext context)
     {
+        stopRotateTimer = 0;
+
         //Swipe
         calledSwipe = false;
         swipeStartPos = swipeAction.ReadValue<Vector2>();
