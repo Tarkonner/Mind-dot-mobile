@@ -1,0 +1,84 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 7929adc3e2ba8f241ae51a04999eb8fd, type: 3}
+  m_Name: pggall minus blue
+  m_EditorClassIdentifier: 
+  version: 0
+  levelTitle: pggnr minus blue
+  levelGrid:
+    dots: 0100000002000000000000000000000003000000010000000200000000000000010000000000000000000000000000000000000003000000010000000300000001000000030000000100000002000000
+    activeCells: 0101010101010101010000010101010101010101
+    boardSize: {x: 4, y: 5}
+  levelPieces:
+  - dotPositions:
+    - {x: 0, y: 1}
+    - {x: 1, y: 0}
+    - {x: 2, y: 1}
+    - {x: 3, y: 0}
+    dotTypes: 01000000030000000100000003000000
+    rotatable: 1
+    gridPosRef: {x: 0, y: 3}
+    pieceSize: {x: 4, y: 2}
+    startRotation: 0
+  - dotPositions:
+    - {x: 0, y: 1}
+    - {x: 1, y: 0}
+    - {x: 2, y: 1}
+    dotTypes: 030000000100000002000000
+    rotatable: 0
+    gridPosRef: {x: 1, y: 3}
+    pieceSize: {x: 3, y: 2}
+    startRotation: 0
+  - dotPositions:
+    - {x: 0, y: 1}
+    - {x: 1, y: 0}
+    - {x: 2, y: 0}
+    dotTypes: 010000000100000002000000
+    rotatable: 1
+    gridPosRef: {x: 0, y: 1}
+    pieceSize: {x: 3, y: 2}
+    startRotation: 1
+  - dotPositions:
+    - {x: 0, y: 1}
+    - {x: 0, y: 0}
+    - {x: 1, y: 0}
+    dotTypes: 030000000100000002000000
+    rotatable: 0
+    gridPosRef: {x: 0, y: 0}
+    pieceSize: {x: 2, y: 2}
+    startRotation: 0
+  levelShapeGoals:
+  - goalSpecifications:
+    - {x: 0, y: 0}
+    - {x: 1, y: 0}
+    - {x: 2, y: 0}
+    - {x: 3, y: 0}
+    goalDots: 00000000030000000000000002000000
+    gridPosRef: {x: 0, y: 4}
+    goalSize: {x: 4, y: 1}
+  - goalSpecifications:
+    - {x: 1, y: 0}
+    - {x: 0, y: 0}
+    - {x: 0, y: 1}
+    - {x: 1, y: 1}
+    goalDots: 02000000000000000300000000000000
+    gridPosRef: {x: 0, y: 0}
+    goalSize: {x: 2, y: 2}
+  levelPlaceGoals:
+  - type: 2
+    goalPosition: {x: 1, y: 0}
+  - type: 2
+    goalPosition: {x: 2, y: 1}
+  - type: 1
+    goalPosition: {x: 0, y: 4}
+  - type: 2
+    goalPosition: {x: 3, y: 4}
