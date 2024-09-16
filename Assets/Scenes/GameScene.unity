@@ -4924,75 +4924,159 @@ PrefabInstance:
       objectReference: {fileID: 11400000, guid: e991b28f06567a14aa0470075e22ddb1, type: 2}
     - target: {fileID: 2800339047658143124, guid: ece83fda2ae00364da4f4bd42689e64a, type: 3}
       propertyPath: tutorialObjects.Array.size
-      value: 9
+      value: 13
       objectReference: {fileID: 0}
     - target: {fileID: 2800339047658143124, guid: ece83fda2ae00364da4f4bd42689e64a, type: 3}
       propertyPath: tutorialObjects.Array.data[2].levelText
-      value: There may be extra dots
+      value: The goal can have different pattern than the board
       objectReference: {fileID: 0}
     - target: {fileID: 2800339047658143124, guid: ece83fda2ae00364da4f4bd42689e64a, type: 3}
       propertyPath: tutorialObjects.Array.data[3].levelText
-      value: All goals needs completing
+      value: 'Goals can have different sizes '
       objectReference: {fileID: 0}
     - target: {fileID: 2800339047658143124, guid: ece83fda2ae00364da4f4bd42689e64a, type: 3}
       propertyPath: tutorialObjects.Array.data[4].levelText
-      value: Goals can overlap
+      value: The board can have diffent shape
       objectReference: {fileID: 0}
     - target: {fileID: 2800339047658143124, guid: ece83fda2ae00364da4f4bd42689e64a, type: 3}
       propertyPath: tutorialObjects.Array.data[5].levelText
-      value: Pieces with purple lines can't rotate
+      value: The board can have empty spaces
       objectReference: {fileID: 0}
     - target: {fileID: 2800339047658143124, guid: ece83fda2ae00364da4f4bd42689e64a, type: 3}
       propertyPath: tutorialObjects.Array.data[6].levelText
-      value: 'Multicolored dots in goal can be any color '
+      value: The board can have diffent shape
       objectReference: {fileID: 0}
     - target: {fileID: 2800339047658143124, guid: ece83fda2ae00364da4f4bd42689e64a, type: 3}
       propertyPath: tutorialObjects.Array.data[7].levelText
-      value: Place any dot over mark to count up
+      value: Empty spaces in goals means there don't need to be a dot there
       objectReference: {fileID: 0}
     - target: {fileID: 2800339047658143124, guid: ece83fda2ae00364da4f4bd42689e64a, type: 3}
       propertyPath: tutorialObjects.Array.data[8].levelText
-      value: Some marks need a specifik color
+      value: Goals can overlap
+      objectReference: {fileID: 0}
+    - target: {fileID: 2800339047658143124, guid: ece83fda2ae00364da4f4bd42689e64a, type: 3}
+      propertyPath: tutorialObjects.Array.data[9].levelText
+      value: Pieces with purple lines can't rotate
+      objectReference: {fileID: 0}
+    - target: {fileID: 2800339047658143124, guid: ece83fda2ae00364da4f4bd42689e64a, type: 3}
+      propertyPath: tutorialObjects.Array.data[10].levelText
+      value: The grey dots in goals can be any color in the board
+      objectReference: {fileID: 0}
+    - target: {fileID: 2800339047658143124, guid: ece83fda2ae00364da4f4bd42689e64a, type: 3}
+      propertyPath: tutorialObjects.Array.data[11].levelText
+      value: All marked cells need a Dot on it to complet level
+      objectReference: {fileID: 0}
+    - target: {fileID: 2800339047658143124, guid: ece83fda2ae00364da4f4bd42689e64a, type: 3}
+      propertyPath: tutorialObjects.Array.data[12].levelText
+      value: Colored marks on board needs a Dot of same color to be complete
+      objectReference: {fileID: 0}
+    - target: {fileID: 2800339047658143124, guid: ece83fda2ae00364da4f4bd42689e64a, type: 3}
+      propertyPath: tutorialObjects.Array.data[13].levelText
+      value: All marked cells need a Dot on it to complet level
       objectReference: {fileID: 0}
     - target: {fileID: 2800339047658143124, guid: ece83fda2ae00364da4f4bd42689e64a, type: 3}
       propertyPath: tutorialObjects.Array.data[0].targetLevel
       value: 
-      objectReference: {fileID: 11400000, guid: 25f0238cd406ec541bfece11c9f715df, type: 2}
+      objectReference: {fileID: 11400000, guid: 80a1ce97d397bd1409fa04207dd812a8, type: 2}
     - target: {fileID: 2800339047658143124, guid: ece83fda2ae00364da4f4bd42689e64a, type: 3}
       propertyPath: tutorialObjects.Array.data[1].targetLevel
       value: 
-      objectReference: {fileID: 11400000, guid: ff587eb3b66f5164597b1bc2aa9c7e31, type: 2}
+      objectReference: {fileID: 11400000, guid: b331989f230ab38479c0430426f52780, type: 2}
     - target: {fileID: 2800339047658143124, guid: ece83fda2ae00364da4f4bd42689e64a, type: 3}
       propertyPath: tutorialObjects.Array.data[2].targetLevel
       value: 
-      objectReference: {fileID: 11400000, guid: 4ca9c5f629df0684598ac338f2b04c17, type: 2}
+      objectReference: {fileID: 11400000, guid: 116c9c112a03b1e438ad5b1dc5e1b9ea, type: 2}
     - target: {fileID: 2800339047658143124, guid: ece83fda2ae00364da4f4bd42689e64a, type: 3}
       propertyPath: tutorialObjects.Array.data[3].targetLevel
       value: 
-      objectReference: {fileID: 11400000, guid: 6a5758218c62c324e953ffc6031e2376, type: 2}
+      objectReference: {fileID: 11400000, guid: 4e4d22e4128990d4f899404bfc2475da, type: 2}
     - target: {fileID: 2800339047658143124, guid: ece83fda2ae00364da4f4bd42689e64a, type: 3}
       propertyPath: tutorialObjects.Array.data[4].targetLevel
       value: 
-      objectReference: {fileID: 11400000, guid: ac3910d1d37f91843bb993e5621ad97d, type: 2}
+      objectReference: {fileID: 11400000, guid: 0279999fc04ea2e49901080756d6f59c, type: 2}
     - target: {fileID: 2800339047658143124, guid: ece83fda2ae00364da4f4bd42689e64a, type: 3}
       propertyPath: tutorialObjects.Array.data[5].targetLevel
       value: 
-      objectReference: {fileID: 11400000, guid: ae574fc51250c464dbc6ecd9b4b60265, type: 2}
+      objectReference: {fileID: 11400000, guid: 92042e721adc67944a1cfe13ebc6e1cd, type: 2}
     - target: {fileID: 2800339047658143124, guid: ece83fda2ae00364da4f4bd42689e64a, type: 3}
       propertyPath: tutorialObjects.Array.data[6].targetLevel
       value: 
-      objectReference: {fileID: 11400000, guid: fa3e268bd15ce5a4dae0bb5c2955b900, type: 2}
+      objectReference: {fileID: 11400000, guid: 0279999fc04ea2e49901080756d6f59c, type: 2}
     - target: {fileID: 2800339047658143124, guid: ece83fda2ae00364da4f4bd42689e64a, type: 3}
       propertyPath: tutorialObjects.Array.data[7].targetLevel
       value: 
-      objectReference: {fileID: 11400000, guid: a66cb316d8ddde441a136d0b8f219730, type: 2}
+      objectReference: {fileID: 11400000, guid: c10077e20a2b3954f9bfd6fd7b5a1f6a, type: 2}
     - target: {fileID: 2800339047658143124, guid: ece83fda2ae00364da4f4bd42689e64a, type: 3}
       propertyPath: tutorialObjects.Array.data[8].targetLevel
       value: 
-      objectReference: {fileID: 11400000, guid: e991b28f06567a14aa0470075e22ddb1, type: 2}
+      objectReference: {fileID: 11400000, guid: ae76aa1dd53cea249ab4f9fba2883760, type: 2}
+    - target: {fileID: 2800339047658143124, guid: ece83fda2ae00364da4f4bd42689e64a, type: 3}
+      propertyPath: tutorialObjects.Array.data[9].targetLevel
+      value: 
+      objectReference: {fileID: 11400000, guid: 9f21430bdf579244aaa15e6929c281b2, type: 2}
+    - target: {fileID: 2800339047658143124, guid: ece83fda2ae00364da4f4bd42689e64a, type: 3}
+      propertyPath: tutorialObjects.Array.data[10].targetLevel
+      value: 
+      objectReference: {fileID: 11400000, guid: 315376e8d29b44e4788d7b48beb48985, type: 2}
+    - target: {fileID: 2800339047658143124, guid: ece83fda2ae00364da4f4bd42689e64a, type: 3}
+      propertyPath: tutorialObjects.Array.data[11].targetLevel
+      value: 
+      objectReference: {fileID: 11400000, guid: f2565434cb72165448ebe89ec1338b5d, type: 2}
+    - target: {fileID: 2800339047658143124, guid: ece83fda2ae00364da4f4bd42689e64a, type: 3}
+      propertyPath: tutorialObjects.Array.data[12].targetLevel
+      value: 
+      objectReference: {fileID: 11400000, guid: 8d07dd0542fa6564db1dab043c4cbe3f, type: 2}
+    - target: {fileID: 2800339047658143124, guid: ece83fda2ae00364da4f4bd42689e64a, type: 3}
+      propertyPath: tutorialObjects.Array.data[13].targetLevel
+      value: 
+      objectReference: {fileID: 11400000, guid: 315376e8d29b44e4788d7b48beb48985, type: 2}
     - target: {fileID: 2800339047658143124, guid: ece83fda2ae00364da4f4bd42689e64a, type: 3}
       propertyPath: tutorialObjects.Array.data[2].gameObjects.Array.size
       value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 2800339047658143124, guid: ece83fda2ae00364da4f4bd42689e64a, type: 3}
+      propertyPath: tutorialObjects.Array.data[3].gameObjects.Array.size
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 2800339047658143124, guid: ece83fda2ae00364da4f4bd42689e64a, type: 3}
+      propertyPath: tutorialObjects.Array.data[4].gameObjects.Array.size
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 2800339047658143124, guid: ece83fda2ae00364da4f4bd42689e64a, type: 3}
+      propertyPath: tutorialObjects.Array.data[5].gameObjects.Array.size
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 2800339047658143124, guid: ece83fda2ae00364da4f4bd42689e64a, type: 3}
+      propertyPath: tutorialObjects.Array.data[6].gameObjects.Array.size
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 2800339047658143124, guid: ece83fda2ae00364da4f4bd42689e64a, type: 3}
+      propertyPath: tutorialObjects.Array.data[7].gameObjects.Array.size
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 2800339047658143124, guid: ece83fda2ae00364da4f4bd42689e64a, type: 3}
+      propertyPath: tutorialObjects.Array.data[8].gameObjects.Array.size
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 2800339047658143124, guid: ece83fda2ae00364da4f4bd42689e64a, type: 3}
+      propertyPath: tutorialObjects.Array.data[9].gameObjects.Array.size
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 2800339047658143124, guid: ece83fda2ae00364da4f4bd42689e64a, type: 3}
+      propertyPath: tutorialObjects.Array.data[10].gameObjects.Array.size
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 2800339047658143124, guid: ece83fda2ae00364da4f4bd42689e64a, type: 3}
+      propertyPath: tutorialObjects.Array.data[11].gameObjects.Array.size
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 2800339047658143124, guid: ece83fda2ae00364da4f4bd42689e64a, type: 3}
+      propertyPath: tutorialObjects.Array.data[12].gameObjects.Array.size
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 2800339047658143124, guid: ece83fda2ae00364da4f4bd42689e64a, type: 3}
+      propertyPath: tutorialObjects.Array.data[13].gameObjects.Array.size
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 2800339047658143124, guid: ece83fda2ae00364da4f4bd42689e64a, type: 3}
       propertyPath: 'tutorialObjects.Array.data[0].gameObjects.Array.data[0]'
@@ -5006,6 +5090,26 @@ PrefabInstance:
       propertyPath: 'tutorialObjects.Array.data[2].gameObjects.Array.data[0]'
       value: 
       objectReference: {fileID: 1117563453}
+    - target: {fileID: 2800339047658143124, guid: ece83fda2ae00364da4f4bd42689e64a, type: 3}
+      propertyPath: 'tutorialObjects.Array.data[3].gameObjects.Array.data[0]'
+      value: 
+      objectReference: {fileID: 1117563453}
+    - target: {fileID: 2800339047658143124, guid: ece83fda2ae00364da4f4bd42689e64a, type: 3}
+      propertyPath: 'tutorialObjects.Array.data[4].gameObjects.Array.data[0]'
+      value: 
+      objectReference: {fileID: 1117563453}
+    - target: {fileID: 2800339047658143124, guid: ece83fda2ae00364da4f4bd42689e64a, type: 3}
+      propertyPath: 'tutorialObjects.Array.data[5].gameObjects.Array.data[0]'
+      value: 
+      objectReference: {fileID: 1117563453}
+    - target: {fileID: 2800339047658143124, guid: ece83fda2ae00364da4f4bd42689e64a, type: 3}
+      propertyPath: 'tutorialObjects.Array.data[6].gameObjects.Array.data[0]'
+      value: 
+      objectReference: {fileID: 1117563453}
+    - target: {fileID: 2800339047658143124, guid: ece83fda2ae00364da4f4bd42689e64a, type: 3}
+      propertyPath: 'tutorialObjects.Array.data[7].gameObjects.Array.data[0]'
+      value: 
+      objectReference: {fileID: 0}
     - target: {fileID: 4704384758314884898, guid: ece83fda2ae00364da4f4bd42689e64a, type: 3}
       propertyPath: m_Name
       value: Level Manager
