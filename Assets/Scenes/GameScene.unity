@@ -5289,7 +5289,7 @@ PrefabInstance:
       objectReference: {fileID: 296173690}
     - target: {fileID: 5746726367402340195, guid: 8cbdc0a76d6bc7148968a7757584fc92, type: 3}
       propertyPath: distanceBeforeSwipe
-      value: 50
+      value: 25
       objectReference: {fileID: 0}
     - target: {fileID: 5746726367402340195, guid: 8cbdc0a76d6bc7148968a7757584fc92, type: 3}
       propertyPath: pieceSnapPositionSpeed
