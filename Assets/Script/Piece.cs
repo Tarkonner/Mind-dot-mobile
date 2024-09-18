@@ -1,7 +1,9 @@
 using DG.Tweening;
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using Unity.VisualScripting;
+using UnityEditor.Experimental.GraphView;
 using UnityEngine;
 using UnityEngine.EventSystems;
 using UnityEngine.UI;
@@ -22,6 +24,9 @@ public class Piece : MonoBehaviour, IDragHandler
 
     [Header("Lines")]
     [SerializeField] private float dotSpacing;
+    private const float ADJACENT_THRESHOLD = 130f;
+    private const float DIAGONAL_THRESHOLD = 180f;
+
     public float DotSpacing { get { return dotSpacing; } }
     private List<UILine> connections = new List<UILine>();
     private Transform pieceHolder;
@@ -153,38 +158,64 @@ public class Piece : MonoBehaviour, IDragHandler
 
 
         //Connection lines
-        TwoKeyDictionary keyDictionary = new TwoKeyDictionary();
-
-        //Goes through each dot and measures grid distance to each other dot.
-        // Distance is used to differentiate adjacent and diagonal dot connections. 
-        for (int i = 0; i < gridPosArray.Length; i++)
+        TwoKeyDictionary twoKeyDictionary = new TwoKeyDictionary();
+        Dictionary<Dot, int> makedConnectionCount = new Dictionary<Dot, int>();
+        for (int i = 0; i < dotsArray.Length; i++)
         {
-            List<int> diagonalList = new List<int>();
-            bool foundAdjacent = false;
-            for (int j = 0; j < gridPosArray.Length; j++)
+            int straightLinesMax = 2;
+
+            for (int j = 0; j < dotsArray.Length; j++)
             {
                 if (i == j) continue;
 
-                float val = Vector2.Distance(gridPosArray[i], gridPosArray[j]);
-                if (val > 1.5f)
-                    continue;
-                else if (val > 1.2f && !foundAdjacent)
+                Dot currentDot = dotsArray[i];
+                Dot checkingDot = dotsArray[j];
+
+                if(!makedConnectionCount.ContainsKey(currentDot))
+                    makedConnectionCount.Add(currentDot, 0);
+                if (!makedConnectionCount.ContainsKey(checkingDot))
+                    makedConnectionCount.Add(checkingDot, 0);
+
+                if (!twoKeyDictionary.HaveElement(currentDot, checkingDot))
                 {
-                    diagonalList.Add(j);
-                }
-                else if (val == 1)
-                {
-                    foundAdjacent = true;
-                    MakeLine(keyDictionary, dotsArray[i], dotsArray[j]);
+                    float distance = Vector2.Distance(currentDot.GetComponent<RectTransform>().localPosition, checkingDot.GetComponent<RectTransform>().localPosition);
+
+                    if(distance < ADJACENT_THRESHOLD)
+                    {
+                        twoKeyDictionary.AddElement(currentDot, checkingDot);
+                        makedConnectionCount[currentDot] = makedConnectionCount[currentDot] + 1;
+                        makedConnectionCount[checkingDot] = makedConnectionCount[checkingDot] + 1;
+                    }
                 }
             }
-            if (!foundAdjacent)
+
+            if (makedConnectionCount[dotsArray[i]] >= straightLinesMax)
+                continue;
+
+
+            for (int j = 0; j < dotsArray.Length; j++)
             {
-                foreach (int j in diagonalList)
+                if (i == j) continue;
+
+                Dot currentPosRec = dotsArray[i];
+                Dot checkingPosRec = dotsArray[j];
+
+                if (!twoKeyDictionary.HaveElement(currentPosRec, checkingPosRec))
                 {
-                    MakeLine(keyDictionary, dotsArray[i], dotsArray[j]);
+                    float distance = Vector2.Distance(currentPosRec.GetComponent<RectTransform>().localPosition, checkingPosRec.GetComponent<RectTransform>().localPosition);
+
+                    if (distance < DIAGONAL_THRESHOLD)
+                        twoKeyDictionary.AddElement(currentPosRec, checkingPosRec);
                 }
             }
+
+
+        }
+        //Make lines
+        foreach (var item in twoKeyDictionary.keyValues)
+        {
+            var k = item.Key.ToValueTuple();
+            CreateLine(k.Item1, k.Item2);
         }
 
         //Find center
@@ -329,18 +360,18 @@ public class Piece : MonoBehaviour, IDragHandler
     }
     #endregion
 
-    void MakeLine(TwoKeyDictionary dictionary, Dot dot1, Dot dot2)
-    {
-        Vector2 posOne = dot1.GetComponent<RectTransform>().localPosition;
-        Vector2 posTwo = dot2.GetComponent<RectTransform>().localPosition;
-        bool result = dictionary.HaveElement(posOne, posTwo);
+    //void MakeLine(TwoKeyDictionary dictionary, Dot dot1, Dot dot2)
+    //{
+    //    Vector2 posOne = dot1.GetComponent<RectTransform>().localPosition;
+    //    Vector2 posTwo = dot2.GetComponent<RectTransform>().localPosition;
+    //    bool result = dictionary.HaveElement(posOne, posTwo);
 
-        if(!result) 
-        {
-            dictionary.AddElement(posOne, posTwo);
-            CreateLine(dot1, dot2);
-        }
-    }
+    //    if(!result) 
+    //    {
+    //        dictionary.AddElement(posOne, posTwo);
+    //        CreateLine(dot1, dot2);
+    //    }
+    //}
 
     public void CreateLine(Dot dot1, Dot dot2)
     {
@@ -411,6 +442,28 @@ public class Piece : MonoBehaviour, IDragHandler
             case 3:
                 pieceCenter = new Vector2Int(savedCenterCoordinats.y, -savedCenterCoordinats.x);
                 break;
+        }
+    }
+
+    private void CheckConnections(Dot currentDot, Dot[] allDots, List<Dot> connectedDots)
+    {
+        foreach (Dot dot in allDots)
+        {
+            if(dot ==  currentDot) 
+                continue;
+
+            if (!connectedDots.Contains(dot))
+            {
+                float distance = Mathf.Sqrt(Mathf.Pow(
+                    currentDot.transform.position.x - dot.transform.position.x, 2) 
+                    + Mathf.Pow(currentDot.transform.position.y - dot.transform.position.y, 2));
+                if (distance <= ADJACENT_THRESHOLD || distance <= DIAGONAL_THRESHOLD)
+                {
+                    connectedDots.Add(dot);
+
+                    CheckConnections(dot, allDots, connectedDots);
+                }
+            }
         }
     }
 }

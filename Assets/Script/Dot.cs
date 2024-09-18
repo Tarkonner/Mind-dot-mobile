@@ -12,7 +12,6 @@ public class Dot : MonoBehaviour, IOccupying
 
     public DotType dotType;
 
-
     public Piece parentPiece;
     public Vector2 relativePosition;
 
