@@ -4928,11 +4928,11 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 2800339047658143124, guid: ece83fda2ae00364da4f4bd42689e64a, type: 3}
       propertyPath: tutorialObjects.Array.data[2].levelText
-      value: The goal can have different pattern than the board
+      value: 'Goals can have different sizes '
       objectReference: {fileID: 0}
     - target: {fileID: 2800339047658143124, guid: ece83fda2ae00364da4f4bd42689e64a, type: 3}
       propertyPath: tutorialObjects.Array.data[3].levelText
-      value: 'Goals can have different sizes '
+      value: Complete all goals
       objectReference: {fileID: 0}
     - target: {fileID: 2800339047658143124, guid: ece83fda2ae00364da4f4bd42689e64a, type: 3}
       propertyPath: tutorialObjects.Array.data[4].levelText
@@ -4985,11 +4985,11 @@ PrefabInstance:
     - target: {fileID: 2800339047658143124, guid: ece83fda2ae00364da4f4bd42689e64a, type: 3}
       propertyPath: tutorialObjects.Array.data[2].targetLevel
       value: 
-      objectReference: {fileID: 11400000, guid: 116c9c112a03b1e438ad5b1dc5e1b9ea, type: 2}
+      objectReference: {fileID: 11400000, guid: 4e4d22e4128990d4f899404bfc2475da, type: 2}
     - target: {fileID: 2800339047658143124, guid: ece83fda2ae00364da4f4bd42689e64a, type: 3}
       propertyPath: tutorialObjects.Array.data[3].targetLevel
       value: 
-      objectReference: {fileID: 11400000, guid: 4e4d22e4128990d4f899404bfc2475da, type: 2}
+      objectReference: {fileID: 11400000, guid: ff108bc17af2d384181e95c53abb855b, type: 2}
     - target: {fileID: 2800339047658143124, guid: ece83fda2ae00364da4f4bd42689e64a, type: 3}
       propertyPath: tutorialObjects.Array.data[4].targetLevel
       value: 
@@ -5032,7 +5032,7 @@ PrefabInstance:
       objectReference: {fileID: 11400000, guid: 315376e8d29b44e4788d7b48beb48985, type: 2}
     - target: {fileID: 2800339047658143124, guid: ece83fda2ae00364da4f4bd42689e64a, type: 3}
       propertyPath: tutorialObjects.Array.data[2].gameObjects.Array.size
-      value: 0
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 2800339047658143124, guid: ece83fda2ae00364da4f4bd42689e64a, type: 3}
       propertyPath: tutorialObjects.Array.data[3].gameObjects.Array.size
@@ -5089,7 +5089,7 @@ PrefabInstance:
     - target: {fileID: 2800339047658143124, guid: ece83fda2ae00364da4f4bd42689e64a, type: 3}
       propertyPath: 'tutorialObjects.Array.data[2].gameObjects.Array.data[0]'
       value: 
-      objectReference: {fileID: 1117563453}
+      objectReference: {fileID: 0}
     - target: {fileID: 2800339047658143124, guid: ece83fda2ae00364da4f4bd42689e64a, type: 3}
       propertyPath: 'tutorialObjects.Array.data[3].gameObjects.Array.data[0]'
       value: 

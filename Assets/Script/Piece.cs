@@ -151,6 +151,8 @@ public class Piece : MonoBehaviour, IDragHandler
                 firstDot = spawn;
         }
 
+
+        //Connection lines
         TwoKeyDictionary keyDictionary = new TwoKeyDictionary();
 
         //Goes through each dot and measures grid distance to each other dot.
