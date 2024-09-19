@@ -4797,7 +4797,7 @@ PrefabInstance:
     - target: {fileID: 65025732663852158, guid: ece83fda2ae00364da4f4bd42689e64a, type: 3}
       propertyPath: testLevel
       value: 
-      objectReference: {fileID: 11400000, guid: 72c5f044af5e3c049a81db25c3406ba5, type: 2}
+      objectReference: {fileID: 11400000, guid: 89b9e28e81bee2f40bcedfdef1d69deb, type: 2}
     - target: {fileID: 65025732663852158, guid: ece83fda2ae00364da4f4bd42689e64a, type: 3}
       propertyPath: goalHolder
       value: 
@@ -4820,7 +4820,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 65025732663852158, guid: ece83fda2ae00364da4f4bd42689e64a, type: 3}
       propertyPath: loadTestlevel
-      value: 0
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 65025732663852158, guid: ece83fda2ae00364da4f4bd42689e64a, type: 3}
       propertyPath: showQuestioner
@@ -5140,6 +5140,10 @@ PrefabInstance:
       value: 180
       objectReference: {fileID: 0}
     - target: {fileID: 2185431799665329636, guid: 8cbdc0a76d6bc7148968a7757584fc92, type: 3}
+      propertyPath: scalePerDot
+      value: 0.035
+      objectReference: {fileID: 0}
+    - target: {fileID: 2185431799665329636, guid: 8cbdc0a76d6bc7148968a7757584fc92, type: 3}
       propertyPath: rotatebulColor.b
       value: 0.78867924
       objectReference: {fileID: 0}
@@ -5166,6 +5170,10 @@ PrefabInstance:
     - target: {fileID: 2185431799665329636, guid: 8cbdc0a76d6bc7148968a7757584fc92, type: 3}
       propertyPath: notRotatebulColor.r
       value: 0.6679245
+      objectReference: {fileID: 0}
+    - target: {fileID: 2185431799665329636, guid: 8cbdc0a76d6bc7148968a7757584fc92, type: 3}
+      propertyPath: piecePulseAnimationDampner
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 3944075986081191757, guid: 8cbdc0a76d6bc7148968a7757584fc92, type: 3}
       propertyPath: m_SizeDelta.x

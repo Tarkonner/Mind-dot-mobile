@@ -45,14 +45,14 @@ public class Piece : MonoBehaviour, IDragHandler
     public enum pieceStats { small, transparent, normal };
     private pieceStats currentState;
 
-    [HideInInspector] public float smallPieceSize = .35f;
 
     [Header("Animation")]
+    [HideInInspector] public float smallPieceSize = .35f;
+    [SerializeField] public float pulseAnimationScale = .2f;
     [SerializeField] float rotationTime = .2f;
     [SerializeField] float scaleAnimation = .2f;
     [HideInInspector] public bool currentlyRotation = false;
     [SerializeField] float pulseAnimationTime = 1;
-    [SerializeField] float pulseAnimationScale = .2f;
     private DG.Tweening.Sequence pulseSequence;
     private DG.Tweening.Sequence wigleSequence;
     [SerializeField] float wigleRotation = 15;
@@ -100,7 +100,6 @@ public class Piece : MonoBehaviour, IDragHandler
         switch (currentState)
         {
             case pieceStats.small:
-                //transform.localScale = new Vector3(smallPieceSize, smallPieceSize, smallPieceSize);
                 transform.DOScale(new Vector3(smallPieceSize, smallPieceSize, smallPieceSize), scaleToSmallTime).OnComplete(() =>
                 {
                     SetAplha(1);   
@@ -360,19 +359,6 @@ public class Piece : MonoBehaviour, IDragHandler
     }
     #endregion
 
-    //void MakeLine(TwoKeyDictionary dictionary, Dot dot1, Dot dot2)
-    //{
-    //    Vector2 posOne = dot1.GetComponent<RectTransform>().localPosition;
-    //    Vector2 posTwo = dot2.GetComponent<RectTransform>().localPosition;
-    //    bool result = dictionary.HaveElement(posOne, posTwo);
-
-    //    if(!result) 
-    //    {
-    //        dictionary.AddElement(posOne, posTwo);
-    //        CreateLine(dot1, dot2);
-    //    }
-    //}
-
     public void CreateLine(Dot dot1, Dot dot2)
     {
         //Get values
@@ -442,28 +428,6 @@ public class Piece : MonoBehaviour, IDragHandler
             case 3:
                 pieceCenter = new Vector2Int(savedCenterCoordinats.y, -savedCenterCoordinats.x);
                 break;
-        }
-    }
-
-    private void CheckConnections(Dot currentDot, Dot[] allDots, List<Dot> connectedDots)
-    {
-        foreach (Dot dot in allDots)
-        {
-            if(dot ==  currentDot) 
-                continue;
-
-            if (!connectedDots.Contains(dot))
-            {
-                float distance = Mathf.Sqrt(Mathf.Pow(
-                    currentDot.transform.position.x - dot.transform.position.x, 2) 
-                    + Mathf.Pow(currentDot.transform.position.y - dot.transform.position.y, 2));
-                if (distance <= ADJACENT_THRESHOLD || distance <= DIAGONAL_THRESHOLD)
-                {
-                    connectedDots.Add(dot);
-
-                    CheckConnections(dot, allDots, connectedDots);
-                }
-            }
         }
     }
 }

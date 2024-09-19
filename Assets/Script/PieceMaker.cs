@@ -22,7 +22,7 @@ public class PieceMaker : ScaleAnimations
     private List<GameObject> piecesToAnimate = new List<GameObject>();
 
     [Header("Scaling")]
-    [SerializeField] float scalePerDot = .15f;
+    [SerializeField] float scalePerDot = .05f;
 
     public void MakePieces(LevelPiece[] levelsPieces)
     {
@@ -84,6 +84,7 @@ public class PieceMaker : ScaleAnimations
                 int diff = 3 - pieceBiggetsSize;
                 float calScale = piece.smallPieceSize + diff * scalePerDot;
                 piece.smallPieceSize = calScale;
+                piece.pulseAnimationScale = piece.pulseAnimationScale / diff;
             }
             piece.ChangeState(Piece.pieceStats.small);
 
