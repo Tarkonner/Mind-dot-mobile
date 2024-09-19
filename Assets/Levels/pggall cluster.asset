@@ -27,16 +27,16 @@ MonoBehaviour:
     - {x: 2, y: 0}
     dotTypes: 0100000003000000020000000100000002000000
     rotatable: 1
-    gridPosRef: {x: 1, y: 1}
+    gridPosRef: {x: 0, y: 0}
     pieceSize: {x: 3, y: 3}
-    startRotation: 1
+    startRotation: 0
   - dotPositions:
     - {x: 0, y: 0}
     - {x: 1, y: 1}
     - {x: 2, y: 2}
     dotTypes: 010000000300000002000000
-    rotatable: 0
-    gridPosRef: {x: 1, y: 0}
+    rotatable: 1
+    gridPosRef: {x: 0, y: 0}
     pieceSize: {x: 3, y: 3}
     startRotation: 0
   - dotPositions:
@@ -44,8 +44,8 @@ MonoBehaviour:
     - {x: 1, y: 0}
     - {x: 2, y: 1}
     dotTypes: 020000000200000001000000
-    rotatable: 0
-    gridPosRef: {x: 0, y: 2}
+    rotatable: 1
+    gridPosRef: {x: 0, y: 0}
     pieceSize: {x: 3, y: 2}
     startRotation: 0
   levelShapeGoals:
@@ -71,7 +71,7 @@ MonoBehaviour:
     - {x: 2, y: 0}
     - {x: 2, y: 1}
     - {x: 2, y: 2}
-    goalDots: 000000000200000002000000010000000300000003000000020000000200000001000000
+    goalDots: 010000000200000002000000010000000300000003000000020000000200000001000000
     gridPosRef: {x: 1, y: 1}
     goalSize: {x: 3, y: 3}
   levelPlaceGoals: []
