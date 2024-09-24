@@ -2690,6 +2690,10 @@ PrefabInstance:
       value: SceneController, Assembly-CSharp
       objectReference: {fileID: 0}
     - target: {fileID: 8524966850120961937, guid: cbcc573ac42373d409429e0fa2c49466, type: 3}
+      propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_Arguments.m_IntArgument
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 8524966850120961937, guid: cbcc573ac42373d409429e0fa2c49466, type: 3}
       propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_Arguments.m_ObjectArgumentAssemblyTypeName
       value: UnityEngine.Object, UnityEngine
       objectReference: {fileID: 0}

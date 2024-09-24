@@ -25,6 +25,6 @@ public class LevelSelectButton : MonoBehaviour
     public void LoadLevel()
     {
         DataBetweenLevels.Instance.targetLevel = targetLevel;
-        SceneController.Instance.LoadScene(1);
+        SceneController.Instance.LoadScene(2);
     }
 }
