@@ -5,32 +5,24 @@ using UnityEngine;
 
 public class SwipeAnimation : MonoBehaviour
 {
-    [SerializeField] GameObject hand;
-    Sequence swipeAnimation;
+    [SerializeField] private Transform hand;
+    private Sequence swipeAnimation;
 
-    
     [Header("Animation")]
-    [SerializeField] float scaleTime = .1f;
-    [SerializeField] float rotaionDegree = -40;
-    [SerializeField] float rotationTime = 2f;
-
-    private void Start()
-    {
-        hand.transform.localScale = Vector3.zero;
-
-        //Make animation
-        swipeAnimation = DOTween.Sequence();
-        swipeAnimation.Append(hand.transform.DOScale(1, scaleTime));
-        swipeAnimation.Append(hand.transform.DORotate(new Vector3(0, 0, rotaionDegree), rotationTime));
-        swipeAnimation.Append(hand.transform.DOScale(0, scaleTime));
-    }
+    [SerializeField] private float scaleTime = 0.1f;
+    [SerializeField] private float rotationDuration = 2f;
+    [SerializeField] private float rotationDegree = -40f;
 
     public void PlayAnimation()
     {
-        if(!swipeAnimation.IsPlaying())
+        if(!hand.gameObject.activeSelf)
         {
-            swipeAnimation.Play();
-            swipeAnimation.OnComplete(() => { hand.transform.localEulerAngles = Vector3.zero; });
+            hand.gameObject.SetActive(true);
+            hand.DORotate(new Vector3(0, 0, rotationDegree), rotationDuration).OnComplete(() =>
+            {
+                hand.localEulerAngles = Vector3.zero;
+                hand.gameObject.SetActive(false);
+            });
         }
     }
 }

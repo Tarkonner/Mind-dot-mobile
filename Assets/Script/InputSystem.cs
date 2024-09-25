@@ -173,12 +173,6 @@ public class InputSystem : MonoBehaviour
 
             Vector2 swipePosition = swipeAction.ReadValue<Vector2>();
 
-            //Debug.Log("Prime touch: " + primeTouchPosition);
-            //Debug.Log("Swipe: " + swipePosition);
-
-            //Debug.Log("Cal: " + Vector2.Distance(swipePosition, primeTouchPosition));
-
-
             if (!calledSwipe && swipePosition.magnitude >= distanceBeforeSwipe)
             {
                 bool rightFromStart = false;
@@ -190,9 +184,11 @@ public class InputSystem : MonoBehaviour
 
                 AudioManager.Instance.PlayWithEffects(rotateSounds);
             }
-            else if(swipePosition.magnitude < distanceBeforeSwipe && swipePosition.magnitude > swipeDeadZone)
+            else if(swipePosition.magnitude < distanceBeforeSwipe && swipePosition.magnitude > swipeDeadZone) //Look for short swipe
             {
-                Debug.Log("Prime swipe");
+                //Play short swipe animation
+                swipeAnimation.PlayAnimation();
+                Debug.Log("Swipe animantion");
             }
         }
     }
@@ -229,8 +225,8 @@ public class InputSystem : MonoBehaviour
         touchPosition = positionAction.ReadValue<Vector2>();
 
         //Raycast Pieceholder
-        List<RaycastResult> piecesDeteced = HitDetection(touchPosition, graphicRaycaster);
-        foreach (RaycastResult result in piecesDeteced)
+        List<RaycastResult> objDeteced = HitDetection(touchPosition, graphicRaycaster);
+        foreach (RaycastResult result in objDeteced)
         {
             //Find Piece
             Piece targetPiece = result.gameObject.GetComponentInChildren<Piece>();
@@ -250,8 +246,7 @@ public class InputSystem : MonoBehaviour
         }
 
         //Raycast Board
-        List<RaycastResult> boardDection = HitDetection(touchPosition, graphicRaycaster);
-        foreach (RaycastResult result in boardDection)
+        foreach (RaycastResult result in objDeteced)
         {
             if (result.gameObject.TryGetComponent(out Cell targetCell))
             {

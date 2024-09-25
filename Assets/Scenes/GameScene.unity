@@ -2398,10 +2398,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: a2a0defe2cebb0a409d6e28d7ef82c9d, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  hand: {fileID: 1302459447}
+  hand: {fileID: 1302459448}
   scaleTime: 0.1
-  rotaionDegree: -40
-  rotationTime: 2
+  rotationDuration: 1
+  rotationDegree: -40
 --- !u!1 &959357545
 GameObject:
   m_ObjectHideFlags: 0
@@ -3279,7 +3279,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!224 &1302459448
 RectTransform:
   m_ObjectHideFlags: 0
@@ -4957,7 +4957,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 65025732663852158, guid: ece83fda2ae00364da4f4bd42689e64a, type: 3}
       propertyPath: loadTestlevel
-      value: 1
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 65025732663852158, guid: ece83fda2ae00364da4f4bd42689e64a, type: 3}
       propertyPath: showQuestioner
