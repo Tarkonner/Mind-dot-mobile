@@ -41,6 +41,8 @@ public class InputSystem : MonoBehaviour
     private bool calledSwipe = false;
     private Vector2 swipeStartPos = Vector2.zero;
     private Vector2 secendSwipeStartPos = Vector2.zero;
+    [SerializeField] SwipeAnimation swipeAnimation;
+    [SerializeField] float swipeDeadZone = 1;
 
     [Header("Animations")]
     [SerializeField] float pieceSnapPositionSpeed = 50;
@@ -114,11 +116,7 @@ public class InputSystem : MonoBehaviour
 
         //Drag
         //Get input
-        Vector2 primeTouchPosition = positionAction.ReadValue<Vector2>();
-        if (primeTouchPosition != Vector2.zero)
-        {
-            touchPosition = primeTouchPosition;
-        }
+        touchPosition = positionAction.ReadValue<Vector2>();
 
         if (holdingPiece != null)
         {
@@ -136,7 +134,7 @@ public class InputSystem : MonoBehaviour
             if (!calledSwipe && Vector2.Distance(swipePosition, secendSwipeStartPos) >= distanceBeforeSwipe)
             {
                 //Sound
-                if(!holdingPiece.currentlyRotation)
+                if (!holdingPiece.currentlyRotation)
                 {
                     if (holdingPiece.rotatable)
                         AudioManager.Instance.PlayWithEffects(rotateSounds);
@@ -151,7 +149,6 @@ public class InputSystem : MonoBehaviour
 
                 holdingPiece.RotateWithAnimation(rightFromStart);
                 calledSwipe = true;
-
             }
 
             //Calculate position
@@ -176,7 +173,13 @@ public class InputSystem : MonoBehaviour
 
             Vector2 swipePosition = swipeAction.ReadValue<Vector2>();
 
-            if (!calledSwipe && Vector2.Distance(swipePosition, secendSwipeStartPos) >= distanceBeforeSwipe)
+            //Debug.Log("Prime touch: " + primeTouchPosition);
+            //Debug.Log("Swipe: " + swipePosition);
+
+            //Debug.Log("Cal: " + Vector2.Distance(swipePosition, primeTouchPosition));
+
+
+            if (!calledSwipe && swipePosition.magnitude >= distanceBeforeSwipe)
             {
                 bool rightFromStart = false;
                 if (swipeStartPos.x < swipePosition.x)
@@ -186,6 +189,10 @@ public class InputSystem : MonoBehaviour
                 calledSwipe = true;
 
                 AudioManager.Instance.PlayWithEffects(rotateSounds);
+            }
+            else if(swipePosition.magnitude < distanceBeforeSwipe && swipePosition.magnitude > swipeDeadZone)
+            {
+                Debug.Log("Prime swipe");
             }
         }
     }
