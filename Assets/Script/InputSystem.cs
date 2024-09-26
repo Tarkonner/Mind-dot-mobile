@@ -1,4 +1,5 @@
 using System;
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.EventSystems;
@@ -41,11 +42,15 @@ public class InputSystem : MonoBehaviour
     private bool calledSwipe = false;
     private Vector2 swipeStartPos = Vector2.zero;
     private Vector2 secendSwipeStartPos = Vector2.zero;
-    [SerializeField] SwipeAnimation swipeAnimation;
     [SerializeField] float swipeDeadZone = 1;
+    [SerializeField] int maxMisclicks = 2;
+    private int currentMusclicks = 0;
+    [SerializeField] float disableInputAfterReleasePieceTime = .1f;
+    private Vector2 primeCollectedSwipe;
 
     [Header("Animations")]
     [SerializeField] float pieceSnapPositionSpeed = 50;
+    [SerializeField] SwipeAnimation swipeAnimation;
     private float pieceSnapCalculation;
 
     [Header("Sounds")]
@@ -93,6 +98,8 @@ public class InputSystem : MonoBehaviour
         //Turn touch input off
         LevelManager.onLevelComplete += () => activeTouch = false;
     }
+
+
     private void OnDisable()
     {
         //Input
@@ -130,8 +137,8 @@ public class InputSystem : MonoBehaviour
             if (stopRotateTimer < stopRotate) //Rotate bug fix
                 return;
 
-            Vector2 swipePosition = secondSwipeAction.ReadValue<Vector2>();
-            if (!calledSwipe && Vector2.Distance(swipePosition, secendSwipeStartPos) >= distanceBeforeSwipe)
+            Vector2 swipeInfo = secondSwipeAction.ReadValue<Vector2>();
+            if (!calledSwipe && swipeInfo.magnitude >= distanceBeforeSwipe)
             {
                 //Sound
                 if (!holdingPiece.currentlyRotation)
@@ -144,11 +151,15 @@ public class InputSystem : MonoBehaviour
 
 
                 bool rightFromStart = false;
-                if (secendSwipeStartPos.x < swipePosition.x)
+                if (secendSwipeStartPos.x < swipeInfo.x)
                     rightFromStart = true;
 
                 holdingPiece.RotateWithAnimation(rightFromStart);
                 calledSwipe = true;
+            }
+            else if(swipeInfo.magnitude < distanceBeforeSwipe && swipeInfo.magnitude > swipeDeadZone) //Look for short swipe
+            {
+                swipeAnimation.PlayAnimation();
             }
 
             //Calculate position
@@ -171,25 +182,35 @@ public class InputSystem : MonoBehaviour
             if (stopRotateTimer < stopRotate) //Rotate bug fix
                 return;
 
-            Vector2 swipePosition = swipeAction.ReadValue<Vector2>();
+            Vector2 tickSwipe = swipeAction.ReadValue<Vector2>();
+            if (tickSwipe == Vector2.zero && primeCollectedSwipe.magnitude > 0)
+            {               
+                if (!calledSwipe && primeCollectedSwipe.magnitude >= distanceBeforeSwipe)
+                {
+                    //Rotate piece
+                    bool rightFromStart = false;
+                    if (swipeStartPos.x < primeCollectedSwipe.x)
+                        rightFromStart = true;
 
-            if (!calledSwipe && swipePosition.magnitude >= distanceBeforeSwipe)
-            {
-                bool rightFromStart = false;
-                if (swipeStartPos.x < swipePosition.x)
-                    rightFromStart = true;
+                    onSwipe?.Invoke(rightFromStart);
+                    calledSwipe = true;
 
-                onSwipe?.Invoke(rightFromStart);
-                calledSwipe = true;
+                    //Sound
+                    AudioManager.Instance.PlayWithEffects(rotateSounds);
+                }
+                else if (primeCollectedSwipe.magnitude < distanceBeforeSwipe
+                    && primeCollectedSwipe.magnitude > swipeDeadZone) //Look for short swipe
+                {
+                    //Play short swipe animation
+                    Debug.Log(primeCollectedSwipe.magnitude);
+                    Debug.Log("Short swipe one fingur");
+                    swipeAnimation.PlayAnimation();
+                }
 
-                AudioManager.Instance.PlayWithEffects(rotateSounds);
+                primeCollectedSwipe = Vector2.zero;
             }
-            else if(swipePosition.magnitude < distanceBeforeSwipe && swipePosition.magnitude > swipeDeadZone) //Look for short swipe
-            {
-                //Play short swipe animation
-                swipeAnimation.PlayAnimation();
-                Debug.Log("Swipe animantion");
-            }
+            else
+                primeCollectedSwipe += tickSwipe;
         }
     }
 
@@ -222,9 +243,11 @@ public class InputSystem : MonoBehaviour
         //Rotation
         hasRotated = true;
 
-        touchPosition = positionAction.ReadValue<Vector2>();
+        //Look if the user only clicks || misclicks
+        bool foundAction = false;
 
         //Raycast Pieceholder
+        touchPosition = positionAction.ReadValue<Vector2>();
         List<RaycastResult> objDeteced = HitDetection(touchPosition, graphicRaycaster);
         foreach (RaycastResult result in objDeteced)
         {
@@ -241,6 +264,10 @@ public class InputSystem : MonoBehaviour
 
                 //Sound
                 AudioManager.Instance.PlayWithEffects(pickupSound);
+
+                //Misclick
+                foundAction = true;
+
                 break;
             }
         }
@@ -266,16 +293,51 @@ public class InputSystem : MonoBehaviour
 
                         //Sound
                         AudioManager.Instance.PlayWithEffects(pickupSound);
+
+                        //Misclick
+                        foundAction = true;
+
+                        break;
                     }
                 }
             }
         }
+
+        //Look if clicked button
+        if (!foundAction && !holdingPiece)
+        {
+            foreach (RaycastResult result in objDeteced)
+            {
+                if(result.gameObject.GetComponent<Button>())
+                {
+                    foundAction = true; break;
+                }
+            }
+        }
+
+        //if(!foundAction && !holdingPiece)
+        //{
+        //    Debug.Log("No action found");
+        //    currentMusclicks++;
+
+        //    if(currentMusclicks == maxMisclicks)
+        //    {
+        //        currentMusclicks = 0;
+        //        swipeAnimation.PlayAnimation();
+        //    }
+        //}
+        //else
+        //    currentMusclicks = 0;
     }
 
     private void Release(InputAction.CallbackContext context)
     {
         if (holdingPiece == null)
             return;
+
+        //Misclick reset
+        currentMusclicks = 0;
+        StartCoroutine(TempDisableControls(disableInputAfterReleasePieceTime));
 
         //Rotation
         hasRotated = false;
@@ -366,4 +428,10 @@ public class InputSystem : MonoBehaviour
         activeTouch = !activeTouch;
     }
 
+    private IEnumerator TempDisableControls(float disableTime)
+    {
+        activeTouch = false;
+        yield return new WaitForSeconds(disableTime);
+        activeTouch = true;
+    }
 }
