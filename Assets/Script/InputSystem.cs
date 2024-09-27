@@ -37,16 +37,14 @@ public class InputSystem : MonoBehaviour
     EventSystem eventSystem;
 
     [Header("Input")]
-    [SerializeField] float distanceBeforeSwipe = 50;
     [SerializeField] float touchOffsetY = 50;
     private bool calledSwipe = false;
     private Vector2 swipeStartPos = Vector2.zero;
     private Vector2 secendSwipeStartPos = Vector2.zero;
     [SerializeField] float swipeDeadZone = 1;
-    [SerializeField] int maxMisclicks = 2;
-    private int currentMusclicks = 0;
     [SerializeField] float disableInputAfterReleasePieceTime = .1f;
     private Vector2 primeCollectedSwipe;
+    [SerializeField] float waitBeforeSwipeAnimationCall = 1;
 
     [Header("Animations")]
     [SerializeField] float pieceSnapPositionSpeed = 50;
@@ -138,7 +136,8 @@ public class InputSystem : MonoBehaviour
                 return;
 
             Vector2 swipeInfo = secondSwipeAction.ReadValue<Vector2>();
-            if (!calledSwipe && swipeInfo.magnitude >= distanceBeforeSwipe)
+
+            if(RotatePieces(swipeInfo))
             {
                 //Sound
                 if (!holdingPiece.currentlyRotation)
@@ -148,18 +147,6 @@ public class InputSystem : MonoBehaviour
                     else
                         AudioManager.Instance.PlayWithEffects(notRotateSound);
                 }
-
-
-                bool rightFromStart = false;
-                if (secendSwipeStartPos.x < swipeInfo.x)
-                    rightFromStart = true;
-
-                holdingPiece.RotateWithAnimation(rightFromStart);
-                calledSwipe = true;
-            }
-            else if(swipeInfo.magnitude < distanceBeforeSwipe && swipeInfo.magnitude > swipeDeadZone) //Look for short swipe
-            {
-                swipeAnimation.PlayAnimation();
             }
 
             //Calculate position
@@ -182,35 +169,21 @@ public class InputSystem : MonoBehaviour
             if (stopRotateTimer < stopRotate) //Rotate bug fix
                 return;
 
-            Vector2 tickSwipe = swipeAction.ReadValue<Vector2>();
-            if (tickSwipe == Vector2.zero && primeCollectedSwipe.magnitude > 0)
-            {               
-                if (!calledSwipe && primeCollectedSwipe.magnitude >= distanceBeforeSwipe)
-                {
-                    //Rotate piece
-                    bool rightFromStart = false;
-                    if (swipeStartPos.x < primeCollectedSwipe.x)
-                        rightFromStart = true;
+            Vector2 colletInput = swipeAction.ReadValue<Vector2>();
+            primeCollectedSwipe += colletInput;
 
-                    onSwipe?.Invoke(rightFromStart);
-                    calledSwipe = true;
+            if (colletInput.magnitude != 0)
+            {
+                bool rotated = RotatePieces(colletInput);                    
+
+                if (rotated)
+                {
+                    primeCollectedSwipe = Vector2.zero;
 
                     //Sound
                     AudioManager.Instance.PlayWithEffects(rotateSounds);
                 }
-                else if (primeCollectedSwipe.magnitude < distanceBeforeSwipe
-                    && primeCollectedSwipe.magnitude > swipeDeadZone) //Look for short swipe
-                {
-                    //Play short swipe animation
-                    Debug.Log(primeCollectedSwipe.magnitude);
-                    Debug.Log("Short swipe one fingur");
-                    swipeAnimation.PlayAnimation();
-                }
-
-                primeCollectedSwipe = Vector2.zero;
-            }
-            else
-                primeCollectedSwipe += tickSwipe;
+            }       
         }
     }
 
@@ -314,69 +287,67 @@ public class InputSystem : MonoBehaviour
                 }
             }
         }
-
-        //if(!foundAction && !holdingPiece)
-        //{
-        //    Debug.Log("No action found");
-        //    currentMusclicks++;
-
-        //    if(currentMusclicks == maxMisclicks)
-        //    {
-        //        currentMusclicks = 0;
-        //        swipeAnimation.PlayAnimation();
-        //    }
-        //}
-        //else
-        //    currentMusclicks = 0;
     }
 
     private void Release(InputAction.CallbackContext context)
     {
-        if (holdingPiece == null)
-            return;
-
-        //Misclick reset
-        currentMusclicks = 0;
-        StartCoroutine(TempDisableControls(disableInputAfterReleasePieceTime));
-
-        //Rotation
-        hasRotated = false;
-
-        //Tap or swipe
-        bool canPlacePiece = false;
-
-        //Raycast
-        List<RaycastResult> deteced = HitDetection(holdingPiece.firstDot.GetComponent<RectTransform>().position, graphicRaycaster);
-        foreach (RaycastResult result in deteced)
+        if(holdingPiece == null)
         {
-            //See if we hit a cell
-            if (result.gameObject.TryGetComponent(out Cell cell))
+            if (!calledSwipe)
             {
-                holdingPiece.transform.SetParent(board.transform);
-                bool placeResult = board.PlacePiece(cell.gridPos, holdingPiece);
+                //Play short swipe animation
+                primeCollectedSwipe = Vector2.zero;
 
-                if (placeResult)
-                {
-                    holdingPiece.onBoard = true; //To not rotate then swipe
-                    //Place piece on board
-                    holdingPiece.ChangeState(Piece.pieceStats.normal);
-                    holdingPiece.GetComponent<Image>().raycastTarget = false;
-                    RemoveHoldingPiece();
-                    canPlacePiece = true;
-
-                    CheckGoals();
-                    break;
-                }
+                swipeAnimation.PlayAnimation();
             }
         }
-
-        if (!canPlacePiece)
-            ReturnPiece();
         else
-            RemoveHoldingPiece();
+        {
+            //Stop input
+            StartCoroutine(TempDisableControls(disableInputAfterReleasePieceTime));
 
-        //Reset snap
-        pieceSnapCalculation = 0;
+            //Rotation
+            hasRotated = false;
+
+            //Tap or swipe
+            bool canPlacePiece = false;
+
+            //Raycast
+            List<RaycastResult> deteced = HitDetection(holdingPiece.firstDot.GetComponent<RectTransform>().position, graphicRaycaster);
+            foreach (RaycastResult result in deteced)
+            {
+                //See if we hit a cell
+                if (result.gameObject.TryGetComponent(out Cell cell))
+                {
+                    holdingPiece.transform.SetParent(board.transform);
+                    bool placeResult = board.PlacePiece(cell.gridPos, holdingPiece);
+
+                    if (placeResult)
+                    {
+                        holdingPiece.onBoard = true; //To not rotate then swipe
+                                                     //Place piece on board
+                        holdingPiece.ChangeState(Piece.pieceStats.normal);
+                        holdingPiece.GetComponent<Image>().raycastTarget = false;
+                        RemoveHoldingPiece();
+                        canPlacePiece = true;
+
+                        CheckGoals();
+                        break;
+                    }
+                }
+            }
+
+            if (!canPlacePiece)
+                ReturnPiece();
+            else
+                RemoveHoldingPiece();
+
+            //Reset snap
+            pieceSnapCalculation = 0;
+        }
+
+
+
     }
 
     private void ReturnPiece()
@@ -433,5 +404,31 @@ public class InputSystem : MonoBehaviour
         activeTouch = false;
         yield return new WaitForSeconds(disableTime);
         activeTouch = true;
+    }
+
+    private bool RotatePieces(Vector2 currentInput)
+    {
+        if (!calledSwipe && currentInput.magnitude >= swipeDeadZone)
+        {
+            //Turn left or right
+            bool rightFromStart = false;
+            if (secendSwipeStartPos.x < currentInput.x)
+                rightFromStart = true;
+
+            if(holdingPiece != null) //Holding piece
+                holdingPiece.RotateWithAnimation(rightFromStart);
+            else
+            {
+                //Rotate all pieces
+                onSwipe?.Invoke(rightFromStart);
+                calledSwipe = true;
+            }
+
+            calledSwipe = true;
+
+            return true;
+        }
+        else
+            return false;
     }
 }

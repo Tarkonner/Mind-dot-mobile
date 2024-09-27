@@ -7,14 +7,19 @@ public class SwipeAnimation : MonoBehaviour
 {
     [SerializeField] private Transform hand;
     private Sequence swipeAnimation;
+    
 
     [Header("Animation")]
     [SerializeField] private float scaleTime = 0.1f;
     [SerializeField] private float rotationDuration = 2f;
     [SerializeField] private float rotationDegree = -40f;
+    [SerializeField] private float timeBetweenAnimation = 4;
+    private bool animationHasPlayed = false;
 
     public void PlayAnimation()
     {
+        if(animationHasPlayed) return;
+
         if(!hand.gameObject.activeSelf)
         {
             hand.gameObject.SetActive(true);
@@ -24,5 +29,12 @@ public class SwipeAnimation : MonoBehaviour
                 hand.gameObject.SetActive(false);
             });
         }
+    }
+
+    IEnumerator AnimationTimer()
+    {
+        animationHasPlayed = true;
+        yield return new WaitForSeconds(timeBetweenAnimation);
+        animationHasPlayed = false;
     }
 }

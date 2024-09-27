@@ -32,16 +32,21 @@ public class DragAnimation : MonoBehaviour
         rotationSequence = DOTween.Sequence();
 
         //Rotate
-        rotationSequence.Append(pieceImage.transform.DORotate(pieceImage.transform.localEulerAngles + new Vector3(0, 0, 90), rotationTime));
+        rotationSequence.Append(pieceImage.transform.DORotate(pieceImage.transform.localEulerAngles + new Vector3(0, 0, -90), rotationTime));
+        dragSequence.Append(mainHand.transform.DORotate(pieceImage.transform.localEulerAngles + new Vector3(0, 0, -40), rotationTime));
 
-        dragSequence.Append(mainHand.transform.DOMove(mainHand.transform.position + mainHandMovement, mainHandAnimationTime));
-        dragSequence.Append(secondHand.transform.DOScale(new Vector3(-targetScale_SH, targetScale_SH, targetScale_SH), secondHandScaleTime / 2));
-        dragSequence.Append(rotationSequence.Play());
-        dragSequence.Append(secondHand.transform.DOScale(new Vector3(-startScale_SH, startScale_SH, startScale_SH), secondHandScaleTime / 2));
-        dragSequence.Append(pieceImage.transform.DOScale(Vector3.one * 1.5f, beforeRestart));
-        dragSequence.Append(mainHand.transform.DOMove(mainHand.transform.position, 0));
+        //dragSequence.Append(mainHand.transform.DOMove(mainHand.transform.position + mainHandMovement, mainHandAnimationTime));
+        //dragSequence.Append(secondHand.transform.DOScale(new Vector3(-targetScale_SH, targetScale_SH, targetScale_SH), secondHandScaleTime / 2));
+        //dragSequence.Append(rotationSequence.Play());
+        //dragSequence.Append(secondHand.transform.DOScale(new Vector3(-startScale_SH, startScale_SH, startScale_SH), secondHandScaleTime / 2));
+        //dragSequence.Append(pieceImage.transform.DOScale(Vector3.one * 1.5f, beforeRestart));
+        //dragSequence.Append(mainHand.transform.DOMove(mainHand.transform.position, 0));
+
+
         
         dragSequence.SetLoops(-1, LoopType.Restart);
         dragSequence.Play();
+        rotationSequence.SetLoops(-1, LoopType.Restart);
+        rotationSequence.Play();
     }
 }
