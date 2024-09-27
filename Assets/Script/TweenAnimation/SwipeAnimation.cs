@@ -16,6 +16,16 @@ public class SwipeAnimation : MonoBehaviour
     [SerializeField] private float timeBetweenAnimation = 4;
     private bool animationHasPlayed = false;
 
+    private void Start()
+    {
+        swipeAnimation = DOTween.Sequence();
+        swipeAnimation.Append(hand.DOScale(hand.transform.localScale, scaleTime));
+        swipeAnimation.Append(hand.DORotate(new Vector3(0, 0, rotationDegree), rotationDuration));
+        swipeAnimation.Append(hand.DOScale(0, scaleTime));
+
+        hand.localScale = Vector3.zero;
+    }
+
     public void PlayAnimation()
     {
         if(animationHasPlayed) return;
@@ -23,11 +33,20 @@ public class SwipeAnimation : MonoBehaviour
         if(!hand.gameObject.activeSelf)
         {
             hand.gameObject.SetActive(true);
-            hand.DORotate(new Vector3(0, 0, rotationDegree), rotationDuration).OnComplete(() =>
+            
+            swipeAnimation.Play();
+            swipeAnimation.OnComplete(() =>
             {
                 hand.localEulerAngles = Vector3.zero;
+                swipeAnimation.Restart();
                 hand.gameObject.SetActive(false);
+
             });
+            //hand.DORotate(new Vector3(0, 0, rotationDegree), rotationDuration).OnComplete(() =>
+            //{
+            //    hand.localEulerAngles = Vector3.zero;
+            //    hand.gameObject.SetActive(false);
+            //});
         }
     }
 
