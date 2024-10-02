@@ -10,7 +10,15 @@ public class SceneController : MonoBehaviour
 
     private void Awake()
     {
-        Instance = this;
+        if(Instance == null)
+            Instance = this;
+        else
+        {
+            Destroy(gameObject);
+            return;
+        }
+
+
     }
 
     public void LoadScene(int levelIndex)

@@ -7,6 +7,9 @@ public class LoadIntoGame : MonoBehaviour
 {
     void Start()
     {
-        SceneManager.LoadScene(1);
+        if(SceneManager.GetActiveScene().buildIndex == 0)
+            SceneManager.LoadScene(1);
+        else
+            Destroy(gameObject);
     }
 }

@@ -9,7 +9,7 @@ EditorBuildSettings:
     path: Assets/Scenes/SampleScene.unity
     guid: 2cda990e2423bbf4892e6590ba056729
   - enabled: 1
-    path: Assets/Scenes/DontDestroy.unity
+    path: Assets/Scenes/ManagerScene.unity
     guid: 22b9a0bd654754b418beda288c5ca84f
   - enabled: 1
     path: Assets/Scenes/MenuScene.unity
