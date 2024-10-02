@@ -7,7 +7,6 @@ using UnityEngine.UI;
 
 public class LevelButtonMaker : MonoBehaviour
 {
-    [SerializeField] LevelsBank levelsBank;
     [Header("Placeing level buttons")]
     [SerializeField] int horizontalElements = 4;
     [SerializeField] int verticalElements = 4;
@@ -38,7 +37,7 @@ public class LevelButtonMaker : MonoBehaviour
         //Arrow buttons
         leftArrowButton.SetActive(false);
 
-        maxPanels = (int)MathF.Ceiling((float)levelsBank.levels.Length / (horizontalElements * verticalElements)) - 1;
+        maxPanels = (int)MathF.Ceiling((float)DataBetweenLevels.Instance.currentLevelChunk.levels.Length / (horizontalElements * verticalElements)) - 1;
 
         //Level
         int targetLevel = 0;
@@ -64,10 +63,6 @@ public class LevelButtonMaker : MonoBehaviour
             {
                 for (int x = 0; x < horizontalElements; x++)
                 {
-                    //No level made
-                    if (targetLevel > levelsBank.levels.Length)
-                        break;
-
                     int count = y * verticalElements + x;
 
                     //Load level when clicket
@@ -78,6 +73,13 @@ public class LevelButtonMaker : MonoBehaviour
                     button.onClick.AddListener(lsb.LoadLevel);
                     //Save button to later
                     buttonsBank[j, count] = lsb;
+
+                    //Setup first planel
+                    
+                    if (j == 0 && DataBetweenLevels.Instance.currentLevelChunk.levels.Length <= count)
+                    {
+                        spawn.SetActive(false);
+                    }
 
                     //Check for save
                     bool levelcompletionState = false;
@@ -220,12 +222,20 @@ public class LevelButtonMaker : MonoBehaviour
                 int movementModefier = -1;
                 if (right)
                     movementModefier = 1;
-                int cal = ((panelCount + movementModefier) * horizontalElements * verticalElements) + count;
-                buttonsBank[targetPanel, count].TargetLevel(cal);
 
-                //Outer line
-                string key = SaveSystem.levelKey + cal.ToString();
-                OuterRingLook(ES3.Load<bool>(key), (panelCount + movementModefier) % numberOfPanels, count);
+                if(DataBetweenLevels.Instance.currentLevelChunk.levels.Length < count)
+                    buttonsBank[targetPanel, count].gameObject.SetActive(false);
+                else
+                {
+                    int cal = ((panelCount + movementModefier) * horizontalElements * verticalElements) + count;
+                    LevelSelectButton targetButton = buttonsBank[targetPanel, count];
+                    targetButton.TargetLevel(cal);
+                    targetButton.gameObject.SetActive(true);
+
+                    //Outer line
+                    string key = SaveSystem.levelKey + cal.ToString();
+                    OuterRingLook(ES3.Load<bool>(key), (panelCount + movementModefier) % numberOfPanels, count);
+                }
             }
         }
     }

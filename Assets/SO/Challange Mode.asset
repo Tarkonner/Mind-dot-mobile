@@ -1,0 +1,17 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 561e7dd4b04f8b247b28ed07e77a75ea, type: 3}
+  m_Name: Challange Mode
+  m_EditorClassIdentifier: 
+  levels:
+  - {fileID: 11400000, guid: 40116fd3e4da3c246a6e1d6ae033d059, type: 2}
+  - {fileID: 11400000, guid: 512136beb2d3d274a9bed308fa4d041b, type: 2}

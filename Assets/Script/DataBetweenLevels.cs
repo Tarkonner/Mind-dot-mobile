@@ -8,11 +8,18 @@ public class DataBetweenLevels : MonoBehaviour
 
     public int targetLevel = 0;
 
+    public LevelsBank currentLevelChunk;
+
     private void Awake()
     {
         if(Instance == null)
             Instance = this;
         else
             Destroy(gameObject);
+    }
+
+    public LevelSO GetCurretLevel()
+    {
+        return currentLevelChunk.levels[targetLevel];
     }
 }

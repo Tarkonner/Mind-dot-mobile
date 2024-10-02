@@ -20,7 +20,7 @@ public class LevelManager : MonoBehaviour
 
     [Header("Goals")]
     [SerializeField] private GameObject goalHolder;
-    [SerializeField] private LevelsBank levelsBank;
+    //[SerializeField] private LevelsBank levelsBank;
     private List<IGoal> allGoals = new List<IGoal>();
 
 
@@ -65,7 +65,7 @@ public class LevelManager : MonoBehaviour
 #endif
 
         //Load first level
-        LoadLevel(levelsBank.levels[DataBetweenLevels.Instance.targetLevel]);
+        LoadLevel(DataBetweenLevels.Instance.GetCurretLevel());
 
         //UI show level index
         levelText.LevelIndex(DataBetweenLevels.Instance.targetLevel);
@@ -161,15 +161,17 @@ public class LevelManager : MonoBehaviour
             SaveGame(DataBetweenLevels.Instance.targetLevel);
 
             //Load level            
-            if (DataBetweenLevels.Instance.targetLevel == levelsBank.levels.Length)
+            if (DataBetweenLevels.Instance.targetLevel + 1 == DataBetweenLevels.Instance.currentLevelChunk.levels.Length)
             {
+                Debug.Log("All level complete");
+
                 //Back to start
-                Debug.Log("All levels complete");
+                SceneController.Instance.LoadMenu(true); //Back to level select
                 DataBetweenLevels.Instance.targetLevel = 0;
 
-                onDeloadLevel?.Invoke();
-                LoadLevel(levelsBank.levels[DataBetweenLevels.Instance.targetLevel]);
-                levelText.LevelIndex(DataBetweenLevels.Instance.targetLevel);
+                //onDeloadLevel?.Invoke();
+                //LoadLevel(DataBetweenLevels.Instance.GetCurretLevel());
+                //levelText.LevelIndex(DataBetweenLevels.Instance.targetLevel);
             }
             else
             {
@@ -187,7 +189,7 @@ public class LevelManager : MonoBehaviour
         DataBetweenLevels.Instance.targetLevel++;
 
         onDeloadLevel?.Invoke(); //Event
-        LoadLevel(levelsBank.levels[DataBetweenLevels.Instance.targetLevel]); //Target level
+        LoadLevel(DataBetweenLevels.Instance.GetCurretLevel()); //Target level
         levelText.LevelIndex(DataBetweenLevels.Instance.targetLevel); //Set level text
     }
 
