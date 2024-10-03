@@ -4,5 +4,16 @@ using UnityEngine;
 
 public class UISelectLevelChunk : MonoBehaviour
 {
-    public void GiveLevelChunk(LevelsBank levelChunk) => DataBetweenLevels.Instance.currentLevelChunk = levelChunk;
+    [SerializeField] LevelButtonMaker levelButtonMaker;
+
+    private void Awake()
+    {
+        levelButtonMaker.Setup();
+    }
+
+    public void GiveLevelChunk(LevelsBank levelChunk)
+    {
+        DataBetweenLevels.Instance.currentLevelChunk = levelChunk;        
+        levelButtonMaker.ShowButtonOnOpening();
+    }
 }

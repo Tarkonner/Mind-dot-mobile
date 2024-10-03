@@ -163,8 +163,6 @@ public class LevelManager : MonoBehaviour
             //Load level            
             if (DataBetweenLevels.Instance.targetLevel + 1 == DataBetweenLevels.Instance.currentLevelChunk.levels.Length)
             {
-                Debug.Log("All level complete");
-
                 //Back to start
                 SceneController.Instance.LoadMenu(true); //Back to level select
                 DataBetweenLevels.Instance.targetLevel = 0;

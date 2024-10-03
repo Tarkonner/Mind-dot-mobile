@@ -32,12 +32,10 @@ public class LevelButtonMaker : MonoBehaviour
     [SerializeField] ColorBank colorBank;
 
 
-    void Start()
+    public void Setup()
     {
         //Arrow buttons
         leftArrowButton.SetActive(false);
-
-        maxPanels = (int)MathF.Ceiling((float)DataBetweenLevels.Instance.currentLevelChunk.levels.Length / (horizontalElements * verticalElements)) - 1;
 
         //Level
         int targetLevel = 0;
@@ -73,13 +71,6 @@ public class LevelButtonMaker : MonoBehaviour
                     button.onClick.AddListener(lsb.LoadLevel);
                     //Save button to later
                     buttonsBank[j, count] = lsb;
-
-                    //Setup first planel
-                    
-                    if (j == 0 && DataBetweenLevels.Instance.currentLevelChunk.levels.Length <= count)
-                    {
-                        spawn.SetActive(false);
-                    }
 
                     //Check for save
                     bool levelcompletionState = false;
@@ -135,17 +126,47 @@ public class LevelButtonMaker : MonoBehaviour
         TextForCount();
     }
 
+
+    public void ShowButtonOnOpening()
+    {
+        //Set panels
+        maxPanels = (int)MathF.Ceiling((float)DataBetweenLevels.Instance.currentLevelChunk.levels.Length / (horizontalElements * verticalElements));
+
+
+        //Buttons for 1 panel
+        for (int y = 0; y < verticalElements; y++)
+        {
+            for (int x = 0; x < horizontalElements; x++)
+            {
+                int count = y * verticalElements + x;
+
+                if (count >= DataBetweenLevels.Instance.currentLevelChunk.levels.Length)
+                    buttonsBank[0, count].gameObject.SetActive(false);
+                else
+                    buttonsBank[0, count].gameObject.SetActive(true);
+            }
+        }
+
+        //Check if need to show arrow
+        if (DataBetweenLevels.Instance.currentLevelChunk.levels.Length < verticalElements * horizontalElements)
+            rightArrowButton.gameObject.SetActive(false);
+        else
+            rightArrowButton.gameObject.SetActive(true);
+    }
+
     public void MovePanels(bool right)
     {
-        if(panelsMoveing) 
+        if (panelsMoveing)
             return;
         else
             panelsMoveing = true;
+
 
         if (right)
         {
             if (panelCount + 1 == maxPanels)
                 return;
+
 
             int targetPanel = (panelCount + 2) % numberOfPanels;
 
@@ -191,7 +212,7 @@ public class LevelButtonMaker : MonoBehaviour
             panelCount--;
 
             //Updata level load
-            if(panelCount != 0)
+            if (panelCount != 0)
                 UpdatePanelsButton(targetPanel, false);
 
             //Turn arrow off
@@ -201,12 +222,28 @@ public class LevelButtonMaker : MonoBehaviour
             rightArrowButton.SetActive(true);
         }
 
+        ////Turn button on or off
+        //for (int y = 0; y < verticalElements; y++)
+        //{
+        //    for (int x = 0; x < horizontalElements; x++)
+        //    {
+        //        int count = y * verticalElements + x;
+
+        //        int currentLevels = DataBetweenLevels.Instance.currentLevelChunk.levels.Length % horizontalElements * verticalElements;
+
+        //        if(currentLevels >= count)
+        //            buttonsBank[targetPanel - 1, count].gameObject.SetActive(true);
+        //        else
+        //            buttonsBank[targetPanel - 1, count].gameObject.SetActive(false);
+        //    }
+        //}
+
         //Update text
         TextForCount();
     }
 
     void TextForCount()
-    {        
+    {
         int numberOfLevels = panelCount * horizontalElements * verticalElements;
         levelCountText.text = $"Level {numberOfLevels + 1} - {numberOfLevels + (horizontalElements * verticalElements)}";
     }
@@ -223,19 +260,13 @@ public class LevelButtonMaker : MonoBehaviour
                 if (right)
                     movementModefier = 1;
 
-                if(DataBetweenLevels.Instance.currentLevelChunk.levels.Length < count)
-                    buttonsBank[targetPanel, count].gameObject.SetActive(false);
-                else
-                {
-                    int cal = ((panelCount + movementModefier) * horizontalElements * verticalElements) + count;
-                    LevelSelectButton targetButton = buttonsBank[targetPanel, count];
-                    targetButton.TargetLevel(cal);
-                    targetButton.gameObject.SetActive(true);
+                int cal = ((panelCount + movementModefier) * horizontalElements * verticalElements) + count;
+                LevelSelectButton targetButton = buttonsBank[targetPanel, count];
+                targetButton.TargetLevel(cal);
 
-                    //Outer line
-                    string key = SaveSystem.levelKey + cal.ToString();
-                    OuterRingLook(ES3.Load<bool>(key), (panelCount + movementModefier) % numberOfPanels, count);
-                }
+                //Outer line
+                string key = SaveSystem.levelKey + cal.ToString();
+                OuterRingLook(ES3.Load<bool>(key), (panelCount + movementModefier) % numberOfPanels, count);
             }
         }
     }

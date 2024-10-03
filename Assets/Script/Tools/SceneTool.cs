@@ -1,6 +1,7 @@
 using UnityEditor;
 using UnityEngine.SceneManagement;
 
+#if(UNITY_EDITOR)
 [InitializeOnLoad]
 public static class SceneTool
 {
@@ -20,3 +21,4 @@ public static class SceneTool
     }
 
 }
+#endif

@@ -18,6 +18,9 @@ public class LevelSelectButton : MonoBehaviour
 
     public void TargetLevel(int targetLevel)
     {
+        if(levelText == null)
+            levelText = GetComponentInChildren<TextMeshProUGUI>();
+
         levelText.text = (targetLevel + 1).ToString();
         this.targetLevel = targetLevel;
     }
