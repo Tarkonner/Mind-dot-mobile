@@ -72,14 +72,6 @@ public class LevelButtonMaker : MonoBehaviour
                     //Save button to later
                     buttonsBank[j, count] = lsb;
 
-                    //Check for save
-                    bool levelcompletionState = false;
-                    if (ES3.FileExists())
-                    {
-                        string key = SaveSystem.levelKey + targetLevel.ToString();
-                        levelcompletionState = ES3.Load<bool>(key);
-                    }
-
                     //Set to next level
                     targetLevel++;
 
@@ -101,10 +93,8 @@ public class LevelButtonMaker : MonoBehaviour
                     Vector2 targetTransform = spawnPoint + new Vector2(x * spaceBetweenButtons, y * -spaceBetweenButtons);
                     button.transform.localPosition = targetTransform;
 
-                    //Give color
-                    outerImages[j, count] = spawn.GetComponent<Image>();
-                    OuterRingLook(levelcompletionState, j, y * verticalElements + x);
 
+                    outerImages[j, count] = spawn.GetComponent<Image>();
                     Image innerImage = spawn.transform.GetChild(0).gameObject.GetComponentInChildren<Image>();
                     switch (lsb.dotType)
                     {
@@ -133,6 +123,7 @@ public class LevelButtonMaker : MonoBehaviour
         maxPanels = (int)MathF.Ceiling((float)DataBetweenLevels.Instance.currentLevelChunk.levels.Length / (horizontalElements * verticalElements));
 
 
+
         //Buttons for 1 panel
         for (int y = 0; y < verticalElements; y++)
         {
@@ -140,10 +131,26 @@ public class LevelButtonMaker : MonoBehaviour
             {
                 int count = y * verticalElements + x;
 
+                //Turn buttons on or off
                 if (count >= DataBetweenLevels.Instance.currentLevelChunk.levels.Length)
                     buttonsBank[0, count].gameObject.SetActive(false);
                 else
+                {
                     buttonsBank[0, count].gameObject.SetActive(true);
+
+                    //Check for save
+                    bool levelcompletionState = false;
+                    if (ES3.FileExists())
+                    {
+                        string key = SaveSystem.levelKey + DataBetweenLevels.Instance.currentLevelChunk.name + count.ToString();
+                        levelcompletionState = ES3.Load<bool>(key);
+                    }
+
+                    //Give color
+                    OuterRingLook(levelcompletionState, 0, count);
+                }
+
+
             }
         }
 
@@ -264,7 +271,7 @@ public class LevelButtonMaker : MonoBehaviour
                 targetButton.TargetLevel(cal);
 
                 //Outer line
-                string key = SaveSystem.levelKey + cal.ToString();
+                string key = SaveSystem.levelKey + DataBetweenLevels.Instance.currentLevelChunk.name + cal.ToString();
                 OuterRingLook(ES3.Load<bool>(key), (panelCount + movementModefier) % numberOfPanels, count);
             }
         }

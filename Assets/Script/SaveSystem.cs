@@ -4,7 +4,7 @@ using UnityEngine;
 
 public class SaveSystem : MonoBehaviour
 {
-    [SerializeField] LevelsBank levelsBank;
+    [SerializeField] LevelsBank[] levelsChunks;
 
     public static string levelKey = "levelKey";
 
@@ -15,10 +15,13 @@ public class SaveSystem : MonoBehaviour
 
         if(!ES3.FileExists())
         {
-            for (int i = 0; i < levelsBank.levels.Length; i++)
+            foreach (var chunk in levelsChunks)
             {
-                string key = levelKey + i.ToString();
-                ES3.Save(key, false);
+                for (int i = 0; i < chunk.levels.Length; i++)
+                {
+                    string key = levelKey + chunk.name + i.ToString();
+                    ES3.Save(key, false);
+                }
             }
         }
     }
