@@ -222,21 +222,20 @@ public class LevelButtonMaker : MonoBehaviour
             rightArrowButton.SetActive(true);
         }
 
-        ////Turn button on or off
-        //for (int y = 0; y < verticalElements; y++)
-        //{
-        //    for (int x = 0; x < horizontalElements; x++)
-        //    {
-        //        int count = y * verticalElements + x;
+        int currentLevels = DataBetweenLevels.Instance.currentLevelChunk.levels.Length % (horizontalElements * verticalElements);
+        //Turn button on or off
+        for (int y = 0; y < verticalElements; y++)
+        {
+            for (int x = 0; x < horizontalElements; x++)
+            {
+                int count = y * verticalElements + x;
 
-        //        int currentLevels = DataBetweenLevels.Instance.currentLevelChunk.levels.Length % horizontalElements * verticalElements;
-
-        //        if(currentLevels >= count)
-        //            buttonsBank[targetPanel - 1, count].gameObject.SetActive(true);
-        //        else
-        //            buttonsBank[targetPanel - 1, count].gameObject.SetActive(false);
-        //    }
-        //}
+                if (currentLevels > count)
+                    buttonsBank[panelCount, count].gameObject.SetActive(true);
+                else
+                    buttonsBank[panelCount, count].gameObject.SetActive(false);
+            }
+        }
 
         //Update text
         TextForCount();
