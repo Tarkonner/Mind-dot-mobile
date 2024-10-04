@@ -26,6 +26,7 @@ public class LevelButtonMaker : MonoBehaviour
     private int panelCount = 0;
     private int maxPanels;
     private bool panelsMoveing = false;
+    private GameObject[] panels;
     [Header("Text")]
     [SerializeField] TextMeshProUGUI levelCountText;
     [Header("Color")]
@@ -47,6 +48,7 @@ public class LevelButtonMaker : MonoBehaviour
         outerImages = new Image[numberOfPanels, horizontalElements * verticalElements];
 
         //Make button
+        panels = new GameObject[numberOfPanels];
         for (int j = 0; j < numberOfPanels; j++)
         {
             //Holder
@@ -55,6 +57,7 @@ public class LevelButtonMaker : MonoBehaviour
             hold.transform.localScale = Vector3.one;
             holders.Add(hold.transform);
             hold.transform.localPosition = new Vector2(j * spaceBetweenPanels, 0);
+            panels[j] = hold;
 
             //Spawn buttons
             for (int y = 0; y < verticalElements; y++)
@@ -122,8 +125,6 @@ public class LevelButtonMaker : MonoBehaviour
         //Set panels
         maxPanels = (int)MathF.Ceiling((float)DataBetweenLevels.Instance.currentLevelChunk.levels.Length / (horizontalElements * verticalElements));
 
-
-
         //Buttons for 1 panel
         for (int y = 0; y < verticalElements; y++)
         {
@@ -136,7 +137,11 @@ public class LevelButtonMaker : MonoBehaviour
                     buttonsBank[0, count].gameObject.SetActive(false);
                 else
                 {
-                    buttonsBank[0, count].gameObject.SetActive(true);
+                    //Buttons
+                    LevelSelectButton lsb = buttonsBank[0, count];                    
+                    lsb.gameObject.SetActive(true);
+                    lsb.TargetLevel(count); //Set what level
+
 
                     //Check for save
                     bool levelcompletionState = false;
@@ -149,8 +154,6 @@ public class LevelButtonMaker : MonoBehaviour
                     //Give color
                     OuterRingLook(levelcompletionState, 0, count);
                 }
-
-
             }
         }
 
@@ -168,14 +171,14 @@ public class LevelButtonMaker : MonoBehaviour
         else
             panelsMoveing = true;
 
-
+        int targetPanel;
         if (right)
         {
             if (panelCount + 1 == maxPanels)
                 return;
 
 
-            int targetPanel = (panelCount + 2) % numberOfPanels;
+            targetPanel = (panelCount + 2) % numberOfPanels;
 
             //Move
             foreach (Transform target in holders)
@@ -195,7 +198,27 @@ public class LevelButtonMaker : MonoBehaviour
 
             //Turn arrow off
             if (panelCount == maxPanels - 1)
+            {
+                //Arrow
                 rightArrowButton.SetActive(false);
+
+                //Buttons
+                int currentLevels = DataBetweenLevels.Instance.currentLevelChunk.levels.Length % (horizontalElements * verticalElements);
+                //Turn button on or off
+                for (int y = 0; y < verticalElements; y++)
+                {
+                    for (int x = 0; x < horizontalElements; x++)
+                    {
+                        int count = y * verticalElements + x;
+
+                        if (currentLevels > count)
+                            buttonsBank[targetPanel - 1, count].gameObject.SetActive(true);
+                        else
+                            buttonsBank[targetPanel - 1, count].gameObject.SetActive(false);
+                    }
+                }
+            }
+                
 
             leftArrowButton.SetActive(true);
         }
@@ -206,7 +229,7 @@ public class LevelButtonMaker : MonoBehaviour
                 return;
 
             //Move
-            int targetPanel = (panelCount + 1) % numberOfPanels;
+            targetPanel = (panelCount + 1) % numberOfPanels;
             foreach (Transform target in holders)
             {
                 target.DOLocalMove(target.localPosition + new Vector3(spaceBetweenPanels, 0, 0), slideAnimationTime).OnComplete(() =>
@@ -229,18 +252,16 @@ public class LevelButtonMaker : MonoBehaviour
             rightArrowButton.SetActive(true);
         }
 
-        int currentLevels = DataBetweenLevels.Instance.currentLevelChunk.levels.Length % (horizontalElements * verticalElements);
-        //Turn button on or off
-        for (int y = 0; y < verticalElements; y++)
+        if(panelCount != maxPanels - 1)
         {
-            for (int x = 0; x < horizontalElements; x++)
+            //Turn button on or off
+            for (int y = 0; y < verticalElements; y++)
             {
-                int count = y * verticalElements + x;
-
-                if (currentLevels > count)
-                    buttonsBank[panelCount, count].gameObject.SetActive(true);
-                else
-                    buttonsBank[panelCount, count].gameObject.SetActive(false);
+                for (int x = 0; x < horizontalElements; x++)
+                {
+                    int count = y * verticalElements + x;
+                    buttonsBank[panelCount % numberOfPanels, count].gameObject.SetActive(true);
+                }
             }
         }
 
@@ -272,7 +293,12 @@ public class LevelButtonMaker : MonoBehaviour
 
                 //Outer line
                 string key = SaveSystem.levelKey + DataBetweenLevels.Instance.currentLevelChunk.name + cal.ToString();
-                OuterRingLook(ES3.Load<bool>(key), (panelCount + movementModefier) % numberOfPanels, count);
+                bool keyStatus = false;
+                if(ES3.KeyExists(key))
+                { 
+                    keyStatus = ES3.Load<bool>(key);
+                }
+                OuterRingLook(keyStatus, (panelCount + movementModefier) % numberOfPanels, count);
             }
         }
     }
@@ -298,5 +324,19 @@ public class LevelButtonMaker : MonoBehaviour
                     break;
             }
         }
+    }
+
+    public void ResetPanels()
+    {
+        //Panels
+        for (int i = 0; i < numberOfPanels; i++)
+        {
+            panels[i].transform.localPosition = new Vector2(i * spaceBetweenPanels, 0);
+        }
+        panelCount = 0;
+
+        //Arrows
+        leftArrowButton.SetActive(false);
+        rightArrowButton.SetActive(false);
     }
 }

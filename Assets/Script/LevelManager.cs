@@ -161,21 +161,22 @@ public class LevelManager : MonoBehaviour
             SaveGame(DataBetweenLevels.Instance.targetLevel);
 
             //Load level            
-            if (DataBetweenLevels.Instance.targetLevel + 1 == DataBetweenLevels.Instance.currentLevelChunk.levels.Length)
-            {
-                //Back to start
-                SceneController.Instance.LoadMenu(true); //Back to level select
-                DataBetweenLevels.Instance.targetLevel = 0;
+            //if (DataBetweenLevels.Instance.targetLevel + 1 == DataBetweenLevels.Instance.currentLevelChunk.levels.Length)
+            //{
+            //    //Back to start
+            //    SceneController.Instance.LoadMenu(true); //Back to level select
+            //    DataBetweenLevels.Instance.targetLevel = 0;
 
-                //onDeloadLevel?.Invoke();
-                //LoadLevel(DataBetweenLevels.Instance.GetCurretLevel());
-                //levelText.LevelIndex(DataBetweenLevels.Instance.targetLevel);
-            }
-            else
-            {
-                Debug.Log("Level Complete");
-                StartCoroutine(WinAnimation());
-            }
+            //    //onDeloadLevel?.Invoke();
+            //    //LoadLevel(DataBetweenLevels.Instance.GetCurretLevel());
+            //    //levelText.LevelIndex(DataBetweenLevels.Instance.targetLevel);
+            //}
+            //else
+            //{
+            //    Debug.Log("Level Complete");
+                
+            //}
+            StartCoroutine(WinAnimation());
         }
     }
 
@@ -214,16 +215,21 @@ public class LevelManager : MonoBehaviour
         onLevelComplete?.Invoke();
         yield return new WaitForSeconds(completedLevelPauseTime);
 
-        //Load next level if not showing question
-        if (!showQuestioner)
-            LoadNextLevel();
-        else
+        //What to do after animation
+        if (DataBetweenLevels.Instance.targetLevel + 1 == DataBetweenLevels.Instance.currentLevelChunk.levels.Length)
+        { //Go to  menu
+            SceneController.Instance.LoadMenu(true); //Back to level select
+            DataBetweenLevels.Instance.targetLevel = 0;
+        }
+        else if (showQuestioner) //Show question
             questioner.SetActive(true);
+        else //Load next level
+            LoadNextLevel();
     }
 
     void SaveGame(int levelCompletet)
     {
-        string key = SaveSystem.levelKey + levelCompletet.ToString();
+        string key = SaveSystem.levelKey + DataBetweenLevels.Instance.currentLevelChunk.name + levelCompletet.ToString();
         ES3.Save(key, true);
     }
 }
