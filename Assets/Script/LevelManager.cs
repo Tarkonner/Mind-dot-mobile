@@ -229,7 +229,16 @@ public class LevelManager : MonoBehaviour
 
     void SaveGame(int levelCompletet)
     {
+        //Save current level complete
         string key = SaveSystem.levelKey + DataBetweenLevels.Instance.currentLevelChunk.name + levelCompletet.ToString();
         ES3.Save(key, true);
+
+        //Save what is the current chunk played
+        ES3.Save("SelectLevelChunk", DataBetweenLevels.Instance.currentLevelChunk.name);
+
+        //Chuck if it was the latest level
+        int checkProgress = ES3.Load<int>(DataBetweenLevels.Instance.currentLevelChunk.name);
+        if(levelCompletet > checkProgress)
+            ES3.Save(DataBetweenLevels.Instance.currentLevelChunk.name, levelCompletet);
     }
 }

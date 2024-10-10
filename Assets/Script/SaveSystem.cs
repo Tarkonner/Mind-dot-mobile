@@ -29,8 +29,16 @@ public class SaveSystem : MonoBehaviour
 
     private void MakeSaveFile()
     {
+        //Target
+        ES3.Save("SelectLevelChunk", "begin");
+
+
         foreach (var chunk in levelsChunks)
         {
+            //Level chunks data
+            ES3.Save(chunk.name, 0);
+
+            //Levels
             for (int i = 0; i < chunk.levels.Length; i++)
             {
                 string key = levelKey + chunk.name + i.ToString();
