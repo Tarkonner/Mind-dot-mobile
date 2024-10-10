@@ -5148,7 +5148,7 @@ PrefabInstance:
     - target: {fileID: 65025732663852158, guid: ece83fda2ae00364da4f4bd42689e64a, type: 3}
       propertyPath: testLevel
       value: 
-      objectReference: {fileID: 11400000, guid: 66ef3fc4a4f31344f80b952e3307437d, type: 2}
+      objectReference: {fileID: 11400000, guid: fdd55c977b049fd4fa35deb6bda24b2e, type: 2}
     - target: {fileID: 65025732663852158, guid: ece83fda2ae00364da4f4bd42689e64a, type: 3}
       propertyPath: goalHolder
       value: 
@@ -5275,7 +5275,7 @@ PrefabInstance:
       objectReference: {fileID: 11400000, guid: e991b28f06567a14aa0470075e22ddb1, type: 2}
     - target: {fileID: 2800339047658143124, guid: ece83fda2ae00364da4f4bd42689e64a, type: 3}
       propertyPath: tutorialObjects.Array.size
-      value: 16
+      value: 18
       objectReference: {fileID: 0}
     - target: {fileID: 2800339047658143124, guid: ece83fda2ae00364da4f4bd42689e64a, type: 3}
       propertyPath: tutorialObjects.Array.data[1].levelText
@@ -5315,26 +5315,38 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 2800339047658143124, guid: ece83fda2ae00364da4f4bd42689e64a, type: 3}
       propertyPath: tutorialObjects.Array.data[10].levelText
-      value: Empty spaces in goals means there don't need to be a dot there
+      value: There can be up tp 4 goals
       objectReference: {fileID: 0}
     - target: {fileID: 2800339047658143124, guid: ece83fda2ae00364da4f4bd42689e64a, type: 3}
       propertyPath: tutorialObjects.Array.data[11].levelText
-      value: Goals can overlap
+      value: Empty spaces in goals means there don't need to be a dot there
       objectReference: {fileID: 0}
     - target: {fileID: 2800339047658143124, guid: ece83fda2ae00364da4f4bd42689e64a, type: 3}
       propertyPath: tutorialObjects.Array.data[12].levelText
-      value: Pieces with purple lines can't rotate
+      value: Goals can overlap
       objectReference: {fileID: 0}
     - target: {fileID: 2800339047658143124, guid: ece83fda2ae00364da4f4bd42689e64a, type: 3}
       propertyPath: tutorialObjects.Array.data[13].levelText
-      value: The grey dots in goals can be any color in the board
+      value: Pieces with purple lines can't rotate
       objectReference: {fileID: 0}
     - target: {fileID: 2800339047658143124, guid: ece83fda2ae00364da4f4bd42689e64a, type: 3}
       propertyPath: tutorialObjects.Array.data[14].levelText
-      value: All marked cells need a Dot on it to complet level
+      value: The grey dots in goals can be any color in the board
       objectReference: {fileID: 0}
     - target: {fileID: 2800339047658143124, guid: ece83fda2ae00364da4f4bd42689e64a, type: 3}
       propertyPath: tutorialObjects.Array.data[15].levelText
+      value: All marked cells need a Dot on it to complet level
+      objectReference: {fileID: 0}
+    - target: {fileID: 2800339047658143124, guid: ece83fda2ae00364da4f4bd42689e64a, type: 3}
+      propertyPath: tutorialObjects.Array.data[16].levelText
+      value: Colored marks on board needs a Dot of same color to be complete
+      objectReference: {fileID: 0}
+    - target: {fileID: 2800339047658143124, guid: ece83fda2ae00364da4f4bd42689e64a, type: 3}
+      propertyPath: tutorialObjects.Array.data[17].levelText
+      value: There can be 3 other goals beside placement
+      objectReference: {fileID: 0}
+    - target: {fileID: 2800339047658143124, guid: ece83fda2ae00364da4f4bd42689e64a, type: 3}
+      propertyPath: tutorialObjects.Array.data[18].levelText
       value: Colored marks on board needs a Dot of same color to be complete
       objectReference: {fileID: 0}
     - target: {fileID: 2800339047658143124, guid: ece83fda2ae00364da4f4bd42689e64a, type: 3}
@@ -5380,25 +5392,37 @@ PrefabInstance:
     - target: {fileID: 2800339047658143124, guid: ece83fda2ae00364da4f4bd42689e64a, type: 3}
       propertyPath: tutorialObjects.Array.data[10].targetLevel
       value: 
-      objectReference: {fileID: 11400000, guid: c10077e20a2b3954f9bfd6fd7b5a1f6a, type: 2}
+      objectReference: {fileID: 11400000, guid: dd4f1d3b64625dd48a271d906eb46acf, type: 2}
     - target: {fileID: 2800339047658143124, guid: ece83fda2ae00364da4f4bd42689e64a, type: 3}
       propertyPath: tutorialObjects.Array.data[11].targetLevel
       value: 
-      objectReference: {fileID: 11400000, guid: ae76aa1dd53cea249ab4f9fba2883760, type: 2}
+      objectReference: {fileID: 11400000, guid: c10077e20a2b3954f9bfd6fd7b5a1f6a, type: 2}
     - target: {fileID: 2800339047658143124, guid: ece83fda2ae00364da4f4bd42689e64a, type: 3}
       propertyPath: tutorialObjects.Array.data[12].targetLevel
       value: 
-      objectReference: {fileID: 11400000, guid: 9f21430bdf579244aaa15e6929c281b2, type: 2}
+      objectReference: {fileID: 11400000, guid: ae76aa1dd53cea249ab4f9fba2883760, type: 2}
     - target: {fileID: 2800339047658143124, guid: ece83fda2ae00364da4f4bd42689e64a, type: 3}
       propertyPath: tutorialObjects.Array.data[13].targetLevel
       value: 
-      objectReference: {fileID: 11400000, guid: 315376e8d29b44e4788d7b48beb48985, type: 2}
+      objectReference: {fileID: 11400000, guid: 9f21430bdf579244aaa15e6929c281b2, type: 2}
     - target: {fileID: 2800339047658143124, guid: ece83fda2ae00364da4f4bd42689e64a, type: 3}
       propertyPath: tutorialObjects.Array.data[14].targetLevel
       value: 
-      objectReference: {fileID: 11400000, guid: f2565434cb72165448ebe89ec1338b5d, type: 2}
+      objectReference: {fileID: 11400000, guid: 315376e8d29b44e4788d7b48beb48985, type: 2}
     - target: {fileID: 2800339047658143124, guid: ece83fda2ae00364da4f4bd42689e64a, type: 3}
       propertyPath: tutorialObjects.Array.data[15].targetLevel
+      value: 
+      objectReference: {fileID: 11400000, guid: f2565434cb72165448ebe89ec1338b5d, type: 2}
+    - target: {fileID: 2800339047658143124, guid: ece83fda2ae00364da4f4bd42689e64a, type: 3}
+      propertyPath: tutorialObjects.Array.data[16].targetLevel
+      value: 
+      objectReference: {fileID: 11400000, guid: 8d07dd0542fa6564db1dab043c4cbe3f, type: 2}
+    - target: {fileID: 2800339047658143124, guid: ece83fda2ae00364da4f4bd42689e64a, type: 3}
+      propertyPath: tutorialObjects.Array.data[17].targetLevel
+      value: 
+      objectReference: {fileID: 11400000, guid: 14c79529a83065b4caaacfb93e64234c, type: 2}
+    - target: {fileID: 2800339047658143124, guid: ece83fda2ae00364da4f4bd42689e64a, type: 3}
+      propertyPath: tutorialObjects.Array.data[18].targetLevel
       value: 
       objectReference: {fileID: 11400000, guid: 8d07dd0542fa6564db1dab043c4cbe3f, type: 2}
     - target: {fileID: 2800339047658143124, guid: ece83fda2ae00364da4f4bd42689e64a, type: 3}
