@@ -13,6 +13,16 @@ public class ScaleAnimations : MonoBehaviour
             targetList[i].transform.DOScale(Vector3.one, animationTime);
         }
     }
+    
+    public virtual void ScaleInLiniar(List<GameObject> targetList, float animationTime, float targetScale)
+    {
+        for (int i = 0; i < targetList.Count; i++)
+        {
+            targetList[i].transform.localScale = Vector3.zero;
+            targetList[i].transform.DOScale(new Vector3(targetScale, targetScale), animationTime);
+        }
+    }
+
 
     public virtual void ScaleOutLiniar(List<GameObject> targetList, float animationTime)
     {

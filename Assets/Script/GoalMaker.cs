@@ -11,6 +11,8 @@ public class GoalMaker : ScaleAnimations
     [SerializeField] GameObject shapeGoalPrefab;
     public Transform holder;
 
+    [SerializeField] float manyGoalScale = .75f;
+
     [Header("Animations")]
     [SerializeField] private float animateInTime = .5f;
     [SerializeField] private float animateOutTime = .5f;
@@ -33,6 +35,8 @@ public class GoalMaker : ScaleAnimations
     IEnumerator MakeLevels(float waitTime, LevelSO levelGoals)
     {
         yield return new WaitForSeconds(waitTime + .05f);
+        bool diffentScale = false;
+
         //Remove old goals
         if (holder.transform.childCount > 0)
         {
@@ -70,8 +74,17 @@ public class GoalMaker : ScaleAnimations
             shapeGoal.LoadGoal(levelGoals.levelShapeGoals[i]);
 
             goalsToAnimate.Add(spawnedGoal);
+
+            if(levelGoals.levelShapeGoals.Length == 4 ||
+                levelGoals.levelShapeGoals.Length == 3 && levelGoals.levelPlaceGoals.Length > 0)
+            {
+                diffentScale = true;
+            }
         }
 
-        ScaleInLiniar(goalsToAnimate, animateInTime);
+        if(!diffentScale)
+            ScaleInLiniar(goalsToAnimate, animateInTime);
+        else
+            ScaleInLiniar(goalsToAnimate, animateInTime, manyGoalScale);
     }
 }
