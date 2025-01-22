@@ -5,8 +5,7 @@ using UnityEngine;
 using UnityEngine.UIElements;
 
 public class MakePieceState : CollectCells
-{
-    
+{  
 
     public override void AddCell(CellElement targetCell, CellColorState targetState)
     {
@@ -47,9 +46,6 @@ public class MakePieceState : CollectCells
         //To remove piece
         pieceElement.holder = pieceHolder;
 
-        //Gate
-        if (!pieceElement.legalPiece)
-            return;
 
         //Editor
         pieceHolder.Q<Button>("Delete").clickable.clicked += () => { levelEditor.RemovePiecesDots(pieceElement); };

@@ -2,6 +2,7 @@ using DG.Tweening;
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.EventSystems;
@@ -154,66 +155,13 @@ public class Piece : MonoBehaviour, IDragHandler
                 firstDot = spawn;
         }
 
-
-        //Connection lines
-        TwoKeyDictionary twoKeyDictionary = new TwoKeyDictionary();
-        Dictionary<Dot, int> makedConnectionCount = new Dictionary<Dot, int>();
-        for (int i = 0; i < dotsArray.Length; i++)
-        {
-            int straightLinesMax = 2;
-
-            for (int j = 0; j < dotsArray.Length; j++)
-            {
-                if (i == j) continue;
-
-                Dot currentDot = dotsArray[i];
-                Dot checkingDot = dotsArray[j];
-
-                if(!makedConnectionCount.ContainsKey(currentDot))
-                    makedConnectionCount.Add(currentDot, 0);
-                if (!makedConnectionCount.ContainsKey(checkingDot))
-                    makedConnectionCount.Add(checkingDot, 0);
-
-                if (!twoKeyDictionary.HaveElement(currentDot, checkingDot))
-                {
-                    float distance = Vector2.Distance(currentDot.GetComponent<RectTransform>().localPosition, checkingDot.GetComponent<RectTransform>().localPosition);
-
-                    if(distance < adjacentThreshold)
-                    {
-                        twoKeyDictionary.AddElement(currentDot, checkingDot);
-                        makedConnectionCount[currentDot] = makedConnectionCount[currentDot] + 1;
-                        makedConnectionCount[checkingDot] = makedConnectionCount[checkingDot] + 1;
-                    }
-                }
-            }
-
-            if (makedConnectionCount[dotsArray[i]] >= straightLinesMax)
-                continue;
-
-
-            for (int j = 0; j < dotsArray.Length; j++)
-            {
-                if (i == j) continue;
-
-                Dot currentPosRec = dotsArray[i];
-                Dot checkingPosRec = dotsArray[j];
-
-                if (!twoKeyDictionary.HaveElement(currentPosRec, checkingPosRec))
-                {
-                    float distance = Vector2.Distance(currentPosRec.GetComponent<RectTransform>().localPosition, checkingPosRec.GetComponent<RectTransform>().localPosition);
-
-                    if (distance < diagonalThreshold)
-                        twoKeyDictionary.AddElement(currentPosRec, checkingPosRec);
-                }
-            }
-
-
-        }
         //Make lines
-        foreach (var item in twoKeyDictionary.keyValues)
+        foreach (var item in targetPiece.connectionsMade.keyValues)
         {
             var k = item.Key.ToValueTuple();
-            CreateLine(k.Item1, k.Item2);
+            
+
+            CreateLine(GetDotAtGridPosition(k.Item1), GetDotAtGridPosition(k.Item2));
         }
 
         //Find center
@@ -429,4 +377,17 @@ public class Piece : MonoBehaviour, IDragHandler
                 break;
         }
     }
+
+    public Dot GetDotAtGridPosition(Vector2 targetGridPos)
+    {
+        for (int i = 0; i < gridPosArray.Length; i++)
+        {
+            if (gridPosArray[i] == targetGridPos)
+            {
+                return dotsArray[i];
+            }
+        }
+        return null; // Return null if no matching dot is found
+    }
 }
+

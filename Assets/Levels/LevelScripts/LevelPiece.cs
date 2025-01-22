@@ -13,6 +13,7 @@ public class LevelPiece
     public Vector2Int gridPosRef;
     public Vector2Int pieceSize;
     public int startRotation;
+    public TwoKeyDictionary<Vector2Int> connectionsMade = new TwoKeyDictionary<Vector2Int>();
 
     public LevelPiece(PieceData pE)
     {
@@ -31,5 +32,7 @@ public class LevelPiece
         this.gridPosRef = pE.gridPosRef;
 
         pieceSize = pE.gridSize;
+
+        connectionsMade = pE.connectionsMade;
     }
 }

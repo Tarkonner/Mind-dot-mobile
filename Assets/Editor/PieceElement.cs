@@ -2,13 +2,14 @@ using SharedData;
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
 using UnityEngine.UIElements;
 
 public class PieceElement : GridElement
 {
-    public bool legalPiece;
     public VisualElement holder;
+    TwoKeyDictionary<Vector2Int> connectionsMade = new TwoKeyDictionary<Vector2Int>();
 
     public override void Construct(Vector2Int targetSize)
     {
@@ -18,8 +19,6 @@ public class PieceElement : GridElement
         temp.gridPosRef = gridData.gridPosRef;
         gridData = temp;
 
-        //Piece legality test
-        legalPiece = true;
 
         //Setup data
         List<Vector2Int> dotPos = new List<Vector2Int>();
@@ -28,46 +27,63 @@ public class PieceElement : GridElement
 
         //Gate
         if (dotPos.Count == 0)
-            legalPiece = false;
-
-        int connectionMade = 0;
-        Stack<Vector2Int> neighbors = new Stack<Vector2Int>();
-        Vector2Int calculationPoint = dotPos[0];
-        dotPos.RemoveAt(0);
-        while (legalPiece)
         {
-            //Look for nieghbors
-            for (int i = dotPos.Count - 1; i >= 0; i--)
+            Debug.LogError("No Dots in Piece");
+            return;
+        }
+
+        
+        for (int i = 0; i < dotPos.Count; i++)
+        {
+            Vector2Int currentPos = dotPos[i];
+
+            //Get neighbors
+            List<Vector2Int> adjecontDots = new List<Vector2Int>();
+            List<Vector2Int> diagnolDots =  new List<Vector2Int>();
+
+            for (int j = 0; j < dotPos.Count; j++)
             {
-                //Do we have the point
-                if (neighbors.Contains(dotPos[i]))
+                if (i == j)
                     continue;
 
-                if(Vector2.Distance(calculationPoint, dotPos[i]) < 1.5f)
-                {
-                    neighbors.Push(dotPos[i]);
-                    dotPos.RemoveAt(i);
-                    connectionMade++;
-                }
-            }
+                //Find neighbors
+                float distance = Vector2.Distance(currentPos, dotPos[j]);
+                if(distance < 1.5f)
+                    diagnolDots.Add(dotPos[j]);
+                else if (distance <= 1f)
+                    adjecontDots.Add(dotPos[j]);
 
-            if(neighbors.Count == 0)
-            {
-                if(connectionMade < gridData.dotDictionary.Keys.Count - 1)
+                //Check for empty
+                if(diagnolDots.Count == 0 && adjecontDots.Count == 0)
                 {
-                    legalPiece = false;
                     Debug.Log("Error in making piece. Illegal dot placement.");
+                    return;
                 }
 
-                break;
-            }
-            else
-            {
-                calculationPoint = neighbors.Pop();
+                for (int k = 0; k < adjecontDots.Count; k++)
+                {
+                    Vector2Int[] diagnolToCheck = ToolMath.PerpendicularVectors(adjecontDots[k] - currentPos);
+
+                    foreach (Vector2Int item in diagnolToCheck)
+                    {
+                        if(diagnolDots.Contains(item))
+                            diagnolDots.Remove(item);
+                    }
+                }
+
+                foreach (Vector2Int item in adjecontDots)
+                {
+                    if(!connectionsMade.HaveElement(currentPos, item))
+                        connectionsMade.AddElement(currentPos, item);
+                }
+                foreach (Vector2Int item in diagnolDots)
+                {
+                    if (!connectionsMade.HaveElement(currentPos, item))
+                        connectionsMade.AddElement(currentPos, item);
+                }
             }
         }
 
-        if (legalPiece)
-            base.Construct(targetSize);
+        base.Construct(targetSize);
     }
 }
