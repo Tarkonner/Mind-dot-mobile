@@ -23,8 +23,8 @@ public class Piece : MonoBehaviour, IDragHandler
 
     [Header("Lines")]
     [SerializeField] private float dotSpacing;
-    private const float ADJACENT_THRESHOLD = 130f;
-    private const float DIAGONAL_THRESHOLD = 180f;
+    private const float adjacentThreshold = 130f;
+    private const float diagonalThreshold = 180f;
 
     public float DotSpacing { get { return dotSpacing; } }
     private List<UILine> connections = new List<UILine>();
@@ -178,7 +178,7 @@ public class Piece : MonoBehaviour, IDragHandler
                 {
                     float distance = Vector2.Distance(currentDot.GetComponent<RectTransform>().localPosition, checkingDot.GetComponent<RectTransform>().localPosition);
 
-                    if(distance < ADJACENT_THRESHOLD)
+                    if(distance < adjacentThreshold)
                     {
                         twoKeyDictionary.AddElement(currentDot, checkingDot);
                         makedConnectionCount[currentDot] = makedConnectionCount[currentDot] + 1;
@@ -202,7 +202,7 @@ public class Piece : MonoBehaviour, IDragHandler
                 {
                     float distance = Vector2.Distance(currentPosRec.GetComponent<RectTransform>().localPosition, checkingPosRec.GetComponent<RectTransform>().localPosition);
 
-                    if (distance < DIAGONAL_THRESHOLD)
+                    if (distance < diagonalThreshold)
                         twoKeyDictionary.AddElement(currentPosRec, checkingPosRec);
                 }
             }
