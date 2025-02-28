@@ -15,6 +15,7 @@ public class LevelEditor : EditorWindow
 
     //Editor
     VisualElement grid;
+    private int gridSize = 6;
     public List<CellElement> cells { get; private set; } = new List<CellElement>();
     private DotType placeDotType;
 
@@ -26,7 +27,7 @@ public class LevelEditor : EditorWindow
     ObjectField inputtedLevelField;
 
     //State machine
-    private EditorState currentState = new CellEditState();
+    EditorStateMachine stateMachine = new EditorStateMachine();
 
     //Pieces
     VisualElement pieceHolder;
@@ -47,17 +48,6 @@ public class LevelEditor : EditorWindow
         wnd.titleContent = new GUIContent("Level Editor");
     }
 
-
-    private void ChangeState(EditorState targetState)
-    {
-        if(currentState.GetType() != targetState.GetType())
-        {
-            currentState.Exit();
-            currentState = targetState;
-            currentState.Enter();
-        }
-    }
-
     public void OnEnable()
     {
         rootVisualElement.Add(styleSheet.Instantiate());
@@ -70,7 +60,7 @@ public class LevelEditor : EditorWindow
         verticalSlider = rootVisualElement.Q("VerticalValue") as SliderInt;
         ButtonAction("ResizeGrid").clicked      += () => ResizeGrid(new Vector2(horizontalSlider.value, verticalSlider.value));
         //Set start marked
-        SelectetAction("CellActivation").clicked  += () => ChangeState(new CellEditState());
+        SelectetAction("CellActivation").clicked  += () => stateMachine.ChangeState(new CellEditState());
 
         //Dots
         DotButton(rootVisualElement.Q<Button>("RedDot"), DotType.Red, Color.red);
@@ -79,18 +69,18 @@ public class LevelEditor : EditorWindow
 
         //Pieces
         pieceHolder = rootVisualElement.Q("PieceScroller");
-        SelectetAction("ChoosePieceCells").clicked += () => ChangeState(new MakePieceState());
+        SelectetAction("ChoosePieceCells").clicked += () => stateMachine.ChangeState(new MakePieceState());
         ButtonAction("MakePiece").clicked += () => 
-            { if (currentState is MakePieceState) ((MakePieceState)currentState).Execute(pieceHolder, eo_PieceHolder, this); };
+            { if (stateMachine.CurrentState is MakePieceState) ((MakePieceState)stateMachine.CurrentState).Execute(pieceHolder, eo_PieceHolder, this); };
 
         //Goal
         //Shape goals
         goalHolder = rootVisualElement.Q("GoalHolder");
-        SelectetAction("ChooseShapeGoalCells").clicked += () => ChangeState(new MakeShapeGoalState());
+        SelectetAction("ChooseShapeGoalCells").clicked += () => stateMachine.ChangeState(new MakeShapeGoalState());
         ButtonAction("MakeShapeGoal").clicked += () =>
-            { if (currentState is MakeShapeGoalState) ((MakeShapeGoalState)currentState).Execute(goalHolder, eo_GoalHolder, this); };
+            { if (stateMachine.CurrentState is MakeShapeGoalState) ((MakeShapeGoalState)stateMachine.CurrentState).Execute(goalHolder, eo_GoalHolder, this); };
         //Placement goals
-        SelectetAction("MakePlaceGoal").clicked += () => ChangeState(new MakePlaceGoalState());
+        SelectetAction("MakePlaceGoal").clicked += () => stateMachine.ChangeState(new MakePlaceGoalState());
 
         //Save and load
         namingField = rootVisualElement.Q("LevelsName") as TextField;
@@ -110,16 +100,16 @@ public class LevelEditor : EditorWindow
         grid.style.flexDirection = FlexDirection.Column;
 
         CellElement blueprint = new CellElement(Vector2Int.zero, this);
-        int gridSize = 7;
+        
 
         // Add cells to the grid
         // Create a new row element and add it to the grid
         VisualElement row = new VisualElement();
         row.style.flexDirection = FlexDirection.Row; // Set the row to align horizontally
         grid.Add(row);
-        for (int i = 0; i < 7; i++)
+        for (int i = 0; i < gridSize; i++)
         {
-            for (int j = 0; j < 7; j++)
+            for (int j = 0; j < gridSize; j++)
             {
                 var cellElement = new CellElement(new Vector2Int(j, i), this);
 
@@ -141,7 +131,7 @@ public class LevelEditor : EditorWindow
 
     void DotButton(Button targetButton, DotType targetDotType, Color targetColor)
     {
-        targetButton.clickable.clicked += () => { ChangeState(new PlaceDotState()); placeDotType = targetDotType; ChangeButtonColor(targetButton); };
+        targetButton.clickable.clicked += () => { stateMachine.ChangeState(new PlaceDotState()); placeDotType = targetDotType; ChangeButtonColor(targetButton); };
         Image dotImage = new Image();
         dotImage.sprite = Resources.Load<Sprite>("Circle");
         dotImage.tintColor = targetColor;
@@ -180,22 +170,22 @@ public class LevelEditor : EditorWindow
 
     public void OnCellClicked(CellElement cellElement, int buttonIndex)
     {
-        switch (currentState)
+        switch (stateMachine.CurrentState)
         {
             case CellEditState:
-                ((CellEditState)currentState).Execute(cellElement);
+                ((CellEditState)stateMachine.CurrentState).Execute(cellElement);
                 break;
             case PlaceDotState:
-                ((PlaceDotState)currentState).Execute(placeDotType, buttonIndex, cellElement);
+                ((PlaceDotState)stateMachine.CurrentState).Execute(placeDotType, buttonIndex, cellElement);
                 break;
             case MakePieceState:
-                ((CollectCells)currentState).AddCell(cellElement, CellColorState.choosenPiece);
+                ((CollectCells)stateMachine.CurrentState).AddCell(cellElement, CellColorState.choosenPiece);
                 break;
             case MakeShapeGoalState:
-                ((CollectCells)currentState).AddCell(cellElement, CellColorState.choosenGoal);
+                ((CollectCells)stateMachine.CurrentState).AddCell(cellElement, CellColorState.choosenGoal);
                 break;
             case MakePlaceGoalState:
-                ((MakePlaceGoalState)currentState).Execute(cellElement, buttonIndex, this);
+                ((MakePlaceGoalState)stateMachine.CurrentState).Execute(cellElement, buttonIndex, this);
                 break;
         }
     }
@@ -203,13 +193,13 @@ public class LevelEditor : EditorWindow
     private void ResizeGrid(Vector2 targetSize)
     {
         //Clamp
-        targetSize = new Vector2(Math.Clamp(horizontalSlider.value, 1, 7), Math.Clamp(verticalSlider.value, 1, 7));
+        targetSize = new Vector2(Math.Clamp(horizontalSlider.value, 1, gridSize), Math.Clamp(verticalSlider.value, 1, gridSize));
 
-        for (int x = 0; x < 7; x++)
+        for (int x = 0; x < gridSize; x++)
         {
-            for (int y = 0; y < 7; y++)
+            for (int y = 0; y < gridSize; y++)
             {
-                CellElement target = cells[y * 7 + x];
+                CellElement target = cells[y * gridSize + x];
 
                 if (targetSize.x <= x || targetSize.y <= y)
                 {
@@ -225,7 +215,7 @@ public class LevelEditor : EditorWindow
     
     private void PlaceDot(Vector2Int coordinats, DotType type)
     {
-        cells[coordinats.y * 7 + coordinats.x].SetDot(new DotElement(type));
+        cells[coordinats.y * gridSize + coordinats.x].SetDot(new DotElement(type));
     }
 
 
@@ -294,11 +284,11 @@ public class LevelEditor : EditorWindow
         shapeGoals.Clear();
 
         //Dots
-        for (int x = 0; x < 7; x++)
+        for (int x = 0; x < gridSize; x++)
         {
-            for (int y = 0; y < 7; y++)
+            for (int y = 0; y < gridSize; y++)
             {
-                CellElement target = cells[y * 7 + x];
+                CellElement target = cells[y * gridSize + x];
                 target.SetActiveState(true);
 
                 target.RemoveDot();
@@ -439,20 +429,20 @@ public class LevelEditor : EditorWindow
         LevelBoard targetGrid = targetLevel.levelGrid;
 
         //Load Dots
-        for (int y = 0; y < 7; y++)
+        for (int y = 0; y < gridSize; y++)
         {
-            for (int x = 0; x < 7; x++)
+            for (int x = 0; x < gridSize; x++)
             {
                 //Turn out of level cells off
                 if (x >= (int)targetGrid.boardSize.x ||
                     y >= (int)targetGrid.boardSize.y)
                 {
-                    cells[y * 7 + x].TurnOffCell();
+                    cells[y * gridSize + x].TurnOffCell();
                     continue;
                 }
 
                 int loadGridIndex = y * (int)targetGrid.boardSize.x + x;
-                int editorGridIndex = y * 7 + x;
+                int editorGridIndex = y * gridSize + x;
 
                 //See if grid is atice & if there is a dot
                 if (!targetGrid.activeCells[loadGridIndex])
@@ -476,7 +466,7 @@ public class LevelEditor : EditorWindow
 
         //Cleanup
         inputtedLevelField.value = null;
-        ChangeState(new CellEditState());
+        stateMachine.ChangeState(new CellEditState());
 
         //Ready to override
         inputtedLevelField.value = targetLevel;
@@ -494,9 +484,9 @@ public class LevelEditor : EditorWindow
         }
 
         //State machine
-        ChangeState(new MakePieceState());
-        ((MakePieceState)currentState).PremakeCells(result);
-        ((MakePieceState)currentState).Execute(pieceHolder, eo_PieceHolder, targetPiece, this);
+        stateMachine.ChangeState(new MakePieceState());
+        ((MakePieceState)stateMachine.CurrentState).PremakeCells(result);
+        ((MakePieceState)stateMachine.CurrentState).Execute(pieceHolder, eo_PieceHolder, targetPiece, this);
     }
 
     private void LoadShapeGoal(LevelShapeGoal targetShapeGoal)
@@ -512,9 +502,9 @@ public class LevelEditor : EditorWindow
         }
 
         //State machine
-        ChangeState(new MakeShapeGoalState());
-        ((MakeShapeGoalState)currentState).PremakeCells(result);
-        ((MakeShapeGoalState)currentState).Execute(goalHolder, eo_GoalHolder, targetShapeGoal, this);
+        stateMachine.ChangeState(new MakeShapeGoalState());
+        ((MakeShapeGoalState)stateMachine.CurrentState).PremakeCells(result);
+        ((MakeShapeGoalState)stateMachine.CurrentState).Execute(goalHolder, eo_GoalHolder, targetShapeGoal, this);
     }
     #endregion
 }

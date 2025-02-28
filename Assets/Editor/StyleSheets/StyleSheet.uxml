@@ -4,8 +4,8 @@
             <ui:Button text="Reset editor" parse-escape-sequences="true" display-tooltip-when-elided="true" name="ResetEditor" style="background-color: rgb(221, 134, 134);" />
             <ui:GroupBox name="Grid">
                 <ui:Label tabindex="-1" text="Cells" parse-escape-sequences="true" display-tooltip-when-elided="true" />
-                <ui:SliderInt picking-mode="Ignore" label="Horizontal Value" value="42" high-value="7" name="HorizontalValue" low-value="1" show-input-field="true" />
-                <ui:SliderInt picking-mode="Ignore" label="Vertical Value" value="42" high-value="7" name="VerticalValue" low-value="1" show-input-field="true" inverted="false" />
+                <ui:SliderInt picking-mode="Ignore" label="Horizontal Value" value="42" high-value="6" name="HorizontalValue" low-value="1" show-input-field="true" />
+                <ui:SliderInt picking-mode="Ignore" label="Vertical Value" value="42" high-value="6" name="VerticalValue" low-value="1" show-input-field="true" inverted="false" />
                 <ui:Button text="Input Cell toggle" parse-escape-sequences="true" display-tooltip-when-elided="true" name="ResizeGrid" binding-path="ResizeGrid" />
                 <ui:Button text="Cell toggle" parse-escape-sequences="true" display-tooltip-when-elided="true" name="CellActivation" />
             </ui:GroupBox>
