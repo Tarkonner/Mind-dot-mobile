@@ -23,10 +23,9 @@ public class LevelBoard
         {
             for (int x = 0; x < boardSize.x; x++)
             {
-                cellsToCheck.Add(cells[y * 7 + x]);
+                cellsToCheck.Add(cells[y * 6 + x]);
             }
         }
-
         for (int i = 0; i < boardTotalLengh; i++)
         {
             if (!cellsToCheck[i].turnedOff)

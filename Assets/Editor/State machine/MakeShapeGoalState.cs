@@ -46,7 +46,7 @@ public class MakeShapeGoalState : CollectCells
         //Set Color for cells
         for (int i = 0; i < shapeGoal.goalSpecifications.Length; i++)
         {
-            CellElement target = levelEditor.cells[(int)((shapeGoal.goalSpecifications[i].y + shapeGoal.gridPosRef.y) * 7 + (shapeGoal.goalSpecifications[i].x + shapeGoal.gridPosRef.x))];
+            CellElement target = levelEditor.interactiveGrid.cells[(int)((shapeGoal.goalSpecifications[i].y + shapeGoal.gridPosRef.y) * InteractiveGrid.gridSize + (shapeGoal.goalSpecifications[i].x + shapeGoal.gridPosRef.x))];
 
             target.ChangeCellColor(CellColorState.partGoal);
             cells.Add(target);

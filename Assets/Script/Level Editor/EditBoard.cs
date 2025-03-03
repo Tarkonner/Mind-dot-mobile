@@ -15,7 +15,7 @@ public class EditBoard : Board
 
     public void CellEditor()
     {
-        Vector2Int levelSize = new Vector2Int(7, 7); //7 is the max size of cells there can be on screen
+        Vector2Int levelSize = new Vector2Int(6, 6); //7 is the max size of cells there can be on screen
         grid = new Cell[levelSize.x, levelSize.y];
         spawnerGrid = new GameObject[levelSize.x, levelSize.y];
 

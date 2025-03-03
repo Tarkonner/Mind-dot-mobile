@@ -181,7 +181,7 @@ public class CellElement : Image
 
     private void OnMouseDown(MouseDownEvent evt)
     {
-        // Call the OnCellClicked method of the LevelEditor window
+        // Call the OnCellClicked method of the levelEditor window
         levelEditor.OnCellClicked(this, evt.button);
     }
 
