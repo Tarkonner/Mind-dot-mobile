@@ -64,6 +64,9 @@ public class LevelEditor : EditorWindow
         //Set start marked
         buttonController.SelectetAction("CellActivation").clicked  += () => stateMachine.ChangeState(new CellEditState());
 
+        //Level generation
+        buttonController.ButtonAction("RandomLevelGeneration").clicked += () => interactiveGrid.MakeRandomCells(false);
+
         //Dots
         buttonController.DotButton(rootVisualElement.Q<Button>("RedDot"),    DotType.Red, Color.red);
         buttonController.DotButton(rootVisualElement.Q<Button>("BlueDot"),   DotType.Blue, Color.blue);

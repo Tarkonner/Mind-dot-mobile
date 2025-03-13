@@ -1,5 +1,6 @@
-using System.Collections;
+using System;
 using System.Collections.Generic;
+using Unity.Mathematics;
 using UnityEngine;
 using UnityEngine.UIElements;
 
@@ -86,5 +87,109 @@ public class InteractiveGrid
         boardSize.y += 1;
 
         return boardSize;
+    }
+
+    /// <summary>
+    /// 
+    /// </summary>
+    /// <param name="samatic">Over the horizontal axtis</param>
+    public void MakeRandomCells(bool samatic)
+    {
+        // Turn all cells off
+        foreach (CellElement item in cells)
+            item.TurnOffCell();
+
+        float outerChanceForDisable = .75f;
+        float interChanceForDisable = .5f;
+
+        // Level size
+        Vector2Int levelSize = new Vector2Int((int)UnityEngine.Random.Range(3, gridSize + 1), (int)UnityEngine.Random.Range(3, gridSize + 1));
+
+        if (!samatic)
+        {
+            List<List<CellElement>> layers = GetGridLayers(levelSize);
+
+            for (int i = 0; i < layers.Count; i++)
+            {
+                float chance = outerChanceForDisable - ((outerChanceForDisable - interChanceForDisable) / (layers.Count - 1)) * i;
+
+                foreach (CellElement item in layers[i])
+                {
+                    float disableResult = UnityEngine.Random.Range(0f, 1f);
+                    if (disableResult < chance)
+                        item.SetActiveState(true);
+                }
+            }
+        }
+    }
+
+    List<List<CellElement>> GetGridLayers(Vector2Int levelSize)
+    {
+
+        List<List<Vector2Int>> cellPos = GridLayersPositionValues(levelSize);
+
+        List<List<CellElement>> layersResult = new List<List<CellElement>>();
+        for (int i = 0; i < cellPos.Count; i++)
+            layersResult.Add(new List<CellElement>());
+
+        foreach (CellElement c in cells)
+        {
+            Vector2Int pos = c.cellData.gridCoordinates;
+
+            for (int i = 0; i < cellPos.Count; i++)
+            {
+                for (int j = 0; j < cellPos[i].Count; j++)
+                {
+                    if(cellPos[i][j] == pos)
+                    {
+                        layersResult[i].Add(c);
+                        break;
+                    }
+                }
+            }
+        }
+
+        return layersResult;
+    }
+
+    List<List<Vector2Int>> GridLayersPositionValues(Vector2Int gridSize)
+    {
+        List<List<Vector2Int>> results = new List<List<Vector2Int>>();
+
+        Vector2Int xValues = new Vector2Int(0, gridSize.x - 1);
+        Vector2Int yValues = new Vector2Int(0, gridSize.y - 1);
+
+        int layers = (Math.Min(gridSize.x, gridSize.y) + 1) / 2;
+        List<Vector2Int> usetPositon = new List<Vector2Int>();
+
+        for (int l = 0; l < layers; l++)
+        {
+            List<Vector2Int> values = new List<Vector2Int>();
+
+            for (int x = 0; x < gridSize.x; x++)
+            {
+                for (int y = 0; y < gridSize.y; y++)
+                {
+                    Vector2Int coordinat = new Vector2Int(x, y);
+
+                    if (usetPositon.Contains(coordinat))
+                        continue;
+
+                    if (x == xValues.x || (x == xValues.y && xValues.y > xValues.x) ||
+                        y == yValues.x || (y == yValues.y && yValues.y > yValues.x))
+                    {
+                        usetPositon.Add(coordinat);
+                        values.Add(coordinat);
+                    }
+                }
+            }
+
+            results.Add(values);
+
+            xValues = new Vector2Int(xValues.x + 1, xValues.y - 1);
+            yValues = new Vector2Int(yValues.x + 1, yValues.y - 1);
+        }
+
+        return results;
     }
 }

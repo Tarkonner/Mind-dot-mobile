@@ -186,7 +186,7 @@ public class CellElement : Image
     }
 
 
-    public void TurnOffCell() => SetActiveState(cellData.turnedOff);
+    public void TurnOffCell() => SetActiveState(false);
     public void SetActiveState(bool targetState)
     {
         if (targetState)
