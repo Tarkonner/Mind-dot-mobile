@@ -89,11 +89,7 @@ public class InteractiveGrid
         return boardSize;
     }
 
-    /// <summary>
-    /// 
-    /// </summary>
-    /// <param name="samatic">Over the horizontal axtis</param>
-    public void MakeRandomCells(bool samatic)
+    public void MakeRandomCells()
     {
         // Turn all cells off
         foreach (CellElement item in cells)
@@ -105,20 +101,17 @@ public class InteractiveGrid
         // Level size
         Vector2Int levelSize = new Vector2Int((int)UnityEngine.Random.Range(3, gridSize + 1), (int)UnityEngine.Random.Range(3, gridSize + 1));
 
-        if (!samatic)
+        List<List<CellElement>> layers = GetGridLayers(levelSize);
+
+        for (int i = 0; i < layers.Count; i++)
         {
-            List<List<CellElement>> layers = GetGridLayers(levelSize);
+            float chance = outerChanceForDisable - ((outerChanceForDisable - interChanceForDisable) / (layers.Count - 1)) * i;
 
-            for (int i = 0; i < layers.Count; i++)
+            foreach (CellElement item in layers[i])
             {
-                float chance = outerChanceForDisable - ((outerChanceForDisable - interChanceForDisable) / (layers.Count - 1)) * i;
-
-                foreach (CellElement item in layers[i])
-                {
-                    float disableResult = UnityEngine.Random.Range(0f, 1f);
-                    if (disableResult < chance)
-                        item.SetActiveState(true);
-                }
+                float disableResult = UnityEngine.Random.Range(0f, 1f);
+                if (disableResult < chance)
+                    item.SetActiveState(true);
             }
         }
     }

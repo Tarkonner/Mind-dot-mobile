@@ -1,6 +1,7 @@
 using SharedData;
 using System;
 using System.Collections.Generic;
+using Unity.Mathematics;
 using UnityEditor;
 using UnityEditor.UIElements;
 using UnityEngine;
@@ -65,7 +66,8 @@ public class LevelEditor : EditorWindow
         buttonController.SelectetAction("CellActivation").clicked  += () => stateMachine.ChangeState(new CellEditState());
 
         //Level generation
-        buttonController.ButtonAction("RandomLevelGeneration").clicked += () => interactiveGrid.MakeRandomCells(false);
+        buttonController.ButtonAction("RandomLevelGeneration").clicked += () => interactiveGrid.MakeRandomCells();
+        buttonController.ButtonAction("PlaceRandomDots").clicked += () => FillLevelWithDots();
 
         //Dots
         buttonController.DotButton(rootVisualElement.Q<Button>("RedDot"),    DotType.Red, Color.red);
@@ -143,7 +145,13 @@ public class LevelEditor : EditorWindow
         interactiveGrid.cells[coordinats.y * InteractiveGrid.gridSize + coordinats.x].SetDot(new DotElement(type));
     }
 
-
+    //Give a DotType without null
+    private DotType RandomDotType()
+    {
+        //Get random dot type (Without null
+        Array values = Enum.GetValues(typeof(DotType));
+        return (DotType)values.GetValue(UnityEngine.Random.Range(1, values.Length));
+    }
 
     public void RemovePiecesDots(PieceElement target)
     {
@@ -220,6 +228,17 @@ public class LevelEditor : EditorWindow
                 target.SetDefaultColor();
                 target.RemovePlacementGoal();
             }
+        }
+    }
+
+    //Place dot on board
+    void FillLevelWithDots()
+    {
+        float placeDotChance = .75f;
+        foreach (CellElement cell in interactiveGrid.cells)
+        {
+            if((float)UnityEngine.Random.Range(0f, 1f) < placeDotChance)
+                cell.SetDot(new DotElement(RandomDotType()));
         }
     }
 

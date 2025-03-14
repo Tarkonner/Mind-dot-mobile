@@ -107,6 +107,9 @@ public class CellElement : Image
 
     public void SetDot(DotElement dot)
     {
+        if (cellData.turnedOff || dotRef != null)
+            return;
+
         dotRef = dot;
         cellData.holding = dot.DotData;
         this.Add(dot);
@@ -187,6 +190,7 @@ public class CellElement : Image
 
 
     public void TurnOffCell() => SetActiveState(false);
+    public void ToggleCellActive() => SetActiveState(cellData.turnedOff);
     public void SetActiveState(bool targetState)
     {
         if (targetState)

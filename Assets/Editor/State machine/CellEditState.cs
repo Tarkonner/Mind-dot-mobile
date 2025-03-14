@@ -6,6 +6,7 @@ public class CellEditState : EditorState
 {
     public void Execute(CellElement cell)
     {
-        cell.TurnOffCell();
+        //cell.SetActiveState(false);
+        cell.ToggleCellActive();
     }
 }
