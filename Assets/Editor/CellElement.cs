@@ -200,11 +200,10 @@ public class CellElement : Image
         }
         else
         {
+            RemoveDot();
             cellData.turnedOff = true;
-
             ChangeCellColor(CellColorState.turnedOff);
 
-            RemoveDot();
         }
     }
 
