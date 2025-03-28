@@ -9,6 +9,8 @@ using UnityEngine.UIElements;
 
 public class LevelEditor : EditorWindow
 {
+    public VisualElement mainRoot { get; private set; }
+
     //Style
     public VisualTreeAsset styleSheet;
     public VisualTreeAsset eo_PieceHolder;
@@ -51,6 +53,7 @@ public class LevelEditor : EditorWindow
     public void OnEnable()
     {
         rootVisualElement.Add(styleSheet.Instantiate());
+        mainRoot = rootVisualElement;
 
         //Button
         buttonController = new ButtonController(rootVisualElement, this);
@@ -61,7 +64,7 @@ public class LevelEditor : EditorWindow
         //Cells
         horizontalSlider = rootVisualElement.Q("HorizontalValue") as SliderInt;
         verticalSlider = rootVisualElement.Q("VerticalValue") as SliderInt;
-        buttonController.ButtonAction("ResizeGrid").clicked += () => interactiveGrid.ResizeGrid(new Vector2(horizontalSlider.value, verticalSlider.value));
+        buttonController.ButtonAction("ResizeGrid").clicked += () => interactiveGrid.ResizeGrid();
         //Set start marked
         buttonController.SelectetAction("CellActivation").clicked  += () => stateMachine.ChangeState(new CellEditState());
 

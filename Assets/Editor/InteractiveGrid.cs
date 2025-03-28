@@ -12,10 +12,19 @@ public class InteractiveGrid
 
     public const int gridSize = 6;
 
+    //Options
+    SliderInt horizontalSlider;
+    SliderInt verticalSlider;
+    Toggle useCurrentGridSizeToggle;
+
     public InteractiveGrid(VisualElement root, LevelEditor levelEditor)
     {
         this.root = root;
         this.levelEditor = levelEditor;
+
+        horizontalSlider = levelEditor.mainRoot.Q("HorizontalValue") as SliderInt;
+        verticalSlider = levelEditor.mainRoot.Q("VerticalValue") as SliderInt;
+        useCurrentGridSizeToggle = levelEditor.mainRoot.Q("UsesCurrentGridSize") as Toggle;
 
         MakeGrid();
     }
@@ -52,7 +61,7 @@ public class InteractiveGrid
         }
     }
 
-    public void ResizeGrid(Vector2 targetSize)
+    public void ResizeGrid()
     {
         //Clamp
         for (int x = 0; x < gridSize; x++)
@@ -61,7 +70,7 @@ public class InteractiveGrid
             {
                 CellElement target = cells[y * gridSize + x];
 
-                if (targetSize.x <= x || targetSize.y <= y)
+                if (horizontalSlider.value <= x || verticalSlider.value <= y)
                 {
                     target.RemoveDot();
                     target.SetActiveState(false);
@@ -99,7 +108,9 @@ public class InteractiveGrid
         float interChanceForDisable = .5f;
 
         // Level size
-        Vector2Int levelSize = new Vector2Int((int)UnityEngine.Random.Range(3, gridSize + 1), (int)UnityEngine.Random.Range(3, gridSize + 1));
+        Vector2Int levelSize = new Vector2Int(horizontalSlider.value, verticalSlider.value);
+        if (!useCurrentGridSizeToggle.value)
+            levelSize = new Vector2Int((int)UnityEngine.Random.Range(3, gridSize + 1), (int)UnityEngine.Random.Range(3, gridSize + 1));
 
         List<List<CellElement>> layers = GetGridLayers(levelSize);
 

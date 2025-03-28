@@ -10,6 +10,7 @@
             </ui:GroupBox>
             <ui:GroupBox name="LevelGeneration">
                 <ui:Label text="Level generation" />
+                <ui:Toggle label="Uses current grid size" name="UsesCurrentGridSize" />
                 <ui:Button text="Random level generation" name="RandomLevelGeneration" />
                 <ui:Button text="Place random dots on board" name="PlaceRandomDots" />
             </ui:GroupBox>
