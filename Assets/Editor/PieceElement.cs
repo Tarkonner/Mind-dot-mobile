@@ -52,35 +52,35 @@ public class PieceElement : GridElement
                     diagnolDots.Add(dotPos[j]);
                 else if (distance <= 1f)
                     adjecontDots.Add(dotPos[j]);
+            }
 
-                //Check for empty
-                if(diagnolDots.Count == 0 && adjecontDots.Count == 0)
-                {
-                    Debug.Log("Error in making piece. Illegal dot placement.");
-                    return;
-                }
+            //Check for empty
+            if (diagnolDots.Count == 0 && adjecontDots.Count == 0)
+            {
+                Debug.Log("Error in making piece. Illegal dot placement.");
+                return;
+            }
 
-                for (int k = 0; k < adjecontDots.Count; k++)
-                {
-                    Vector2Int[] diagnolToCheck = ToolMath.PerpendicularVectors(adjecontDots[k] - currentPos);
+            for (int k = 0; k < adjecontDots.Count; k++)
+            {
+                Vector2Int[] diagnolToCheck = ToolMath.PerpendicularVectors(adjecontDots[k] - currentPos);
 
-                    foreach (Vector2Int item in diagnolToCheck)
-                    {
-                        if(diagnolDots.Contains(item))
-                            diagnolDots.Remove(item);
-                    }
+                foreach (Vector2Int item in diagnolToCheck)
+                {
+                    if (diagnolDots.Contains(item))
+                        diagnolDots.Remove(item);
                 }
+            }
 
-                foreach (Vector2Int item in adjecontDots)
-                {
-                    if(!connectionsMade.HaveElement(currentPos, item))
-                        connectionsMade.AddElement(currentPos, item);
-                }
-                foreach (Vector2Int item in diagnolDots)
-                {
-                    if (!connectionsMade.HaveElement(currentPos, item))
-                        connectionsMade.AddElement(currentPos, item);
-                }
+            foreach (Vector2Int item in adjecontDots)
+            {
+                if (!connectionsMade.HaveElement(currentPos, item))
+                    connectionsMade.AddElement(currentPos, item);
+            }
+            foreach (Vector2Int item in diagnolDots)
+            {
+                if (!connectionsMade.HaveElement(currentPos, item))
+                    connectionsMade.AddElement(currentPos, item);
             }
         }
 
