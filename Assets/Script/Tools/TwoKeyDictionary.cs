@@ -3,35 +3,44 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
+[System.Serializable]
+public class ConnectionData<T>
+{
+    public T key1;
+    public T key2;
+}
+
+[System.Serializable]
 public class TwoKeyDictionary<T>
 {
-    public Dictionary<Tuple<T, T>, bool> keyValues = new Dictionary<Tuple<T, T>, bool>();
-
-    public bool HaveElement(T key1, T key2)
-    {
-        // Check normal key values
-        Tuple<T, T> normalResult = new Tuple<T, T>(key1, key2);
-        if (keyValues.ContainsKey(normalResult))
-            return true;
-
-        // Check mirror key values
-        Tuple<T, T> mirrorResult = new Tuple<T, T>(key2, key1);
-        if (keyValues.ContainsKey(mirrorResult))
-            return true;
-
-        return false;
-    }
+    [SerializeField] private List<ConnectionData<T>> connections = new List<ConnectionData<T>>();
 
     public void AddElement(T key1, T key2)
     {
-        // Add normal key values
-        Tuple<T, T> normalResult = new Tuple<T, T>(key1, key2);
-        if (!keyValues.ContainsKey(normalResult))
-            keyValues.Add(normalResult, true);
+        // Check if the connection already exists
+        if (!HaveElement(key1, key2))
+        {
+            // Add both normal and mirrored connections
+            connections.Add(new ConnectionData<T> { key1 = key1, key2 = key2 });
+            connections.Add(new ConnectionData<T> { key1 = key2, key2 = key1 });
+        }
+    }
 
-        // Add mirror key values
-        Tuple<T, T> mirrorResult = new Tuple<T, T>(key2, key1);
-        if (!keyValues.ContainsKey(mirrorResult))
-            keyValues.Add(mirrorResult, true);
+    public bool HaveElement(T key1, T key2)
+    {
+        foreach (var connection in connections)
+        {
+            if ((connection.key1.Equals(key1) && connection.key2.Equals(key2)) ||
+                (connection.key1.Equals(key2) && connection.key2.Equals(key1)))
+            {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    public List<ConnectionData<T>> GetConnections()
+    {
+        return connections;
     }
 }

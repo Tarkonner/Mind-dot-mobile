@@ -9,7 +9,7 @@ using UnityEngine.UIElements;
 public class PieceElement : GridElement
 {
     public VisualElement holder;
-    TwoKeyDictionary<Vector2Int> connectionsMade = new TwoKeyDictionary<Vector2Int>();
+    public PieceData PieceData => gridData as PieceData;
 
     public override void Construct(Vector2Int targetSize)
     {
@@ -74,13 +74,13 @@ public class PieceElement : GridElement
 
             foreach (Vector2Int item in adjecontDots)
             {
-                if (!connectionsMade.HaveElement(currentPos, item))
-                    connectionsMade.AddElement(currentPos, item);
+                if (!PieceData.connectionsMade.HaveElement(currentPos, item))
+                    PieceData.connectionsMade.AddElement(currentPos, item);
             }
             foreach (Vector2Int item in diagnolDots)
             {
-                if (!connectionsMade.HaveElement(currentPos, item))
-                    connectionsMade.AddElement(currentPos, item);
+                if (!PieceData.connectionsMade.HaveElement(currentPos, item))
+                    PieceData.connectionsMade.AddElement(currentPos, item);
             }
         }
 

@@ -4,6 +4,7 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using Unity.VisualScripting;
+using UnityEditor.MemoryProfiler;
 using UnityEngine;
 using UnityEngine.EventSystems;
 using UnityEngine.UI;
@@ -156,12 +157,9 @@ public class Piece : MonoBehaviour, IDragHandler
         }
 
         //Make lines
-        foreach (var item in targetPiece.connectionsMade.keyValues)
+        foreach (var connection in targetPiece.connectionsMade.GetConnections())
         {
-            var k = item.Key.ToValueTuple();
-            
-
-            CreateLine(GetDotAtGridPosition(k.Item1), GetDotAtGridPosition(k.Item2));
+            CreateLine(GetDotAtGridPosition(connection.key1), GetDotAtGridPosition(connection.key2));
         }
 
         //Find center
