@@ -9,7 +9,7 @@ using UnityEngine;
 public static class LevelConverter
 {
 # if(UNITY_EDITOR)
-    private static string version = "0.1";
+    private static string version = "0.2";
     public static (bool, LevelSO) SaveLevel(string title, List<PieceData> pEs, 
         List<CellData> board, Vector2 boardSize, List<GridData> sGEs, List<PlaceGoalData> pGEs)
     {

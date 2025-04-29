@@ -14,6 +14,9 @@ public class LevelSO : ScriptableObject
     [SerializeField] public LevelShapeGoal[] levelShapeGoals;
     [SerializeField] public LevelPlaceGoal[] levelPlaceGoals;
 
+    public int[] piecesPlacementOptions;
+    public int totalPlacementOptions;
+
     public LevelSO() { }
 #nullable enable
     private void Init(string? levelTitle, LevelBoard levelGrid,
