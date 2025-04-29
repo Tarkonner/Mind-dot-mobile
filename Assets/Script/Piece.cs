@@ -25,8 +25,6 @@ public class Piece : MonoBehaviour, IDragHandler
 
     [Header("Lines")]
     [SerializeField] private float dotSpacing;
-    private const float adjacentThreshold = 130f;
-    private const float diagonalThreshold = 180f;
 
     public float DotSpacing { get { return dotSpacing; } }
     private List<UILine> connections = new List<UILine>();

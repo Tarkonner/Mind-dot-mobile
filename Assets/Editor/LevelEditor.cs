@@ -1,6 +1,7 @@
 using SharedData;
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using Unity.Mathematics;
 using UnityEditor;
 using UnityEditor.UIElements;
@@ -235,12 +236,99 @@ public class LevelEditor : EditorWindow
         }
     }
 
-    //Piece meta data
-    private bool FreeSpace(PieceData pieceData)
+    public int CountValidPlacements(PieceElement piece)
     {
-        
+        // Normalize original piece shape to top-left corner
+        List<Vector2Int> originalDotPositions = piece.GetDotCellPositions();
+        for (int i = 0; i < originalDotPositions.Count; i++)
+        {
+            originalDotPositions[i] -= piece.gridData.gridPosRef;
+        }
 
-        return false;
+        int validPlacementCount = 0;
+        Vector2 gridSize = interactiveGrid.GridSize();
+
+        // Try all 4 90-degree rotations
+        for (int rotation = 0; rotation < 4; rotation++)
+        {
+            List<Vector2Int> rotatedDots = RotateDots(originalDotPositions, rotation);
+
+            for (int x = 0; x < gridSize.x; x++)
+            {
+                for (int y = 0; y < gridSize.y; y++)
+                {
+                    bool canPlace = true;
+
+                    for (int i = 0; i < rotatedDots.Count; i++)
+                    {
+                        Vector2Int cal = rotatedDots[i] + new Vector2Int(x, y);
+                        if (cal.x < 0 || cal.x >= gridSize.x || cal.y < 0 || cal.y >= gridSize.y)
+                        {
+                            canPlace = false;
+                            break;
+                        }
+
+                        CellElement cell = interactiveGrid.cells[cal.y * InteractiveGrid.gridSize + cal.x];
+                        if (cell.cellData.turnedOff)
+                        {
+                            canPlace = false;
+                            break;
+                        }
+                        if (!cell.cellData.partOfPiece && cell.cellData.holding != null)
+                        {
+                            canPlace = false;
+                            break;
+                        }
+                    }
+
+                    if (canPlace)
+                        validPlacementCount++;
+                }
+            }
+        }
+
+        return validPlacementCount;
+    }
+
+    private List<Vector2Int> RotateDots(List<Vector2Int> dots, int rotation)
+    {
+        List<Vector2Int> rotated = new List<Vector2Int>();
+
+        foreach (var dot in dots)
+        {
+            Vector2Int r;
+
+            switch (rotation)
+            {
+                case 0: // 0°
+                    r = new Vector2Int(dot.x, dot.y);
+                    break;
+                case 1: // 90°
+                    r = new Vector2Int(-dot.y, dot.x);
+                    break;
+                case 2: // 180°
+                    r = new Vector2Int(-dot.x, -dot.y);
+                    break;
+                case 3: // 270°
+                    r = new Vector2Int(dot.y, -dot.x);
+                    break;
+                default:
+                    r = dot;
+                    break;
+            }
+
+            rotated.Add(r);
+        }
+
+        // Normalize to top-left (0,0) based position
+        int minX = rotated.Min(p => p.x);
+        int minY = rotated.Min(p => p.y);
+        for (int i = 0; i < rotated.Count; i++)
+        {
+            rotated[i] -= new Vector2Int(minX, minY);
+        }
+
+        return rotated;
     }
 
     #region Save
@@ -254,29 +342,12 @@ public class LevelEditor : EditorWindow
         else
         {
             LevelSO level = (LevelSO)inputtedLevelField.value;
-
-            //Cell
-            List<CellData> cellDatas = new List<CellData>();
-            foreach (CellElement item in interactiveGrid.cells)
-                cellDatas.Add(item.cellData);
-            //Piece
-            LevelPiece[] pieces = new LevelPiece[piecesData.Count];
-            for (int i = 0; i < piecesData.Count; i++)
-            {
-                pieces[i] = new LevelPiece(piecesData[i].gridData as PieceData);
-            }
-            //Shape goals
-            LevelShapeGoal[] shape = new LevelShapeGoal[shapeGoals.Count];
-            for (int i = 0; i < shapeGoals.Count; i++)
-            {
-                shape[i] = new LevelShapeGoal(shapeGoals[i].gridData);
-            }
-            //Placement goals
-            LevelPlaceGoal[] place = new LevelPlaceGoal[placeGoalCells.Count];
-            for (int i = 0; i < placeGoalCells.Count; i++)
-            {
-                place[i] = new LevelPlaceGoal(placeGoalCells[i].cellData.gridCoordinates, placeGoalCells[i].cellData.holding.dotType);
-            }
+                        
+            // Collect data
+            List<CellData> cellDatas = GetCellData();
+            LevelPiece[] pieces = GetLevelPieces();
+            LevelShapeGoal[] shape = GetShapeGoals();
+            LevelPlaceGoal[] place = GetPlacementGoals();
 
             level.LevelOverride(new LevelBoard(cellDatas, interactiveGrid.GridSize()), pieces, shape, place);
 
@@ -323,28 +394,14 @@ public class LevelEditor : EditorWindow
         if(namingField.value != null)
             levelName = namingField.value.ToString();
 
-        //Converter
-        //Cell
-        List<CellData> cellDatas = new List<CellData>();
-        foreach (CellElement item in interactiveGrid.cells)
-            cellDatas.Add(item.cellData);
-        //Piece
-        List<PieceData> pieceDatas = new List<PieceData>();
-        foreach (PieceElement data in piecesData)
-            pieceDatas.Add(data.gridData as PieceData);
-        //Shape goals
-        List<GridData> gridDatas = new List<GridData>();
-        foreach (GridElement item in shapeGoals)
-            gridDatas.Add(item.gridData);
-        //Placement goals
-        List<PlaceGoalElement> placeGoals = new List<PlaceGoalElement>();
-        foreach (var cell in placeGoalCells)
-            placeGoals.Add(cell.placeGoal);
-        List<PlaceGoalData> placeGoalDatas = new List<PlaceGoalData>();
-        foreach (PlaceGoalElement item in placeGoals)
-            placeGoalDatas.Add(item.placeGoalData);
+        // Collect data
+        List<CellData> cellDatas = GetCellData();
+        List<PieceData> pieceDatas = GetPieceData();
+        List<GridData> gridDatas = GetShapeGridData();
+        List<PlaceGoalData> placeGoalDatas = GetPlacementGoalData();
 
         //Make SO
+        /*
         (bool workingLevel, LevelSO SO_Level) = LevelConverter.SaveLevel(levelName, pieceDatas, cellDatas, interactiveGrid.GridSize(), gridDatas, placeGoalDatas);
 
         //Message statues
@@ -359,6 +416,76 @@ public class LevelEditor : EditorWindow
             Debug.Log("Error saving level");
             namingField.value = null;
         }
+        */
+    }
+    #endregion
+
+    #region Collect data
+    private List<CellData> GetCellData()
+    {
+        List<CellData> cellDatas = new List<CellData>();
+        foreach (CellElement item in interactiveGrid.cells)
+            cellDatas.Add(item.cellData);
+        return cellDatas;
+    }
+
+    private LevelPiece[] GetLevelPieces()
+    {
+        LevelPiece[] pieces = new LevelPiece[piecesData.Count];
+        for (int i = 0; i < piecesData.Count; i++)
+            pieces[i] = new LevelPiece(piecesData[i].gridData as PieceData);
+        return pieces;
+    }
+
+    private List<PieceData> GetPieceData()
+    {
+        for (int i = 0; i < piecesData.Count; i++)
+        {
+            Debug.Log(CountValidPlacements(piecesData[i]));
+        }
+
+        List<PieceData> pieceDatas = new List<PieceData>();
+        foreach (PieceElement data in piecesData)
+            pieceDatas.Add(data.gridData as PieceData);
+        return pieceDatas;
+    }
+
+    private LevelShapeGoal[] GetShapeGoals()
+    {
+        LevelShapeGoal[] shape = new LevelShapeGoal[shapeGoals.Count];
+        for (int i = 0; i < shapeGoals.Count; i++)
+            shape[i] = new LevelShapeGoal(shapeGoals[i].gridData);
+        return shape;
+    }
+
+    private List<GridData> GetShapeGridData()
+    {
+        List<GridData> gridDatas = new List<GridData>();
+        foreach (GridElement item in shapeGoals)
+            gridDatas.Add(item.gridData);
+        return gridDatas;
+    }
+
+    private LevelPlaceGoal[] GetPlacementGoals()
+    {
+        LevelPlaceGoal[] place = new LevelPlaceGoal[placeGoalCells.Count];
+        for (int i = 0; i < placeGoalCells.Count; i++)
+        {
+            place[i] = new LevelPlaceGoal(
+                placeGoalCells[i].cellData.gridCoordinates,
+                placeGoalCells[i].cellData.holding.dotType);
+        }
+        return place;
+    }
+
+    private List<PlaceGoalData> GetPlacementGoalData()
+    {
+        List<PlaceGoalData> placeGoalDatas = new List<PlaceGoalData>();
+        foreach (var cell in placeGoalCells)
+        {
+            placeGoalDatas.Add(cell.placeGoal.placeGoalData);
+        }
+        return placeGoalDatas;
     }
     #endregion
 

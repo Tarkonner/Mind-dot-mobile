@@ -86,4 +86,18 @@ public class PieceElement : GridElement
 
         base.Construct(targetSize);
     }
+
+    public List<Vector2Int> GetDotCellPositions()
+    {
+        if (gridData == null || gridData.dotDictionary == null)
+            return new List<Vector2Int>();
+
+        List<Vector2Int> worldPositions = new List<Vector2Int>();
+        foreach (var localPos in gridData.dotDictionary.Keys)
+        {
+            worldPositions.Add(localPos + gridData.gridPosRef); // Convert to world position
+        }
+
+        return worldPositions;
+    }
 }
