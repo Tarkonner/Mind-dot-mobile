@@ -287,10 +287,15 @@ public class LevelEditor : EditorWindow
     }
     private void SaveLevelToSO()
     {
-        //Legal level
-        if(piecesData.Count == 0)
+        #region Legal level rules
+        if (piecesData.Count == 0)
         {
             Debug.Log("No Pieces in level");
+            return;
+        }
+        if(piecesData.Count > 4)
+        {
+            Debug.Log("To many pieces");
             return;
         }
         if(shapeGoals.Count == 0 && placeGoalCells.Count == 0)
@@ -308,6 +313,7 @@ public class LevelEditor : EditorWindow
             Debug.Log("Too many Shape goals");
             return;
         }
+        #endregion
 
         //Set typed name
         string levelName = "";
