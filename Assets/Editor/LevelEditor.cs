@@ -18,11 +18,7 @@ public class LevelEditor : EditorWindow
 
     //Editor    
     public InteractiveGrid interactiveGrid;   
-    
-
-    //Cell
-    SliderInt horizontalSlider;
-    SliderInt verticalSlider;
+   
     //Save and load
     TextField namingField;
     ObjectField inputtedLevelField;
@@ -30,7 +26,6 @@ public class LevelEditor : EditorWindow
     //State machine
     public EditorStateMachine stateMachine = new EditorStateMachine();
     
-
     //Pieces
     VisualElement pieceHolder;
     public List<PieceElement> piecesData = new List<PieceElement>();
@@ -62,8 +57,6 @@ public class LevelEditor : EditorWindow
         buttonController.ButtonAction("ResetEditor").clicked += ClearAll;
 
         //Cells
-        horizontalSlider = rootVisualElement.Q("HorizontalValue") as SliderInt;
-        verticalSlider = rootVisualElement.Q("VerticalValue") as SliderInt;
         buttonController.ButtonAction("ResizeGrid").clicked += () => interactiveGrid.ResizeGrid();
         //Set start marked
         buttonController.SelectetAction("CellActivation").clicked  += () => stateMachine.ChangeState(new CellEditState());
@@ -114,8 +107,6 @@ public class LevelEditor : EditorWindow
         //Grid
         VisualElement grid = rootVisualElement.Q("GridHolder");
         interactiveGrid = new InteractiveGrid(grid, this);
-
-
     }
 
     public void OnCellClicked(CellElement cellElement, int buttonIndex)
@@ -140,9 +131,7 @@ public class LevelEditor : EditorWindow
         }
     }
 
-
-
-
+    #region Dot placement
     private void PlaceDot(Vector2Int coordinats, DotType type)
     {
         interactiveGrid.cells[coordinats.y * InteractiveGrid.gridSize + coordinats.x].SetDot(new DotElement(type));
@@ -151,10 +140,22 @@ public class LevelEditor : EditorWindow
     //Give a DotType without null
     private DotType RandomDotType()
     {
-        //Get random dot type (Without null
+        //Get random dot type (Without null)
         Array values = Enum.GetValues(typeof(DotType));
         return (DotType)values.GetValue(UnityEngine.Random.Range(1, values.Length));
     }
+
+    //Place dot on board
+    void FillLevelWithDots()
+    {
+        float placeDotChance = .75f;
+        foreach (CellElement cell in interactiveGrid.cells)
+        {
+            if ((float)UnityEngine.Random.Range(0f, 1f) < placeDotChance)
+                cell.SetDot(new DotElement(RandomDotType()));
+        }
+    }
+    #endregion
 
     public void RemovePiecesDots(PieceElement target)
     {
@@ -234,15 +235,12 @@ public class LevelEditor : EditorWindow
         }
     }
 
-    //Place dot on board
-    void FillLevelWithDots()
+    //Piece meta data
+    private bool FreeSpace(PieceData pieceData)
     {
-        float placeDotChance = .75f;
-        foreach (CellElement cell in interactiveGrid.cells)
-        {
-            if((float)UnityEngine.Random.Range(0f, 1f) < placeDotChance)
-                cell.SetDot(new DotElement(RandomDotType()));
-        }
+        
+
+        return false;
     }
 
     #region Save
@@ -314,6 +312,11 @@ public class LevelEditor : EditorWindow
             return;
         }
         #endregion
+
+        //Meta info
+        //How many option in a level;
+        int[] piecesPlacementOptions = new int[piecesData.Count];
+
 
         //Set typed name
         string levelName = "";
