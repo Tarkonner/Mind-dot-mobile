@@ -298,6 +298,16 @@ public class LevelEditor : EditorWindow
             Debug.Log("No Goals");
             return;
         }
+        if (shapeGoals.Count > 3 && placeGoalCells.Count != 0)
+        {
+            Debug.Log("Too many Shape goals with placement goals");
+            return;
+        }
+        if (shapeGoals.Count > 4)
+        {
+            Debug.Log("Too many Shape goals");
+            return;
+        }
 
         //Set typed name
         string levelName = "";
