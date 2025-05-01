@@ -1,4 +1,4 @@
-using SharedData;
+﻿using SharedData;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -72,38 +72,49 @@ public class MakePieceState : CollectCells
     public void Execute(VisualElement holder, VisualTreeAsset spawnHolder, LevelPiece savedPiece, LevelEditor levelEditor)
     {
         List<CellElement> targetCells = new List<CellElement>();
-        //Collect Cells and set color
+
         for (int i = 0; i < savedPiece.dotPositions.Length; i++)
         {
-            CellElement cell = levelEditor.interactiveGrid.cells[(int)((savedPiece.dotPositions[i].y + savedPiece.gridPosRef.y) * InteractiveGrid.gridSize + (savedPiece.dotPositions[i].x + savedPiece.gridPosRef.x))];
+            var x = (int)(savedPiece.dotPositions[i].x + savedPiece.gridPosRef.x);
+            var y = (int)(savedPiece.dotPositions[i].y + savedPiece.gridPosRef.y);
+            CellElement cell = levelEditor.interactiveGrid.cells[y * InteractiveGrid.gridSize + x];
+
             cell.ChangeCellColor(CellColorState.partPiece);
             targetCells.Add(cell);
         }
 
-        //Data
+        // Data
         PieceElement pieceElement = new PieceElement();
-
         levelEditor.piecesData.Add(pieceElement);
 
-        //Connect behavior
-        //Editor
+        // Mark cells as part of the piece and assign the piece
+        foreach (var cell in targetCells)
+        {
+            cell.cellData.partOfPiece = true;
+            cell.SetPiece(pieceElement);
+        }
+
+        // Editor UI
         VisualElement pieceHolder = spawnHolder.Instantiate();
-        pieceHolder.Q<Button>("Delete").clickable.clicked += () => 
-        { 
-            holder.Remove(pieceHolder); 
+        pieceHolder.Q<Button>("Delete").clickable.clicked += () =>
+        {
+            holder.Remove(pieceHolder);
             levelEditor.piecesData.Remove(pieceElement);
-            for (int i = 0; i < targetCells.Count; i++)
-                targetCells[i].RemovePiece();
+            foreach (var cell in targetCells)
+                cell.RemovePiece();
         };
-        //Grid
-        pieceHolder.Q<VisualElement>("Grid").Add(GridMaker.MakeGridElement(cells, pieceElement));
-        //Slider
+
+        // 🛠️ Use targetCells, not the empty cells list
+        pieceHolder.Q<VisualElement>("Grid").Add(GridMaker.MakeGridElement(targetCells, pieceElement));
+
+        // Slider
         SliderInt rotationSlider = pieceHolder.Q<SliderInt>("RotateValue");
         rotationSlider.value = savedPiece.startRotation;
         rotationSlider.RegisterValueChangedCallback(value => ((PieceData)pieceElement.gridData).startRotationIndex = value.newValue);
         if (!savedPiece.rotatable)
             rotationSlider.SetEnabled(false);
-        //Toggle
+
+        // Toggle
         Toggle rotationToggle = pieceHolder.Q<Toggle>("RotatebulToggle");
         rotationToggle.value = savedPiece.rotatable;
         rotationToggle.RegisterValueChangedCallback(value => {
@@ -118,7 +129,5 @@ public class MakePieceState : CollectCells
         });
 
         holder.Add(pieceHolder);
-
-        cells.Clear();
     }
 }

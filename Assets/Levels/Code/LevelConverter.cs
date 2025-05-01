@@ -11,7 +11,8 @@ public static class LevelConverter
 # if(UNITY_EDITOR)
     private static string version = "0.2";
     public static (bool, LevelSO) SaveLevel(string title, List<PieceData> pEs, 
-        List<CellData> board, Vector2 boardSize, List<GridData> sGEs, List<PlaceGoalData> pGEs)
+        List<CellData> board, Vector2 boardSize, List<GridData> sGEs, List<PlaceGoalData> pGEs,
+        int[] piecesPlacementOptions)
     {
         bool success = true;
 
@@ -46,7 +47,7 @@ public static class LevelConverter
         string uniquePath = AssetDatabase.GenerateUniqueAssetPath($"Assets/Levels/{name}.asset");
         string uniqueName = uniquePath.Replace("Assets/Levels/", "");
         uniqueName = uniqueName.Replace(".asset", "");
-        LevelSO levelObject = LevelSO.CreateLevelSO(uniqueName, new LevelBoard(board, boardSize), pieces, levelShapeGoals, lPGs);
+        LevelSO levelObject = LevelSO.CreateLevelSO(uniqueName, new LevelBoard(board, boardSize), pieces, levelShapeGoals, lPGs, piecesPlacementOptions);
 
         AssetDatabase.CreateAsset(levelObject, uniquePath);
         AssetDatabase.SaveAssets();

@@ -236,6 +236,14 @@ public class LevelEditor : EditorWindow
         }
     }
 
+    public int[] PiecesMetadataCalculation()
+    {
+        int[] result = new int[piecesData.Count];
+        for (int i = 0; i < piecesData.Count; i++)
+            result[i] = CountValidPlacements(piecesData[i]);
+        return result;
+    }
+
     public int CountValidPlacements(PieceElement piece)
     {
         // Normalize original piece shape to top-left corner
@@ -279,6 +287,8 @@ public class LevelEditor : EditorWindow
                             canPlace = false;
                             break;
                         }
+                        if (cell.cellData.partOfPiece)
+                            Debug.Log("Piece");
                     }
 
                     if (canPlace)
@@ -349,7 +359,7 @@ public class LevelEditor : EditorWindow
             LevelShapeGoal[] shape = GetShapeGoals();
             LevelPlaceGoal[] place = GetPlacementGoals();
 
-            level.LevelOverride(new LevelBoard(cellDatas, interactiveGrid.GridSize()), pieces, shape, place);
+            level.LevelOverride(new LevelBoard(cellDatas, interactiveGrid.GridSize()), pieces, shape, place, PiecesMetadataCalculation());
 
             Debug.Log("Overrided level");
         }
@@ -384,11 +394,6 @@ public class LevelEditor : EditorWindow
         }
         #endregion
 
-        //Meta info
-        //How many option in a level;
-        int[] piecesPlacementOptions = new int[piecesData.Count];
-
-
         //Set typed name
         string levelName = "";
         if(namingField.value != null)
@@ -401,8 +406,11 @@ public class LevelEditor : EditorWindow
         List<PlaceGoalData> placeGoalDatas = GetPlacementGoalData();
 
         //Make SO
-        /*
-        (bool workingLevel, LevelSO SO_Level) = LevelConverter.SaveLevel(levelName, pieceDatas, cellDatas, interactiveGrid.GridSize(), gridDatas, placeGoalDatas);
+        
+        (bool workingLevel, LevelSO SO_Level) = LevelConverter.SaveLevel(
+            levelName, pieceDatas, cellDatas, 
+            interactiveGrid.GridSize(), gridDatas, placeGoalDatas,
+            PiecesMetadataCalculation());
 
         //Message statues
         if (workingLevel)
@@ -416,7 +424,6 @@ public class LevelEditor : EditorWindow
             Debug.Log("Error saving level");
             namingField.value = null;
         }
-        */
     }
     #endregion
 
@@ -439,11 +446,6 @@ public class LevelEditor : EditorWindow
 
     private List<PieceData> GetPieceData()
     {
-        for (int i = 0; i < piecesData.Count; i++)
-        {
-            Debug.Log(CountValidPlacements(piecesData[i]));
-        }
-
         List<PieceData> pieceDatas = new List<PieceData>();
         foreach (PieceElement data in piecesData)
             pieceDatas.Add(data.gridData as PieceData);
