@@ -7,7 +7,7 @@ public class GridMaker
 {
     public static GridElement MakeGridElement(List<CellElement> targetElements, GridElement gridType)
     {
-        //Save siblings
+        //SaveWithField siblings
         for (int i = 0; i < targetElements.Count; i++)
         {
             gridType.siblings.Add(targetElements[i]);

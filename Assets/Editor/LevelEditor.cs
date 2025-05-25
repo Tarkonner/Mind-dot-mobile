@@ -1,3 +1,4 @@
+using log4net.Core;
 using SharedData;
 using System;
 using System.Collections.Generic;
@@ -20,7 +21,7 @@ public class LevelEditor : EditorWindow
     //Editor    
     public InteractiveGrid interactiveGrid;   
    
-    //Save and load
+    //SaveWithField and load
     TextField namingField;
     ObjectField inputtedLevelField;
 
@@ -92,7 +93,7 @@ public class LevelEditor : EditorWindow
         //Placement goals
         buttonController.SelectetAction("MakePlaceGoal").clicked += () => stateMachine.ChangeState(new MakePlaceGoalState());
 
-        //Save and load
+        //SaveWithField and load
         namingField = rootVisualElement.Q("LevelsName") as TextField;
         inputtedLevelField = rootVisualElement.Q("LoadLevelField") as ObjectField;
         inputtedLevelField.RegisterValueChangedCallback((evt) =>
@@ -102,8 +103,8 @@ public class LevelEditor : EditorWindow
             else
                 rootVisualElement.Q<Button>("SaveLevel").text = "Save";
         });
-        buttonController.ButtonAction("SaveLevel").clicked += Save;
-        buttonController.ButtonAction("LoadLevel").clicked += LoadLevel;
+        buttonController.ButtonAction("SaveLevel").clicked += SaveWithField;
+        buttonController.ButtonAction("LoadLevel").clicked += LoadLevelFromField;
 
         //Grid
         VisualElement grid = rootVisualElement.Q("GridHolder");
@@ -242,26 +243,32 @@ public class LevelEditor : EditorWindow
     /// <summary>
     /// Makes a new SO with the data.
     /// </summary>
-    private void Save()
+    private void SaveWithField()
     {
         if (inputtedLevelField.value == null)
             SaveLevelToSO();
         else
         {
             LevelSO level = (LevelSO)inputtedLevelField.value;
-                        
-            // Collect data
-            List<CellData> cellDatas = GetCellData();
-            LevelPiece[] pieces = GetLevelPieces();
-            LevelShapeGoal[] shape = GetShapeGoals();
-            LevelPlaceGoal[] place = GetPlacementGoals();
 
-            level.LevelOverride(new LevelBoard(cellDatas, interactiveGrid.GridSize()), pieces, shape, place, 
-                LevelMetadata.PiecesMetadataCalculation(piecesData,interactiveGrid));
+            OverrideSaveLogic(level);
 
             Debug.Log("Overrided level");
         }
     }
+
+    private void OverrideSaveLogic(LevelSO targetLevel)
+    {
+        // Collect data
+        List<CellData> cellDatas = GetCellData();
+        LevelPiece[] pieces = GetLevelPieces();
+        LevelShapeGoal[] shape = GetShapeGoals();
+        LevelPlaceGoal[] place = GetPlacementGoals();
+
+        targetLevel.LevelOverride(new LevelBoard(cellDatas, interactiveGrid.GridSize()), pieces, shape, place,
+            LevelMetadata.PiecesMetadataCalculation(piecesData, interactiveGrid));
+    }
+
     private void SaveLevelToSO()
     {
         #region Legal level rules
@@ -391,7 +398,7 @@ public class LevelEditor : EditorWindow
 
 
     #region Load
-    private void LoadLevel()
+    private void LoadLevelFromField()
     {
         if(inputtedLevelField.value == null)
         {
@@ -403,6 +410,14 @@ public class LevelEditor : EditorWindow
 
         LevelSO targetLevel = (LevelSO)inputtedLevelField.value;
 
+        LoadLevelLogic(targetLevel);
+
+        //Ready to override
+        inputtedLevelField.value = targetLevel;
+    }
+
+    private void LoadLevelLogic(LevelSO targetLevel)
+    {
         //Grid
         LevelBoard targetGrid = targetLevel.levelGrid;
 
@@ -411,7 +426,7 @@ public class LevelEditor : EditorWindow
         {
             for (int x = 0; x < InteractiveGrid.gridSize; x++)
             {
-                //Turn out of level cells off
+                //Turn out of targetLevel cells off
                 if (x >= (int)targetGrid.boardSize.x ||
                     y >= (int)targetGrid.boardSize.y)
                 {
@@ -439,15 +454,12 @@ public class LevelEditor : EditorWindow
             LoadShapeGoal(item);
 
         //Load Placement goals
-        foreach(LevelPlaceGoal item in targetLevel.levelPlaceGoals)
+        foreach (LevelPlaceGoal item in targetLevel.levelPlaceGoals)
             interactiveGrid.cells[(int)(item.goalPosition.y * InteractiveGrid.gridSize + item.goalPosition.x)].AddPlacementGoal(item.type);
 
         //Cleanup
         inputtedLevelField.value = null;
         stateMachine.ChangeState(new CellEditState());
-
-        //Ready to override
-        inputtedLevelField.value = targetLevel;
     }
 
     private void LoadPiece(LevelPiece targetPiece)
@@ -484,5 +496,17 @@ public class LevelEditor : EditorWindow
         ((MakeShapeGoalState)stateMachine.CurrentState).PremakeCells(result);
         ((MakeShapeGoalState)stateMachine.CurrentState).Execute(goalHolder, eo_GoalHolder, targetShapeGoal, this);
     }
+
+    /// <summary>
+    /// So other helper classes can load and resave a targetLevel with data
+    /// </summary>
+    /// <returns></returns>
+    public void LoadAndResaveObject(LevelSO targetLevel)
+    {
+        ClearAll();
+        LoadLevelLogic(targetLevel);
+        OverrideSaveLogic(targetLevel);
+    }
+
     #endregion
 }
