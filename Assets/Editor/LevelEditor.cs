@@ -482,19 +482,17 @@ public class LevelEditor : EditorWindow
     private void LoadShapeGoal(LevelShapeGoal targetShapeGoal)
     {
         //Load elements
-        List<CellElement> result = new List<CellElement>();
+        Dictionary<CellElement, DotType> dataParing = new();
+
         for (int i = 0; i < targetShapeGoal.goalDots.Length; i++)
         {
-            CellElement spawnCell = new CellElement(new Vector2Int((int)targetShapeGoal.goalSpecifications[i].x, (int)targetShapeGoal.goalSpecifications[i].y), this);
-            DotElement spawnDot = new DotElement(targetShapeGoal.goalDots[i]);
-            spawnCell.SetDot(spawnDot);
-            result.Add(spawnCell);
+            CellElement foundCell = interactiveGrid.cells[(int)((targetShapeGoal.goalSpecifications[i].y + targetShapeGoal.gridPosRef.y) * InteractiveGrid.gridSize + (targetShapeGoal.goalSpecifications[i].x + targetShapeGoal.gridPosRef.x))];
+            dataParing.Add(foundCell, targetShapeGoal.goalDots[i]);
         }
 
         //State machine
         stateMachine.ChangeState(new MakeShapeGoalState());
-        ((MakeShapeGoalState)stateMachine.CurrentState).PremakeCells(result);
-        ((MakeShapeGoalState)stateMachine.CurrentState).Execute(goalHolder, eo_GoalHolder, targetShapeGoal, this);
+        ((MakeShapeGoalState)stateMachine.CurrentState).MakeWithLoadData(dataParing, goalHolder, eo_GoalHolder, this);
     }
 
     /// <summary>

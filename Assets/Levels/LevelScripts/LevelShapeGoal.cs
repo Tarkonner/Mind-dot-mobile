@@ -32,9 +32,4 @@ public class LevelShapeGoal
 
         goalSize = goal.gridSize;
     }
-    public LevelShapeGoal(Vector2[] goalSpecifications, DotType[] goalDots)
-    {
-        this.goalSpecifications = goalSpecifications;
-        this.goalDots = goalDots;
-    }
 }

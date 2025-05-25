@@ -1,8 +1,6 @@
-using System.Collections;
-using System.Collections.Generic;
+using SharedData;
 using UnityEngine;
 using UnityEngine.UIElements;
-using SharedData;
 
 public class DotElement : VisualElement
 {
@@ -10,7 +8,7 @@ public class DotElement : VisualElement
 
     public DotData DotData = new DotData();
 
-    public DotElement(DotType type) 
+    public DotElement(DotType type)
     {
         DotData.dotType = type;
 
@@ -19,7 +17,7 @@ public class DotElement : VisualElement
         style.width = 30;
         style.height = 30;
 
-        switch(type) 
+        switch (type)
         {
             case DotType.Blue:
                 image.tintColor = Color.blue;
@@ -30,8 +28,11 @@ public class DotElement : VisualElement
             case DotType.Yellow:
                 image.tintColor = Color.yellow;
                 break;
+            case DotType.Null:
+                image.tintColor = Color.gray;
+                break;
             default:
-                Debug.LogError("Not set dotType for Dot element");
+                Debug.LogError($"Not set dotType for Dot element. Was: {type}");
                 break;
         }
 
@@ -40,7 +41,7 @@ public class DotElement : VisualElement
 
     public void ChangeColor()
     {
-        switch(DotData.dotType) 
+        switch (DotData.dotType)
         {
             case DotType.Blue:
                 DotData.dotType = DotType.Red;
@@ -59,7 +60,7 @@ public class DotElement : VisualElement
 
     public void UpdateColor()
     {
-        switch(DotData.dotType)
+        switch (DotData.dotType)
         {
             case DotType.Blue:
                 image.tintColor = Color.blue;
