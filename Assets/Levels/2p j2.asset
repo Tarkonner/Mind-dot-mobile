@@ -42,7 +42,7 @@ MonoBehaviour:
     - {x: 1, y: 0}
     - {x: 1, y: 1}
     - {x: 0, y: 2}
-    dotTypes: 020000000200000001000000
+    dotTypes: 010000000100000003000000
     rotatable: 1
     gridPosRef: {x: 0, y: 0}
     pieceSize: {x: 2, y: 3}
@@ -72,5 +72,5 @@ MonoBehaviour:
     gridPosRef: {x: 0, y: 0}
     goalSize: {x: 3, y: 3}
   levelPlaceGoals: []
-  piecesPlacementOptions: 0000000000000000
-  totalPlacementOptions: 0
+  piecesPlacementOptions: 0200000002000000
+  totalPlacementOptions: 4

@@ -37,9 +37,9 @@ MonoBehaviour:
   - goalSpecifications:
     - {x: 0, y: 0}
     - {x: 0, y: 1}
-    goalDots: 0000000001000000
+    goalDots: 0000000000000000
     gridPosRef: {x: 1, y: 0}
     goalSize: {x: 1, y: 2}
   levelPlaceGoals: []
   piecesPlacementOptions: 72000000
-  totalPlacementOptions: 114
+  totalPlacementOptions: 228
