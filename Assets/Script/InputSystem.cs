@@ -134,10 +134,10 @@ public class InputSystem : MonoBehaviour
             //Look for swipe
             if (stopRotateTimer < stopRotate) //Rotate bug fix
                 return;
-
+            /*
             Vector2 swipeInfo = secondSwipeAction.ReadValue<Vector2>();
 
-            if(RotatePieces(swipeInfo))
+            if (RotatePieces(swipeInfo))
             {
                 //Sound
                 if (!holdingPiece.currentlyRotation)
@@ -148,6 +148,7 @@ public class InputSystem : MonoBehaviour
                         AudioManager.Instance.PlayWithEffects(notRotateSound);
                 }
             }
+            */
 
             //Calculate position
             if (pieceSnapCalculation < 1)
@@ -169,12 +170,13 @@ public class InputSystem : MonoBehaviour
             if (stopRotateTimer < stopRotate) //Rotate bug fix
                 return;
 
+            /*
             Vector2 colletInput = swipeAction.ReadValue<Vector2>();
             primeCollectedSwipe += colletInput;
 
             if (colletInput.magnitude != 0)
             {
-                bool rotated = RotatePieces(colletInput);                    
+                bool rotated = RotatePieces(colletInput);
 
                 if (rotated)
                 {
@@ -183,7 +185,8 @@ public class InputSystem : MonoBehaviour
                     //Sound
                     AudioManager.Instance.PlayWithEffects(rotateSounds);
                 }
-            }       
+            }
+            */
         }
     }
 
@@ -281,7 +284,7 @@ public class InputSystem : MonoBehaviour
         {
             foreach (RaycastResult result in objDeteced)
             {
-                if(result.gameObject.GetComponent<Button>())
+                if (result.gameObject.GetComponent<Button>())
                 {
                     foundAction = true; break;
                 }
@@ -291,7 +294,7 @@ public class InputSystem : MonoBehaviour
 
     private void Release(InputAction.CallbackContext context)
     {
-        if(holdingPiece == null)
+        if (holdingPiece == null)
         {
             if (!calledSwipe)
             {
@@ -345,9 +348,6 @@ public class InputSystem : MonoBehaviour
             //Reset snap
             pieceSnapCalculation = 0;
         }
-
-
-
     }
 
     private void ReturnPiece()
@@ -386,7 +386,7 @@ public class InputSystem : MonoBehaviour
         {
             Tap();
         }
-        hasRotated = false;        
+        hasRotated = false;
     }
 
     private void CheckGoals()
@@ -415,7 +415,7 @@ public class InputSystem : MonoBehaviour
             if (secendSwipeStartPos.x < currentInput.x)
                 rightFromStart = true;
 
-            if(holdingPiece != null) //Holding piece
+            if (holdingPiece != null) //Holding piece
                 holdingPiece.RotateWithAnimation(rightFromStart);
             else
             {
@@ -430,5 +430,15 @@ public class InputSystem : MonoBehaviour
         }
         else
             return false;
+    }
+
+    public void RotatePieces(bool rotateLeft = false)
+    {
+        //Rotate all pieces
+        onSwipe?.Invoke(rotateLeft);
+        calledSwipe = true;
+
+        //Sound
+        AudioManager.Instance.PlayAudioclip(rotateSounds);
     }
 }

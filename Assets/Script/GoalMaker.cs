@@ -10,6 +10,8 @@ public class GoalMaker : ScaleAnimations
     
     [SerializeField] GameObject shapeGoalPrefab;
     public Transform holder;
+    [SerializeField] Vector2 holderOffset = new Vector2(0, -100);
+    [SerializeField] Vector2 holderStartPos = new Vector2(0, -125);
 
     [SerializeField] float manyGoalScale = .75f;
 
@@ -19,9 +21,14 @@ public class GoalMaker : ScaleAnimations
     private List<GameObject> goalsToAnimate = new List<GameObject>();
 
 
-
     public void MakeGoals(LevelSO levelGoals)
     {
+        //offset goal holder
+        if (levelGoals.levelGrid.boardSize.y < 5)
+            holder.transform.localPosition = holderStartPos + holderOffset;
+        else
+            holder.transform.localPosition = holderStartPos;
+
         //Leave exits
         if (holder.transform.childCount > 0)
         {

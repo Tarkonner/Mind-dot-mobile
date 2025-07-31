@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using TMPro;
 using UnityEngine;
+using UnityEngine.Events;
 
 public class TutorialManager : MonoBehaviour
 {
@@ -65,6 +66,9 @@ public class TutorialManager : MonoBehaviour
 
         if (currentTutorialObjects != null)
         {
+            //Run events
+            currentTutorialObjects.events?.Invoke();
+
             animations.ScaleInLiniar(toAnimate, scaleInTime);
             textMesh.text = currentTutorialObjects.levelText;
 
@@ -82,4 +86,5 @@ class InspectorGameobject
     public LevelSO targetLevel;
     public string levelText;
     public GameObject[] gameObjects;
+    public UnityEvent events;
 }
