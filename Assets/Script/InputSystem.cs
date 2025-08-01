@@ -92,9 +92,9 @@ public class InputSystem : MonoBehaviour
         secoundTap.canceled += LiftTap;
 
         //Turn touch input on
-        LevelManager.onLoadLevel += () => activeTouch = true;
+        LevelManager.onLoadLevel += EnableInput;
         //Turn touch input off
-        LevelManager.onLevelComplete += () => activeTouch = false;
+        LevelManager.onLevelComplete += DisableInput;
     }
 
 
@@ -107,17 +107,18 @@ public class InputSystem : MonoBehaviour
         secoundTap.canceled -= LiftTap;
 
         //Turn touch input on
-        LevelManager.onLoadLevel -= () => activeTouch = true;
+        LevelManager.onLoadLevel -= EnableInput;
         //Turn touch input off
-        LevelManager.onLevelComplete -= () => activeTouch = false;
+        LevelManager.onLevelComplete -= DisableInput;
     }
 
     private void Update()
     {
+        if (!BothInputAndBoardIsActive())
+            return;
+
         stopRotateTimer += Time.deltaTime;
 
-        if (!activeTouch)
-            return;
 
         //Drag
         //Get input
@@ -206,6 +207,8 @@ public class InputSystem : MonoBehaviour
 
     private void BeginDrag(InputAction.CallbackContext context)
     {
+        if(!BothInputAndBoardIsActive()) return;
+
         stopRotateTimer = 0;
 
         //Swipe
@@ -294,6 +297,8 @@ public class InputSystem : MonoBehaviour
 
     private void Release(InputAction.CallbackContext context)
     {
+        if (!BothInputAndBoardIsActive()) return;
+
         if (holdingPiece == null)
         {
             if (!calledSwipe)
@@ -440,5 +445,16 @@ public class InputSystem : MonoBehaviour
 
         //Sound
         AudioManager.Instance.PlayAudioclip(rotateSounds);
+    }
+
+    private void EnableInput() => activeTouch = true;
+    private void DisableInput() => activeTouch = false;
+
+    bool BothInputAndBoardIsActive()
+    {
+        if(!activeTouch || LevelManager.inactiveBoard)
+            return false;
+        else
+            return true;
     }
 }

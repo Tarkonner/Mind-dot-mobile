@@ -45,6 +45,8 @@ public class LevelManager : MonoBehaviour
     public delegate void OnLevelComplete();
     public static event OnLevelComplete onLevelComplete;
 
+    public static bool inactiveBoard = false;
+
     private void Start()
     {
         //Load level
@@ -138,6 +140,8 @@ public class LevelManager : MonoBehaviour
         //Level completet
         if (completedGoals == allGoals.Count)
         {
+            inactiveBoard = true;
+            onLevelComplete?.Invoke();
 #if (UNITY_EDITOR)
             //Tell test levelsBank
             if (loadTestlevel)
@@ -190,6 +194,8 @@ public class LevelManager : MonoBehaviour
         onDeloadLevel?.Invoke(); //Event
         LoadLevel(DataBetweenLevels.Instance.GetCurretLevel()); //Target level
         levelText.LevelIndex(DataBetweenLevels.Instance.targetLevel); //Set level text
+
+        StartCoroutine(WaitForLevelToLoad());
     }
 
     IEnumerator WinAnimation()
@@ -211,8 +217,7 @@ public class LevelManager : MonoBehaviour
             float targetScale = collectetDots[i].transform.localScale.x + dotsBonusSize;
             collectetDots[i].transform.DOScale(targetScale, sizeAnimationTime);
         }
-
-        onLevelComplete?.Invoke();
+        
         yield return new WaitForSeconds(completedLevelPauseTime);
 
         //What to do after animation
@@ -240,5 +245,11 @@ public class LevelManager : MonoBehaviour
         int checkProgress = ES3.Load<int>(DataBetweenLevels.Instance.currentLevelChunk.name);
         if(levelCompletet > checkProgress)
             ES3.Save(DataBetweenLevels.Instance.currentLevelChunk.name, levelCompletet);
+    }
+
+    IEnumerator WaitForLevelToLoad()
+    {
+        yield return new WaitForSeconds(1);
+        inactiveBoard = false;
     }
 }
