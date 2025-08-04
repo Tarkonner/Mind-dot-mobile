@@ -15,7 +15,7 @@ MonoBehaviour:
   version: 0
   levelTitle: Intro grey goal dots
   levelGrid:
-    dots: 030000000100000002000000030000000100000002000000030000000100000002000000
+    dots: 030000000000000002000000030000000100000002000000030000000000000002000000
     activeCells: 010101010101010101
     boardSize: {x: 3, y: 3}
   levelPieces:
@@ -27,7 +27,7 @@ MonoBehaviour:
     rotatable: 1
     gridPosRef: {x: 0, y: 1}
     pieceSize: {x: 3, y: 1}
-    startRotation: 0
+    startRotation: 1
     connectionsMade:
       connections:
       - key1: {x: 0, y: 0}
@@ -39,12 +39,6 @@ MonoBehaviour:
       - key1: {x: 2, y: 0}
         key2: {x: 1, y: 0}
   levelShapeGoals: []
-  levelPlaceGoals:
-  - type: 0
-    goalPosition: {x: 0, y: 1}
-  - type: 0
-    goalPosition: {x: 1, y: 1}
-  - type: 0
-    goalPosition: {x: 2, y: 1}
-  piecesPlacementOptions: 02000000
-  totalPlacementOptions: 2
+  levelPlaceGoals: []
+  piecesPlacementOptions: 04000000
+  totalPlacementOptions: 6
