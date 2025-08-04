@@ -22,4 +22,13 @@ public class DataBetweenLevels : MonoBehaviour
     {
         return currentLevelChunk.levels[targetLevel];
     }
+
+    public void ClearWhatLevelIsOn()
+    {
+        targetLevel = 0;
+        currentLevelChunk = null;
+
+        //Delete save data
+        ES3.DeleteKey("SelectLevelChunk");
+    }
 }

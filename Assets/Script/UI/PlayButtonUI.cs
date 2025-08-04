@@ -10,7 +10,7 @@ public class PlayButtonUI : MonoBehaviour
 
     [SerializeField] LevelsBank[] levelsBanks;
 
-    private LevelsBank targetBank;
+    private LevelsBank targetBank = null;
     private bool fromTheBeginning = false;
 
     // Start is called before the first frame update
@@ -62,6 +62,8 @@ public class PlayButtonUI : MonoBehaviour
             {
                 DataBetweenLevels.Instance.currentLevelChunk = targetBank;
                 int foundTargetLevel = ES3.Load<int>(targetBank.name) + 1;
+                if (foundTargetLevel >= targetBank.levels.Length)
+                    foundTargetLevel = 0;
                 DataBetweenLevels.Instance.targetLevel = foundTargetLevel;
             }
             else

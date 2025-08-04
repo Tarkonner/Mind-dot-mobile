@@ -20,7 +20,6 @@ public class LevelManager : MonoBehaviour
 
     [Header("Goals")]
     [SerializeField] private GameObject goalHolder;
-    //[SerializeField] private LevelsBank levelsBank;
     private List<IGoal> allGoals = new List<IGoal>();
 
 
@@ -224,7 +223,10 @@ public class LevelManager : MonoBehaviour
         if (DataBetweenLevels.Instance.targetLevel + 1 == DataBetweenLevels.Instance.currentLevelChunk.levels.Length)
         { //Go to  menu
             SceneController.Instance.LoadMenu(true); //Back to level select
-            DataBetweenLevels.Instance.targetLevel = 0;
+            DataBetweenLevels.Instance.ClearWhatLevelIsOn();
+
+            //Dirty turn input in again
+            inactiveBoard = false;
         }
         else if (showQuestioner) //Show question
             questioner.SetActive(true);
