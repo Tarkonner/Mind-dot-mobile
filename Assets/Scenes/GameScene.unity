@@ -5797,7 +5797,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 2800339047658143124, guid: ece83fda2ae00364da4f4bd42689e64a, type: 3}
       propertyPath: tutorialObjects.Array.data[1].levelText
-      value: Click to rotate
+      value: Click on buttens to rotate
       objectReference: {fileID: 0}
     - target: {fileID: 2800339047658143124, guid: ece83fda2ae00364da4f4bd42689e64a, type: 3}
       propertyPath: tutorialObjects.Array.data[2].levelText
@@ -5865,7 +5865,11 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 2800339047658143124, guid: ece83fda2ae00364da4f4bd42689e64a, type: 3}
       propertyPath: tutorialObjects.Array.data[18].levelText
-      value: There can be 3 other goals beside placement
+      value: Multicolored dots can have any color there
+      objectReference: {fileID: 0}
+    - target: {fileID: 2800339047658143124, guid: ece83fda2ae00364da4f4bd42689e64a, type: 3}
+      propertyPath: tutorialObjects.Array.data[19].levelText
+      value: Multicolored dots can have any color there
       objectReference: {fileID: 0}
     - target: {fileID: 2800339047658143124, guid: ece83fda2ae00364da4f4bd42689e64a, type: 3}
       propertyPath: tutorialObjects.Array.data[0].targetLevel
@@ -5934,7 +5938,7 @@ PrefabInstance:
     - target: {fileID: 2800339047658143124, guid: ece83fda2ae00364da4f4bd42689e64a, type: 3}
       propertyPath: tutorialObjects.Array.data[16].targetLevel
       value: 
-      objectReference: {fileID: 11400000, guid: f2565434cb72165448ebe89ec1338b5d, type: 2}
+      objectReference: {fileID: 11400000, guid: 7895f5671266b8f4a9b373688d353b96, type: 2}
     - target: {fileID: 2800339047658143124, guid: ece83fda2ae00364da4f4bd42689e64a, type: 3}
       propertyPath: tutorialObjects.Array.data[17].targetLevel
       value: 
@@ -5942,7 +5946,11 @@ PrefabInstance:
     - target: {fileID: 2800339047658143124, guid: ece83fda2ae00364da4f4bd42689e64a, type: 3}
       propertyPath: tutorialObjects.Array.data[18].targetLevel
       value: 
-      objectReference: {fileID: 11400000, guid: 14c79529a83065b4caaacfb93e64234c, type: 2}
+      objectReference: {fileID: 11400000, guid: 1506521f77763f54497a978fa6db70a4, type: 2}
+    - target: {fileID: 2800339047658143124, guid: ece83fda2ae00364da4f4bd42689e64a, type: 3}
+      propertyPath: tutorialObjects.Array.data[19].targetLevel
+      value: 
+      objectReference: {fileID: 11400000, guid: 1506521f77763f54497a978fa6db70a4, type: 2}
     - target: {fileID: 2800339047658143124, guid: ece83fda2ae00364da4f4bd42689e64a, type: 3}
       propertyPath: tutorialObjects.Array.data[0].events.Array.size
       value: 1

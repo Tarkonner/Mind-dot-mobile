@@ -28,6 +28,16 @@ MonoBehaviour:
     gridPosRef: {x: 0, y: 1}
     pieceSize: {x: 3, y: 1}
     startRotation: 0
+    connectionsMade:
+      connections:
+      - key1: {x: 0, y: 0}
+        key2: {x: 1, y: 0}
+      - key1: {x: 1, y: 0}
+        key2: {x: 0, y: 0}
+      - key1: {x: 1, y: 0}
+        key2: {x: 2, y: 0}
+      - key1: {x: 2, y: 0}
+        key2: {x: 1, y: 0}
   levelShapeGoals:
   - goalSpecifications:
     - {x: 0, y: 2}
@@ -44,3 +54,5 @@ MonoBehaviour:
     gridPosRef: {x: 2, y: 0}
     goalSize: {x: 1, y: 3}
   levelPlaceGoals: []
+  piecesPlacementOptions: 04000000
+  totalPlacementOptions: 4
