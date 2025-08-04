@@ -73,4 +73,4 @@ MonoBehaviour:
     goalSize: {x: 3, y: 3}
   levelPlaceGoals: []
   piecesPlacementOptions: 0200000002000000
-  totalPlacementOptions: 4
+  totalPlacementOptions: 8
