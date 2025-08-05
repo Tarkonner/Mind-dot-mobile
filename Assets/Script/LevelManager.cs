@@ -12,6 +12,7 @@ public class LevelManager : MonoBehaviour
     [SerializeField] PieceMaker pieceHolder;
     [SerializeField] GoalMaker goalMaker;
     [SerializeField] LevelText levelText;
+    [SerializeField] GameObject nextLevelButton;
 
     [Header("Animations")]
     [SerializeField] float completedLevelPauseTime = .5f;
@@ -46,6 +47,15 @@ public class LevelManager : MonoBehaviour
 
     public static bool inactiveBoard = false;
 
+    [Header("Tutorial")]
+    TutorialManager tutorialManager;
+    [SerializeField] public float tutorialBeforeGame = .5f;
+
+    private void Awake()
+    {
+        tutorialManager = GetComponent<TutorialManager>();
+    }
+
     private void Start()
     {
         //Load level
@@ -78,17 +88,22 @@ public class LevelManager : MonoBehaviour
 
         //Analytics
         onLoadLevel += () => runningLevelClock = true;
+
+        onLoadLevel += TurnOffNextButton;
+
         //Questioner
-        if (showQuestioner)
-            LevelDeficultyAnalytics.onQuestionerComplet += LoadNextLevel;
+        //if (showQuestioner)
+        //    LevelDeficultyAnalytics.onQuestionerComplet += LoadNextLevel;
     }
     private void OnDisable()
     {
         InputSystem.onDotChange -= GoalProgression;
 
+        onLoadLevel -= TurnOffNextButton;
+
         //Questioner
-        if (showQuestioner)
-            LevelDeficultyAnalytics.onQuestionerComplet -= LoadNextLevel;
+        //if (showQuestioner)
+        //    LevelDeficultyAnalytics.onQuestionerComplet -= LoadNextLevel;
     }
 
     private void Update()
@@ -99,13 +114,22 @@ public class LevelManager : MonoBehaviour
 
     public void LoadLevel(LevelSO targetLevel)
     {
-        currentLevel = targetLevel;
+        currentLevel = targetLevel;        
 
         onLoadLevel?.Invoke();
 
         //Clear old
         allGoals.Clear();
 
+        if (tutorialManager.levelsWithTutorial.Contains(targetLevel))
+            StartCoroutine(MakeLevelParts(targetLevel, tutorialBeforeGame));
+        else
+            StartCoroutine(MakeLevelParts(targetLevel));
+    }
+
+    IEnumerator MakeLevelParts(LevelSO targetLevel, float delay = 0)
+    {
+        yield return new WaitForSeconds(delay);
         board.LoadLevel(targetLevel); //Uses info from both board & pieces, so piece dots don't get loadet in
         goalMaker.MakeGoals(targetLevel);
         pieceHolder.MakePieces(targetLevel.levelPieces);
@@ -177,8 +201,10 @@ public class LevelManager : MonoBehaviour
             //else
             //{
             //    Debug.Log("Level Complete");
-                
+
             //}
+            nextLevelButton.SetActive(true);
+
             StartCoroutine(WinAnimation());
         }
     }
@@ -217,7 +243,7 @@ public class LevelManager : MonoBehaviour
             collectetDots[i].transform.DOScale(targetScale, sizeAnimationTime);
         }
         
-        yield return new WaitForSeconds(completedLevelPauseTime);
+        yield return new WaitForSeconds(completedLevelPauseTime);        
 
         //What to do after animation
         if (DataBetweenLevels.Instance.targetLevel + 1 == DataBetweenLevels.Instance.currentLevelChunk.levels.Length)
@@ -228,10 +254,14 @@ public class LevelManager : MonoBehaviour
             //Dirty turn input in again
             inactiveBoard = false;
         }
+        /*
         else if (showQuestioner) //Show question
             questioner.SetActive(true);
         else //Load next level
             LoadNextLevel();
+        */
+
+        
     }
 
     void SaveGame(int levelCompletet)
@@ -253,5 +283,10 @@ public class LevelManager : MonoBehaviour
     {
         yield return new WaitForSeconds(1);
         inactiveBoard = false;
+    }
+
+    void TurnOffNextButton()
+    {
+        nextLevelButton.SetActive(false);
     }
 }

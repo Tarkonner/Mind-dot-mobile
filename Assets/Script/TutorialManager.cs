@@ -17,12 +17,18 @@ public class TutorialManager : MonoBehaviour
     [SerializeField] float scaleInTime = .3f;
     private List<GameObject> toAnimate;
 
+    public List<LevelSO> levelsWithTutorial { get; private set; } = new();
 
     private void Awake()
     {
         levelManager = GetComponent<LevelManager>();
 
         toAnimate = new List<GameObject>() { textHolder };
+
+        foreach (InspectorGameobject item in tutorialObjects)
+        {
+            levelsWithTutorial.Add(item.targetLevel);
+        }
     }
 
     private void OnEnable()
