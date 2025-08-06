@@ -7,9 +7,6 @@ using UnityEngine.UIElements;
 public class ButtonToNextLevel : MonoBehaviour
 {
     [SerializeField] AudioClip winSound;
-
-    [SerializeField] GameObject particalPrefab;
-    MultipulParticalController particalController;
     [SerializeField] GameObject button;
     Button buttonComponent;
 
@@ -49,10 +46,6 @@ public class ButtonToNextLevel : MonoBehaviour
             transform.position,
             Camera.MonoOrStereoscopicEye.Mono
         );
-
-        // Create particle instance
-        var partical = Instantiate(particalPrefab, worldPosition, Quaternion.identity);
-        particalController = partical.GetComponent<MultipulParticalController>();
 
         // Start animations
         PlayEffects();
@@ -104,7 +97,7 @@ public class ButtonToNextLevel : MonoBehaviour
 
     public void PlayEffects()
     {
-        particalController.PlayParticles();
+        MultipulParticalController.Instance.PlayParticles();
         AudioManager.Instance.PlayAudioclip(winSound);
     }
 }

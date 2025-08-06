@@ -3051,7 +3051,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   winSound: {fileID: 8300000, guid: 2046597bf26848c48a1ae38978f95abf, type: 3}
-  particalPrefab: {fileID: 6822126416511410718, guid: b618683bcd13a55429c3703b57915adc, type: 3}
   button: {fileID: 1655921929}
   pulseAnimationTime: 1
   pulseAnimationScale: 0.2
@@ -4802,6 +4801,18 @@ MonoBehaviour:
           m_StringArgument: 
           m_BoolArgument: 0
         m_CallState: 2
+      - m_Target: {fileID: 959623489}
+        m_TargetAssemblyTypeName: ButtonToNextLevel, Assembly-CSharp
+        m_MethodName: PlayEffects
+        m_Mode: 1
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
 --- !u!114 &1655921932
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -4853,7 +4864,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   winSound: {fileID: 8300000, guid: 2046597bf26848c48a1ae38978f95abf, type: 3}
-  particalPrefab: {fileID: 6822126416511410718, guid: b618683bcd13a55429c3703b57915adc, type: 3}
   button: {fileID: 0}
   pulseAnimationTime: 1
   pulseAnimationScale: 0.2
