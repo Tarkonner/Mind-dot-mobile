@@ -4,14 +4,7 @@ using UnityEngine;
 
 public class MultipulParticalController : MonoBehaviour
 {
-    public static MultipulParticalController Instance;
-
     [SerializeField] List<ParticleSystem> particleSystems = new();
-
-    private void Awake()
-    {
-        Instance = this;
-    }
 
     public void PlayParticles()
     {
