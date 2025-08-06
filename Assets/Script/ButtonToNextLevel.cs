@@ -10,30 +10,41 @@ public class ButtonToNextLevel : MonoBehaviour
 
     [Header("Animation")]
     // Animation settings
-    [SerializeField] private float pulseAnimationTime = 1f;
-    [SerializeField] private float pulseAnimationScale = 0.2f;
     [SerializeField] float scaleAnimatiomTime = 1.2f;
-
-    // Store references
-    private Sequence pulseSequence;
-    private Vector3 originalScale;
-    private bool isAnimating = false;
 
     private MultipulParticalController multipulParticalController;
 
     private void Start()
     {
-        multipulParticalController = Object.FindFirstObjectByType<MultipulParticalController>();
+        
+        transform.localScale = Vector3.zero;
     }
 
     private void OnEnable()
-    {     
+    {
+        if(multipulParticalController == null)
+            multipulParticalController = Object.FindFirstObjectByType<MultipulParticalController>();
+
         PlayEffects();
+
+        StartCoroutine(ScaleUP());
+    }
+
+    IEnumerator ScaleUP()
+    {
+        yield return new WaitForSeconds(.1f);
+        transform.DOScale(Vector3.one, scaleAnimatiomTime);
+    }
+
+    public void ScaleDown()
+    {
+        transform.DOScale(Vector3.zero, scaleAnimatiomTime)
+            .OnComplete(() => gameObject.SetActive(false));
     }
 
     public void PlayEffects()
     {
-        MultipulParticalController.Instance.PlayParticles();
-        AudioManager.Instance.PlayAudioclip(winSound);
+        multipulParticalController.PlayParticles();
+        AudioManager.Instance.PlayWithVolume(winSound, 2f);
     }
 }

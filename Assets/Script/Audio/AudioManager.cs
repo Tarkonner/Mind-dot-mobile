@@ -95,4 +95,11 @@ public class AudioManager : MonoBehaviour
             soundOn= true;
         }
     }
+
+    public void PlayWithVolume(AudioClip sound, float volume)
+    {
+        audioSource.clip = sound;
+        audioSource.volume = volume;
+        audioSource.Play();
+    }
 }

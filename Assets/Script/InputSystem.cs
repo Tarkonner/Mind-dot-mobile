@@ -447,7 +447,7 @@ public class InputSystem : MonoBehaviour
         AudioManager.Instance.PlayAudioclip(rotateSounds);
     }
 
-    private void EnableInput() => activeTouch = true;
+    public void EnableInput() => activeTouch = true;
     private void DisableInput() => activeTouch = false;
 
     bool BothInputAndBoardIsActive()

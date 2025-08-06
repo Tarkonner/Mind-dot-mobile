@@ -47,6 +47,8 @@ public class LevelManager : MonoBehaviour
 
     public static bool inactiveBoard = false;
 
+    private bool loadedLevel = false;
+
     [Header("Tutorial")]
     TutorialManager tutorialManager;
     [SerializeField] public float tutorialBeforeGame = .5f;
@@ -120,11 +122,15 @@ public class LevelManager : MonoBehaviour
 
         //Clear old
         allGoals.Clear();
+               
 
-        if (tutorialManager.levelsWithTutorial.Contains(targetLevel))
+        if (tutorialManager.levelsWithTutorial.Contains(targetLevel) && loadedLevel)
             StartCoroutine(MakeLevelParts(targetLevel, tutorialBeforeGame));
         else
+        {
             StartCoroutine(MakeLevelParts(targetLevel));
+            loadedLevel = true;
+        }
     }
 
     IEnumerator MakeLevelParts(LevelSO targetLevel, float delay = 0)
@@ -133,6 +139,10 @@ public class LevelManager : MonoBehaviour
         board.LoadLevel(targetLevel); //Uses info from both board & pieces, so piece dots don't get loadet in
         goalMaker.MakeGoals(targetLevel);
         pieceHolder.MakePieces(targetLevel.levelPieces);
+
+        //Make sure touch is turned on
+        InputSystem.instance.EnableInput();
+        inactiveBoard = false;
     }
 
     public void GoalProgression()
