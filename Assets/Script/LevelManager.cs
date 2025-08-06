@@ -256,7 +256,7 @@ public class LevelManager : MonoBehaviour
         yield return new WaitForSeconds(completedLevelPauseTime);        
 
         //What to do after animation
-        if (DataBetweenLevels.Instance.targetLevel + 1 == DataBetweenLevels.Instance.currentLevelChunk.levels.Length)
+        if (DataBetweenLevels.Instance.targetLevel >= DataBetweenLevels.Instance.currentLevelChunk.levels.Length)
         { //Go to  menu
             SceneController.Instance.LoadMenu(true); //Back to level select
             DataBetweenLevels.Instance.ClearWhatLevelIsOn();
