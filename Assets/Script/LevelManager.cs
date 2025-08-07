@@ -13,6 +13,7 @@ public class LevelManager : MonoBehaviour
     [SerializeField] GoalMaker goalMaker;
     [SerializeField] LevelText levelText;
     [SerializeField] GameObject nextLevelButton;
+    [SerializeField] GameObject lastLevelButton;
 
     [Header("Animations")]
     [SerializeField] float completedLevelPauseTime = .5f;
@@ -53,6 +54,11 @@ public class LevelManager : MonoBehaviour
     TutorialManager tutorialManager;
     [SerializeField] public float tutorialBeforeGame = .5f;
 
+    //Win effects
+    [Header("Win effects")]
+    private MultipulParticalController multipulParticalController;
+    [SerializeField] AudioClip winSound;
+
     private void Awake()
     {
         tutorialManager = GetComponent<TutorialManager>();
@@ -60,6 +66,9 @@ public class LevelManager : MonoBehaviour
 
     private void Start()
     {
+        if (multipulParticalController == null)
+            multipulParticalController = Object.FindFirstObjectByType<MultipulParticalController>();
+
         //Load level
 #if (UNITY_EDITOR)
         if (loadTestlevel && testLevel != null)
@@ -213,7 +222,13 @@ public class LevelManager : MonoBehaviour
             //    Debug.Log("Level Complete");
 
             //}
-            nextLevelButton.SetActive(true);
+            PlayWinEffects();
+
+            //Back to menu button
+            if (DataBetweenLevels.Instance.targetLevel + 1 >= DataBetweenLevels.Instance.currentLevelChunk.levels.Length)
+                lastLevelButton.SetActive(true);
+            else
+                nextLevelButton.SetActive(true);
 
             StartCoroutine(WinAnimation());
         }
@@ -255,15 +270,6 @@ public class LevelManager : MonoBehaviour
         
         yield return new WaitForSeconds(completedLevelPauseTime);        
 
-        //What to do after animation
-        if (DataBetweenLevels.Instance.targetLevel >= DataBetweenLevels.Instance.currentLevelChunk.levels.Length)
-        { //Go to  menu
-            SceneController.Instance.LoadMenu(true); //Back to level select
-            DataBetweenLevels.Instance.ClearWhatLevelIsOn();
-
-            //Dirty turn input in again
-            inactiveBoard = false;
-        }
         /*
         else if (showQuestioner) //Show question
             questioner.SetActive(true);
@@ -272,6 +278,15 @@ public class LevelManager : MonoBehaviour
         */
 
         
+    }
+
+    public void BackToMainMenu()
+    {
+        SceneController.Instance.LoadMenu(true); //Back to level select
+        DataBetweenLevels.Instance.ClearWhatLevelIsOn();
+
+        //Dirty turn input in again
+        inactiveBoard = false;
     }
 
     void SaveGame(int levelCompletet)
@@ -298,5 +313,11 @@ public class LevelManager : MonoBehaviour
     void TurnOffNextButton()
     {
         nextLevelButton.SetActive(false);
+    }
+
+    public void PlayWinEffects()
+    {
+        multipulParticalController.PlayParticles();
+        AudioManager.Instance.PlayWithVolume(winSound, 2f);
     }
 }
