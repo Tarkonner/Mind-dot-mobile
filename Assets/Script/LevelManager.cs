@@ -318,6 +318,6 @@ public class LevelManager : MonoBehaviour
     public void PlayWinEffects()
     {
         multipulParticalController.PlayParticles();
-        AudioManager.Instance.PlayWithVolume(winSound, 2f);
+        AudioManager.Instance.PlayWithVolume(winSound, 3f);
     }
 }
