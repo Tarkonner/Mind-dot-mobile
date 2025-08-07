@@ -6900,7 +6900,7 @@ PrefabInstance:
     - target: {fileID: 2800339047658143124, guid: ece83fda2ae00364da4f4bd42689e64a, type: 3}
       propertyPath: tutorialObjects.Array.data[6].targetLevel
       value: 
-      objectReference: {fileID: 11400000, guid: 92042e721adc67944a1cfe13ebc6e1cd, type: 2}
+      objectReference: {fileID: 11400000, guid: de9e2b753e41ba34cb6c090cf9072a3b, type: 2}
     - target: {fileID: 2800339047658143124, guid: ece83fda2ae00364da4f4bd42689e64a, type: 3}
       propertyPath: tutorialObjects.Array.data[7].targetLevel
       value: 

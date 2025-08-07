@@ -10,12 +10,12 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 7929adc3e2ba8f241ae51a04999eb8fd, type: 3}
-  m_Name: hb dount
+  m_Name: Tor_Dount
   m_EditorClassIdentifier: 
   version: 0
-  levelTitle: hb dount
+  levelTitle: Tor_Dount
   levelGrid:
-    dots: 010000000000000003000000010000000000000003000000010000000200000003000000
+    dots: 030000000000000002000000030000000000000002000000030000000100000002000000
     activeCells: 010101010001010101
     boardSize: {x: 3, y: 3}
   levelPieces:
@@ -23,11 +23,11 @@ MonoBehaviour:
     - {x: 0, y: 0}
     - {x: 1, y: 1}
     - {x: 2, y: 0}
-    dotTypes: 010000000200000003000000
+    dotTypes: 030000000100000002000000
     rotatable: 1
     gridPosRef: {x: 0, y: 1}
     pieceSize: {x: 3, y: 2}
-    startRotation: 0
+    startRotation: 1
     connectionsMade:
       connections:
       - key1: {x: 0, y: 0}
@@ -40,18 +40,6 @@ MonoBehaviour:
         key2: {x: 1, y: 1}
   levelShapeGoals:
   - goalSpecifications:
-    - {x: 0, y: 2}
-    - {x: 0, y: 1}
-    - {x: 0, y: 0}
-    - {x: 1, y: 0}
-    - {x: 2, y: 0}
-    - {x: 2, y: 1}
-    - {x: 2, y: 2}
-    - {x: 1, y: 2}
-    goalDots: 0100000001000000010000000200000003000000030000000300000002000000
-    gridPosRef: {x: 0, y: 0}
-    goalSize: {x: 3, y: 3}
-  - goalSpecifications:
     - {x: 0, y: 0}
     - {x: 0, y: 1}
     - {x: 0, y: 2}
@@ -59,9 +47,9 @@ MonoBehaviour:
     - {x: 2, y: 2}
     - {x: 2, y: 1}
     - {x: 2, y: 0}
-    goalDots: 01000000010000000100000002000000030000000300000003000000
+    goalDots: 03000000030000000300000001000000020000000200000002000000
     gridPosRef: {x: 0, y: 0}
     goalSize: {x: 3, y: 3}
   levelPlaceGoals: []
   piecesPlacementOptions: 04000000
-  totalPlacementOptions: 13
+  totalPlacementOptions: 4

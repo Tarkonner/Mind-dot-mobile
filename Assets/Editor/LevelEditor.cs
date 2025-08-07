@@ -380,7 +380,7 @@ public class LevelEditor : EditorWindow
         {
             place[i] = new LevelPlaceGoal(
                 placeGoalCells[i].cellData.gridCoordinates,
-                placeGoalCells[i].cellData.holding.dotType);
+                placeGoalCells[i].placeGoal.placeGoalData.goalType);
         }
         return place;
     }
@@ -445,6 +445,10 @@ public class LevelEditor : EditorWindow
             }
         }
 
+        //Load Placement goals
+        foreach (LevelPlaceGoal item in targetLevel.levelPlaceGoals)
+            interactiveGrid.cells[(int)(item.goalPosition.y * InteractiveGrid.gridSize + item.goalPosition.x)].AddPlacementGoal(item.type);
+
         //Load Pieces
         foreach (LevelPiece item in targetLevel.levelPieces)
             LoadPiece(item);
@@ -452,11 +456,7 @@ public class LevelEditor : EditorWindow
         //Load Shape goals
         foreach (LevelShapeGoal item in targetLevel.levelShapeGoals)
             LoadShapeGoal(item);
-
-        //Load Placement goals
-        foreach (LevelPlaceGoal item in targetLevel.levelPlaceGoals)
-            interactiveGrid.cells[(int)(item.goalPosition.y * InteractiveGrid.gridSize + item.goalPosition.x)].AddPlacementGoal(item.type);
-
+               
         //Cleanup
         inputtedLevelField.value = null;
         stateMachine.ChangeState(new CellEditState());
