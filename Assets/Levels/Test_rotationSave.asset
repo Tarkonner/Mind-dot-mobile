@@ -27,7 +27,7 @@ MonoBehaviour:
     rotatable: 1
     gridPosRef: {x: 0, y: 0}
     pieceSize: {x: 3, y: 3}
-    startRotation: 1
+    startRotation: 0
     connectionsMade:
       connections:
       - key1: {x: 0, y: 0}
@@ -40,11 +40,11 @@ MonoBehaviour:
         key2: {x: 1, y: 1}
   levelShapeGoals: []
   levelPlaceGoals:
-  - type: 1
+  - type: 0
     goalPosition: {x: 0, y: 0}
   - type: 3
     goalPosition: {x: 1, y: 1}
   - type: 2
     goalPosition: {x: 2, y: 2}
   piecesPlacementOptions: 04000000
-  totalPlacementOptions: 4
+  totalPlacementOptions: 36
