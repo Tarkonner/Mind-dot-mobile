@@ -447,7 +447,15 @@ public class LevelEditor : EditorWindow
 
         //Load Placement goals
         foreach (LevelPlaceGoal item in targetLevel.levelPlaceGoals)
-            interactiveGrid.cells[(int)(item.goalPosition.y * InteractiveGrid.gridSize + item.goalPosition.x)].AddPlacementGoal(item.type);
+        {
+            var cell = interactiveGrid.cells[
+                (int)(item.goalPosition.y * InteractiveGrid.gridSize + item.goalPosition.x)];
+
+            cell.AddPlacementGoal(item.type);
+
+            if (!placeGoalCells.Contains(cell))
+                placeGoalCells.Add(cell);
+        }
 
         //Load Pieces
         foreach (LevelPiece item in targetLevel.levelPieces)

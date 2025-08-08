@@ -10,35 +10,41 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 7929adc3e2ba8f241ae51a04999eb8fd, type: 3}
-  m_Name: Intro grey goal dots
+  m_Name: Test_rotationSave
   m_EditorClassIdentifier: 
   version: 0
-  levelTitle: Intro grey goal dots
+  levelTitle: Test_rotationSave
   levelGrid:
-    dots: 030000000000000002000000030000000100000002000000030000000000000002000000
+    dots: 010000000000000000000000000000000300000000000000000000000000000002000000
     activeCells: 010101010101010101
     boardSize: {x: 3, y: 3}
   levelPieces:
   - dotPositions:
     - {x: 0, y: 0}
-    - {x: 1, y: 0}
-    - {x: 2, y: 0}
-    dotTypes: 030000000100000002000000
+    - {x: 1, y: 1}
+    - {x: 2, y: 2}
+    dotTypes: 010000000300000002000000
     rotatable: 1
-    gridPosRef: {x: 0, y: 1}
-    pieceSize: {x: 3, y: 1}
+    gridPosRef: {x: 0, y: 0}
+    pieceSize: {x: 3, y: 3}
     startRotation: 1
     connectionsMade:
       connections:
       - key1: {x: 0, y: 0}
-        key2: {x: 1, y: 0}
-      - key1: {x: 1, y: 0}
+        key2: {x: 1, y: 1}
+      - key1: {x: 1, y: 1}
         key2: {x: 0, y: 0}
-      - key1: {x: 1, y: 0}
-        key2: {x: 2, y: 0}
-      - key1: {x: 2, y: 0}
-        key2: {x: 1, y: 0}
+      - key1: {x: 1, y: 1}
+        key2: {x: 2, y: 2}
+      - key1: {x: 2, y: 2}
+        key2: {x: 1, y: 1}
   levelShapeGoals: []
-  levelPlaceGoals: []
+  levelPlaceGoals:
+  - type: 1
+    goalPosition: {x: 0, y: 0}
+  - type: 3
+    goalPosition: {x: 1, y: 1}
+  - type: 2
+    goalPosition: {x: 2, y: 2}
   piecesPlacementOptions: 04000000
-  totalPlacementOptions: 42
+  totalPlacementOptions: 4
