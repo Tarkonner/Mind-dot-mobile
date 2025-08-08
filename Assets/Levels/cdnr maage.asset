@@ -23,10 +23,16 @@ MonoBehaviour:
     - {x: 0, y: 0}
     - {x: 1, y: 1}
     dotTypes: 0100000002000000
-    rotatable: 0
+    rotatable: 1
     gridPosRef: {x: 1, y: 1}
     pieceSize: {x: 2, y: 2}
     startRotation: 0
+    connectionsMade:
+      connections:
+      - key1: {x: 0, y: 0}
+        key2: {x: 1, y: 1}
+      - key1: {x: 1, y: 1}
+        key2: {x: 0, y: 0}
   - dotPositions:
     - {x: 0, y: 0}
     - {x: 0, y: 1}
@@ -35,15 +41,31 @@ MonoBehaviour:
     rotatable: 1
     gridPosRef: {x: 0, y: 1}
     pieceSize: {x: 2, y: 3}
-    startRotation: 1
+    startRotation: 0
+    connectionsMade:
+      connections:
+      - key1: {x: 0, y: 0}
+        key2: {x: 0, y: 1}
+      - key1: {x: 0, y: 1}
+        key2: {x: 0, y: 0}
+      - key1: {x: 0, y: 1}
+        key2: {x: 1, y: 2}
+      - key1: {x: 1, y: 2}
+        key2: {x: 0, y: 1}
   - dotPositions:
     - {x: 0, y: 0}
     - {x: 1, y: 0}
     dotTypes: 0300000001000000
-    rotatable: 0
+    rotatable: 1
     gridPosRef: {x: 1, y: 0}
     pieceSize: {x: 2, y: 1}
     startRotation: 0
+    connectionsMade:
+      connections:
+      - key1: {x: 0, y: 0}
+        key2: {x: 1, y: 0}
+      - key1: {x: 1, y: 0}
+        key2: {x: 0, y: 0}
   levelShapeGoals:
   - goalSpecifications:
     - {x: 0, y: 2}
@@ -72,3 +94,5 @@ MonoBehaviour:
     gridPosRef: {x: 0, y: 0}
     goalSize: {x: 3, y: 3}
   levelPlaceGoals: []
+  piecesPlacementOptions: 120000000800000010000000
+  totalPlacementOptions: 42

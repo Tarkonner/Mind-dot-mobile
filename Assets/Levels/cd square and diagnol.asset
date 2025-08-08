@@ -29,6 +29,20 @@ MonoBehaviour:
     gridPosRef: {x: 0, y: 0}
     pieceSize: {x: 4, y: 4}
     startRotation: 0
+    connectionsMade:
+      connections:
+      - key1: {x: 0, y: 3}
+        key2: {x: 1, y: 2}
+      - key1: {x: 1, y: 2}
+        key2: {x: 0, y: 3}
+      - key1: {x: 1, y: 2}
+        key2: {x: 2, y: 1}
+      - key1: {x: 2, y: 1}
+        key2: {x: 1, y: 2}
+      - key1: {x: 2, y: 1}
+        key2: {x: 3, y: 0}
+      - key1: {x: 3, y: 0}
+        key2: {x: 2, y: 1}
   - dotPositions:
     - {x: 1, y: 1}
     - {x: 1, y: 0}
@@ -38,7 +52,33 @@ MonoBehaviour:
     rotatable: 1
     gridPosRef: {x: 0, y: 0}
     pieceSize: {x: 2, y: 2}
-    startRotation: 1
+    startRotation: 0
+    connectionsMade:
+      connections:
+      - key1: {x: 1, y: 1}
+        key2: {x: 1, y: 0}
+      - key1: {x: 1, y: 0}
+        key2: {x: 1, y: 1}
+      - key1: {x: 1, y: 1}
+        key2: {x: 0, y: 0}
+      - key1: {x: 0, y: 0}
+        key2: {x: 1, y: 1}
+      - key1: {x: 1, y: 1}
+        key2: {x: 0, y: 1}
+      - key1: {x: 0, y: 1}
+        key2: {x: 1, y: 1}
+      - key1: {x: 1, y: 0}
+        key2: {x: 0, y: 0}
+      - key1: {x: 0, y: 0}
+        key2: {x: 1, y: 0}
+      - key1: {x: 1, y: 0}
+        key2: {x: 0, y: 1}
+      - key1: {x: 0, y: 1}
+        key2: {x: 1, y: 0}
+      - key1: {x: 0, y: 0}
+        key2: {x: 0, y: 1}
+      - key1: {x: 0, y: 1}
+        key2: {x: 0, y: 0}
   - dotPositions:
     - {x: 0, y: 0}
     - {x: 1, y: 1}
@@ -48,6 +88,16 @@ MonoBehaviour:
     gridPosRef: {x: 2, y: 0}
     pieceSize: {x: 2, y: 3}
     startRotation: 0
+    connectionsMade:
+      connections:
+      - key1: {x: 0, y: 0}
+        key2: {x: 1, y: 1}
+      - key1: {x: 1, y: 1}
+        key2: {x: 0, y: 0}
+      - key1: {x: 1, y: 1}
+        key2: {x: 0, y: 2}
+      - key1: {x: 0, y: 2}
+        key2: {x: 1, y: 1}
   levelShapeGoals:
   - goalSpecifications:
     - {x: 2, y: 0}
@@ -70,3 +120,5 @@ MonoBehaviour:
     gridPosRef: {x: 1, y: 0}
     goalSize: {x: 2, y: 3}
   levelPlaceGoals: []
+  piecesPlacementOptions: 040000002400000018000000
+  totalPlacementOptions: 64

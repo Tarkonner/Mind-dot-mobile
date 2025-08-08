@@ -29,6 +29,28 @@ MonoBehaviour:
     gridPosRef: {x: 2, y: 3}
     pieceSize: {x: 3, y: 2}
     startRotation: 0
+    connectionsMade:
+      connections:
+      - key1: {x: 1, y: 1}
+        key2: {x: 0, y: 0}
+      - key1: {x: 0, y: 0}
+        key2: {x: 1, y: 1}
+      - key1: {x: 1, y: 1}
+        key2: {x: 1, y: 0}
+      - key1: {x: 1, y: 0}
+        key2: {x: 1, y: 1}
+      - key1: {x: 1, y: 1}
+        key2: {x: 2, y: 0}
+      - key1: {x: 2, y: 0}
+        key2: {x: 1, y: 1}
+      - key1: {x: 0, y: 0}
+        key2: {x: 1, y: 0}
+      - key1: {x: 1, y: 0}
+        key2: {x: 0, y: 0}
+      - key1: {x: 1, y: 0}
+        key2: {x: 2, y: 0}
+      - key1: {x: 2, y: 0}
+        key2: {x: 1, y: 0}
   - dotPositions:
     - {x: 1, y: 3}
     - {x: 1, y: 2}
@@ -38,7 +60,21 @@ MonoBehaviour:
     rotatable: 1
     gridPosRef: {x: 0, y: 1}
     pieceSize: {x: 2, y: 4}
-    startRotation: 0
+    startRotation: 1
+    connectionsMade:
+      connections:
+      - key1: {x: 1, y: 3}
+        key2: {x: 1, y: 2}
+      - key1: {x: 1, y: 2}
+        key2: {x: 1, y: 3}
+      - key1: {x: 1, y: 2}
+        key2: {x: 0, y: 1}
+      - key1: {x: 0, y: 1}
+        key2: {x: 1, y: 2}
+      - key1: {x: 0, y: 1}
+        key2: {x: 0, y: 0}
+      - key1: {x: 0, y: 0}
+        key2: {x: 0, y: 1}
   - dotPositions:
     - {x: 0, y: 0}
     - {x: 1, y: 1}
@@ -48,7 +84,33 @@ MonoBehaviour:
     rotatable: 1
     gridPosRef: {x: 1, y: 1}
     pieceSize: {x: 2, y: 2}
-    startRotation: 0
+    startRotation: 2
+    connectionsMade:
+      connections:
+      - key1: {x: 0, y: 0}
+        key2: {x: 1, y: 1}
+      - key1: {x: 1, y: 1}
+        key2: {x: 0, y: 0}
+      - key1: {x: 0, y: 0}
+        key2: {x: 1, y: 0}
+      - key1: {x: 1, y: 0}
+        key2: {x: 0, y: 0}
+      - key1: {x: 0, y: 0}
+        key2: {x: 0, y: 1}
+      - key1: {x: 0, y: 1}
+        key2: {x: 0, y: 0}
+      - key1: {x: 1, y: 1}
+        key2: {x: 1, y: 0}
+      - key1: {x: 1, y: 0}
+        key2: {x: 1, y: 1}
+      - key1: {x: 1, y: 1}
+        key2: {x: 0, y: 1}
+      - key1: {x: 0, y: 1}
+        key2: {x: 1, y: 1}
+      - key1: {x: 1, y: 0}
+        key2: {x: 0, y: 1}
+      - key1: {x: 0, y: 1}
+        key2: {x: 1, y: 0}
   levelShapeGoals:
   - goalSpecifications:
     - {x: 0, y: 0}
@@ -75,3 +137,5 @@ MonoBehaviour:
     goalPosition: {x: 0, y: 1}
   - type: 1
     goalPosition: {x: 3, y: 3}
+  piecesPlacementOptions: 150000000a0000001c000000
+  totalPlacementOptions: 236

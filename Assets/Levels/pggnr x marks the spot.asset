@@ -28,7 +28,25 @@ MonoBehaviour:
     rotatable: 1
     gridPosRef: {x: 2, y: 0}
     pieceSize: {x: 3, y: 3}
-    startRotation: 1
+    startRotation: 0
+    connectionsMade:
+      connections:
+      - key1: {x: 0, y: 2}
+        key2: {x: 1, y: 1}
+      - key1: {x: 1, y: 1}
+        key2: {x: 0, y: 2}
+      - key1: {x: 1, y: 1}
+        key2: {x: 2, y: 1}
+      - key1: {x: 2, y: 1}
+        key2: {x: 1, y: 1}
+      - key1: {x: 1, y: 1}
+        key2: {x: 2, y: 0}
+      - key1: {x: 2, y: 0}
+        key2: {x: 1, y: 1}
+      - key1: {x: 2, y: 1}
+        key2: {x: 2, y: 0}
+      - key1: {x: 2, y: 0}
+        key2: {x: 2, y: 1}
   - dotPositions:
     - {x: 1, y: 2}
     - {x: 0, y: 2}
@@ -38,26 +56,80 @@ MonoBehaviour:
     rotatable: 1
     gridPosRef: {x: 3, y: 2}
     pieceSize: {x: 2, y: 3}
-    startRotation: 1
+    startRotation: 0
+    connectionsMade:
+      connections:
+      - key1: {x: 1, y: 2}
+        key2: {x: 0, y: 2}
+      - key1: {x: 0, y: 2}
+        key2: {x: 1, y: 2}
+      - key1: {x: 1, y: 2}
+        key2: {x: 0, y: 1}
+      - key1: {x: 0, y: 1}
+        key2: {x: 1, y: 2}
+      - key1: {x: 0, y: 2}
+        key2: {x: 0, y: 1}
+      - key1: {x: 0, y: 1}
+        key2: {x: 0, y: 2}
+      - key1: {x: 0, y: 1}
+        key2: {x: 0, y: 0}
+      - key1: {x: 0, y: 0}
+        key2: {x: 0, y: 1}
   - dotPositions:
     - {x: 0, y: 0}
     - {x: 0, y: 1}
     - {x: 1, y: 1}
     - {x: 1, y: 2}
     dotTypes: 01000000030000000100000002000000
-    rotatable: 0
+    rotatable: 1
     gridPosRef: {x: 0, y: 0}
     pieceSize: {x: 2, y: 3}
     startRotation: 0
+    connectionsMade:
+      connections:
+      - key1: {x: 0, y: 0}
+        key2: {x: 0, y: 1}
+      - key1: {x: 0, y: 1}
+        key2: {x: 0, y: 0}
+      - key1: {x: 0, y: 0}
+        key2: {x: 1, y: 1}
+      - key1: {x: 1, y: 1}
+        key2: {x: 0, y: 0}
+      - key1: {x: 0, y: 1}
+        key2: {x: 1, y: 1}
+      - key1: {x: 1, y: 1}
+        key2: {x: 0, y: 1}
+      - key1: {x: 0, y: 1}
+        key2: {x: 1, y: 2}
+      - key1: {x: 1, y: 2}
+        key2: {x: 0, y: 1}
+      - key1: {x: 1, y: 1}
+        key2: {x: 1, y: 2}
+      - key1: {x: 1, y: 2}
+        key2: {x: 1, y: 1}
   - dotPositions:
     - {x: 0, y: 1}
     - {x: 1, y: 1}
     - {x: 1, y: 0}
     dotTypes: 020000000100000003000000
-    rotatable: 0
+    rotatable: 1
     gridPosRef: {x: 0, y: 3}
     pieceSize: {x: 2, y: 2}
     startRotation: 0
+    connectionsMade:
+      connections:
+      - key1: {x: 0, y: 1}
+        key2: {x: 1, y: 1}
+      - key1: {x: 1, y: 1}
+        key2: {x: 0, y: 1}
+      - key1: {x: 0, y: 1}
+        key2: {x: 1, y: 0}
+      - key1: {x: 1, y: 0}
+        key2: {x: 0, y: 1}
+      - key1: {x: 1, y: 1}
+        key2: {x: 1, y: 0}
+      - key1: {x: 1, y: 0}
+        key2: {x: 1, y: 1}
   levelShapeGoals:
   - goalSpecifications:
     - {x: 0, y: 2}
@@ -89,3 +161,5 @@ MonoBehaviour:
     goalPosition: {x: 4, y: 4}
   - type: 0
     goalPosition: {x: 2, y: 2}
+  piecesPlacementOptions: 18000000140000001800000028000000
+  totalPlacementOptions: 108

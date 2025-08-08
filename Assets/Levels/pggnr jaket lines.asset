@@ -28,15 +28,47 @@ MonoBehaviour:
     rotatable: 1
     gridPosRef: {x: 0, y: 0}
     pieceSize: {x: 2, y: 2}
-    startRotation: 1
+    startRotation: 0
+    connectionsMade:
+      connections:
+      - key1: {x: 0, y: 1}
+        key2: {x: 0, y: 0}
+      - key1: {x: 0, y: 0}
+        key2: {x: 0, y: 1}
+      - key1: {x: 0, y: 1}
+        key2: {x: 1, y: 0}
+      - key1: {x: 1, y: 0}
+        key2: {x: 0, y: 1}
+      - key1: {x: 0, y: 1}
+        key2: {x: 1, y: 1}
+      - key1: {x: 1, y: 1}
+        key2: {x: 0, y: 1}
+      - key1: {x: 0, y: 0}
+        key2: {x: 1, y: 0}
+      - key1: {x: 1, y: 0}
+        key2: {x: 0, y: 0}
+      - key1: {x: 0, y: 0}
+        key2: {x: 1, y: 1}
+      - key1: {x: 1, y: 1}
+        key2: {x: 0, y: 0}
+      - key1: {x: 1, y: 0}
+        key2: {x: 1, y: 1}
+      - key1: {x: 1, y: 1}
+        key2: {x: 1, y: 0}
   - dotPositions:
     - {x: 0, y: 0}
     - {x: 1, y: 1}
     dotTypes: 0100000003000000
-    rotatable: 0
+    rotatable: 1
     gridPosRef: {x: 2, y: 2}
     pieceSize: {x: 2, y: 2}
     startRotation: 0
+    connectionsMade:
+      connections:
+      - key1: {x: 0, y: 0}
+        key2: {x: 1, y: 1}
+      - key1: {x: 1, y: 1}
+        key2: {x: 0, y: 0}
   levelShapeGoals:
   - goalSpecifications:
     - {x: 1, y: 0}
@@ -55,3 +87,5 @@ MonoBehaviour:
     goalPosition: {x: 3, y: 3}
   - type: 0
     goalPosition: {x: 0, y: 0}
+  piecesPlacementOptions: 080000000e000000
+  totalPlacementOptions: 22
