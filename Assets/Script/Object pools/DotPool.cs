@@ -33,5 +33,6 @@ public class DotPool : PoolerBase<Dot>
     {
         obj.transform.parent = null;
         obj.transform.position = Vector3.zero;
+        obj.transform.localEulerAngles = Vector3.zero;
     }
 }
