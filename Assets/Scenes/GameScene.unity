@@ -38,12 +38,12 @@ RenderSettings:
   m_ReflectionIntensity: 1
   m_CustomReflection: {fileID: 0}
   m_Sun: {fileID: 0}
-  m_IndirectSpecularColor: {r: 0, g: 0, b: 0, a: 1}
   m_UseRadianceAmbientProbe: 0
 --- !u!157 &3
 LightmapSettings:
   m_ObjectHideFlags: 0
-  serializedVersion: 12
+  serializedVersion: 13
+  m_BakeOnSceneLoad: 0
   m_GISettings:
     serializedVersion: 2
     m_BounceScale: 1
@@ -4327,6 +4327,7 @@ MonoBehaviour:
   m_DeselectOnBackgroundClick: 1
   m_PointerBehavior: 0
   m_CursorLockBehavior: 0
+  m_ScrollDeltaPerTick: 6
 --- !u!1 &1557336755
 GameObject:
   m_ObjectHideFlags: 0
@@ -6835,7 +6836,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 2800339047658143124, guid: ece83fda2ae00364da4f4bd42689e64a, type: 3}
       propertyPath: tutorialObjects.Array.data[10].levelText
-      value: There can be up tp 4 goals
+      value: There can be up to 4 goals
       objectReference: {fileID: 0}
     - target: {fileID: 2800339047658143124, guid: ece83fda2ae00364da4f4bd42689e64a, type: 3}
       propertyPath: tutorialObjects.Array.data[11].levelText
@@ -6859,7 +6860,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 2800339047658143124, guid: ece83fda2ae00364da4f4bd42689e64a, type: 3}
       propertyPath: tutorialObjects.Array.data[16].levelText
-      value: All marked cells need a Dot on it to complet level
+      value: All marked cells need a Dot on it to complete level
       objectReference: {fileID: 0}
     - target: {fileID: 2800339047658143124, guid: ece83fda2ae00364da4f4bd42689e64a, type: 3}
       propertyPath: tutorialObjects.Array.data[17].levelText
