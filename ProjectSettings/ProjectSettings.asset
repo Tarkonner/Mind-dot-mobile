@@ -263,7 +263,7 @@ PlayerSettings:
   templateDefaultScene: Assets/Scenes/SampleScene.unity
   useCustomMainManifest: 0
   useCustomLauncherManifest: 0
-  useCustomMainGradleTemplate: 0
+  useCustomMainGradleTemplate: 1
   useCustomLauncherGradleManifest: 0
   useCustomBaseGradleTemplate: 0
   useCustomGradlePropertiesTemplate: 0
@@ -727,7 +727,7 @@ PlayerSettings:
   webWasm2023: 0
   webEnableSubmoduleStrippingCompatibility: 0
   scriptingDefineSymbols:
-    Android: UNITY_VISUAL_SCRIPTING;DOTWEEN;ES3_TMPRO;ES3_UGUI
+    Android: UNITY_VISUAL_SCRIPTING;DOTWEEN;ES3_TMPRO;ES3_UGUI;LEVELPLAY_DEPENDENCIES_INSTALLED
     Bratwurst: UNITY_VISUAL_SCRIPTING
     EmbeddedLinux: UNITY_VISUAL_SCRIPTING;DOTWEEN;ES3_TMPRO;ES3_UGUI
     GameCoreScarlett: DOTWEEN
