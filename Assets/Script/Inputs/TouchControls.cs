@@ -136,6 +136,24 @@ public partial class @TouchControls: IInputActionCollection2, IDisposable
                     ""processors"": """",
                     ""interactions"": """",
                     ""initialStateCheck"": true
+                },
+                {
+                    ""name"": ""Point"",
+                    ""type"": ""Value"",
+                    ""id"": ""6aa933af-39fd-4dd4-a0ec-503be83d62bb"",
+                    ""expectedControlType"": ""Vector2"",
+                    ""processors"": """",
+                    ""interactions"": """",
+                    ""initialStateCheck"": true
+                },
+                {
+                    ""name"": ""Click"",
+                    ""type"": ""Button"",
+                    ""id"": ""0921ddf3-c3ec-46e8-8653-8d5624b2baff"",
+                    ""expectedControlType"": """",
+                    ""processors"": """",
+                    ""interactions"": """",
+                    ""initialStateCheck"": false
                 }
             ],
             ""bindings"": [
@@ -193,6 +211,28 @@ public partial class @TouchControls: IInputActionCollection2, IDisposable
                     ""action"": ""SecendSwipe"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""ad65688e-56be-48e3-96cf-f96119e2cb14"",
+                    ""path"": ""<Touchscreen>/primaryTouch/position"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""Point"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""d2774294-e92f-4b12-ac0c-8181c31cb4f0"",
+                    ""path"": ""<Touchscreen>/Press"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""Click"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
                 }
             ]
         }
@@ -206,6 +246,8 @@ public partial class @TouchControls: IInputActionCollection2, IDisposable
         m_Touch_SecendFinger = m_Touch.FindAction("SecendFinger", throwIfNotFound: true);
         m_Touch_Swipe = m_Touch.FindAction("Swipe", throwIfNotFound: true);
         m_Touch_SecendSwipe = m_Touch.FindAction("SecendSwipe", throwIfNotFound: true);
+        m_Touch_Point = m_Touch.FindAction("Point", throwIfNotFound: true);
+        m_Touch_Click = m_Touch.FindAction("Click", throwIfNotFound: true);
     }
 
     ~@TouchControls()
@@ -291,6 +333,8 @@ public partial class @TouchControls: IInputActionCollection2, IDisposable
     private readonly InputAction m_Touch_SecendFinger;
     private readonly InputAction m_Touch_Swipe;
     private readonly InputAction m_Touch_SecendSwipe;
+    private readonly InputAction m_Touch_Point;
+    private readonly InputAction m_Touch_Click;
     /// <summary>
     /// Provides access to input actions defined in input action map "Touch".
     /// </summary>
@@ -322,6 +366,14 @@ public partial class @TouchControls: IInputActionCollection2, IDisposable
         /// Provides access to the underlying input action "Touch/SecendSwipe".
         /// </summary>
         public InputAction @SecendSwipe => m_Wrapper.m_Touch_SecendSwipe;
+        /// <summary>
+        /// Provides access to the underlying input action "Touch/Point".
+        /// </summary>
+        public InputAction @Point => m_Wrapper.m_Touch_Point;
+        /// <summary>
+        /// Provides access to the underlying input action "Touch/Click".
+        /// </summary>
+        public InputAction @Click => m_Wrapper.m_Touch_Click;
         /// <summary>
         /// Provides access to the underlying input action map instance.
         /// </summary>
@@ -363,6 +415,12 @@ public partial class @TouchControls: IInputActionCollection2, IDisposable
             @SecendSwipe.started += instance.OnSecendSwipe;
             @SecendSwipe.performed += instance.OnSecendSwipe;
             @SecendSwipe.canceled += instance.OnSecendSwipe;
+            @Point.started += instance.OnPoint;
+            @Point.performed += instance.OnPoint;
+            @Point.canceled += instance.OnPoint;
+            @Click.started += instance.OnClick;
+            @Click.performed += instance.OnClick;
+            @Click.canceled += instance.OnClick;
         }
 
         /// <summary>
@@ -389,6 +447,12 @@ public partial class @TouchControls: IInputActionCollection2, IDisposable
             @SecendSwipe.started -= instance.OnSecendSwipe;
             @SecendSwipe.performed -= instance.OnSecendSwipe;
             @SecendSwipe.canceled -= instance.OnSecendSwipe;
+            @Point.started -= instance.OnPoint;
+            @Point.performed -= instance.OnPoint;
+            @Point.canceled -= instance.OnPoint;
+            @Click.started -= instance.OnClick;
+            @Click.performed -= instance.OnClick;
+            @Click.canceled -= instance.OnClick;
         }
 
         /// <summary>
@@ -464,5 +528,19 @@ public partial class @TouchControls: IInputActionCollection2, IDisposable
         /// <seealso cref="UnityEngine.InputSystem.InputAction.performed" />
         /// <seealso cref="UnityEngine.InputSystem.InputAction.canceled" />
         void OnSecendSwipe(InputAction.CallbackContext context);
+        /// <summary>
+        /// Method invoked when associated input action "Point" is either <see cref="UnityEngine.InputSystem.InputAction.started" />, <see cref="UnityEngine.InputSystem.InputAction.performed" /> or <see cref="UnityEngine.InputSystem.InputAction.canceled" />.
+        /// </summary>
+        /// <seealso cref="UnityEngine.InputSystem.InputAction.started" />
+        /// <seealso cref="UnityEngine.InputSystem.InputAction.performed" />
+        /// <seealso cref="UnityEngine.InputSystem.InputAction.canceled" />
+        void OnPoint(InputAction.CallbackContext context);
+        /// <summary>
+        /// Method invoked when associated input action "Click" is either <see cref="UnityEngine.InputSystem.InputAction.started" />, <see cref="UnityEngine.InputSystem.InputAction.performed" /> or <see cref="UnityEngine.InputSystem.InputAction.canceled" />.
+        /// </summary>
+        /// <seealso cref="UnityEngine.InputSystem.InputAction.started" />
+        /// <seealso cref="UnityEngine.InputSystem.InputAction.performed" />
+        /// <seealso cref="UnityEngine.InputSystem.InputAction.canceled" />
+        void OnClick(InputAction.CallbackContext context);
     }
 }
